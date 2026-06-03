@@ -29,9 +29,7 @@ function entries(): Record<string, string> {
     join(src, 'vue/index.ts'),
     ...walk(join(src, 'components'), (f) => /kt-[a-z-]+\.ts$/.test(f) && !f.endsWith('.test.ts')),
   ];
-  return Object.fromEntries(
-    files.map((file) => [relative(src, file).replace(/\.ts$/, ''), file]),
-  );
+  return Object.fromEntries(files.map((file) => [relative(src, file).replace(/\.ts$/, ''), file]));
 }
 
 export default defineConfig({
