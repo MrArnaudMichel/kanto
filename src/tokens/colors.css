@@ -1,0 +1,83 @@
+/**
+ * Kanto colour tokens.
+ *
+ * Ported from kanto-ng `_theme-dark.scss`. Dark is the canonical theme: it is
+ * what `:root` carries, so a page that sets nothing gets the intended look.
+ *
+ * Surfaces are an eleven-step ramp (`--color-dark-8` … `--color-dark-24`)
+ * rather than a shadow scale — in Kanto, elevation means "slightly lighter
+ * surface". Semantic colours each ship three variants: `-base` (opaque, for
+ * text and solid fills), `-soft` (12% alpha, for tinted backgrounds) and
+ * `-hover` (16% alpha).
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* === BRAND === */
+  --color-white: rgba(244, 244, 245, 1);
+  --color-primary-base: rgba(101, 98, 248, 1);
+  --color-primary-hover: rgba(111, 109, 248, 1);
+  --color-primary-soft: rgba(101, 98, 248, 0.12);
+  --color-secondary-hover: rgba(111, 116, 246, 0.16);
+
+  /* === SEMANTIC === */
+  --color-danger-base: rgba(245, 61, 92, 1);
+  --color-danger-hover: rgba(243, 73, 107, 0.16);
+  --color-danger-soft: rgba(245, 61, 92, 0.12);
+
+  --color-info-base: rgba(53, 175, 243, 1);
+  --color-info-hover: rgba(53, 175, 243, 0.16);
+  --color-info-soft: rgba(53, 175, 243, 0.12);
+
+  --color-warning-base: rgba(245, 171, 61, 1);
+  --color-warning-hover: rgba(245, 171, 61, 0.16);
+  --color-warning-soft: rgba(245, 171, 61, 0.12);
+
+  --color-success-base: rgba(53, 221, 131, 1);
+  --color-success-hover: rgba(53, 221, 131, 0.16);
+  --color-success-soft: rgba(53, 221, 131, 0.12);
+
+  /* === TEXT (100 = highest contrast) === */
+  --color-text-100: rgba(244, 244, 245, 1);
+  --color-text-400: rgba(145, 145, 161, 1);
+  --color-text-500: rgba(101, 101, 114, 1);
+  --color-text-600: rgba(75, 75, 88, 1);
+  --color-text-700: rgba(66, 66, 77, 1);
+  --color-text-800: rgba(58, 58, 68, 1);
+  --color-text-900: rgba(39, 39, 42, 1);
+
+  /* === SURFACES (low → high elevation) === */
+  --color-dark-8: rgba(19, 18, 22, 1);
+  --color-dark-12: rgba(29, 28, 34, 1);
+  --color-dark-14: rgba(34, 33, 39, 1);
+  --color-dark-15: rgba(36, 35, 41, 1);
+  --color-dark-16: rgba(38, 37, 44, 1);
+  --color-dark-18: rgba(43, 42, 50, 1);
+  --color-dark-19: rgba(45, 44, 53, 1);
+  --color-dark-20: rgba(48, 46, 56, 1);
+  --color-dark-22: rgba(53, 51, 61, 1);
+  --color-dark-23: rgba(55, 53, 64, 1);
+  --color-dark-24: rgba(58, 56, 67, 1);
+
+  /* === NAVIGATION === */
+  --color-navigation-top-icon: #f4f4f5;
+  --color-navigation-icon: #656572;
+  --color-navigation-icon-close: #ec2d3a;
+
+  /* === OVERLAY === */
+  --color-overlay: rgba(145, 145, 161, 1);
+  --color-backdrop: rgba(0, 0, 0, 0.45);
+
+  /* === SEMANTIC ALIASES ===
+     Prefer these in application code: they survive a change to the
+     underlying ramp step. */
+  --surface-page: var(--color-dark-12);
+  --surface-card: var(--color-dark-16);
+  --surface-raised: var(--color-dark-20);
+  --surface-hover: var(--color-dark-22);
+  --border-subtle: var(--color-dark-20);
+  --text-body: var(--color-text-100);
+  --text-muted: var(--color-text-400);
+  --text-disabled: var(--color-text-700);
+}
