@@ -1,0 +1,41 @@
+/**
+ * Kanto typography tokens — ported from kanto-ng `_base.scss` (desktop scale).
+ *
+ * Type is exposed as composite `font` shorthands rather than separate
+ * size/weight/family tokens, so a text style is applied in one declaration and
+ * cannot be half-applied:
+ *
+ *     h1 { font: var(--font-title-h1); }
+ *
+ * The families are factored out into `--font-family-*` so a swap only touches
+ * one line. Fallback stacks matter here: Gilroy and Avenir Next are commercial
+ * faces that may not be licensed in a consuming app.
+ */
+
+:root {
+  /* === FAMILIES === */
+  --font-family-display: 'Gilroy', 'Segoe UI', system-ui, sans-serif;
+  --font-family-body: 'Avenir Next', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-code: 'Source Code Pro', ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
+
+  /* === TITLES (Gilroy) === */
+  --font-title-studio: 400 48px/58px var(--font-family-display);
+  --font-title-h1: 600 36px/43px var(--font-family-display);
+  --font-title-h4: 400 24px/29px var(--font-family-display);
+  --font-title-h6: 600 18px var(--font-family-display);
+
+  /* Overline uses the body face despite living with the titles. */
+  --font-title-overline: 600 10px var(--font-family-body);
+
+  /* === BODY & UI (Avenir Next) === */
+  --font-normal-regular: 400 14px var(--font-family-body);
+  --font-normal-medium: 500 14px var(--font-family-body);
+  --font-normal-small: 400 12px var(--font-family-body);
+  --font-input: 400 14px var(--font-family-body);
+
+  /* === CODE === */
+  --font-code-regular: 400 14px var(--font-family-code);
+
+  /* === TRACKING === */
+  --letter-spacing-overline: 2px;
+}
