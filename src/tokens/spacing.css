@@ -1,0 +1,67 @@
+/**
+ * Kanto spacing, radius and dimension tokens — ported from kanto-ng
+ * `_base.scss` (desktop scale). Responsive overrides live in
+ * `responsive.css`.
+ */
+
+:root {
+  /* === RADIUS === */
+  --border-radius: 8px; /* inputs, buttons, square chips */
+  --border-radius-card: 12px;
+  --radius-input: 8px;
+  --radius-modal: 12px;
+  --radius-sub-menu: 2px;
+  --radius-pill: 20px; /* tag chips */
+  --radius-full: 9999px; /* toggle track and thumb */
+
+  /* === PADDING === */
+  --padding-card: 24px;
+  --padding-modal: 24px;
+  --padding-input: 8px 0;
+  --padding-form: 16px;
+  --padding-sub-menu: 12px 24px;
+  --padding-sub-menu-item: 8px 16px;
+  --padding-expand: 8px;
+  --padding-expand-item: 8px 16px;
+  --padding-drag-drop: 16px 24px;
+  --padding-chip: 4px 12px;
+  --text-area-padding: 10px 16px;
+
+  /* === GAP === */
+  --gap-element: 4px;
+  --gap-button: 8px;
+  --gap-drag-drop: 12px;
+  --gap-form: 16px;
+  --gap-card: 20px;
+  --gap-modal: 20px;
+  --gap-sub-menu: 24px;
+
+  /* === DIMENSIONS === */
+  --button-height-small: 32px;
+  --button-height: 40px;
+  --button-height-large: 48px;
+  --button-padding-x: 16px;
+
+  /* === BORDERS === */
+  --border-width: 1px;
+  --outline-width: 2px; /* inputs gain an outline, never a border, on focus */
+
+  /* === MOTION ===
+     Fast and utilitarian: no bounces, no springs. */
+  --duration-instant: 0.1s;
+  --duration-fast: 0.16s;
+  --duration-normal: 0.2s;
+  --easing-standard: ease;
+
+  /* === ELEVATION ===
+     Kanto expresses elevation as a lighter surface. The only real shadow in
+     the system is on toasts. */
+  --shadow-toast: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+  /* === LAYERS === */
+  --z-dropdown: 100;
+  --z-tooltip: 200;
+  --z-side-panel: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
