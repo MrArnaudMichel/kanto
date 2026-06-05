@@ -1,0 +1,79 @@
+/**
+ * Global element styles — ported from kanto-ng `_base.scss`.
+ *
+ * Optional. Custom elements style themselves inside their shadow roots, so
+ * Kanto components render correctly without this file; it exists so the
+ * *application's own* markup (headings, links, page background) matches.
+ * Import `kanto-ds/tokens/index.css` instead if you only want the variables.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* The system's signature: everything cross-fades on theme change and hover,
+   fast enough to read as instant. Honours prefers-reduced-motion through
+   --duration-instant. */
+*,
+*::before,
+*::after {
+  transition:
+    background-color var(--duration-instant),
+    color var(--duration-instant);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--surface-page);
+  color: var(--text-body);
+  font: var(--font-normal-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h4,
+h6,
+p,
+a {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h4,
+h6 {
+  color: var(--text-muted);
+}
+
+h1 {
+  font: var(--font-title-h1);
+}
+h4 {
+  font: var(--font-title-h4);
+}
+h6 {
+  font: var(--font-title-h6);
+}
+
+a {
+  color: var(--color-primary-base);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+code,
+pre {
+  font: var(--font-code-regular);
+}
+
+/* Keyboard focus is always visible; pointer focus is not. */
+:focus-visible {
+  outline: var(--outline-width) solid var(--color-primary-base);
+  outline-offset: 2px;
+}

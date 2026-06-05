@@ -1,0 +1,13 @@
+/**
+ * Kanto — full stylesheet. Import this once, at the root of the app:
+ *
+ *     import 'kanto-ds/styles.css';
+ *
+ * Includes the webfonts, the token layer and the global element styles. For a
+ * narrower footprint, import `kanto-ds/tokens/index.css` instead and skip
+ * `fonts.css` / `base.css`.
+ */
+
+@import './tokens/fonts.css';
+@import './tokens/index.css';
+@import './tokens/base.css';

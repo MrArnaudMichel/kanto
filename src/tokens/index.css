@@ -1,0 +1,12 @@
+/**
+ * Token layer only — custom properties, no global element styles.
+ *
+ * Use this when Kanto has to coexist with another design system's resets.
+ * Webfonts (`fonts.css`) and page-level styles (`base.css`) are opt-in.
+ */
+
+@import './colors.css';
+@import './theme-light.css';
+@import './typography.css';
+@import './spacing.css';
+@import './responsive.css';
