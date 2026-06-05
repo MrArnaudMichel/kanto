@@ -1,0 +1,105 @@
+/**
+ * @font-face declarations for the Kanto families.
+ *
+ * Optional: `typography.css` ships fallback stacks, so an app that cannot
+ * license Gilroy and Avenir Next can skip this file entirely.
+ *
+ * See `../assets/fonts/README.md` for the licence terms.
+ */
+
+/* === GILROY — display / titles === */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../assets/fonts/gilroy/Gilroy-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../assets/fonts/gilroy/Gilroy-RegularItalic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../assets/fonts/gilroy/Gilroy-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../assets/fonts/gilroy/Gilroy-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../assets/fonts/gilroy/Gilroy-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('../assets/fonts/gilroy/Gilroy-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* === AVENIR NEXT CYR — body / UI === */
+@font-face {
+  font-family: 'Avenir Next';
+  src: url('../assets/fonts/avenir_next/AvenirNextCyr-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next';
+  src: url('../assets/fonts/avenir_next/AvenirNextCyr-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next';
+  src: url('../assets/fonts/avenir_next/AvenirNextCyr-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next';
+  src: url('../assets/fonts/avenir_next/AvenirNextCyr-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next';
+  src: url('../assets/fonts/avenir_next/AvenirNextCyr-Demi.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next';
+  src: url('../assets/fonts/avenir_next/AvenirNextCyr-DemiItalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* === SOURCE CODE PRO — code === */
+@font-face {
+  font-family: 'Source Code Pro';
+  src: url('../assets/fonts/source_code_pro/SourceCodePro-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
