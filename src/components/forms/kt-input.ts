@@ -10,6 +10,14 @@ import {
   setValidity,
   type UsableInternals,
 } from '../../internal/form-control.js';
+import {
+  DEFAULT_COUNTRIES,
+  digitsOnly,
+  flagEmoji,
+  formatNationalNumber,
+  searchCountries,
+  type KtCountry,
+} from '../../internal/countries.js';
 import '../core/kt-icon.js';
 
 export type KtInputSize = 'small' | 'medium' | 'large';
@@ -159,6 +167,106 @@ export class KtInput extends KtElement {
       .error-icon {
         color: var(--color-danger-base);
       }
+
+      /* === PHONE MODE === */
+      .country {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        gap: var(--gap-element);
+        height: 100%;
+        margin-right: var(--button-padding-x);
+        padding: 0 var(--button-padding-x) 0 0;
+        color: var(--text-body);
+        background: none;
+        border: none;
+        border-right: var(--border-width) solid var(--color-dark-16);
+        cursor: pointer;
+        font: var(--font-normal-regular);
+        user-select: none;
+      }
+
+      .country:focus-visible {
+        outline: var(--outline-width) solid var(--color-primary-base);
+        outline-offset: -2px;
+      }
+
+      .chevron {
+        display: inline-flex;
+        transform-origin: 50% 50%;
+        transition: transform var(--duration-fast) ease-in-out;
+      }
+      .chevron.open {
+        transform: scaleY(-1);
+      }
+
+      .dial {
+        color: var(--text-muted);
+      }
+
+      .country-panel {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        z-index: var(--z-dropdown);
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-element);
+        width: 280px;
+        max-height: 225px;
+        padding: var(--padding-expand);
+        background: var(--color-dark-20);
+        border-radius: var(--radius-input);
+      }
+
+      .country-search {
+        width: 100%;
+        height: var(--button-height-small);
+        padding: 0 12px;
+        color: var(--text-body);
+        font: var(--font-normal-regular);
+        background: var(--color-dark-12);
+        border: none;
+        border-radius: var(--radius-input);
+        outline: none;
+      }
+
+      .country-list {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: var(--gap-element);
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        list-style: none;
+        scrollbar-width: thin;
+      }
+
+      .country-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: var(--radius-input);
+        cursor: pointer;
+        font: var(--font-normal-regular);
+      }
+      .country-item:hover,
+      .country-item[aria-selected='true'] {
+        background: var(--color-dark-23);
+      }
+
+      .country-name {
+        flex: 1;
+      }
+
+      .country-empty {
+        padding: 8px 12px;
+        color: var(--text-muted);
+        font: var(--font-normal-small);
+      }
     `,
   ];
 
@@ -170,6 +278,12 @@ export class KtInput extends KtElement {
   /** True while a `password` field is showing its contents. */
   @state()
   private passwordVisible = false;
+
+  @state()
+  private countryOpen = false;
+
+  @state()
+  private countryQuery = '';
 
   /** The field's value. The `value` attribute seeds it and acts as the reset value. */
   @property({ type: String })
@@ -220,18 +334,34 @@ export class KtInput extends KtElement {
   @property({ type: Number })
   maxlength?: number;
 
+  /**
+   * Countries offered in phone mode. Replace it to widen the list.
+   */
+  @property({ attribute: false })
+  countries: readonly KtCountry[] = DEFAULT_COUNTRIES;
+
+  /** Selected country in phone mode, as an ISO 3166-1 alpha-2 code. */
+  @property({ type: String })
+  country = 'fr';
+
   /** The value the enclosing form resets to. */
   private defaultValue = '';
 
   override connectedCallback(): void {
     super.connectedCallback();
+    document.addEventListener('pointerdown', this.closeCountryPanel);
     this.internals ??= attachFormInternals(this);
     this.defaultValue = this.value;
-    setFormValue(this.internals, this.value);
+    setFormValue(this.internals, this.formValue);
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
-    if (changed.has('value') || changed.has('required') || changed.has('error')) {
+    if (
+      changed.has('value') ||
+      changed.has('required') ||
+      changed.has('error') ||
+      changed.has('country')
+    ) {
       setFormValue(this.internals, this.value);
       this.refreshValidity();
     }
@@ -245,6 +375,11 @@ export class KtInput extends KtElement {
       { valueMissing: missing, customError: Boolean(this.error) },
       message,
     );
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    document.removeEventListener('pointerdown', this.closeCountryPanel);
   }
 
   /** Called by the platform when the enclosing form is reset. */
@@ -271,18 +406,126 @@ export class KtInput extends KtElement {
     this.input?.select();
   }
 
+  /** Phone mode: the country picker, digit-only storage and grouped display. */
+  private get isPhone(): boolean {
+    return this.type === 'tel';
+  }
+
+  private get selectedCountry(): KtCountry | undefined {
+    return this.countries.find((candidate) => candidate.id === this.country);
+  }
+
+  /**
+   * What the form receives. In phone mode that is the full international
+   * number — submitting national digits alone would throw away the country
+   * the user picked.
+   */
+  private get formValue(): string {
+    if (!this.isPhone || !this.value) return this.value;
+    return `+${this.selectedCountry?.dialCode ?? ''}${this.value}`;
+  }
+
+  private get displayValue(): string {
+    return this.isPhone ? formatNationalNumber(this.value, this.selectedCountry) : this.value;
+  }
+
   private get showClear(): boolean {
     return this.clearable && this.value.length > 0 && !this.readonly && !this.disabled;
   }
 
   private get resolvedType(): string {
+    // Phone mode renders grouped digits, which type="tel" would not accept
+    // back; the value is normalised to digits on input either way.
+    if (this.isPhone) return 'text';
     if (this.type !== 'password') return this.type;
     return this.passwordVisible ? 'text' : 'password';
   }
 
   private onInput(event: Event): void {
-    this.value = (event.target as HTMLInputElement).value;
+    const raw = (event.target as HTMLInputElement).value;
+    this.value = this.isPhone ? digitsOnly(raw) : raw;
     emit(this, 'kt-input', { value: this.value });
+  }
+
+  private toggleCountryPanel(): void {
+    this.countryOpen = !this.countryOpen;
+    this.countryQuery = '';
+  }
+
+  private selectCountry(country: KtCountry): void {
+    this.country = country.id;
+    this.countryOpen = false;
+    this.countryQuery = '';
+    emit(this, 'kt-country-change', { country: country.id, dialCode: country.dialCode });
+    this.focus();
+  }
+
+  private closeCountryPanel = (event: Event): void => {
+    if (event.composedPath().includes(this)) return;
+    this.countryOpen = false;
+  };
+
+  private onCountryKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.countryOpen) {
+      event.stopPropagation();
+      this.countryOpen = false;
+      this.shadowRoot?.querySelector<HTMLButtonElement>('.country')?.focus();
+    }
+  }
+
+  private renderCountryPicker(): TemplateResult {
+    const selected = this.selectedCountry;
+    const matches = searchCountries(this.countries, this.countryQuery);
+
+    return html`<button
+        type="button"
+        class="country"
+        aria-haspopup="listbox"
+        aria-expanded=${this.countryOpen ? 'true' : 'false'}
+        aria-label=${`Indicatif pays : ${selected?.name ?? 'aucun'}`}
+        ?disabled=${this.disabled || this.readonly}
+        @click=${this.toggleCountryPanel}
+      >
+        <span aria-hidden="true">${flagEmoji(this.country)}</span>
+        <span class="dial">+${selected?.dialCode ?? ''}</span>
+        <span class=${classMap({ chevron: true, open: this.countryOpen })}>
+          <kt-icon name="chevron-down" size="14"></kt-icon>
+        </span>
+      </button>
+      ${
+        this.countryOpen
+          ? html`<div class="country-panel" @pointerdown=${(e: Event) => e.stopPropagation()}>
+              <input
+                class="country-search"
+                placeholder="Rechercher un pays ou indicatif"
+                .value=${this.countryQuery}
+                aria-label="Rechercher un pays ou indicatif"
+                @input=${(e: Event) => {
+                  this.countryQuery = (e.target as HTMLInputElement).value;
+                }}
+              />
+              <ul class="country-list" role="listbox">
+                ${
+                  matches.length === 0
+                    ? html`<li class="country-empty">Aucun pays trouvé</li>`
+                    : matches.map(
+                        (candidate) =>
+                          html`<li
+                            class="country-item"
+                            role="option"
+                            aria-selected=${candidate.id === this.country ? 'true' : 'false'}
+                            @click=${() => this.selectCountry(candidate)}
+                          >
+                            <span aria-hidden="true">${flagEmoji(candidate.id)}</span>
+                            <span class="country-name">${candidate.name}</span>
+                            <span class="dial">+${candidate.dialCode}</span>
+                          </li>`,
+                      )
+                }
+              </ul>
+            </div>`
+          : nothing
+      }`;
   }
 
   private onChange(event: Event): void {
@@ -325,14 +568,18 @@ export class KtInput extends KtElement {
         disabled: this.disabled,
       })}
       @pointerdown=${this.onFieldPointerDown}
+      @keydown=${this.onCountryKeyDown}
     >
+      ${this.isPhone ? this.renderCountryPicker() : nothing}
+
       <input
         part="control"
         type=${this.resolvedType}
         name=${this.name || nothing}
-        .value=${live(this.value)}
-        placeholder=${this.placeholder || nothing}
+        .value=${live(this.displayValue)}
+        placeholder=${this.placeholder || this.selectedCountry?.format || nothing}
         autocomplete=${this.autocomplete || nothing}
+        inputmode=${this.isPhone ? 'tel' : nothing}
         maxlength=${this.maxlength ?? nothing}
         aria-label=${this.label || nothing}
         aria-invalid=${this.error ? 'true' : nothing}
@@ -348,50 +595,52 @@ export class KtInput extends KtElement {
         hasActions
           ? html`<div part="actions" class="actions">
               ${
-              this.type === 'password'
-                ? html`<button
-                    type="button"
-                    class="icon-button"
-                    tabindex="-1"
-                    aria-label=${
-                    this.passwordVisible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
-                  }
-                    @click=${this.togglePassword}
-                  >
-                    <kt-icon
-                      name=${this.passwordVisible ? 'eye-off' : 'eye'}
-                      size=${ICON_SIZE}
-                    ></kt-icon>
-                  </button>`
-                : nothing
-            }
+                this.type === 'password'
+                  ? html`<button
+                      type="button"
+                      class="icon-button"
+                      tabindex="-1"
+                      aria-label=${
+                        this.passwordVisible
+                          ? 'Masquer le mot de passe'
+                          : 'Afficher le mot de passe'
+                      }
+                      @click=${this.togglePassword}
+                    >
+                      <kt-icon
+                        name=${this.passwordVisible ? 'eye-off' : 'eye'}
+                        size=${ICON_SIZE}
+                      ></kt-icon>
+                    </button>`
+                  : nothing
+              }
               ${
-              this.icon
-                ? html`<span class="adornment">
-                    <kt-icon name=${this.icon} size=${ICON_SIZE}></kt-icon>
-                  </span>`
-                : nothing
-            }
+                this.icon
+                  ? html`<span class="adornment">
+                      <kt-icon name=${this.icon} size=${ICON_SIZE}></kt-icon>
+                    </span>`
+                  : nothing
+              }
               ${
-              this.error
-                ? html`<span class="adornment error-icon" title=${this.error}>
-                    <kt-icon name="circle-alert" size=${ICON_SIZE} label=${this.error}></kt-icon>
-                  </span>`
-                : nothing
-            }
+                this.error
+                  ? html`<span class="adornment error-icon" title=${this.error}>
+                      <kt-icon name="circle-alert" size=${ICON_SIZE} label=${this.error}></kt-icon>
+                    </span>`
+                  : nothing
+              }
               ${
-              this.showClear
-                ? html`<button
-                    type="button"
-                    class="icon-button clear"
-                    tabindex="-1"
-                    aria-label="Effacer"
-                    @click=${this.clear}
-                  >
-                    <kt-icon name="x" size=${ICON_SIZE}></kt-icon>
-                  </button>`
-                : nothing
-            }
+                this.showClear
+                  ? html`<button
+                      type="button"
+                      class="icon-button clear"
+                      tabindex="-1"
+                      aria-label="Effacer"
+                      @click=${this.clear}
+                    >
+                      <kt-icon name="x" size=${ICON_SIZE}></kt-icon>
+                    </button>`
+                  : nothing
+              }
             </div>`
           : nothing
       }
