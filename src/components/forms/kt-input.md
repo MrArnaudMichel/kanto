@@ -1,0 +1,101 @@
+# `<kt-input>`
+
+A single-line text field.
+
+Kanto fields are borderless: a fill on `--color-dark-12` that gains a 2px
+**outline** — grey on hover, primary on focus, danger on error. An outline sits
+outside the box, so none of those states reflow the layout.
+
+```html
+<kt-input placeholder="Rechercher partout..." icon="search"></kt-input>
+<kt-input type="password" name="password"></kt-input>
+<kt-input error="Adresse invalide" value="pas-une-adresse"></kt-input>
+<kt-input size="small" placeholder="Filtrer"></kt-input>
+```
+
+## Forms
+
+`<kt-input>` is a form-associated custom element. It serialises into `FormData`
+under its `name`, resets with the form, and reports validity like a native
+input — no hidden mirror input, no manual wiring.
+
+```html
+<form>
+  <kt-input name="email" type="email" required></kt-input>
+  <kt-button type="submit">Envoyer</kt-button>
+</form>
+```
+
+```js
+new FormData(form).get('email'); // the field's value
+```
+
+## Reading the value
+
+`value` is a property, and a `value` attribute seeds it and becomes the reset
+value. Listen for `kt-change` for a committed value, `kt-input` for every
+keystroke:
+
+```js
+input.addEventListener('kt-change', (e) => console.log(e.detail.value));
+```
+
+The inner `change` event is stopped at the boundary rather than allowed to leak
+out retargeted and untyped.
+
+## Password and clear
+
+`type="password"` adds a reveal toggle. Any non-empty field shows a clear
+button, which rotates 90° on hover; set `clearable="false"` to suppress it.
+Both are `tabindex="-1"` — they are conveniences for the mouse, and putting
+them in the tab order would double the number of stops in a form.
+
+## Labelling
+
+Wrap the field in `<kt-label-input>`, or give it a `label` when there is no
+visible one:
+
+```html
+<kt-label-input label="Adresse e-mail" required>
+  <kt-input name="email" type="email" required></kt-input>
+</kt-label-input>
+
+<kt-input label="Rechercher" icon="search"></kt-input>
+```
+
+## API
+
+| Property       | Attribute      | Type                             | Default    |
+| -------------- | -------------- | -------------------------------- | ---------- |
+| `value`        | `value`        | `string`                         | `''`       |
+| `name`         | `name`         | `string`                         | `''`       |
+| `type`         | `type`         | `string`                         | `'text'`   |
+| `placeholder`  | `placeholder`  | `string`                         | `''`       |
+| `size`         | `size`         | `'small' \| 'medium' \| 'large'` | `'medium'` |
+| `disabled`     | `disabled`     | `boolean`                        | `false`    |
+| `readonly`     | `readonly`     | `boolean`                        | `false`    |
+| `required`     | `required`     | `boolean`                        | `false`    |
+| `icon`         | `icon`         | `string`                         | `''`       |
+| `error`        | `error`        | `string`                         | `''`       |
+| `clearable`    | `clearable`    | `boolean`                        | `true`     |
+| `label`        | `label`        | `string`                         | `''`       |
+| `autocomplete` | `autocomplete` | `string`                         | `''`       |
+| `maxlength`    | `maxlength`    | `number`                         | —          |
+
+| Method     | Description                  |
+| ---------- | ---------------------------- |
+| `focus()`  | Focuses the inner input      |
+| `blur()`   | Blurs it                     |
+| `select()` | Selects the field's contents |
+
+| Event       | Detail              | Fired when                   |
+| ----------- | ------------------- | ---------------------------- |
+| `kt-input`  | `{ value: string }` | On every keystroke           |
+| `kt-change` | `{ value: string }` | On commit (blur or Enter)    |
+| `kt-clear`  | —                   | The clear button was pressed |
+
+| Part      | Description           |
+| --------- | --------------------- |
+| `base`    | The field container   |
+| `control` | The native `<input>`  |
+| `actions` | The trailing icon row |
