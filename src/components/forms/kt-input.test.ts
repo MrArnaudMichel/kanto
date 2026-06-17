@@ -119,3 +119,95 @@ describe('kt-input', () => {
     expect(field(el).classList.contains('large')).toBe(true);
   });
 });
+
+describe('kt-input in phone mode', () => {
+  const picker = (el: KtInput) => el.shadowRoot!.querySelector<HTMLButtonElement>('.country')!;
+  const options = (el: KtInput) => [
+    ...el.shadowRoot!.querySelectorAll<HTMLElement>('.country-item'),
+  ];
+
+  it('shows the country picker only for type="tel"', async () => {
+    const text = await fixture<KtInput>('<kt-input></kt-input>');
+    expect(text.shadowRoot!.querySelector('.country')).toBeNull();
+
+    const phone = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+    expect(picker(phone).textContent).toContain('+33');
+  });
+
+  it('no longer guesses phone mode from the placeholder or the name', async () => {
+    const el = await fixture<KtInput>(
+      '<kt-input name="telephone" placeholder="Téléphone"></kt-input>',
+    );
+    expect(el.shadowRoot!.querySelector('.country')).toBeNull();
+  });
+
+  it('stores digits and displays them grouped', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+    await type(el, '06 12-34');
+
+    expect(el.value).toBe('061234');
+    expect(control(el).value).toBe('0 61 23 4');
+    expect(control(el).getAttribute('inputmode')).toBe('tel');
+  });
+
+  it('falls back to the country format as placeholder', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+    expect(control(el).getAttribute('placeholder')).toBe('1 23 45 67 89');
+  });
+
+  it('opens, searches and picks a country', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+    const changed = vi.fn();
+    el.addEventListener('kt-country-change', changed);
+
+    picker(el).click();
+    await settle(el);
+    expect(options(el).length).toBeGreaterThan(1);
+
+    const search = el.shadowRoot!.querySelector<HTMLInputElement>('.country-search')!;
+    search.value = 'suis';
+    search.dispatchEvent(new Event('input', { bubbles: true }));
+    await settle(el);
+    expect(options(el)).toHaveLength(1);
+
+    options(el)[0]!.click();
+    await settle(el);
+
+    expect(el.country).toBe('ch');
+    expect(picker(el).textContent).toContain('+41');
+    expect(el.shadowRoot!.querySelector('.country-panel')).toBeNull();
+    expect(changed).toHaveBeenCalledOnce();
+  });
+
+  it('says so when the search matches nothing', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+    picker(el).click();
+    await settle(el);
+
+    const search = el.shadowRoot!.querySelector<HTMLInputElement>('.country-search')!;
+    search.value = 'atlantide';
+    search.dispatchEvent(new Event('input', { bubbles: true }));
+    await settle(el);
+
+    expect(options(el)).toHaveLength(0);
+    expect(el.shadowRoot!.querySelector('.country-empty')!.textContent).toContain('Aucun pays');
+  });
+
+  it('closes the panel on Escape and on an outside click', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+
+    picker(el).click();
+    await settle(el);
+    el.shadowRoot!.querySelector('.field')!.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+    );
+    await settle(el);
+    expect(el.shadowRoot!.querySelector('.country-panel')).toBeNull();
+
+    picker(el).click();
+    await settle(el);
+    document.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+    await settle(el);
+    expect(el.shadowRoot!.querySelector('.country-panel')).toBeNull();
+  });
+});
