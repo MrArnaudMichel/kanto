@@ -50,6 +50,30 @@ button, which rotates 90° on hover; set `clearable="false"` to suppress it.
 Both are `tabindex="-1"` — they are conveniences for the mouse, and putting
 them in the tab order would double the number of stops in a form.
 
+## Phone mode
+
+`type="tel"` adds a country picker: flag, dial code, and a searchable panel.
+
+```html
+<kt-input type="tel" name="phone" country="be"></kt-input>
+```
+
+`value` holds the **national digits only** — `612345678` — and the field
+displays them grouped (`6 12 34 56 78`, pairs after the first digit for France,
+threes elsewhere). What the _form_ receives is the full international number,
+`+33612345678`: submitting national digits without the country would throw away
+the thing the user just picked.
+
+Six countries ship by default. Pass your own list for a wider audience:
+
+```js
+input.countries = [{ id: 'ca', name: 'Canada', dialCode: '1', format: '123-456-7890' }, ...];
+```
+
+Phone mode is now reached **only** through `type="tel"`. The React port also
+sniffed the placeholder, the name and the icon for `/tel|phone/`, which turned
+any field named `telephone_verifie` into a country picker.
+
 ## Labelling
 
 Wrap the field in `<kt-label-input>`, or give it a `label` when there is no
