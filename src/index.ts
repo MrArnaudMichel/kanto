@@ -28,6 +28,36 @@ export { KtTextarea } from './components/forms/kt-textarea.js';
 export { KtToggle } from './components/forms/kt-toggle.js';
 export type { KtToggleSize } from './components/forms/kt-toggle.js';
 
+// === NAVIGATION ===
+export { KtBreadcrumb } from './components/navigation/kt-breadcrumb.js';
+export type { KtBreadcrumbItem } from './components/navigation/kt-breadcrumb.js';
+export { KtSegmentedControl } from './components/navigation/kt-segmented-control.js';
+export type {
+  KtSegmentedOption,
+  KtSegmentedSize,
+} from './components/navigation/kt-segmented-control.js';
+export { KtSubMenuNavigation } from './components/navigation/kt-sub-menu-navigation.js';
+export type { KtNavItem, KtNavSection } from './components/navigation/kt-sub-menu-navigation.js';
+export { KtToggleButton } from './components/navigation/kt-toggle-button.js';
+export type {
+  KtToggleButtonSize,
+  KtToggleButtonVariant,
+} from './components/navigation/kt-toggle-button.js';
+export { KtToggleButtonGroup } from './components/navigation/kt-toggle-button-group.js';
+
+// === FEEDBACK ===
+export { KtProgressBar } from './components/feedback/kt-progress-bar.js';
+export type { KtProgressSize, KtProgressVariant } from './components/feedback/kt-progress-bar.js';
+export { KtSkeleton } from './components/feedback/kt-skeleton.js';
+export type { KtSkeletonVariant } from './components/feedback/kt-skeleton.js';
+export { KtToast } from './components/feedback/kt-toast.js';
+export type { KtToastVariant } from './components/feedback/kt-toast.js';
+export { KtToastContainer } from './components/feedback/kt-toast-container.js';
+export type { KtToastOptions, KtToastPosition } from './components/feedback/kt-toast-container.js';
+export { toaster } from './components/feedback/toaster.js';
+export { KtTooltip } from './components/feedback/kt-tooltip.js';
+export type { KtTooltipPlacement } from './components/feedback/kt-tooltip.js';
+
 // === SHARED TYPES ===
 export type { KtOption } from './internal/listbox.js';
 export type { KtCountry } from './internal/countries.js';
