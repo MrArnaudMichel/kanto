@@ -58,6 +58,13 @@ export { toaster } from './components/feedback/toaster.js';
 export { KtTooltip } from './components/feedback/kt-tooltip.js';
 export type { KtTooltipPlacement } from './components/feedback/kt-tooltip.js';
 
+// === OVERLAYS ===
+export { KtConfirmDialog } from './components/overlays/kt-confirm-dialog.js';
+export type { KtConfirmVariant } from './components/overlays/kt-confirm-dialog.js';
+export { KtDropdown } from './components/overlays/kt-dropdown.js';
+export type { KtDropdownPlacement } from './components/overlays/kt-dropdown.js';
+export { KtSidePanel } from './components/overlays/kt-side-panel.js';
+
 // === SHARED TYPES ===
 export type { KtOption } from './internal/listbox.js';
 export type { KtCountry } from './internal/countries.js';
