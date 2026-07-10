@@ -65,6 +65,17 @@ export { KtDropdown } from './components/overlays/kt-dropdown.js';
 export type { KtDropdownPlacement } from './components/overlays/kt-dropdown.js';
 export { KtSidePanel } from './components/overlays/kt-side-panel.js';
 
+// === DATA ===
+export { KtPagination } from './components/data/kt-pagination.js';
+export { KtTable } from './components/data/kt-table.js';
+export type {
+  KtCellRenderer,
+  KtSortDirection,
+  KtSortState,
+  KtTableColumn,
+  KtTableRow,
+} from './components/data/kt-table.js';
+
 // === SHARED TYPES ===
 export type { KtOption } from './internal/listbox.js';
 export type { KtCountry } from './internal/countries.js';
