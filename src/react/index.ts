@@ -1,0 +1,261 @@
+/**
+ * React wrappers for the Kanto elements.
+ *
+ * React 19 can set custom-element properties and listen for custom events on
+ * its own, so these wrappers are not strictly required. They are here for what
+ * plain JSX still cannot give you: typed props with autocompletion, typed
+ * event handlers as `onKtChange` rather than `useEffect` plus
+ * `addEventListener`, and refs typed as the element rather than `HTMLElement`.
+ *
+ *     import { KtButton, KtInput } from 'kanto/react';
+ *     import 'kanto/styles.css';
+ *
+ *     <KtInput placeholder="Rechercher" onKtChange={(e) => setQuery(e.detail.value)} />
+ *
+ * React is a peer dependency: the package works without it.
+ */
+import * as React from 'react';
+import { createComponent, type EventName } from '@lit/react';
+
+import { KtButton as KtButtonElement } from '../components/core/kt-button.js';
+import { KtCard as KtCardElement } from '../components/core/kt-card.js';
+import { KtChip as KtChipElement } from '../components/core/kt-chip.js';
+import { KtIcon as KtIconElement } from '../components/core/kt-icon.js';
+import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop.js';
+import { KtInput as KtInputElement } from '../components/forms/kt-input.js';
+import { KtInputMenu as KtInputMenuElement } from '../components/forms/kt-input-menu.js';
+import { KtLabelInput as KtLabelInputElement } from '../components/forms/kt-label-input.js';
+import { KtSelect as KtSelectElement } from '../components/forms/kt-select.js';
+import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea.js';
+import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle.js';
+import { KtBreadcrumb as KtBreadcrumbElement } from '../components/navigation/kt-breadcrumb.js';
+import { KtSegmentedControl as KtSegmentedControlElement } from '../components/navigation/kt-segmented-control.js';
+import { KtSubMenuNavigation as KtSubMenuNavigationElement } from '../components/navigation/kt-sub-menu-navigation.js';
+import { KtToggleButton as KtToggleButtonElement } from '../components/navigation/kt-toggle-button.js';
+import { KtToggleButtonGroup as KtToggleButtonGroupElement } from '../components/navigation/kt-toggle-button-group.js';
+import { KtProgressBar as KtProgressBarElement } from '../components/feedback/kt-progress-bar.js';
+import { KtSkeleton as KtSkeletonElement } from '../components/feedback/kt-skeleton.js';
+import { KtToast as KtToastElement } from '../components/feedback/kt-toast.js';
+import { KtToastContainer as KtToastContainerElement } from '../components/feedback/kt-toast-container.js';
+import { KtTooltip as KtTooltipElement } from '../components/feedback/kt-tooltip.js';
+import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlays/kt-confirm-dialog.js';
+import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown.js';
+import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel.js';
+import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination.js';
+import { KtTable as KtTableElement } from '../components/data/kt-table.js';
+
+/** Narrows an event name to the detail its element actually dispatches. */
+type Kt<T> = EventName<CustomEvent<T>>;
+
+// === CORE ===
+export const KtButton = createComponent({
+  tagName: 'kt-button',
+  elementClass: KtButtonElement,
+  react: React,
+});
+
+export const KtCard = createComponent({
+  tagName: 'kt-card',
+  elementClass: KtCardElement,
+  react: React,
+  events: { onKtCardClick: 'kt-card-click' as Kt<never> },
+});
+
+export const KtChip = createComponent({
+  tagName: 'kt-chip',
+  elementClass: KtChipElement,
+  react: React,
+  events: { onKtChipClick: 'kt-chip-click' as Kt<never> },
+});
+
+export const KtIcon = createComponent({
+  tagName: 'kt-icon',
+  elementClass: KtIconElement,
+  react: React,
+});
+
+// === FORMS ===
+export const KtInput = createComponent({
+  tagName: 'kt-input',
+  elementClass: KtInputElement,
+  react: React,
+  events: {
+    onKtInput: 'kt-input' as Kt<{ value: string }>,
+    onKtChange: 'kt-change' as Kt<{ value: string }>,
+    onKtClear: 'kt-clear' as Kt<never>,
+    onKtCountryChange: 'kt-country-change' as Kt<{ country: string; dialCode: string }>,
+  },
+});
+
+export const KtTextarea = createComponent({
+  tagName: 'kt-textarea',
+  elementClass: KtTextareaElement,
+  react: React,
+  events: {
+    onKtInput: 'kt-input' as Kt<{ value: string }>,
+    onKtChange: 'kt-change' as Kt<{ value: string }>,
+  },
+});
+
+export const KtLabelInput = createComponent({
+  tagName: 'kt-label-input',
+  elementClass: KtLabelInputElement,
+  react: React,
+});
+
+export const KtToggle = createComponent({
+  tagName: 'kt-toggle',
+  elementClass: KtToggleElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ checked: boolean }> },
+});
+
+export const KtSelect = createComponent({
+  tagName: 'kt-select',
+  elementClass: KtSelectElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | number | null }> },
+});
+
+export const KtInputMenu = createComponent({
+  tagName: 'kt-input-menu',
+  elementClass: KtInputMenuElement,
+  react: React,
+  events: {
+    onKtChange: 'kt-change' as Kt<{ value: string | number | null }>,
+    onKtFilter: 'kt-filter' as Kt<{ query: string }>,
+  },
+});
+
+export const KtDragDrop = createComponent({
+  tagName: 'kt-drag-drop',
+  elementClass: KtDragDropElement,
+  react: React,
+  events: {
+    onKtFilesChange: 'kt-files-change' as Kt<{ files: File[] }>,
+    onKtFilesRejected: 'kt-files-rejected' as Kt<{ files: File[]; reason: 'type' | 'size' }>,
+  },
+});
+
+// === NAVIGATION ===
+export const KtBreadcrumb = createComponent({
+  tagName: 'kt-breadcrumb',
+  elementClass: KtBreadcrumbElement,
+  react: React,
+  events: { onKtNavigate: 'kt-navigate' as Kt<{ index: number }> },
+});
+
+export const KtSubMenuNavigation = createComponent({
+  tagName: 'kt-sub-menu-navigation',
+  elementClass: KtSubMenuNavigationElement,
+  react: React,
+  events: { onKtNavigate: 'kt-navigate' as Kt<unknown> },
+});
+
+export const KtSegmentedControl = createComponent({
+  tagName: 'kt-segmented-control',
+  elementClass: KtSegmentedControlElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | number }> },
+});
+
+export const KtToggleButton = createComponent({
+  tagName: 'kt-toggle-button',
+  elementClass: KtToggleButtonElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ selected: boolean; value: string }> },
+});
+
+export const KtToggleButtonGroup = createComponent({
+  tagName: 'kt-toggle-button-group',
+  elementClass: KtToggleButtonGroupElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | string[] | null }> },
+});
+
+// === FEEDBACK ===
+export const KtProgressBar = createComponent({
+  tagName: 'kt-progress-bar',
+  elementClass: KtProgressBarElement,
+  react: React,
+});
+
+export const KtSkeleton = createComponent({
+  tagName: 'kt-skeleton',
+  elementClass: KtSkeletonElement,
+  react: React,
+});
+
+export const KtTooltip = createComponent({
+  tagName: 'kt-tooltip',
+  elementClass: KtTooltipElement,
+  react: React,
+});
+
+export const KtToast = createComponent({
+  tagName: 'kt-toast',
+  elementClass: KtToastElement,
+  react: React,
+  events: { onKtToastClose: 'kt-toast-close' as Kt<never> },
+});
+
+export const KtToastContainer = createComponent({
+  tagName: 'kt-toast-container',
+  elementClass: KtToastContainerElement,
+  react: React,
+});
+
+// === OVERLAYS ===
+export const KtDropdown = createComponent({
+  tagName: 'kt-dropdown',
+  elementClass: KtDropdownElement,
+  react: React,
+  events: {
+    onKtSelect: 'kt-select' as Kt<{ value: string | number }>,
+    onKtOpen: 'kt-open' as Kt<never>,
+    onKtClose: 'kt-close' as Kt<never>,
+  },
+});
+
+export const KtSidePanel = createComponent({
+  tagName: 'kt-side-panel',
+  elementClass: KtSidePanelElement,
+  react: React,
+  events: { onKtClose: 'kt-close' as Kt<never> },
+});
+
+export const KtConfirmDialog = createComponent({
+  tagName: 'kt-confirm-dialog',
+  elementClass: KtConfirmDialogElement,
+  react: React,
+  events: {
+    onKtConfirm: 'kt-confirm' as Kt<never>,
+    onKtCancel: 'kt-cancel' as Kt<never>,
+  },
+});
+
+// === DATA ===
+export const KtTable = createComponent({
+  tagName: 'kt-table',
+  elementClass: KtTableElement,
+  react: React,
+  events: {
+    onKtSortChange: 'kt-sort-change' as Kt<{
+      key: string | null;
+      direction: 'asc' | 'desc' | null;
+    }>,
+    onKtSelectionChange: 'kt-selection-change' as Kt<{ selected: unknown[] }>,
+    onKtRowClick: 'kt-row-click' as Kt<{ index: number }>,
+    onKtPageChange: 'kt-page-change' as Kt<{ page: number }>,
+  },
+});
+
+export const KtPagination = createComponent({
+  tagName: 'kt-pagination',
+  elementClass: KtPaginationElement,
+  react: React,
+  events: { onKtPageChange: 'kt-page-change' as Kt<{ page: number }> },
+});
+
+// The imperative toaster needs no wrapper.
+export { toaster } from '../components/feedback/toaster.js';
