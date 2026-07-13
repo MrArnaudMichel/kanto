@@ -1,0 +1,104 @@
+/* The documentation shell itself. Everything inside a page is Kanto. */
+
+body {
+  margin: 0;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-card);
+  padding: var(--padding-card);
+  background: var(--color-dark-8);
+  border-right: var(--border-width) solid var(--border-subtle);
+}
+
+.wordmark {
+  font: 600 20px/1 var(--font-family-display);
+  color: var(--text-body);
+  letter-spacing: 0.5px;
+}
+
+.wordmark span {
+  color: var(--color-primary-base);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-button);
+}
+
+main {
+  min-width: 0;
+  padding: 32px;
+  overflow-x: hidden;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.page-header p {
+  max-width: 68ch;
+  color: var(--text-muted);
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+section > h6 {
+  margin-bottom: 14px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.overline {
+  color: var(--color-text-500);
+  font: var(--font-title-overline);
+  letter-spacing: var(--letter-spacing-overline);
+  text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: var(--border-width) solid var(--border-subtle);
+  }
+
+  main {
+    padding: 20px;
+  }
+}
