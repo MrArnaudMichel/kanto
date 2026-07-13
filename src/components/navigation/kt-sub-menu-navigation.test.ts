@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { fixture, settle } from '../../test/fixture.js';
 import './kt-sub-menu-navigation.js';
 import type { KtNavSection, KtSubMenuNavigation } from './kt-sub-menu-navigation.js';
@@ -55,13 +55,16 @@ describe('kt-sub-menu-navigation', () => {
   });
 
   it('lets a router intercept a click', () => {
-    const listener = vi.fn((e: Event) => e.preventDefault());
-    el.addEventListener('kt-navigate', listener);
+    const seen: { item: { href?: string } }[] = [];
+    el.addEventListener('kt-navigate', (e) => {
+      e.preventDefault();
+      seen.push((e as CustomEvent<{ item: { href?: string } }>).detail);
+    });
 
     const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
     links(el)[0]!.dispatchEvent(event);
 
-    expect(listener.mock.calls[0]![0].detail.item.href).toBe('/input');
+    expect(seen[0]!.item.href).toBe('/input');
     expect(event.defaultPrevented).toBe(true);
   });
 });

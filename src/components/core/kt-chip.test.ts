@@ -3,7 +3,7 @@ import { fixture, settle } from '../../test/fixture.js';
 import './kt-chip.js';
 import type { KtChip } from './kt-chip.js';
 
-const base = (el: KtChip) => el.shadowRoot!.querySelector('.chip')!;
+const base = (el: KtChip) => el.shadowRoot!.querySelector<HTMLElement>('.chip')!;
 
 describe('kt-chip', () => {
   it('is a pill tag by default', async () => {

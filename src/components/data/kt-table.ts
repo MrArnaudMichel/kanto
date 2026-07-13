@@ -34,6 +34,24 @@ export type KtCellRenderer = (row: KtTableRow, column: KtTableColumn) => unknown
  */
 const collator = new Intl.Collator('fr', { numeric: true, sensitivity: 'base' });
 
+/**
+ * A sortable string for any cell value.
+ *
+ * Objects get their JSON rather than "[object Object]", which at least sorts
+ * consistently instead of collapsing every object in the column to one key.
+ */
+function sortableText(value: unknown): string {
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') {
+    return String(value);
+  }
+  try {
+    return JSON.stringify(value) ?? '';
+  } catch {
+    return '';
+  }
+}
+
 /** A row's identity: `id`, else `uid`, else the row itself. */
 function rowKey(row: KtTableRow): unknown {
   return row['id'] ?? row['uid'] ?? row;
@@ -252,7 +270,7 @@ export class KtTable extends KtElement {
       if (rightEmpty) return -1;
 
       if (typeof left === 'number' && typeof right === 'number') return (left - right) * sign;
-      return collator.compare(String(left), String(right)) * sign;
+      return collator.compare(sortableText(left), sortableText(right)) * sign;
     });
   }
 
@@ -404,7 +422,7 @@ export class KtTable extends KtElement {
         ${this.columns.map((column) => {
           const rendered = this.renderCell?.(row, column);
           return html`<td part="cell" style=${styleMap({ textAlign: column.align ?? 'left' })}>
-            ${rendered === undefined ? (row[column.key] as unknown) : rendered}
+            ${rendered === undefined ? row[column.key] : rendered}
           </td>`;
         })}
       </tr>`;
