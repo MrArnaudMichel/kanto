@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "allowJs": false,
+    "paths": {}
+  },
+  /* Only the library: no demo site, no tests, no test helpers. */
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/test"]
+}

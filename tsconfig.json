@@ -23,12 +23,16 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "allowJs": false,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "dist",
-    "rootDir": "src"
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+
+    "paths": {
+      "kanto": ["./src/index.ts"],
+      "kanto/*": ["./src/*"]
+    }
   },
-  "include": ["src"],
-  "exclude": ["src/**/*.test.ts", "src/test"]
+  /* Everything, so the editor and ESLint understand every file in the repo.
+     The published build narrows this down in tsconfig.build.json. */
+  "include": ["src", "demo", "scripts", "*.ts", "*.js"]
 }
