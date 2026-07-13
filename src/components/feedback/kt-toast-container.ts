@@ -1,7 +1,8 @@
 import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '../../internal/kt-element.js';
-import { KtToast, type KtToastVariant } from './kt-toast.js';
+import type { KtToast, KtToastVariant } from './kt-toast.js';
+import './kt-toast.js';
 
 export type KtToastPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
