@@ -343,11 +343,11 @@ export class KtInputMenu extends KtElement {
                     part="option"
                     id=${this.optionId(index)}
                     class=${classMap({
-                  option: true,
-                  selected: option.id === this.value,
-                  active: index === this.activeIndex,
-                  disabled: Boolean(option.disabled),
-                })}
+                      option: true,
+                      selected: option.id === this.value,
+                      active: index === this.activeIndex,
+                      disabled: Boolean(option.disabled),
+                    })}
                     role="option"
                     aria-selected=${option.id === this.value ? 'true' : 'false'}
                     @click=${() => this.choose(option)}
