@@ -77,7 +77,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "node -e \"fs.rmSync(dist,{recursive:true,force:true})\""
+    "clean": "node -e \"fs.rmSync(dist,{recursive:true,force:true})\"",
+    "check:exports": "node scripts/check-exports.js"
   },
   "dependencies": {
     "@lit/react": "^1.0.8",
