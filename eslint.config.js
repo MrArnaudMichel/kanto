@@ -37,10 +37,19 @@ export default ts.config(
     ...ts.configs.disableTypeChecked,
   },
   {
-    // Build scripts run in Node, not the browser.
-    files: ['scripts/**'],
-    languageOptions: { globals: { console: 'readonly', process: 'readonly' } },
-    rules: { 'no-console': 'off' },
+    /* Node-side plumbing: build scripts reading untyped JSON, and this config
+       itself. Type-aware rules here would only ask for casts around
+       JSON.parse and around ESLint's own untyped presets, which prove
+       nothing. */
+    files: ['scripts/**', 'eslint.config.js'],
+    ...ts.configs.disableTypeChecked,
+    languageOptions: {
+      // Spread first: disableTypeChecked works by unsetting parserOptions,
+      // and replacing languageOptions outright would put them back.
+      ...ts.configs.disableTypeChecked.languageOptions,
+      globals: { console: 'readonly', process: 'readonly' },
+    },
+    rules: { ...ts.configs.disableTypeChecked.rules, 'no-console': 'off' },
   },
   prettier,
 );
