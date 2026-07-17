@@ -40,6 +40,7 @@ const box = (over: Partial<DOMRect> = {}): DOMRect =>
     x: 100,
     y: 100,
     toJSON: () => ({}),
+    ...over,
   }) as DOMRect;
 
 describe('openModal', () => {
@@ -111,7 +112,7 @@ describe('isBackdropClick', () => {
   });
 
   it('is false for an unlaid-out dialog, rather than dismissing on any click', () => {
-    const collapsed = fakeDialog({ box: { ...box(), width: 0, height: 0 } as DOMRect });
+    const collapsed = fakeDialog({ box: box({ width: 0, height: 0 }) });
     expect(isBackdropClick(collapsed, clickAt(0, 0, collapsed))).toBe(false);
   });
 });
