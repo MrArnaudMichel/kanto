@@ -21,8 +21,8 @@
   "type": "module",
   "sideEffects": [
     "*.css",
-    "./src/components/**/kt-*.ts",
-    "./dist/components/**"
+    "./dist/components/**",
+    "./dist/icons/defaults.js"
   ],
   "engines": {
     "node": ">=20"
@@ -78,7 +78,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "node -e \"fs.rmSync(dist,{recursive:true,force:true})\"",
-    "check:exports": "node scripts/check-exports.js"
+    "check:exports": "node scripts/check-exports.js",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports"
   },
   "dependencies": {
     "@lit/react": "^1.0.8",
