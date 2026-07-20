@@ -27,9 +27,9 @@ export interface KtBreadcrumbItem {
  * @example
  * ```js
  * trail.items = [
- *   { label: 'Accueil', href: '/' },
- *   { label: 'Entités', href: '/entites' },
- *   { label: 'Entité 4812' },
+ *   { label: 'Home', href: '/' },
+ *   { label: 'Entities', href: '/entities' },
+ *   { label: 'Entity 4812' },
  * ];
  * ```
  */
@@ -85,7 +85,7 @@ export class KtBreadcrumb extends KtElement {
 
   /** Accessible name for the navigation landmark. */
   @property({ type: String })
-  label = "Fil d'ariane";
+  label = 'Breadcrumb';
 
   private onSelect(event: MouseEvent, item: KtBreadcrumbItem, index: number): void {
     // Let modified clicks through: they open a new tab, which is the user

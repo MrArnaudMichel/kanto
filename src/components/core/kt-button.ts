@@ -42,9 +42,9 @@ const ICON_SIZE: Record<KtButtonSize, number> = { small: 16, medium: 20, large: 
  *
  * @example
  * ```html
- * <kt-button icon="plus">Nouvelle entité</kt-button>
- * <kt-button variant="secondary" icon="refresh-cw">Actualiser</kt-button>
- * <kt-button variant="danger">Supprimer</kt-button>
+ * <kt-button icon="plus">New entity</kt-button>
+ * <kt-button variant="secondary" icon="refresh-cw">Refresh</kt-button>
+ * <kt-button variant="danger">Delete</kt-button>
  * ```
  */
 export class KtButton extends KtElement {

@@ -47,9 +47,9 @@ const ICON_SIZE = 18;
  *
  * @example
  * ```html
- * <kt-input placeholder="Rechercher partout..." icon="search"></kt-input>
+ * <kt-input placeholder="Search everything..." icon="search"></kt-input>
  * <kt-input type="password" name="password"></kt-input>
- * <kt-input error="Adresse invalide" value="pas-une-adresse"></kt-input>
+ * <kt-input error="Invalid email address" value="not-an-address"></kt-input>
  * ```
  */
 export class KtInput extends KtElement {
@@ -342,7 +342,7 @@ export class KtInput extends KtElement {
 
   /** Selected country in phone mode, as an ISO 3166-1 alpha-2 code. */
   @property({ type: String })
-  country = 'fr';
+  country = 'us';
 
   /** The value the enclosing form resets to. */
   private defaultValue = '';
@@ -369,7 +369,7 @@ export class KtInput extends KtElement {
 
   private refreshValidity(): void {
     const missing = this.required && this.value.length === 0;
-    const message = this.error || (missing ? 'Ce champ est requis.' : '');
+    const message = this.error || (missing ? 'This field is required.' : '');
     setValidity(
       this.internals,
       { valueMissing: missing, customError: Boolean(this.error) },
@@ -482,7 +482,7 @@ export class KtInput extends KtElement {
         class="country"
         aria-haspopup="listbox"
         aria-expanded=${this.countryOpen ? 'true' : 'false'}
-        aria-label=${`Indicatif pays : ${selected?.name ?? 'aucun'}`}
+        aria-label=${`Country code: ${selected?.name ?? 'none'}`}
         ?disabled=${this.disabled || this.readonly}
         @click=${this.toggleCountryPanel}
       >
@@ -497,9 +497,9 @@ export class KtInput extends KtElement {
           ? html`<div class="country-panel" @pointerdown=${(e: Event) => e.stopPropagation()}>
               <input
                 class="country-search"
-                placeholder="Rechercher un pays ou indicatif"
+                placeholder="Search country or dial code"
                 .value=${this.countryQuery}
-                aria-label="Rechercher un pays ou indicatif"
+                aria-label="Search country or dial code"
                 @input=${(e: Event) => {
                   this.countryQuery = (e.target as HTMLInputElement).value;
                 }}
@@ -507,7 +507,7 @@ export class KtInput extends KtElement {
               <ul class="country-list" role="listbox">
                 ${
                   matches.length === 0
-                    ? html`<li class="country-empty">Aucun pays trouvé</li>`
+                    ? html`<li class="country-empty">No country found</li>`
                     : matches.map(
                         (candidate) =>
                           html`<li
@@ -600,11 +600,7 @@ export class KtInput extends KtElement {
                       type="button"
                       class="icon-button"
                       tabindex="-1"
-                      aria-label=${
-                        this.passwordVisible
-                          ? 'Masquer le mot de passe'
-                          : 'Afficher le mot de passe'
-                      }
+                      aria-label=${this.passwordVisible ? 'Hide password' : 'Show password'}
                       @click=${this.togglePassword}
                     >
                       <kt-icon
@@ -634,7 +630,7 @@ export class KtInput extends KtElement {
                       type="button"
                       class="icon-button clear"
                       tabindex="-1"
-                      aria-label="Effacer"
+                      aria-label="Clear"
                       @click=${this.clear}
                     >
                       <kt-icon name="x" size=${ICON_SIZE}></kt-icon>

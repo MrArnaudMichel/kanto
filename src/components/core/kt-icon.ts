@@ -35,7 +35,7 @@ function toSvgChild([tag, attrs]: IconNode[number]): SVGElement {
  * @example
  * ```html
  * <kt-icon name="search"></kt-icon>
- * <kt-icon name="trash-2" size="16" label="Supprimer"></kt-icon>
+ * <kt-icon name="trash-2" size="16" label="Delete"></kt-icon>
  * ```
  */
 export class KtIcon extends KtElement {

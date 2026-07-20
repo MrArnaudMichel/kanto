@@ -155,7 +155,7 @@ export class KtInputMenu extends KtElement {
   label = '';
 
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'Aucune option disponible';
+  emptyText = 'No options available';
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -303,7 +303,7 @@ export class KtInputMenu extends KtElement {
             ? html`<button
                 type="button"
                 class="icon-button clear"
-                aria-label="Effacer"
+                aria-label="Clear"
                 tabindex="-1"
                 @click=${this.clear}
               >
@@ -315,7 +315,7 @@ export class KtInputMenu extends KtElement {
         <button
           type="button"
           class="icon-button toggle"
-          aria-label=${this.open ? 'Fermer la liste' : 'Ouvrir la liste'}
+          aria-label=${this.open ? 'Close list' : 'Open list'}
           tabindex="-1"
           @click=${(event: Event) => {
             event.stopPropagation();

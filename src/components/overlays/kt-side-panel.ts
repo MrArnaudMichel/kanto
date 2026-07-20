@@ -27,7 +27,7 @@ import '../core/kt-button.js';
  *
  * @example
  * ```html
- * <kt-side-panel open eyebrow="Détails" heading="Entité 4812">
+ * <kt-side-panel open eyebrow="Details" heading="Entity 4812">
  *   <p>…</p>
  * </kt-side-panel>
  * ```
@@ -135,9 +135,9 @@ export class KtSidePanel extends KtElement {
   @property({ type: Boolean, reflect: true })
   open = false;
 
-  /** Small uppercase label above the heading — "Détails", "Modification". */
+  /** Small uppercase label above the heading — "Details", "Editing". */
   @property({ type: String })
-  eyebrow = 'Détails';
+  eyebrow = 'Details';
 
   @property({ type: String })
   heading = '';
@@ -189,7 +189,7 @@ export class KtSidePanel extends KtElement {
           variant="secondary"
           size="small"
           icon="x"
-          label="Fermer"
+          label="Close"
           @click=${this.requestClose}
         ></kt-button>
       </div>

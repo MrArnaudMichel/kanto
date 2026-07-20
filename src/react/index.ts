@@ -10,7 +10,7 @@
  *     import { KtButton, KtInput } from 'kanto/react';
  *     import 'kanto/styles.css';
  *
- *     <KtInput placeholder="Rechercher" onKtChange={(e) => setQuery(e.detail.value)} />
+ *     <KtInput placeholder="Search" onKtChange={(e) => setQuery(e.detail.value)} />
  *
  * React is a peer dependency: the package works without it.
  */
