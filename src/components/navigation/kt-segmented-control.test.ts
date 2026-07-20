@@ -4,9 +4,9 @@ import './kt-segmented-control.js';
 import type { KtSegmentedControl, KtSegmentedOption } from './kt-segmented-control.js';
 
 const OPTIONS: KtSegmentedOption[] = [
-  { value: 'day', label: 'Jour' },
-  { value: 'week', label: 'Semaine', disabled: true },
-  { value: 'month', label: 'Mois' },
+  { value: 'day', label: 'Day' },
+  { value: 'week', label: 'Week', disabled: true },
+  { value: 'month', label: 'Month' },
 ];
 
 const track = (el: KtSegmentedControl) => el.shadowRoot!.querySelector('.track')!;

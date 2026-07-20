@@ -10,8 +10,8 @@ import {
 
 const options: KtOption[] = [
   { id: 'fr', label: 'France' },
-  { id: 'be', label: 'Belgique', disabled: true },
-  { id: 'ch', label: 'Suisse' },
+  { id: 'be', label: 'Belgium', disabled: true },
+  { id: 'ch', label: 'Switzerland' },
   { id: 42 },
 ];
 
@@ -28,7 +28,7 @@ describe('filterOptions', () => {
   });
 
   it('matches the visible label, ignoring case', () => {
-    expect(filterOptions(options, 'SUIS').map((o) => o.id)).toEqual(['ch']);
+    expect(filterOptions(options, 'SWITZ').map((o) => o.id)).toEqual(['ch']);
   });
 
   it('matches an option that only has an id', () => {

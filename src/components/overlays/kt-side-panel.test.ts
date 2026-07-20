@@ -5,12 +5,10 @@ import type { KtSidePanel } from './kt-side-panel.js';
 
 const dialog = (el: KtSidePanel) => el.shadowRoot!.querySelector('dialog')!;
 const closeButton = (el: KtSidePanel) =>
-  el.shadowRoot!.querySelector<HTMLElement>('kt-button[label="Fermer"]')!;
+  el.shadowRoot!.querySelector<HTMLElement>('kt-button[label="Close"]')!;
 
 const mount = (attrs = '') =>
-  fixture<KtSidePanel>(
-    `<kt-side-panel heading="Entité 4812" ${attrs}><p>Corps</p></kt-side-panel>`,
-  );
+  fixture<KtSidePanel>(`<kt-side-panel heading="Entity 4812" ${attrs}><p>Body</p></kt-side-panel>`);
 
 describe('kt-side-panel', () => {
   it('is closed until open is set', async () => {
@@ -25,8 +23,8 @@ describe('kt-side-panel', () => {
   it('renders the eyebrow and heading, and names the dialog', async () => {
     const el = await mount('eyebrow="Modification"');
     expect(el.shadowRoot!.querySelector('.eyebrow')!.textContent).toBe('Modification');
-    expect(el.shadowRoot!.querySelector('h2')!.textContent).toBe('Entité 4812');
-    expect(dialog(el).getAttribute('aria-label')).toBe('Entité 4812');
+    expect(el.shadowRoot!.querySelector('h2')!.textContent).toBe('Entity 4812');
+    expect(dialog(el).getAttribute('aria-label')).toBe('Entity 4812');
   });
 
   it('closes from the close button and reports it', async () => {

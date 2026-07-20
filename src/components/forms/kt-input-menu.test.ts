@@ -6,8 +6,8 @@ import type { KtOption } from '../../internal/listbox.js';
 
 const OPTIONS: KtOption[] = [
   { id: 'fr', label: 'France' },
-  { id: 'be', label: 'Belgique' },
-  { id: 'ch', label: 'Suisse' },
+  { id: 'be', label: 'Belgium' },
+  { id: 'ch', label: 'Switzerland' },
 ];
 
 const input = (el: KtInputMenu) => el.shadowRoot!.querySelector('input')!;
@@ -26,7 +26,7 @@ describe('kt-input-menu', () => {
   let el: KtInputMenu;
 
   beforeEach(async () => {
-    el = await fixture<KtInputMenu>('<kt-input-menu placeholder="Pays"></kt-input-menu>');
+    el = await fixture<KtInputMenu>('<kt-input-menu placeholder="Country"></kt-input-menu>');
     el.options = OPTIONS;
     await settle(el);
   });
@@ -43,17 +43,17 @@ describe('kt-input-menu', () => {
     const filtered = vi.fn();
     el.addEventListener('kt-filter', filtered);
 
-    await typeQuery(el, 'sui');
+    await typeQuery(el, 'switz');
 
     expect(rows(el)).toHaveLength(1);
-    expect(rows(el)[0]!.textContent).toContain('Suisse');
-    expect(filtered.mock.calls[0]![0].detail.query).toBe('sui');
+    expect(rows(el)[0]!.textContent).toContain('Switzerland');
+    expect(filtered.mock.calls[0]![0].detail.query).toBe('switz');
   });
 
   it('says so when nothing matches', async () => {
-    await typeQuery(el, 'atlantide');
+    await typeQuery(el, 'atlantis');
     expect(rows(el)).toHaveLength(0);
-    expect(el.shadowRoot!.querySelector('.empty')!.textContent).toContain('Aucune option');
+    expect(el.shadowRoot!.querySelector('.empty')!.textContent).toContain('No options');
   });
 
   it('chooses an option, clears the query and shows the label', async () => {
@@ -65,14 +65,14 @@ describe('kt-input-menu', () => {
     await settle(el);
 
     expect(el.value).toBe('be');
-    expect(input(el).value).toBe('Belgique');
+    expect(input(el).value).toBe('Belgium');
     expect(popup(el).classList.contains('open')).toBe(false);
     expect(listener.mock.calls[0]![0].detail.value).toBe('be');
   });
 
   it('walks only the filtered options with the arrows', async () => {
     await typeQuery(el, 'i');
-    expect(rows(el).map((row) => row.textContent!.trim())).toEqual(['Belgique', 'Suisse']);
+    expect(rows(el).map((row) => row.textContent!.trim())).toEqual(['Belgium', 'Switzerland']);
 
     // The first match is active on open; one step down lands on the second.
     key(el, 'ArrowDown');
@@ -85,7 +85,7 @@ describe('kt-input-menu', () => {
   });
 
   it('closes on Escape and forgets the query', async () => {
-    await typeQuery(el, 'sui');
+    await typeQuery(el, 'switz');
     key(el, 'Escape');
     await settle(el);
 

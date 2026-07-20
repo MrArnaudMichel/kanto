@@ -61,7 +61,7 @@ describe('kt-toggle', () => {
   });
 
   it('takes its accessible name from the label attribute when nothing is slotted', async () => {
-    const el = await fixture<KtToggle>('<kt-toggle label="Mode sombre"></kt-toggle>');
-    expect(control(el).getAttribute('aria-label')).toBe('Mode sombre');
+    const el = await fixture<KtToggle>('<kt-toggle label="Dark mode"></kt-toggle>');
+    expect(control(el).getAttribute('aria-label')).toBe('Dark mode');
   });
 });

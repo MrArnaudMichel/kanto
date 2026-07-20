@@ -6,7 +6,7 @@ import type { KtTooltip } from './kt-tooltip.js';
 const bubble = (el: KtTooltip) => el.shadowRoot!.querySelector('.bubble')!;
 const trigger = (el: KtTooltip) => el.querySelector('button')!;
 
-const mount = (attrs = 'text="Actualiser"') =>
+const mount = (attrs = 'text="Refresh"') =>
   fixture<KtTooltip>(`<kt-tooltip ${attrs}><button>OK</button></kt-tooltip>`);
 
 describe('kt-tooltip', () => {
@@ -51,13 +51,13 @@ describe('kt-tooltip', () => {
 
     expect(id).toBeTruthy();
     const description = el.querySelector(`#${id}`)!;
-    expect(description.textContent).toBe('Actualiser');
+    expect(description.textContent).toBe('Refresh');
     // Addressed to a slot that does not exist, so it never renders.
     expect(description.getAttribute('slot')).toBe('kt-tooltip-description');
   });
 
   it('stays silent when disabled or empty', async () => {
-    const off = await mount('text="Actualiser" disabled');
+    const off = await mount('text="Refresh" disabled');
     off.dispatchEvent(new Event('pointerenter'));
     await settle(off);
     expect(bubble(off).classList.contains('visible')).toBe(false);

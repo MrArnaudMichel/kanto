@@ -12,7 +12,7 @@ describe('kt-progress-bar', () => {
     expect(track(el).getAttribute('role')).toBe('progressbar');
     expect(track(el).getAttribute('aria-valuenow')).toBe('40');
     expect(track(el).getAttribute('aria-valuemax')).toBe('100');
-    expect(track(el).getAttribute('aria-valuetext')).toBe('40 %');
+    expect(track(el).getAttribute('aria-valuetext')).toBe('40%');
   });
 
   it('fills proportionally', async () => {
@@ -57,6 +57,6 @@ describe('kt-progress-bar', () => {
 
     el.showValue = true;
     await settle(el);
-    expect(el.shadowRoot!.querySelector('.label')!.textContent!.trim()).toBe('42 %');
+    expect(el.shadowRoot!.querySelector('.label')!.textContent!.trim()).toBe('42%');
   });
 });

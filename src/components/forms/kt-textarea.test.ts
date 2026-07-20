@@ -14,14 +14,14 @@ async function type(el: KtTextarea, text: string) {
 
 describe('kt-textarea', () => {
   it('seeds the control and reports keystrokes', async () => {
-    const el = await fixture<KtTextarea>('<kt-textarea value="Bonjour"></kt-textarea>');
-    expect(control(el).value).toBe('Bonjour');
+    const el = await fixture<KtTextarea>('<kt-textarea value="Hello"></kt-textarea>');
+    expect(control(el).value).toBe('Hello');
 
     const listener = vi.fn();
     el.addEventListener('kt-input', listener);
-    await type(el, 'Bonsoir');
+    await type(el, 'Good evening');
 
-    expect(el.value).toBe('Bonsoir');
+    expect(el.value).toBe('Good evening');
     expect(listener).toHaveBeenCalledOnce();
   });
 
@@ -56,14 +56,14 @@ describe('kt-textarea', () => {
   });
 
   it('shows the alert icon and marks the control invalid on error', async () => {
-    const el = await fixture<KtTextarea>('<kt-textarea error="Trop court"></kt-textarea>');
+    const el = await fixture<KtTextarea>('<kt-textarea error="Too short"></kt-textarea>');
     expect(control(el).getAttribute('aria-invalid')).toBe('true');
     expect(el.shadowRoot!.querySelector('kt-icon[name="circle-alert"]')).not.toBeNull();
   });
 
   it('restores the seeded value on form reset', async () => {
     const el = await fixture<KtTextarea>('<kt-textarea value="initial"></kt-textarea>');
-    await type(el, 'modifié');
+    await type(el, 'edited');
     el.formResetCallback();
     await settle(el);
 

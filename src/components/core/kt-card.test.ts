@@ -7,19 +7,19 @@ const base = (el: KtCard) => el.shadowRoot!.querySelector('.card')!;
 
 describe('kt-card', () => {
   it('is a plain surface by default: no role, not focusable', async () => {
-    const el = await fixture<KtCard>('<kt-card>Contenu</kt-card>');
+    const el = await fixture<KtCard>('<kt-card>Content</kt-card>');
     expect(base(el).hasAttribute('role')).toBe(false);
     expect(base(el).hasAttribute('tabindex')).toBe(false);
   });
 
   it('becomes a focusable button when clickable', async () => {
-    const el = await fixture<KtCard>('<kt-card clickable>Contenu</kt-card>');
+    const el = await fixture<KtCard>('<kt-card clickable>Content</kt-card>');
     expect(base(el).getAttribute('role')).toBe('button');
     expect(base(el).getAttribute('tabindex')).toBe('0');
   });
 
   it('fires kt-card-click on pointer and on keyboard', async () => {
-    const el = await fixture<KtCard>('<kt-card clickable>Contenu</kt-card>');
+    const el = await fixture<KtCard>('<kt-card clickable>Content</kt-card>');
     const listener = vi.fn();
     el.addEventListener('kt-card-click', listener);
 
@@ -32,7 +32,7 @@ describe('kt-card', () => {
   });
 
   it('stays inert when it is not clickable', async () => {
-    const el = await fixture<KtCard>('<kt-card>Contenu</kt-card>');
+    const el = await fixture<KtCard>('<kt-card>Content</kt-card>');
     const listener = vi.fn();
     el.addEventListener('kt-card-click', listener);
 
@@ -42,7 +42,7 @@ describe('kt-card', () => {
   });
 
   it('renders no media well without an image', async () => {
-    const el = await fixture<KtCard>('<kt-card>Contenu</kt-card>');
+    const el = await fixture<KtCard>('<kt-card>Content</kt-card>');
     expect(el.shadowRoot!.querySelector('.media')).toBeNull();
   });
 
@@ -59,9 +59,9 @@ describe('kt-card', () => {
   });
 
   it('renders the convenience image with its alt text', async () => {
-    const el = await fixture<KtCard>('<kt-card image="/x.png" image-alt="Aperçu"></kt-card>');
+    const el = await fixture<KtCard>('<kt-card image="/x.png" image-alt="Preview"></kt-card>');
     const img = el.shadowRoot!.querySelector('img')!;
     expect(img.getAttribute('src')).toBe('/x.png');
-    expect(img.getAttribute('alt')).toBe('Aperçu');
+    expect(img.getAttribute('alt')).toBe('Preview');
   });
 });

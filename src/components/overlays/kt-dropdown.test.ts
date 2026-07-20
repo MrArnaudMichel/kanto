@@ -5,9 +5,9 @@ import type { KtDropdown } from './kt-dropdown.js';
 import type { KtOption } from '../../internal/listbox.js';
 
 const OPTIONS: KtOption[] = [
-  { id: 'edit', label: 'Modifier' },
-  { id: 'archive', label: 'Archiver', disabled: true },
-  { id: 'delete', label: 'Supprimer' },
+  { id: 'edit', label: 'Edit' },
+  { id: 'archive', label: 'Archive', disabled: true },
+  { id: 'delete', label: 'Delete' },
 ];
 
 const trigger = (el: KtDropdown) => el.shadowRoot!.querySelector<HTMLElement>('.trigger')!;
@@ -123,7 +123,7 @@ describe('kt-dropdown', () => {
 
   it('falls back to a slot when there are no options', async () => {
     const custom = await fixture<KtDropdown>(
-      '<kt-dropdown><button slot="trigger">Filtres</button><div slot="panel">Contenu</div></kt-dropdown>',
+      '<kt-dropdown><button slot="trigger">Filtres</button><div slot="panel">Content</div></kt-dropdown>',
     );
     expect(custom.shadowRoot!.querySelector('slot[name="panel"]')).not.toBeNull();
     expect(custom.shadowRoot!.querySelector('.list')).toBeNull();

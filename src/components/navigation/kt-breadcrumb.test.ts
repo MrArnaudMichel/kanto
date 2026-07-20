@@ -5,8 +5,8 @@ import type { KtBreadcrumb, KtBreadcrumbItem } from './kt-breadcrumb.js';
 
 const ITEMS: KtBreadcrumbItem[] = [
   { label: 'Accueil', href: '/' },
-  { label: 'Entités', href: '/entites' },
-  { label: 'Entité 4812' },
+  { label: 'Entities', href: '/entites' },
+  { label: 'Entity 4812' },
 ];
 
 const links = (el: KtBreadcrumb) => [...el.shadowRoot!.querySelectorAll('a')];
@@ -22,8 +22,8 @@ describe('kt-breadcrumb', () => {
   });
 
   it('links every entry except the last', () => {
-    expect(links(el).map((a) => a.textContent)).toEqual(['Accueil', 'Entités']);
-    expect(current(el).textContent).toBe('Entité 4812');
+    expect(links(el).map((a) => a.textContent)).toEqual(['Accueil', 'Entities']);
+    expect(current(el).textContent).toBe('Entity 4812');
     expect(current(el).getAttribute('aria-current')).toBe('page');
   });
 
@@ -32,7 +32,7 @@ describe('kt-breadcrumb', () => {
   });
 
   it('names the landmark', () => {
-    expect(el.shadowRoot!.querySelector('nav')!.getAttribute('aria-label')).toBe("Fil d'ariane");
+    expect(el.shadowRoot!.querySelector('nav')!.getAttribute('aria-label')).toBe('Breadcrumb');
   });
 
   it('reports activation and lets a listener take over routing', async () => {
