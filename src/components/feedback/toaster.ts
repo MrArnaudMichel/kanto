@@ -15,8 +15,8 @@ import './kt-toast-container.js';
  * ```js
  * import { toaster } from 'kanto-ds';
  *
- * toaster.success('Entité créée');
- * toaster.error('Échec de la sauvegarde', { description: 'Réessayez dans un instant.' });
+ * toaster.success('Entity created');
+ * toaster.error('Could not save', { description: 'Try again in a moment.' });
  * ```
  *
  * Prefer placing a `<kt-toast-container>` in your own markup when you care

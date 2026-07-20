@@ -261,7 +261,7 @@ export class KtToast extends KtElement {
 
       ${
         this.dismissible
-          ? html`<button part="close" class="close" aria-label="Fermer" @click=${this.close}>
+          ? html`<button part="close" class="close" aria-label="Close" @click=${this.close}>
               <kt-icon name="x" size="18"></kt-icon>
             </button>`
           : nothing
@@ -276,7 +276,7 @@ export class KtToast extends KtElement {
                 animated
                 .value=${this.remaining}
                 .max=${this.duration}
-                label="Temps restant"
+                label="Time remaining"
               ></kt-progress-bar>
             </div>`
           : nothing

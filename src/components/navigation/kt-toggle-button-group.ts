@@ -27,8 +27,8 @@ import { KtToggleButton } from './kt-toggle-button.js';
  * @example
  * ```html
  * <kt-toggle-button-group>
- *   <kt-toggle-button value="list" icon="list" label="Liste"></kt-toggle-button>
- *   <kt-toggle-button value="grid" icon="grid" label="Grille"></kt-toggle-button>
+ *   <kt-toggle-button value="list" icon="list" label="List"></kt-toggle-button>
+ *   <kt-toggle-button value="grid" icon="grid" label="Grid"></kt-toggle-button>
  * </kt-toggle-button-group>
  * ```
  */

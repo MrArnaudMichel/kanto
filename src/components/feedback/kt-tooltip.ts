@@ -15,8 +15,8 @@ const DESCRIPTION_SLOT = 'kt-tooltip-description';
  * Wrap the thing it describes:
  *
  * ```html
- * <kt-tooltip text="Actualiser les données">
- *   <kt-button icon="refresh-cw" label="Actualiser"></kt-button>
+ * <kt-tooltip text="Refresh the data">
+ *   <kt-button icon="refresh-cw" label="Refresh"></kt-button>
  * </kt-tooltip>
  * ```
  *

@@ -29,10 +29,11 @@ export interface KtSortState {
 export type KtCellRenderer = (row: KtTableRow, column: KtTableColumn) => unknown;
 
 /**
- * Sorts with a locale-aware collator, so "Élan" files next to "Elan" instead
- * of after "Zèbre". `numeric` also makes "Entité 2" precede "Entité 10".
+ * Sorts with a locale-aware collator, so "Ångström" files next to "Angstrom"
+ * instead of after "Zeta". `numeric` also makes "Entity 2" precede
+ * "Entity 10".
  */
-const collator = new Intl.Collator('fr', { numeric: true, sensitivity: 'base' });
+const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
 
 /**
  * A sortable string for any cell value.
@@ -75,8 +76,8 @@ function rowKey(row: KtTableRow): unknown {
  * @example
  * ```js
  * table.columns = [
- *   { key: 'name', label: 'Nom', sortable: true },
- *   { key: 'amount', label: 'Montant', sortable: true, align: 'right' },
+ *   { key: 'name', label: 'Name', sortable: true },
+ *   { key: 'amount', label: 'Amount', sortable: true, align: 'right' },
  * ];
  * table.data = rows;
  * ```
@@ -241,10 +242,10 @@ export class KtTable extends KtElement {
   renderCell: KtCellRenderer | undefined;
 
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'Aucune donnée à afficher';
+  emptyText = 'No data to display';
 
   @property({ type: String, attribute: 'loading-text' })
-  loadingText = 'Chargement…';
+  loadingText = 'Loading…';
 
   /** Accessible name for the table. */
   @property({ type: String })
@@ -412,7 +413,7 @@ export class KtTable extends KtElement {
                   type=${this.selectionMode === 'single' ? 'radio' : 'checkbox'}
                   name=${this.selectionMode === 'single' ? 'kt-table-selection' : nothing}
                   .checked=${selected}
-                  aria-label="Sélectionner la ligne"
+                  aria-label="Select row"
                   @click=${(event: Event) => event.stopPropagation()}
                   @change=${() => this.toggleSelection(row)}
                 />
@@ -453,7 +454,7 @@ export class KtTable extends KtElement {
                               type="checkbox"
                               .checked=${allSelected}
                               .indeterminate=${someSelected && !allSelected}
-                              aria-label="Tout sélectionner"
+                              aria-label="Select all"
                               @change=${this.toggleAll}
                             />`
                           : nothing

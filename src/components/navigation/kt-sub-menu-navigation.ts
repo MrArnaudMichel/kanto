@@ -110,7 +110,7 @@ export class KtSubMenuNavigation extends KtElement {
   activeHref = '';
 
   @property({ type: String })
-  label = 'Navigation secondaire';
+  label = 'Secondary navigation';
 
   private isActive(item: KtNavItem): boolean {
     return item.active === true || (this.activeHref !== '' && item.href === this.activeHref);

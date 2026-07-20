@@ -172,11 +172,11 @@ export class KtDragDrop extends KtElement {
    * reusing it would put the prompt in a native tooltip on the whole zone.
    */
   @property({ type: String })
-  heading = 'Glissez-déposez ou';
+  heading = 'Drag and drop or';
 
   /** The clickable-looking part of the prompt. */
   @property({ type: String, attribute: 'link-text' })
-  linkText = 'parcourez vos fichiers';
+  linkText = 'browse your files';
 
   /** Optional hint, e.g. `800×400px`. */
   @property({ type: String, attribute: 'recommended-size' })
@@ -304,9 +304,7 @@ export class KtDragDrop extends KtElement {
           <p class="title">${this.heading} ${this.linkText}</p>
           ${
             this.recommendedSize
-              ? html`<div class="hint">
-                  La taille d'image recommandée est de ${this.recommendedSize}
-                </div>`
+              ? html`<div class="hint">Recommended image size: ${this.recommendedSize}</div>`
               : nothing
           }
         </div>
@@ -317,7 +315,7 @@ export class KtDragDrop extends KtElement {
           ? html`<ul
               part="list"
               class="list"
-              aria-label="Fichiers sélectionnés"
+              aria-label="Selected files"
               @click=${(event: Event) => event.stopPropagation()}
             >
               ${this.files.map(
@@ -335,7 +333,7 @@ export class KtDragDrop extends KtElement {
                       variant="danger"
                       size="small"
                       icon="trash-2"
-                      label=${`Supprimer ${file.name}`}
+                      label=${`Remove ${file.name}`}
                       @click=${() => this.removeAt(index)}
                     ></kt-button>
                   </li>`,

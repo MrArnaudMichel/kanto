@@ -174,7 +174,7 @@ export class KtProgressBar extends KtElement {
       aria-valuemin="0"
       aria-valuemax=${this.max}
       aria-valuenow=${this.value}
-      aria-valuetext=${`${percent} %`}
+      aria-valuetext=${`${percent}%`}
       aria-label=${this.label || nothing}
     >
       <div
@@ -187,7 +187,7 @@ export class KtProgressBar extends KtElement {
         })}
         style=${styleMap({ width: `${percent}%` })}
       ></div>
-      ${this.showValue ? html`<div part="label" class="label">${percent} %</div>` : nothing}
+      ${this.showValue ? html`<div part="label" class="label">${percent}%</div>` : nothing}
     </div>`;
   }
 }

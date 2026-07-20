@@ -41,10 +41,10 @@ export type { KtOption };
  *
  * @example
  * ```html
- * <kt-select placeholder="Sélectionner une région"></kt-select>
+ * <kt-select placeholder="Select a region"></kt-select>
  * ```
  * ```js
- * select.options = [{ id: 'idf', label: 'Île-de-France' }, { id: 'bzh', label: 'Bretagne' }];
+ * select.options = [{ id: 'ne', label: 'North East' }, { id: 'sw', label: 'South West' }];
  * ```
  */
 export class KtSelect extends KtElement {
@@ -170,7 +170,7 @@ export class KtSelect extends KtElement {
   value: string | number | null = null;
 
   @property({ type: String })
-  placeholder = 'Sélectionner';
+  placeholder = 'Select';
 
   @property({ type: String })
   name = '';
@@ -198,7 +198,7 @@ export class KtSelect extends KtElement {
 
   /** Shown when `options` is empty. */
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'Aucune option disponible';
+  emptyText = 'No options available';
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -220,7 +220,7 @@ export class KtSelect extends KtElement {
       setValidity(
         this.internals,
         { valueMissing: missing, customError: Boolean(this.error) },
-        this.error || (missing ? 'Sélectionnez une option.' : ''),
+        this.error || (missing ? 'Select an option.' : ''),
       );
     }
   }
@@ -358,7 +358,7 @@ export class KtSelect extends KtElement {
                   class="clear"
                   role="button"
                   tabindex="-1"
-                  aria-label="Effacer"
+                  aria-label="Clear"
                   @click=${this.clear}
                 >
                   <kt-icon name="x" size="18"></kt-icon>

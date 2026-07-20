@@ -90,10 +90,10 @@ export class KtPagination extends KtElement {
         part="previous"
         type="button"
         ?disabled=${first}
-        aria-label="Page précédente"
+        aria-label="Previous page"
         @click=${() => this.go(this.page - 1)}
       >
-        Préc
+        Prev
       </button>
 
       <!-- polite, so a page change is announced without interrupting whatever
@@ -106,10 +106,10 @@ export class KtPagination extends KtElement {
         part="next"
         type="button"
         ?disabled=${last}
-        aria-label="Page suivante"
+        aria-label="Next page"
         @click=${() => this.go(this.page + 1)}
       >
-        Suiv
+        Next
       </button>
     </nav>`;
   }

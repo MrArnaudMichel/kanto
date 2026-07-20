@@ -29,9 +29,9 @@ export type KtConfirmVariant = 'danger' | 'primary';
  * @example
  * ```html
  * <kt-confirm-dialog
- *   heading="Supprimer l'entité ?"
- *   message="Cette action est irréversible."
- *   confirm-label="Supprimer"
+ *   heading="Delete this entity?"
+ *   message="This action cannot be undone."
+ *   confirm-label="Delete"
  * ></kt-confirm-dialog>
  * ```
  */
@@ -116,16 +116,16 @@ export class KtConfirmDialog extends KtElement {
   open = false;
 
   @property({ type: String })
-  heading = 'Êtes-vous sûr ?';
+  heading = 'Are you sure?';
 
   @property({ type: String })
   message = '';
 
   @property({ type: String, attribute: 'confirm-label' })
-  confirmLabel = 'Confirmer';
+  confirmLabel = 'Confirm';
 
   @property({ type: String, attribute: 'cancel-label' })
-  cancelLabel = 'Annuler';
+  cancelLabel = 'Cancel';
 
   /** `danger` gives the confirm button the solid red treatment. */
   @property({ type: String, reflect: true })

@@ -30,7 +30,7 @@ export interface KtToastOptions {
  * ```js
  * document.querySelector('kt-toast-container').show({
  *   variant: 'success',
- *   heading: 'Entité créée',
+ *   heading: 'Entity created',
  *   duration: 4000,
  *   dismissible: true,
  * });

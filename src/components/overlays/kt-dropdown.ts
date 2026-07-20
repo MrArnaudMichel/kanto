@@ -153,7 +153,7 @@ export class KtDropdown extends KtElement {
   disabled = false;
 
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'Aucun résultat';
+  emptyText = 'No results';
 
   /** Whether the panel is showing. */
   get isOpen(): boolean {

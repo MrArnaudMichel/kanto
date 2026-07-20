@@ -177,7 +177,7 @@ export class KtTextarea extends KtElement {
       setValidity(
         this.internals,
         { valueMissing: missing, customError: Boolean(this.error) },
-        this.error || (missing ? 'Ce champ est requis.' : ''),
+        this.error || (missing ? 'This field is required.' : ''),
       );
     }
   }
