@@ -96,11 +96,11 @@ describe('kt-toast-container', () => {
   it('appends toasts and removes them on close', async () => {
     const el = await fixture<KtToastContainer>('<kt-toast-container></kt-toast-container>');
 
-    const toast = el.show({ heading: 'Entité créée', variant: 'success' });
+    const toast = el.show({ heading: 'Entity created', variant: 'success' });
     await settle(el);
 
     expect(el.toasts).toHaveLength(1);
-    expect(toast.heading).toBe('Entité créée');
+    expect(toast.heading).toBe('Entity created');
 
     toast.close();
     expect(el.toasts).toHaveLength(0);
@@ -149,7 +149,7 @@ describe('toaster', () => {
   });
 
   it('creates one container on demand and reuses it', () => {
-    toaster.success('Entité créée');
+    toaster.success('Entity created');
     toaster.info('Synchronisation en cours');
 
     const containers = document.querySelectorAll('kt-toast-container');
@@ -161,15 +161,15 @@ describe('toaster', () => {
     const existing = await fixture<KtToastContainer>(
       '<kt-toast-container position="top-left"></kt-toast-container>',
     );
-    toaster.success('Entité créée');
+    toaster.success('Entity created');
 
     expect(existing.toasts).toHaveLength(1);
     expect(document.querySelectorAll('kt-toast-container')).toHaveLength(1);
   });
 
   it('leaves errors on screen and lets the rest expire', () => {
-    const error = toaster.error('Échec de la sauvegarde');
-    const success = toaster.success('Entité créée');
+    const error = toaster.error('Could not save');
+    const success = toaster.success('Entity created');
 
     expect(error.duration).toBe(0);
     expect(error.variant).toBe('error');
@@ -177,7 +177,7 @@ describe('toaster', () => {
   });
 
   it('lets the caller override the defaults', () => {
-    const toast = toaster.error('Échec', { duration: 1000, dismissible: false });
+    const toast = toaster.error('Failed', { duration: 1000, dismissible: false });
     expect(toast.duration).toBe(1000);
     expect(toast.dismissible).toBe(false);
   });

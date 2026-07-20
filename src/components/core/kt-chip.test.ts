@@ -7,13 +7,13 @@ const base = (el: KtChip) => el.shadowRoot!.querySelector<HTMLElement>('.chip')!
 
 describe('kt-chip', () => {
   it('is a pill tag by default', async () => {
-    const el = await fixture<KtChip>('<kt-chip>Actif</kt-chip>');
+    const el = await fixture<KtChip>('<kt-chip>Active</kt-chip>');
     expect(base(el).classList.contains('tag')).toBe(true);
   });
 
   it('falls back to the label attribute when nothing is slotted', async () => {
-    const el = await fixture<KtChip>('<kt-chip label="Brouillon"></kt-chip>');
-    expect(base(el).textContent).toContain('Brouillon');
+    const el = await fixture<KtChip>('<kt-chip label="Draft"></kt-chip>');
+    expect(base(el).textContent).toContain('Draft');
   });
 
   it('exposes the category colour as a custom property', async () => {
@@ -28,13 +28,13 @@ describe('kt-chip', () => {
   });
 
   it('layers the error palette over any variant', async () => {
-    const el = await fixture<KtChip>('<kt-chip variant="category" error>Échec</kt-chip>');
+    const el = await fixture<KtChip>('<kt-chip variant="category" error>Failed</kt-chip>');
     expect(base(el).classList.contains('error')).toBe(true);
     expect(base(el).classList.contains('category')).toBe(true);
   });
 
   it('is only interactive when clickable', async () => {
-    const el = await fixture<KtChip>('<kt-chip>Actif</kt-chip>');
+    const el = await fixture<KtChip>('<kt-chip>Active</kt-chip>');
     const listener = vi.fn();
     el.addEventListener('kt-chip-click', listener);
 

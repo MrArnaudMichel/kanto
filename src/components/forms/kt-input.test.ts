@@ -52,14 +52,14 @@ describe('kt-input', () => {
 
   it('shows the clear button only when there is something to clear', async () => {
     const el = await fixture<KtInput>('<kt-input></kt-input>');
-    expect(button(el, 'Effacer')).toBeNull();
+    expect(button(el, 'Clear')).toBeNull();
 
     await type(el, 'x');
-    expect(button(el, 'Effacer')).not.toBeNull();
+    expect(button(el, 'Clear')).not.toBeNull();
 
     el.readonly = true;
     await settle(el);
-    expect(button(el, 'Effacer')).toBeNull();
+    expect(button(el, 'Clear')).toBeNull();
   });
 
   it('clears the value and announces it', async () => {
@@ -67,7 +67,7 @@ describe('kt-input', () => {
     const cleared = vi.fn();
     el.addEventListener('kt-clear', cleared);
 
-    button(el, 'Effacer')!.click();
+    button(el, 'Clear')!.click();
     await settle(el);
 
     expect(el.value).toBe('');
@@ -79,16 +79,16 @@ describe('kt-input', () => {
     const el = await fixture<KtInput>('<kt-input type="password" value="secret"></kt-input>');
     expect(control(el).type).toBe('password');
 
-    button(el, 'Afficher le mot de passe')!.click();
+    button(el, 'Show password')!.click();
     await settle(el);
 
     expect(control(el).type).toBe('text');
     expect(el.value).toBe('secret');
-    expect(button(el, 'Masquer le mot de passe')).not.toBeNull();
+    expect(button(el, 'Hide password')).not.toBeNull();
   });
 
   it('marks the field invalid and shows the alert icon on error', async () => {
-    const el = await fixture<KtInput>('<kt-input error="Adresse invalide"></kt-input>');
+    const el = await fixture<KtInput>('<kt-input error="Invalid address"></kt-input>');
 
     expect(field(el).classList.contains('error')).toBe(true);
     expect(control(el).getAttribute('aria-invalid')).toBe('true');
@@ -98,14 +98,14 @@ describe('kt-input', () => {
   it('exposes no clear button and no pointer events when disabled', async () => {
     const el = await fixture<KtInput>('<kt-input value="x" disabled></kt-input>');
     expect(control(el).disabled).toBe(true);
-    expect(button(el, 'Effacer')).toBeNull();
+    expect(button(el, 'Clear')).toBeNull();
     expect(field(el).classList.contains('disabled')).toBe(true);
   });
 
   it('restores the seeded value when the form resets', async () => {
     const el = await fixture<KtInput>('<kt-input value="initial"></kt-input>');
-    await type(el, 'modifié');
-    expect(el.value).toBe('modifié');
+    await type(el, 'edited');
+    expect(el.value).toBe('edited');
 
     el.formResetCallback();
     await settle(el);
@@ -131,28 +131,34 @@ describe('kt-input in phone mode', () => {
     expect(text.shadowRoot!.querySelector('.country')).toBeNull();
 
     const phone = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
-    expect(picker(phone).textContent).toContain('+33');
+    expect(picker(phone).textContent).toContain('+1');
   });
 
   it('no longer guesses phone mode from the placeholder or the name', async () => {
-    const el = await fixture<KtInput>(
-      '<kt-input name="telephone" placeholder="Téléphone"></kt-input>',
-    );
+    const el = await fixture<KtInput>('<kt-input name="telephone" placeholder="Phone"></kt-input>');
     expect(el.shadowRoot!.querySelector('.country')).toBeNull();
   });
 
   it('stores digits and displays them grouped', async () => {
     const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+    await type(el, '(415) 555-24');
+
+    expect(el.value).toBe('41555524');
+    expect(control(el).value).toBe('415 555 24');
+    expect(control(el).getAttribute('inputmode')).toBe('tel');
+  });
+
+  it('groups French numbers as a leading digit then pairs', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel" country="fr"></kt-input>');
     await type(el, '06 12-34');
 
     expect(el.value).toBe('061234');
     expect(control(el).value).toBe('0 61 23 4');
-    expect(control(el).getAttribute('inputmode')).toBe('tel');
   });
 
   it('falls back to the country format as placeholder', async () => {
     const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
-    expect(control(el).getAttribute('placeholder')).toBe('1 23 45 67 89');
+    expect(control(el).getAttribute('placeholder')).toBe('123-456-7890');
   });
 
   it('opens, searches and picks a country', async () => {
@@ -165,7 +171,7 @@ describe('kt-input in phone mode', () => {
     expect(options(el).length).toBeGreaterThan(1);
 
     const search = el.shadowRoot!.querySelector<HTMLInputElement>('.country-search')!;
-    search.value = 'suis';
+    search.value = 'switz';
     search.dispatchEvent(new Event('input', { bubbles: true }));
     await settle(el);
     expect(options(el)).toHaveLength(1);
@@ -185,12 +191,12 @@ describe('kt-input in phone mode', () => {
     await settle(el);
 
     const search = el.shadowRoot!.querySelector<HTMLInputElement>('.country-search')!;
-    search.value = 'atlantide';
+    search.value = 'atlantis';
     search.dispatchEvent(new Event('input', { bubbles: true }));
     await settle(el);
 
     expect(options(el)).toHaveLength(0);
-    expect(el.shadowRoot!.querySelector('.country-empty')!.textContent).toContain('Aucun pays');
+    expect(el.shadowRoot!.querySelector('.country-empty')!.textContent).toContain('No country');
   });
 
   it('closes the panel on Escape and on an outside click', async () => {

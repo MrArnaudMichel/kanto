@@ -17,7 +17,7 @@ const press = (el: KtToggleButton) =>
 
 describe('kt-toggle-button', () => {
   it('reports its state through aria-pressed', async () => {
-    const el = await fixture<KtToggleButton>('<kt-toggle-button>Gras</kt-toggle-button>');
+    const el = await fixture<KtToggleButton>('<kt-toggle-button>Bold</kt-toggle-button>');
     expect(native(el).getAttribute('aria-pressed')).toBe('false');
 
     native(el).click();
@@ -29,7 +29,7 @@ describe('kt-toggle-button', () => {
 
   it('reports the change with its value', async () => {
     const el = await fixture<KtToggleButton>(
-      '<kt-toggle-button value="bold">Gras</kt-toggle-button>',
+      '<kt-toggle-button value="bold">Bold</kt-toggle-button>',
     );
     const listener = vi.fn();
     el.addEventListener('kt-change', listener);
@@ -40,14 +40,14 @@ describe('kt-toggle-button', () => {
 
   it('collapses to a square when it is icon-only', async () => {
     const el = await fixture<KtToggleButton>(
-      '<kt-toggle-button icon="eye" label="Aperçu"></kt-toggle-button>',
+      '<kt-toggle-button icon="eye" label="Preview"></kt-toggle-button>',
     );
     expect(native(el).classList.contains('icon-only')).toBe(true);
-    expect(native(el).getAttribute('aria-label')).toBe('Aperçu');
+    expect(native(el).getAttribute('aria-label')).toBe('Preview');
   });
 
   it('ignores clicks while disabled', async () => {
-    const el = await fixture<KtToggleButton>('<kt-toggle-button disabled>Gras</kt-toggle-button>');
+    const el = await fixture<KtToggleButton>('<kt-toggle-button disabled>Bold</kt-toggle-button>');
     native(el).click();
     await settle(el);
     expect(el.selected).toBe(false);
@@ -57,9 +57,9 @@ describe('kt-toggle-button', () => {
 describe('kt-toggle-button-group', () => {
   const markup = `
     <kt-toggle-button-group>
-      <kt-toggle-button value="list">Liste</kt-toggle-button>
-      <kt-toggle-button value="grid">Grille</kt-toggle-button>
-      <kt-toggle-button value="map">Carte</kt-toggle-button>
+      <kt-toggle-button value="list">List</kt-toggle-button>
+      <kt-toggle-button value="grid">Grid</kt-toggle-button>
+      <kt-toggle-button value="map">Map</kt-toggle-button>
     </kt-toggle-button-group>`;
 
   const buttons = (group: KtToggleButtonGroup) => [

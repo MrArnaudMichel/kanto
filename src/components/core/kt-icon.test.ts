@@ -37,9 +37,9 @@ describe('kt-icon', () => {
     expect(svgOf(plain).getAttribute('aria-hidden')).toBe('true');
     expect(svgOf(plain).hasAttribute('role')).toBe(false);
 
-    const labelled = await fixture<KtIcon>('<kt-icon name="search" label="Rechercher"></kt-icon>');
+    const labelled = await fixture<KtIcon>('<kt-icon name="search" label="Search"></kt-icon>');
     expect(svgOf(labelled).getAttribute('role')).toBe('img');
-    expect(svgOf(labelled).getAttribute('aria-label')).toBe('Rechercher');
+    expect(svgOf(labelled).getAttribute('aria-label')).toBe('Search');
     expect(svgOf(labelled).hasAttribute('aria-hidden')).toBe(false);
   });
 

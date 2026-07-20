@@ -42,7 +42,7 @@ describe('kt-drag-drop', () => {
 
     expect(items(el)).toHaveLength(1);
     expect(items(el)[0]!.textContent).toContain('logo.png');
-    expect(items(el)[0]!.textContent).toContain('2,0 Ko');
+    expect(items(el)[0]!.textContent).toContain('2.0 KB');
     expect(items(el)[0]!.textContent).toContain('image/png');
     expect(changed.mock.calls[0]![0].detail.files).toHaveLength(1);
   });

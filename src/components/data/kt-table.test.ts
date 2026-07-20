@@ -5,16 +5,16 @@ import './kt-table.js';
 import type { KtTable, KtTableColumn, KtTableRow } from './kt-table.js';
 
 const COLUMNS: KtTableColumn[] = [
-  { key: 'name', label: 'Nom', sortable: true },
-  { key: 'amount', label: 'Montant', sortable: true, align: 'right' },
-  { key: 'status', label: 'Statut' },
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'amount', label: 'Amount', sortable: true, align: 'right' },
+  { key: 'status', label: 'Status' },
 ];
 
 const DATA: KtTableRow[] = [
-  { id: 1, name: 'Zèbre', amount: 30, status: 'actif' },
-  { id: 2, name: 'Élan', amount: 10, status: 'actif' },
-  { id: 3, name: 'Alpaga', amount: null, status: 'archivé' },
-  { id: 4, name: 'Élan 10', amount: 20, status: 'actif' },
+  { id: 1, name: 'Zeta', amount: 30, status: 'active' },
+  { id: 2, name: 'Ångström', amount: 10, status: 'active' },
+  { id: 3, name: 'Alpaca', amount: null, status: 'archived' },
+  { id: 4, name: 'Ångström 10', amount: 20, status: 'active' },
 ];
 
 const headerButtons = (el: KtTable) => [
@@ -43,14 +43,14 @@ describe('kt-table', () => {
   it('shows the empty state with no data', async () => {
     el.data = [];
     await settle(el);
-    expect(el.shadowRoot!.querySelector('.placeholder')!.textContent).toContain('Aucune donnée');
+    expect(el.shadowRoot!.querySelector('.placeholder')!.textContent).toContain('No data');
   });
 
   it('shows only the loading state while loading', async () => {
     el.loading = true;
     await settle(el);
     expect(el.shadowRoot!.querySelector('table')).toBeNull();
-    expect(el.shadowRoot!.querySelector('.placeholder')!.textContent).toContain('Chargement');
+    expect(el.shadowRoot!.querySelector('.placeholder')!.textContent).toContain('Loading');
   });
 
   it('makes sortable headers real buttons', () => {
@@ -72,13 +72,13 @@ describe('kt-table', () => {
     await settle(el);
     expect(el.sortKey).toBeNull();
     expect(headers(el)[0]!.getAttribute('aria-sort')).toBe('none');
-    expect(cellText(el)).toEqual(['Zèbre', 'Élan', 'Alpaga', 'Élan 10']);
+    expect(cellText(el)).toEqual(['Zeta', 'Ångström', 'Alpaca', 'Ångström 10']);
   });
 
   it('sorts text with a French collator, so accents file naturally', async () => {
     headerButtons(el)[0]!.click();
     await settle(el);
-    expect(cellText(el)).toEqual(['Alpaga', 'Élan', 'Élan 10', 'Zèbre']);
+    expect(cellText(el)).toEqual(['Alpaca', 'Ångström', 'Ångström 10', 'Zeta']);
   });
 
   it('sorts numbers numerically, not as strings', async () => {
@@ -90,11 +90,11 @@ describe('kt-table', () => {
   it('sends empty values to the end whichever way the column points', async () => {
     headerButtons(el)[1]!.click();
     await settle(el);
-    expect(cellText(el)[3]).toBe('Alpaga');
+    expect(cellText(el)[3]).toBe('Alpaca');
 
     headerButtons(el)[1]!.click();
     await settle(el);
-    expect(cellText(el)[3]).toBe('Alpaga');
+    expect(cellText(el)[3]).toBe('Alpaca');
   });
 
   it('reports sort changes', async () => {
@@ -112,7 +112,7 @@ describe('kt-table', () => {
     el.addEventListener('kt-row-click', listener);
 
     bodyRows(el)[1]!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(listener.mock.calls[0]![0].detail.row.name).toBe('Élan');
+    expect(listener.mock.calls[0]![0].detail.row.name).toBe('Ångström');
     expect(listener.mock.calls[0]![0].detail.index).toBe(1);
   });
 
@@ -133,7 +133,7 @@ describe('kt-table', () => {
       await settle(el);
 
       expect(el.selected).toEqual([1, 3]);
-      expect(el.selectedRows.map((r) => r['name'])).toEqual(['Zèbre', 'Alpaga']);
+      expect(el.selectedRows.map((r) => r['name'])).toEqual(['Zeta', 'Alpaca']);
       expect(listener).toHaveBeenCalledTimes(2);
     });
 
@@ -200,7 +200,7 @@ describe('kt-table', () => {
       next.click();
       await settle(el);
 
-      expect(cellText(el)).toEqual(['Alpaga', 'Élan 10']);
+      expect(cellText(el)).toEqual(['Alpaca', 'Ångström 10']);
       expect(listener.mock.calls[0]![0].detail.page).toBe(2);
     });
 
@@ -218,7 +218,7 @@ describe('kt-table', () => {
         : undefined;
     await settle(el);
 
-    expect(bodyRows(el)[0]!.querySelector('strong')!.textContent).toBe('ACTIF');
-    expect(cellText(el, 0)).toEqual(['Zèbre', 'Élan', 'Alpaga', 'Élan 10']);
+    expect(bodyRows(el)[0]!.querySelector('strong')!.textContent).toBe('ACTIVE');
+    expect(cellText(el, 0)).toEqual(['Zeta', 'Ångström', 'Alpaca', 'Ångström 10']);
   });
 });

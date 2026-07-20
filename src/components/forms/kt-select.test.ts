@@ -5,9 +5,9 @@ import type { KtSelect } from './kt-select.js';
 import type { KtOption } from '../../internal/listbox.js';
 
 const OPTIONS: KtOption[] = [
-  { id: 'idf', label: 'Île-de-France' },
-  { id: 'paca', label: "Provence-Alpes-Côte d'Azur", disabled: true },
-  { id: 'bzh', label: 'Bretagne' },
+  { id: 'ne', label: 'North East' },
+  { id: 'nw', label: 'North West', disabled: true },
+  { id: 'sw', label: 'South West' },
 ];
 
 const trigger = (el: KtSelect) => el.shadowRoot!.querySelector<HTMLButtonElement>('.trigger')!;
@@ -31,14 +31,14 @@ describe('kt-select', () => {
   });
 
   it('shows the placeholder until something is chosen', () => {
-    expect(trigger(el).textContent).toContain('Sélectionner');
+    expect(trigger(el).textContent).toContain('Select');
     expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
   });
 
   it('says so when there are no options', async () => {
     el.options = [];
     await settle(el);
-    expect(el.shadowRoot!.querySelector('.empty')!.textContent).toContain('Aucune option');
+    expect(el.shadowRoot!.querySelector('.empty')!.textContent).toContain('No options');
   });
 
   it('opens and closes on the trigger', async () => {
@@ -64,10 +64,10 @@ describe('kt-select', () => {
     rows(el)[2]!.click();
     await settle(el);
 
-    expect(el.value).toBe('bzh');
-    expect(el.selectedOption?.label).toBe('Bretagne');
-    expect(trigger(el).textContent).toContain('Bretagne');
-    expect(listener.mock.calls[0]![0].detail.value).toBe('bzh');
+    expect(el.value).toBe('sw');
+    expect(el.selectedOption?.label).toBe('South West');
+    expect(trigger(el).textContent).toContain('South West');
+    expect(listener.mock.calls[0]![0].detail.value).toBe('sw');
     expect(popup(el).classList.contains('open')).toBe(false);
   });
 
@@ -114,7 +114,7 @@ describe('kt-select', () => {
     key(el, 'Enter');
     await settle(el);
 
-    expect(el.value).toBe('bzh');
+    expect(el.value).toBe('sw');
   });
 
   it('closes on Escape without changing the value', async () => {
@@ -144,26 +144,26 @@ describe('kt-select', () => {
   });
 
   it('clears the selection', async () => {
-    el.value = 'bzh';
+    el.value = 'sw';
     await settle(el);
 
     el.shadowRoot!.querySelector<HTMLElement>('.clear')!.click();
     await settle(el);
 
     expect(el.value).toBeNull();
-    expect(trigger(el).textContent).toContain('Sélectionner');
+    expect(trigger(el).textContent).toContain('Select');
   });
 
   it('restores the initial selection on form reset', async () => {
-    const seeded = await fixture<KtSelect>('<kt-select value="idf"></kt-select>');
+    const seeded = await fixture<KtSelect>('<kt-select value="ne"></kt-select>');
     seeded.options = OPTIONS;
     await settle(seeded);
 
-    seeded.value = 'bzh';
+    seeded.value = 'sw';
     await settle(seeded);
     seeded.formResetCallback();
     await settle(seeded);
 
-    expect(seeded.value).toBe('idf');
+    expect(seeded.value).toBe('ne');
   });
 });

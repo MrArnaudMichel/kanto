@@ -10,15 +10,15 @@ const labelEl = (el: KtLabelInput) => el.shadowRoot!.querySelector('label')!;
 describe('kt-label-input', () => {
   it('renders the label text', async () => {
     const el = await fixture<KtLabelInput>(
-      '<kt-label-input label="Nom"><kt-input></kt-input></kt-label-input>',
+      '<kt-label-input label="Name"><kt-input></kt-input></kt-label-input>',
     );
-    expect(labelEl(el).textContent).toContain('Nom');
+    expect(labelEl(el).textContent).toContain('Name');
     expect(labelEl(el).querySelector('.required')).toBeNull();
   });
 
   it('marks required fields with an asterisk hidden from screen readers', async () => {
     const el = await fixture<KtLabelInput>(
-      '<kt-label-input label="Nom" required><kt-input></kt-input></kt-label-input>',
+      '<kt-label-input label="Name" required><kt-input></kt-input></kt-label-input>',
     );
     const star = labelEl(el).querySelector('.required')!;
     expect(star.textContent).toBe('*');
@@ -27,14 +27,14 @@ describe('kt-label-input', () => {
 
   it('names the slotted control, since label association cannot cross a shadow root', async () => {
     const el = await fixture<KtLabelInput>(
-      '<kt-label-input label="Adresse e-mail"><kt-input></kt-input></kt-label-input>',
+      '<kt-label-input label="Email address"><kt-input></kt-input></kt-label-input>',
     );
     const input = el.querySelector<KtInput>('kt-input')!;
     await settle(input);
 
-    expect(input.label).toBe('Adresse e-mail');
+    expect(input.label).toBe('Email address');
     expect(input.shadowRoot!.querySelector('input')!.getAttribute('aria-label')).toBe(
-      'Adresse e-mail',
+      'Email address',
     );
   });
 
@@ -47,7 +47,7 @@ describe('kt-label-input', () => {
 
   it('focuses the control when the label is clicked', async () => {
     const el = await fixture<KtLabelInput>(
-      '<kt-label-input label="Nom"><kt-input></kt-input></kt-label-input>',
+      '<kt-label-input label="Name"><kt-input></kt-input></kt-label-input>',
     );
     const input = el.querySelector<KtInput>('kt-input')!;
     const focus = vi.spyOn(input, 'focus');

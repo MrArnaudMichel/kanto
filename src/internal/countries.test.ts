@@ -34,8 +34,13 @@ describe('formatNationalNumber', () => {
     expect(formatNationalNumber('612345678', france)).toBe('6 12 34 56 78');
   });
 
+  it('groups North American numbers as 3-3-4', () => {
+    expect(formatNationalNumber('1234567890', usa)).toBe('123 456 7890');
+  });
+
   it('groups everything else in threes', () => {
-    expect(formatNationalNumber('1234567890', usa)).toBe('123 456 789 0');
+    const germany = DEFAULT_COUNTRIES.find((c) => c.id === 'de');
+    expect(formatNationalNumber('1234567890', germany)).toBe('123 456 789 0');
   });
 
   it('formats a partial number as it is typed', () => {

@@ -12,14 +12,14 @@ const press = (button: HTMLElement) =>
 
 const mount = (attrs = '') =>
   fixture<KtConfirmDialog>(
-    `<kt-confirm-dialog heading="Supprimer l'entité ?" message="Cette action est irréversible." ${attrs}></kt-confirm-dialog>`,
+    `<kt-confirm-dialog heading="Delete this entity?" message="This action cannot be undone." ${attrs}></kt-confirm-dialog>`,
   );
 
 describe('kt-confirm-dialog', () => {
   it('is an alertdialog describing its own message', async () => {
     const el = await mount();
     expect(dialog(el).getAttribute('role')).toBe('alertdialog');
-    expect(dialog(el).getAttribute('aria-label')).toBe("Supprimer l'entité ?");
+    expect(dialog(el).getAttribute('aria-label')).toBe('Delete this entity?');
     expect(dialog(el).getAttribute('aria-describedby')).toBe('kt-confirm-message');
   });
 
@@ -73,8 +73,8 @@ describe('kt-confirm-dialog', () => {
   });
 
   it('uses the supplied labels', async () => {
-    const el = await mount('confirm-label="Supprimer" cancel-label="Garder"');
-    expect(buttons(el)[0]!.textContent).toContain('Garder');
-    expect(buttons(el)[1]!.textContent).toContain('Supprimer');
+    const el = await mount('confirm-label="Delete" cancel-label="Keep"');
+    expect(buttons(el)[0]!.textContent).toContain('Keep');
+    expect(buttons(el)[1]!.textContent).toContain('Delete');
   });
 });
