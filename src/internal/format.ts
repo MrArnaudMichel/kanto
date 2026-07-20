@@ -1,12 +1,12 @@
 /** Formatting helpers shared by elements that display data. */
 
-const UNITS = ['o', 'Ko', 'Mo', 'Go', 'To'] as const;
+const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
 
 /**
- * A file size in French units: octets, kilo-octets, méga-octets.
+ * A human-readable file size.
  *
  * Uses 1024 steps, matching what every desktop file manager shows, and one
- * decimal above a kilobyte — "1,4 Mo" reads; "1 468 006 o" does not.
+ * decimal above a kilobyte — "1.4 MB" reads; "1468006 B" does not.
  */
 export function formatFileSize(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes < 0) return '';
@@ -18,6 +18,6 @@ export function formatFileSize(bytes: number): string {
     unit += 1;
   }
 
-  const rounded = unit === 0 ? String(Math.round(value)) : value.toFixed(1).replace('.', ',');
+  const rounded = unit === 0 ? String(Math.round(value)) : value.toFixed(1);
   return `${rounded} ${UNITS[unit]}`;
 }
