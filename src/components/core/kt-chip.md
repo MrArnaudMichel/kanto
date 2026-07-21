@@ -3,10 +3,10 @@
 A compact label. Three variants, none of them a button by default.
 
 ```html
-<kt-chip>Actif</kt-chip>
+<kt-chip>Active</kt-chip>
 <kt-chip variant="code">--color-primary-base</kt-chip>
-<kt-chip variant="category" color="#35DD83">Livré</kt-chip>
-<kt-chip error>Échec</kt-chip>
+<kt-chip variant="category" color="#35DD83">Delivered</kt-chip>
+<kt-chip error>Failed</kt-chip>
 ```
 
 | Variant    | Shape           | Use for                                     |
@@ -21,8 +21,8 @@ A compact label. Three variants, none of them a button by default.
 and the text and border take it at full strength.
 
 ```html
-<kt-chip variant="category" color="var(--color-info-base)">Interne</kt-chip>
-<kt-chip variant="category" color="rgb(245 171 61)">Priorité</kt-chip>
+<kt-chip variant="category" color="var(--color-info-base)">Internal</kt-chip>
+<kt-chip variant="category" color="rgb(245 171 61)">Priority</kt-chip>
 ```
 
 Set it in CSS instead when the colour is per-context rather than per-chip:
@@ -38,7 +38,7 @@ Set it in CSS instead when the colour is per-context rather than per-chip:
 ## Clickable chips
 
 ```html
-<kt-chip clickable>Filtre : région</kt-chip>
+<kt-chip clickable>Filter: region</kt-chip>
 ```
 
 Adds `role="button"`, a tab stop and Enter/Space activation, then fires

@@ -6,9 +6,9 @@ grouping, not as an elevation.
 
 ```html
 <kt-card>
-  <h6 slot="header">Transactions récentes</h6>
+  <h6 slot="header">Recent transactions</h6>
   <kt-table></kt-table>
-  <kt-button slot="footer" variant="text">Voir tout l'historique</kt-button>
+  <kt-button slot="footer" variant="text">View full history</kt-button>
 </kt-card>
 ```
 
@@ -17,7 +17,7 @@ Empty `header` and `footer` slots collapse, so an omitted footer costs no gap.
 ## Clickable cards
 
 ```html
-<kt-card clickable>Entité 4 812</kt-card>
+<kt-card clickable>Entity 4812</kt-card>
 ```
 
 `clickable` gives the card `role="button"`, a tab stop, hover and active
@@ -33,11 +33,11 @@ control, or the things inside it are.
 `image` is the convenience path; the `media` slot takes anything else.
 
 ```html
-<kt-card image="/preview.png" image-alt="Aperçu" image-position="top" image-size="160px"></kt-card>
+<kt-card image="/preview.png" image-alt="Preview" image-position="top" image-size="160px"></kt-card>
 
 <kt-card image-position="right" image-size="200px">
   <canvas slot="media"></canvas>
-  Répartition mensuelle
+  Monthly breakdown
 </kt-card>
 ```
 

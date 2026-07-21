@@ -7,9 +7,9 @@ Kanto fields are borderless: a fill on `--color-dark-12` that gains a 2px
 outside the box, so none of those states reflow the layout.
 
 ```html
-<kt-input placeholder="Rechercher partout..." icon="search"></kt-input>
+<kt-input placeholder="Search everything..." icon="search"></kt-input>
 <kt-input type="password" name="password"></kt-input>
-<kt-input error="Adresse invalide" value="pas-une-adresse"></kt-input>
+<kt-input error="Invalid email address" value="pas-une-adresse"></kt-input>
 <kt-input size="small" placeholder="Filtrer"></kt-input>
 ```
 
@@ -22,7 +22,7 @@ input — no hidden mirror input, no manual wiring.
 ```html
 <form>
   <kt-input name="email" type="email" required></kt-input>
-  <kt-button type="submit">Envoyer</kt-button>
+  <kt-button type="submit">Send</kt-button>
 </form>
 ```
 
@@ -33,7 +33,7 @@ new FormData(form).get('email'); // the field's value
 ## Reading the value
 
 `value` is a property, and a `value` attribute seeds it and becomes the reset
-value. Listen for `kt-change` for a committed value, `kt-input` for every
+value. Listn for `kt-change` for a committed value, `kt-input` for every
 keystroke:
 
 ```js
@@ -80,11 +80,11 @@ Wrap the field in `<kt-label-input>`, or give it a `label` when there is no
 visible one:
 
 ```html
-<kt-label-input label="Adresse e-mail" required>
+<kt-label-input label="Email address" required>
   <kt-input name="email" type="email" required></kt-input>
 </kt-label-input>
 
-<kt-input label="Rechercher" icon="search"></kt-input>
+<kt-input label="Search" icon="search"></kt-input>
 ```
 
 ## API

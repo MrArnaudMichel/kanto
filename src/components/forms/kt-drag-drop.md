@@ -10,7 +10,7 @@ entry be removed.
 ```js
 zone.addEventListener('kt-files-change', (e) => console.log(e.detail.files));
 zone.addEventListener('kt-files-rejected', (e) => {
-  toast.error(e.detail.reason === 'size' ? 'Fichier trop volumineux' : 'Format non accepté');
+  toast.error(e.detail.reason === 'size' ? 'File too large' : 'Unsupported format');
 });
 ```
 
@@ -31,20 +31,20 @@ fires `kt-files-rejected` with what it turned away and why.
 The zone is `role="button"` with a tab stop and Enter/Space activation, so it
 can be used without a pointer — a drop zone reachable only by dragging is
 unusable for anyone who does not drag. Each file's remove button carries the
-file name in its accessible label, rather than nine identical "Supprimer"
+file name in its accessible label, rather than nine identical "Delete"
 buttons.
 
 ## API
 
-| Property          | Attribute          | Type      | Default                    |
-| ----------------- | ------------------ | --------- | -------------------------- |
-| `heading`         | `heading`          | `string`  | `'Glissez-déposez ou'`     |
-| `linkText`        | `link-text`        | `string`  | `'parcourez vos fichiers'` |
-| `recommendedSize` | `recommended-size` | `string`  | `''`                       |
-| `multiple`        | `multiple`         | `boolean` | `true`                     |
-| `accept`          | `accept`           | `string`  | `''`                       |
-| `maxSize`         | `max-size`         | `number`  | `0` (no limit)             |
-| `disabled`        | `disabled`         | `boolean` | `false`                    |
+| Property          | Attribute          | Type      | Default               |
+| ----------------- | ------------------ | --------- | --------------------- |
+| `heading`         | `heading`          | `string`  | `'Drag and drop or'`  |
+| `linkText`        | `link-text`        | `string`  | `'browse your files'` |
+| `recommendedSize` | `recommended-size` | `string`  | `''`                  |
+| `multiple`        | `multiple`         | `boolean` | `true`                |
+| `accept`          | `accept`           | `string`  | `''`                  |
+| `maxSize`         | `max-size`         | `number`  | `0` (no limit)        |
+| `disabled`        | `disabled`         | `boolean` | `false`               |
 
 `heading` rather than `title`: an element already has a `title`, and reusing it
 would drop the prompt into a native tooltip over the whole zone.

@@ -4,9 +4,9 @@ A trail showing where the current page sits.
 
 ```js
 trail.items = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Entités', href: '/entites' },
-  { label: 'Entité 4812' },
+  { label: 'Home', href: '/' },
+  { label: 'Entities', href: '/entites' },
+  { label: 'Entity 4812' },
 ];
 ```
 
@@ -31,10 +31,10 @@ user is asking the browser for a new tab, and the element stays out of it.
 
 ## API
 
-| Property | Attribute | Type                 | Default          |
-| -------- | --------- | -------------------- | ---------------- |
-| `items`  | —         | `KtBreadcrumbItem[]` | `[]`             |
-| `label`  | `label`   | `string`             | `"Fil d'ariane"` |
+| Property | Attribute | Type                 | Default        |
+| -------- | --------- | -------------------- | -------------- |
+| `items`  | —         | `KtBreadcrumbItem[]` | `[]`           |
+| `label`  | `label`   | `string`             | `"Breadcrumb"` |
 
 ```ts
 interface KtBreadcrumbItem {

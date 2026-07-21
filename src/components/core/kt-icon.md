@@ -43,10 +43,10 @@ Give it a `label` only when it carries meaning alone, which makes it
 
 ```html
 <!-- text says it; icon is decoration -->
-<kt-button icon="trash-2">Supprimer</kt-button>
+<kt-button icon="trash-2">Delete</kt-button>
 
 <!-- icon says it; it needs a name -->
-<kt-icon name="trash-2" label="Supprimer"></kt-icon>
+<kt-icon name="trash-2" label="Delete"></kt-icon>
 ```
 
 ## API

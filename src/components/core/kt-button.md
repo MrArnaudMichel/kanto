@@ -3,10 +3,10 @@
 The Kanto action button. Ten variants, three sizes, an optional Lucide icon.
 
 ```html
-<kt-button icon="plus">Nouvelle entité</kt-button>
-<kt-button variant="secondary" icon="refresh-cw">Actualiser</kt-button>
-<kt-button variant="danger">Supprimer</kt-button>
-<kt-button variant="text">Voir tout l'historique</kt-button>
+<kt-button icon="plus">New entity</kt-button>
+<kt-button variant="secondary" icon="refresh-cw">Refresh</kt-button>
+<kt-button variant="danger">Delete</kt-button>
+<kt-button variant="text">View full history</kt-button>
 ```
 
 ## Choosing a variant
@@ -28,7 +28,7 @@ An `icon` with no slotted text collapses the button to a square. It then has no
 accessible name of its own, so `label` is required:
 
 ```html
-<kt-button icon="x" label="Fermer" variant="secondary-no-bg"></kt-button>
+<kt-button icon="x" label="Close" variant="secondary-no-bg"></kt-button>
 ```
 
 ## Forms
@@ -41,7 +41,7 @@ the form's constraint validation, fires a real `submit` event, and carries
 ```html
 <form>
   <kt-input name="email" type="email" required></kt-input>
-  <kt-button type="submit">Envoyer</kt-button>
+  <kt-button type="submit">Send</kt-button>
 </form>
 ```
 

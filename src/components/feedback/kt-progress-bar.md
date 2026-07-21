@@ -3,7 +3,7 @@
 A determinate progress bar.
 
 ```html
-<kt-progress-bar value="64" show-value label="Import des entités"></kt-progress-bar>
+<kt-progress-bar value="64" show-value label="Importing entities"></kt-progress-bar>
 <kt-progress-bar value="90" variant="warning" striped animated></kt-progress-bar>
 <kt-progress-bar value="4" max="7" size="small"></kt-progress-bar>
 ```

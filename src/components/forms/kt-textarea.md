@@ -4,9 +4,9 @@ A multi-line field, with the same borderless fill and outline states as
 `<kt-input>`.
 
 ```html
-<kt-textarea placeholder="Décrivez l'incident..." rows="5"></kt-textarea>
+<kt-textarea placeholder="Describe the incident..." rows="5"></kt-textarea>
 <kt-textarea maxlength="280" name="bio"></kt-textarea>
-<kt-textarea error="280 caractères maximum" resize="none"></kt-textarea>
+<kt-textarea error="280 characters maximum" resize="none"></kt-textarea>
 ```
 
 ## The counter

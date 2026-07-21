@@ -7,8 +7,8 @@ Transient notifications. Three layers, use the highest one that fits.
 ```js
 import { toaster } from 'kanto';
 
-toaster.success('Entité créée');
-toaster.error('Échec de la sauvegarde', { description: 'Réessayez dans un instant.' });
+toaster.success('Entity created');
+toaster.error('Could not save', { description: 'Try again in a moment.' });
 ```
 
 It creates one `<kt-toast-container>` on `<body>` the first time it is called
@@ -26,7 +26,7 @@ happen to be looking at is an error they never saw.
 ```
 
 ```js
-container.show({ variant: 'success', heading: 'Entité créée', duration: 4000 });
+container.show({ variant: 'success', heading: 'Entity created', duration: 4000 });
 ```
 
 The container owns the toasts: it appends them, and it removes them when they
@@ -42,7 +42,7 @@ otherwise a toast expires under the pointer of someone reading it.
 ## `<kt-toast>` — one notification
 
 ```html
-<kt-toast variant="warning" heading="Quota bientôt atteint" dismissible duration="6000"></kt-toast>
+<kt-toast variant="warning" heading="Approaching your quota" dismissible duration="6000"></kt-toast>
 ```
 
 `heading`, not `title`: every element already has a `title`, and shadowing it

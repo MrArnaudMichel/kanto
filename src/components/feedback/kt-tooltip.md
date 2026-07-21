@@ -3,8 +3,8 @@
 A short label that appears on hover or focus. Wrap what it describes:
 
 ```html
-<kt-tooltip text="Actualiser les données">
-  <kt-button icon="refresh-cw" label="Actualiser"></kt-button>
+<kt-tooltip text="Refresh the data">
+  <kt-button icon="refresh-cw" label="Refresh"></kt-button>
 </kt-tooltip>
 ```
 

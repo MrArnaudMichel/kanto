@@ -5,9 +5,9 @@ selected segment raised out of it.
 
 ```js
 control.options = [
-  { value: 'day', label: 'Jour' },
-  { value: 'week', label: 'Semaine' },
-  { value: 'month', label: 'Mois' },
+  { value: 'day', label: 'Day' },
+  { value: 'week', label: 'Week' },
+  { value: 'month', label: 'Month' },
 ];
 control.value = 'week';
 control.addEventListener('kt-change', (e) => setRange(e.detail.value));

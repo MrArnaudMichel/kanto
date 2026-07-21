@@ -8,7 +8,7 @@ import 'kanto/styles.css';
 ```
 
 ```html
-<kt-button variant="primary" icon="plus">Nouvelle entité</kt-button>
+<kt-button variant="primary" icon="plus">New entity</kt-button>
 ```
 
 Import a single element instead when you only need a few, so the bundler can
@@ -33,7 +33,7 @@ They bubble and cross shadow boundaries, so you can listen on a container.
 
 ```js
 const select = document.querySelector('kt-select');
-select.options = [{ id: 'idf', label: 'Île-de-France' }];
+select.options = [{ id: 'ne', label: 'North East' }];
 select.addEventListener('kt-change', (e) => console.log(e.detail.value));
 ```
 
@@ -54,7 +54,7 @@ export function Filters() {
   return (
     <>
       <KtInput
-        placeholder="Rechercher partout..."
+        placeholder="Search everything..."
         icon="search"
         value={query}
         onKtInput={(e) => setQuery(e.detail.value)}
@@ -93,7 +93,7 @@ import 'kanto/styles.css';
 
 ```vue
 <template>
-  <kt-input :value="query" placeholder="Rechercher" @kt-change="query = $event.detail.value" />
+  <kt-input :value="query" placeholder="Search" @kt-change="query = $event.detail.value" />
   <kt-select :options="regions" @kt-change="region = $event.detail.value" />
 </template>
 ```
@@ -114,7 +114,7 @@ import 'kanto';
 @Component({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
-    <kt-input placeholder="Rechercher" (kt-change)="onQuery($event)" />
+    <kt-input placeholder="Search" (kt-change)="onQuery($event)" />
     <kt-select [options]="regions" (kt-change)="onRegion($event)" />
   `,
 })
@@ -135,7 +135,7 @@ and listens for any event name:
   let query = '';
 </script>
 
-<kt-input placeholder="Rechercher" on:kt-change={(e) => (query = e.detail.value)} />
+<kt-input placeholder="Search" on:kt-change={(e) => (query = e.detail.value)} />
 <kt-select {options} on:kt-change={(e) => (region = e.detail.value)} />
 ```
 

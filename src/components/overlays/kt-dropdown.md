@@ -10,8 +10,8 @@ A panel anchored to a trigger. The generic overlay in the system.
 
 ```js
 menu.options = [
-  { id: 'edit', label: 'Modifier' },
-  { id: 'delete', label: 'Supprimer' },
+  { id: 'edit', label: 'Edit' },
+  { id: 'delete', label: 'Delete' },
 ];
 menu.addEventListener('kt-select', (e) => run(e.detail.value));
 ```
@@ -33,13 +33,13 @@ Placement is recalculated on open and on window resize.
 
 ## API
 
-| Property             | Attribute             | Type                       | Default            |
-| -------------------- | --------------------- | -------------------------- | ------------------ |
-| `options`            | —                     | `KtOption[]`               | `[]`               |
-| `value`              | `value`               | `string \| number \| null` | `null`             |
-| `preferredPlacement` | `preferred-placement` | `'bottom' \| 'top'`        | `'bottom'`         |
-| `disabled`           | `disabled`            | `boolean`                  | `false`            |
-| `emptyText`          | `empty-text`          | `string`                   | `'Aucun résultat'` |
+| Property             | Attribute             | Type                       | Default        |
+| -------------------- | --------------------- | -------------------------- | -------------- |
+| `options`            | —                     | `KtOption[]`               | `[]`           |
+| `value`              | `value`               | `string \| number \| null` | `null`         |
+| `preferredPlacement` | `preferred-placement` | `'bottom' \| 'top'`        | `'bottom'`     |
+| `disabled`           | `disabled`            | `boolean`                  | `false`        |
+| `emptyText`          | `empty-text`          | `string`                   | `'No results'` |
 
 | Method / getter | Description           |
 | --------------- | --------------------- |
