@@ -3,12 +3,12 @@
 A button that stays pressed, and a way to join several into one bar.
 
 ```html
-<kt-toggle-button icon="bold" label="Gras"></kt-toggle-button>
+<kt-toggle-button icon="bold" label="Bold"></kt-toggle-button>
 
-<kt-toggle-button-group label="Affichage">
-  <kt-toggle-button value="list">Liste</kt-toggle-button>
-  <kt-toggle-button value="grid">Grille</kt-toggle-button>
-  <kt-toggle-button value="map">Carte</kt-toggle-button>
+<kt-toggle-button-group label="View">
+  <kt-toggle-button value="list">List</kt-toggle-button>
+  <kt-toggle-button value="grid">Grid</kt-toggle-button>
+  <kt-toggle-button value="map">Map</kt-toggle-button>
 </kt-toggle-button-group>
 ```
 

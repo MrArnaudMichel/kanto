@@ -12,7 +12,7 @@ nav.sections = [
       { label: 'Select', href: '/select' },
     ],
   },
-  { title: 'Examples', items: [{ label: 'Tableau de bord', href: '/dashboard' }] },
+  { title: 'Examples', items: [{ label: 'Dashboard', href: '/dashboard' }] },
 ];
 nav.activeHref = location.pathname;
 ```
@@ -40,11 +40,11 @@ nav.addEventListener('kt-navigate', (e) => {
 
 ## API
 
-| Property     | Attribute     | Type             | Default                   |
-| ------------ | ------------- | ---------------- | ------------------------- |
-| `sections`   | —             | `KtNavSection[]` | `[]`                      |
-| `activeHref` | `active-href` | `string`         | `''`                      |
-| `label`      | `label`       | `string`         | `'Navigation secondaire'` |
+| Property     | Attribute     | Type             | Default                  |
+| ------------ | ------------- | ---------------- | ------------------------ |
+| `sections`   | —             | `KtNavSection[]` | `[]`                     |
+| `activeHref` | `active-href` | `string`         | `''`                     |
+| `label`      | `label`       | `string`         | `'Secondary navigation'` |
 
 ```ts
 interface KtNavSection {

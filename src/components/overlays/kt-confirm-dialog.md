@@ -4,9 +4,9 @@ A centred yes/no overlay for an action worth stopping to think about.
 
 ```html
 <kt-confirm-dialog
-  heading="Supprimer l'entité ?"
-  message="Cette action est irréversible."
-  confirm-label="Supprimer"
+  heading="Delete this entity?"
+  message="This action cannot be undone."
+  confirm-label="Delete"
 ></kt-confirm-dialog>
 ```
 
@@ -33,14 +33,14 @@ treatment, the only place in Kanto that colour is used.
 
 ## API
 
-| Property       | Attribute       | Type                    | Default             |
-| -------------- | --------------- | ----------------------- | ------------------- |
-| `open`         | `open`          | `boolean`               | `false`             |
-| `heading`      | `heading`       | `string`                | `'Êtes-vous sûr ?'` |
-| `message`      | `message`       | `string`                | `''`                |
-| `confirmLabel` | `confirm-label` | `string`                | `'Confirmer'`       |
-| `cancelLabel`  | `cancel-label`  | `string`                | `'Annuler'`         |
-| `variant`      | `variant`       | `'danger' \| 'primary'` | `'danger'`          |
+| Property       | Attribute       | Type                    | Default           |
+| -------------- | --------------- | ----------------------- | ----------------- |
+| `open`         | `open`          | `boolean`               | `false`           |
+| `heading`      | `heading`       | `string`                | `'Are you sure?'` |
+| `message`      | `message`       | `string`                | `''`              |
+| `confirmLabel` | `confirm-label` | `string`                | `'Confirm'`       |
+| `cancelLabel`  | `cancel-label`  | `string`                | `'Cancel'`        |
+| `variant`      | `variant`       | `'danger' \| 'primary'` | `'danger'`        |
 
 | Event        | Description                            |
 | ------------ | -------------------------------------- |

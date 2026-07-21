@@ -3,14 +3,14 @@
 A combobox: type to narrow the list, then pick.
 
 ```html
-<kt-input-menu placeholder="Rechercher un pays"></kt-input-menu>
+<kt-input-menu placeholder="Search a country"></kt-input-menu>
 ```
 
 ```js
 menu.options = [
   { id: 'fr', label: 'France' },
-  { id: 'be', label: 'Belgique' },
-  { id: 'ch', label: 'Suisse' },
+  { id: 'be', label: 'Belgium' },
+  { id: 'ch', label: 'Switzerland' },
 ];
 
 menu.addEventListener('kt-change', (e) => console.log(e.detail.value));
@@ -58,15 +58,15 @@ The arrows walk the **filtered** list, not the full one.
 
 ## API
 
-| Property      | Attribute     | Type                       | Default            |
-| ------------- | ------------- | -------------------------- | ------------------ |
-| `options`     | —             | `KtOption[]`               | `[]`               |
-| `value`       | `value`       | `string \| number \| null` | `null`             |
-| `placeholder` | `placeholder` | `string`                   | `''`               |
-| `disabled`    | `disabled`    | `boolean`                  | `false`            |
-| `error`       | `error`       | `string`                   | `''`               |
-| `label`       | `label`       | `string`                   | `''`               |
-| `emptyText`   | `empty-text`  | `string`                   | `'Aucune option…'` |
+| Property      | Attribute     | Type                       | Default         |
+| ------------- | ------------- | -------------------------- | --------------- |
+| `options`     | —             | `KtOption[]`               | `[]`            |
+| `value`       | `value`       | `string \| number \| null` | `null`          |
+| `placeholder` | `placeholder` | `string`                   | `''`            |
+| `disabled`    | `disabled`    | `boolean`                  | `false`         |
+| `error`       | `error`       | `string`                   | `''`            |
+| `label`       | `label`       | `string`                   | `''`            |
+| `emptyText`   | `empty-text`  | `string`                   | `'No options…'` |
 
 | Event       | Detail              |
 | ----------- | ------------------- |

@@ -4,9 +4,9 @@ A drawer sliding in from the right, for viewing or editing one record without
 losing the list behind it.
 
 ```html
-<kt-side-panel open eyebrow="Détails" heading="Entité 4812">
-  <kt-label-input label="Nom"><kt-input value="Entité 4812"></kt-input></kt-label-input>
-  <kt-button slot="footer" full-width>Enregistrer</kt-button>
+<kt-side-panel open eyebrow="Details" heading="Entity 4812">
+  <kt-label-input label="Nom"><kt-input value="Entity 4812"></kt-input></kt-label-input>
+  <kt-button slot="footer" full-width>Save</kt-button>
 </kt-side-panel>
 ```
 
@@ -41,7 +41,7 @@ guard it.
 | Property          | Attribute           | Type      | Default     |
 | ----------------- | ------------------- | --------- | ----------- |
 | `open`            | `open`              | `boolean` | `false`     |
-| `eyebrow`         | `eyebrow`           | `string`  | `'Détails'` |
+| `eyebrow`         | `eyebrow`           | `string`  | `'Details'` |
 | `heading`         | `heading`           | `string`  | `''`        |
 | `noBackdropClose` | `no-backdrop-close` | `boolean` | `false`     |
 

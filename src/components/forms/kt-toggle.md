@@ -4,7 +4,7 @@ An on/off switch.
 
 ```html
 <kt-toggle checked>Notifications</kt-toggle>
-<kt-toggle size="small" label="Mode sombre"></kt-toggle>
+<kt-toggle size="small" label="Dark mode"></kt-toggle>
 <kt-toggle disabled></kt-toggle>
 ```
 

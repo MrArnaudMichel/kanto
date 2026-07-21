@@ -3,7 +3,7 @@
 A label above a form control, with a red asterisk when it is required.
 
 ```html
-<kt-label-input label="Adresse e-mail" required>
+<kt-label-input label="Email address" required>
   <kt-input name="email" type="email" required></kt-input>
 </kt-label-input>
 ```
@@ -29,11 +29,11 @@ control's own `required` attribute, not from a decorative star in the label.
   <kt-textarea maxlength="500"></kt-textarea>
 </kt-label-input>
 
-<kt-label-input label="Région">
+<kt-label-input label="Region">
   <kt-select></kt-select>
 </kt-label-input>
 
-<kt-label-input label="Fichier">
+<kt-label-input label="File">
   <input type="file" />
 </kt-label-input>
 ```

@@ -5,8 +5,8 @@ A data table: tri-state sorting, single or multiple selection, paging.
 ```js
 table.columns = [
   { key: 'name', label: 'Nom', sortable: true },
-  { key: 'amount', label: 'Montant', sortable: true, align: 'right' },
-  { key: 'status', label: 'Statut' },
+  { key: 'amount', label: 'Amount', sortable: true, align: 'right' },
+  { key: 'status', label: 'Status' },
 ];
 table.data = rows;
 table.pageSize = 20;
@@ -20,9 +20,9 @@ sort with a mouse is a table half the users cannot sort.
 Each press cycles: unsorted → ascending → descending → unsorted. The third press
 restoring the original order is what makes sorting undoable.
 
-Text sorts through `Intl.Collator('fr', { numeric: true })`, so "Élan" files
-next to "Elan" rather than after "Zèbre", and "Entité 2" comes before
-"Entité 10". Empty values sort to the end whichever way the column points — a
+Text sorts through `Intl.Collator('fr', { numeric: true })`, so "Ångström" files
+next to "Elan" rather than after "Zeta", and "Entity 2" comes before
+"Entity 10". Empty values sort to the end whichever way the column points — a
 descending sort should not open with a screen of blanks.
 
 `aria-sort` on the header reflects the state.
@@ -59,22 +59,22 @@ table.renderCell = (row, column) =>
 
 ## API
 
-| Property        | Attribute        | Type                       | Default                      |
-| --------------- | ---------------- | -------------------------- | ---------------------------- |
-| `columns`       | —                | `KtTableColumn[]`          | `[]`                         |
-| `data`          | —                | `KtTableRow[]`             | `[]`                         |
-| `selectable`    | `selectable`     | `boolean`                  | `false`                      |
-| `selectionMode` | `selection-mode` | `'single' \| 'multiple'`   | `'multiple'`                 |
-| `selected`      | —                | `unknown[]`                | `[]`                         |
-| `pageSize`      | `page-size`      | `number` (0 = no paging)   | `0`                          |
-| `loading`       | `loading`        | `boolean`                  | `false`                      |
-| `compact`       | `compact`        | `boolean`                  | `false`                      |
-| `sortKey`       | `sort-key`       | `string \| null`           | `null`                       |
-| `sortDirection` | `sort-direction` | `'asc' \| 'desc' \| null`  | `null`                       |
-| `renderCell`    | —                | `(row, column) => unknown` | —                            |
-| `emptyText`     | `empty-text`     | `string`                   | `'Aucune donnée à afficher'` |
-| `loadingText`   | `loading-text`   | `string`                   | `'Chargement…'`              |
-| `label`         | `label`          | `string`                   | `''`                         |
+| Property        | Attribute        | Type                       | Default                |
+| --------------- | ---------------- | -------------------------- | ---------------------- |
+| `columns`       | —                | `KtTableColumn[]`          | `[]`                   |
+| `data`          | —                | `KtTableRow[]`             | `[]`                   |
+| `selectable`    | `selectable`     | `boolean`                  | `false`                |
+| `selectionMode` | `selection-mode` | `'single' \| 'multiple'`   | `'multiple'`           |
+| `selected`      | —                | `unknown[]`                | `[]`                   |
+| `pageSize`      | `page-size`      | `number` (0 = no paging)   | `0`                    |
+| `loading`       | `loading`        | `boolean`                  | `false`                |
+| `compact`       | `compact`        | `boolean`                  | `false`                |
+| `sortKey`       | `sort-key`       | `string \| null`           | `null`                 |
+| `sortDirection` | `sort-direction` | `'asc' \| 'desc' \| null`  | `null`                 |
+| `renderCell`    | —                | `(row, column) => unknown` | —                      |
+| `emptyText`     | `empty-text`     | `string`                   | `'No data to display'` |
+| `loadingText`   | `loading-text`   | `string`                   | `'Loading…'`           |
+| `label`         | `label`          | `string`                   | `''`                   |
 
 ```ts
 interface KtTableColumn {

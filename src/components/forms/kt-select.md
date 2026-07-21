@@ -3,14 +3,14 @@
 A single-choice dropdown.
 
 ```html
-<kt-select placeholder="Sélectionner une région" name="region"></kt-select>
+<kt-select placeholder="Select a region" name="region"></kt-select>
 ```
 
 ```js
 select.options = [
-  { id: 'idf', label: 'Île-de-France' },
-  { id: 'bzh', label: 'Bretagne' },
-  { id: 'paca', label: "Provence-Alpes-Côte d'Azur", disabled: true },
+  { id: 'ne', label: 'North East' },
+  { id: 'sw', label: 'South West' },
+  { id: 'nw', label: 'North West', disabled: true },
 ];
 
 select.addEventListener('kt-change', (e) => console.log(e.detail.value, e.detail.option));
@@ -43,19 +43,19 @@ out; one that only toggles `display` cannot animate at all.
 
 ## API
 
-| Property      | Attribute     | Type                             | Default            |
-| ------------- | ------------- | -------------------------------- | ------------------ |
-| `options`     | —             | `KtOption[]`                     | `[]`               |
-| `value`       | `value`       | `string \| number \| null`       | `null`             |
-| `placeholder` | `placeholder` | `string`                         | `'Sélectionner'`   |
-| `name`        | `name`        | `string`                         | `''`               |
-| `size`        | `size`        | `'small' \| 'medium' \| 'large'` | `'medium'`         |
-| `disabled`    | `disabled`    | `boolean`                        | `false`            |
-| `required`    | `required`    | `boolean`                        | `false`            |
-| `error`       | `error`       | `string`                         | `''`               |
-| `clearable`   | `clearable`   | `boolean`                        | `true`             |
-| `label`       | `label`       | `string`                         | `''`               |
-| `emptyText`   | `empty-text`  | `string`                         | `'Aucune option…'` |
+| Property      | Attribute     | Type                             | Default         |
+| ------------- | ------------- | -------------------------------- | --------------- |
+| `options`     | —             | `KtOption[]`                     | `[]`            |
+| `value`       | `value`       | `string \| number \| null`       | `null`          |
+| `placeholder` | `placeholder` | `string`                         | `'Select'`      |
+| `name`        | `name`        | `string`                         | `''`            |
+| `size`        | `size`        | `'small' \| 'medium' \| 'large'` | `'medium'`      |
+| `disabled`    | `disabled`    | `boolean`                        | `false`         |
+| `required`    | `required`    | `boolean`                        | `false`         |
+| `error`       | `error`       | `string`                         | `''`            |
+| `clearable`   | `clearable`   | `boolean`                        | `true`          |
+| `label`       | `label`       | `string`                         | `''`            |
+| `emptyText`   | `empty-text`  | `string`                         | `'No options…'` |
 
 ```ts
 interface KtOption {
