@@ -23,11 +23,11 @@ interface Page {
 }
 
 const PAGES: readonly Page[] = [
-  { id: 'foundations', label: 'Fondations', section: 'Design', render: foundationsPage },
-  { id: 'components', label: 'Composants', section: 'Design', render: componentsPage },
-  { id: 'dashboard', label: 'Tableau de bord', section: 'Exemples', render: dashboardPage },
-  { id: 'form', label: 'Formulaire', section: 'Exemples', render: formPage },
-  { id: 'table', label: 'Données', section: 'Exemples', render: tablePage },
+  { id: 'foundations', label: 'Foundations', section: 'Design', render: foundationsPage },
+  { id: 'components', label: 'Components', section: 'Design', render: componentsPage },
+  { id: 'dashboard', label: 'Dashboard', section: 'Examples', render: dashboardPage },
+  { id: 'form', label: 'Form', section: 'Examples', render: formPage },
+  { id: 'table', label: 'Data', section: 'Examples', render: tablePage },
 ];
 
 const THEME_KEY = 'kanto-docs-theme';
@@ -79,16 +79,16 @@ function shell(): TemplateResult {
       <kt-sub-menu-navigation
         .sections=${navSections()}
         active-href=${`#${page.id}`}
-        label="Documentation Kanto"
+        label="Kanto documentation"
       ></kt-sub-menu-navigation>
 
       <div class="sidebar-footer">
-        <span class="overline">Thème</span>
+        <span class="overline">Theme</span>
         <kt-segmented-control
-          label="Thème"
+          label="Theme"
           .options=${[
-            { value: 'dark', label: 'Sombre' },
-            { value: 'light', label: 'Clair' },
+            { value: 'dark', label: 'Dark' },
+            { value: 'light', label: 'Light' },
           ]}
           .value=${theme}
           @kt-change=${(event: CustomEvent<{ value: Theme }>) => {

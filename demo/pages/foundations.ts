@@ -6,29 +6,29 @@ const TEXT = [100, 400, 500, 600, 700, 800, 900];
 
 const TYPE_SCALE: readonly (readonly [string, string])[] = [
   ['--font-title-studio', 'Studio · 48/58 Gilroy'],
-  ['--font-title-h1', 'Titre H1 · 36/43 Gilroy 600'],
-  ['--font-title-h4', 'Titre H4 · 24/29 Gilroy 400'],
-  ['--font-title-h6', 'Titre H6 · 18 Gilroy 600'],
-  ['--font-normal-medium', 'Corps medium · 14 Avenir Next 500'],
-  ['--font-normal-regular', 'Corps regular · 14 Avenir Next 400'],
-  ['--font-normal-small', 'Corps small · 12 Avenir Next 400'],
+  ['--font-title-h1', 'Heading H1 · 36/43 Gilroy 600'],
+  ['--font-title-h4', 'Heading H4 · 24/29 Gilroy 400'],
+  ['--font-title-h6', 'Heading H6 · 18 Gilroy 600'],
+  ['--font-normal-medium', 'Body medium · 14 Avenir Next 500'],
+  ['--font-normal-regular', 'Body regular · 14 Avenir Next 400'],
+  ['--font-normal-small', 'Body small · 12 Avenir Next 400'],
   ['--font-code-regular', 'Code · 14 Source Code Pro'],
 ];
 
 const SPACING: readonly (readonly [string, string])[] = [
-  ['--padding-card', 'Padding des cartes'],
-  ['--gap-card', 'Gap interne des cartes'],
-  ['--padding-form', 'Padding des formulaires'],
-  ['--gap-form', 'Gap des formulaires'],
-  ['--gap-button', 'Gap dans un bouton'],
-  ['--gap-element', 'Gap le plus fin'],
+  ['--padding-card', 'Card padding'],
+  ['--gap-card', 'Card inner gap'],
+  ['--padding-form', 'Form padding'],
+  ['--gap-form', 'Form gap'],
+  ['--gap-button', 'Gap inside a button'],
+  ['--gap-element', 'Finest gap'],
 ];
 
 const RADII: readonly (readonly [string, string])[] = [
-  ['--border-radius', 'Champs, boutons, chips carrés'],
-  ['--border-radius-card', 'Cartes et modales'],
-  ['--radius-pill', 'Chips tag'],
-  ['--radius-sub-menu', 'Conteneur de navigation'],
+  ['--border-radius', 'Fields, buttons, square chips'],
+  ['--border-radius-card', 'Cards and modals'],
+  ['--radius-pill', 'Tag chips'],
+  ['--radius-sub-menu', 'Navigation container'],
 ];
 
 function swatch(token: string, label: string): TemplateResult {
@@ -46,19 +46,19 @@ function swatch(token: string, label: string): TemplateResult {
 export function foundationsPage(): TemplateResult {
   return html`
     <header class="page-header">
-      <h1>Fondations</h1>
+      <h1>Foundations</h1>
       <p>
-        Chaque décision visuelle de Kanto se résout en une custom property. Les composants ne codent
-        en dur ni couleur, ni taille, ni durée — c'est ce qui rend le thème clair possible sans une
-        seule ligne de CSS spécifique.
+        Every visual decision in Kanto resolves to a CSS custom property. Components hard-code no
+        colour, no size and no duration — which is what makes the light theme possible without a
+        single line of theme-specific CSS.
       </p>
     </header>
 
     <section>
       <h6>Surfaces</h6>
       <p style="color:var(--text-muted);margin-bottom:14px">
-        L'élévation, dans Kanto, est une surface plus claire — pas une ombre. La seule vraie ombre
-        du système est sur les toasts.
+        Elevation in Kanto is a lighter surface, not a shadow. The only real shadow in the system is
+        on toasts.
       </p>
       <div class="grid">
         ${SURFACES.map((step) => swatch(`--color-dark-${step}`, `dark-${step}`))}
@@ -66,10 +66,10 @@ export function foundationsPage(): TemplateResult {
     </section>
 
     <section>
-      <h6>Couleurs sémantiques</h6>
+      <h6>Semantic colours</h6>
       <p style="color:var(--text-muted);margin-bottom:14px">
-        Chaque couleur existe en trois variantes : <code>-base</code> opaque, <code>-soft</code> à
-        12 % et <code>-hover</code> à 16 %.
+        Each colour ships in three variants: <code>-base</code> opaque, <code>-soft</code> at 12%
+        and <code>-hover</code> at 16%.
       </p>
       <div class="grid">
         ${SEMANTIC.map((name) => swatch(`--color-${name}-base`, name))}
@@ -78,12 +78,12 @@ export function foundationsPage(): TemplateResult {
     </section>
 
     <section>
-      <h6>Texte</h6>
+      <h6>Text</h6>
       <div class="grid">${TEXT.map((step) => swatch(`--color-text-${step}`, `text-${step}`))}</div>
     </section>
 
     <section>
-      <h6>Typographie</h6>
+      <h6>Typography</h6>
       <div class="stack">
         ${TYPE_SCALE.map(
           ([token, label]) =>
@@ -96,7 +96,7 @@ export function foundationsPage(): TemplateResult {
     </section>
 
     <section>
-      <h6>Espacements</h6>
+      <h6>Spacing</h6>
       <div class="stack">
         ${SPACING.map(
           ([token, label]) =>
@@ -112,7 +112,7 @@ export function foundationsPage(): TemplateResult {
     </section>
 
     <section>
-      <h6>Rayons</h6>
+      <h6>Radii</h6>
       <div class="grid">
         ${RADII.map(
           ([token, label]) =>
