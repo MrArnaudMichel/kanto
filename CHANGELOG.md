@@ -79,8 +79,8 @@ framework.
   `width: NaN%`.
 - **Category chips tint through `color-mix`** instead of concatenating `"33"`
   onto a hex string, which only ever worked for six-digit hex.
-- **Table sorting is locale-aware** — "Élan" files next to "Elan", and
-  "Entité 2" precedes "Entité 10". Empty values sort last in both directions.
+- **Table sorting is locale-aware** — "Ångström" files next to "Angstrom", and
+  "Entity 2" precedes "Entity 10". Empty values sort last in both directions.
 - **Combobox arrows walk the filtered list.** They indexed into the unfiltered
   array, so pressing Down after typing selected whatever sat at that index.
 - **Modified clicks on links are left alone**, so ⌘-click on a breadcrumb opens

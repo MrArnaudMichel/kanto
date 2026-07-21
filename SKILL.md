@@ -32,8 +32,10 @@ static HTML file, import `styles.css`, and load the elements from a bundle.
 - **Prefer the semantic aliases** — `--surface-card` over `--color-dark-16`,
   `--text-muted` over `--color-text-400`.
 - **Data goes in as properties, not attributes.** `options`, `data`, `columns`.
-- **Copy is French**, sentence case, no emoji. Numbers in French formats:
-  "120,00 €", "il y a 2 min", "25 Jan".
+- **Copy is English**, sentence case, no emoji. Keep it terse: "No data to
+  display", not "There is currently no data available to display".
+- **Every default string is a property.** Override `placeholder`, `emptyText`,
+  `confirmLabel` and friends at the call site rather than forking a component.
 - **Elevation is a lighter surface, not a shadow.**
 - **One primary button per screen.** `delete` — the solid red — is for the
   irreversible only.

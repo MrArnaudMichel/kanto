@@ -19,9 +19,9 @@ import 'kanto-ds/styles.css';
 
 ```html
 <kt-card>
-  <h6 slot="header">Transactions récentes</h6>
+  <h6 slot="header">Recent transactions</h6>
   <kt-table></kt-table>
-  <kt-button slot="footer" variant="text">Voir tout l'historique</kt-button>
+  <kt-button slot="footer" variant="text">View full history</kt-button>
 </kt-card>
 ```
 
@@ -65,9 +65,13 @@ danger on error.
 decorative animation is the striped progress bar, and it earns its place: it is
 how an operation says it is still working when the number is not moving.
 
-**Copy is French.** "Rechercher partout...", "Aucune donnée à afficher",
-"il y a 2 min". Sentence case for labels, uppercase only for overline section
-titles. No emoji in product UI.
+**Copy is English, and terse.** "Search everything...", "No data to display",
+"2 min ago". Sentence case for labels and buttons; uppercase only for overline
+section titles. No emoji in product UI — the one exception is the flag in the
+phone-input country picker, which is functional.
+
+Every default string is a property, so a screen can override any of them, and
+an application that needs another language sets them at the call site.
 
 Full details in **[src/tokens/README.md](src/tokens/README.md)**.
 
@@ -112,10 +116,10 @@ input — no hidden mirror inputs, no manual wiring.
 
 ```html
 <form>
-  <kt-label-input label="Adresse e-mail" required>
+  <kt-label-input label="Email address" required>
     <kt-input name="email" type="email" required></kt-input>
   </kt-label-input>
-  <kt-button type="submit">Envoyer</kt-button>
+  <kt-button type="submit">Send</kt-button>
 </form>
 ```
 
@@ -138,7 +142,7 @@ shape. Some of what that meant:
 ```bash
 npm install
 npm run dev          # the documentation site, on src/
-npm test             # 228 tests
+npm test             # 247 tests
 npm run typecheck
 npm run lint
 npm run build        # JS, types, and the static CSS + fonts
