@@ -9,7 +9,7 @@ outside the box, so none of those states reflow the layout.
 ```html
 <kt-input placeholder="Search everything..." icon="search"></kt-input>
 <kt-input type="password" name="password"></kt-input>
-<kt-input error="Invalid email address" value="pas-une-adresse"></kt-input>
+<kt-input error="Invalid email address" value="not-an-address"></kt-input>
 <kt-input size="small" placeholder="Filtrer"></kt-input>
 ```
 

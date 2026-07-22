@@ -89,7 +89,7 @@ export function componentsPage(): TemplateResult {
         <kt-input placeholder="Search everything..." icon="search"></kt-input>
         <kt-input type="password" value="hunter2"></kt-input>
         <kt-input type="tel"></kt-input>
-        <kt-input error="Adresse invalide" value="pas-une-adresse"></kt-input>
+        <kt-input error="Invalid email address" value="not-an-address"></kt-input>
         <kt-select placeholder="Select a region" .options=${REGIONS}></kt-select>
         <kt-input-menu placeholder="Search a region" .options=${REGIONS}></kt-input-menu>
         <kt-textarea placeholder="Describe the incident..." maxlength="280"></kt-textarea>
