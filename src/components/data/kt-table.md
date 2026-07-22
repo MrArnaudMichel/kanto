@@ -20,8 +20,8 @@ sort with a mouse is a table half the users cannot sort.
 Each press cycles: unsorted → ascending → descending → unsorted. The third press
 restoring the original order is what makes sorting undoable.
 
-Text sorts through `Intl.Collator('fr', { numeric: true })`, so "Ångström" files
-next to "Elan" rather than after "Zeta", and "Entity 2" comes before
+Text sorts through `Intl.Collator('en', { numeric: true })`, so "Ångström"
+files next to "Angstrom" rather than after "Zeta", and "Entity 2" comes before
 "Entity 10". Empty values sort to the end whichever way the column points — a
 descending sort should not open with a screen of blanks.
 
