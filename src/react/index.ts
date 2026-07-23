@@ -17,32 +17,32 @@
 import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';
 
-import { KtButton as KtButtonElement } from '../components/core/kt-button.js';
-import { KtCard as KtCardElement } from '../components/core/kt-card.js';
-import { KtChip as KtChipElement } from '../components/core/kt-chip.js';
-import { KtIcon as KtIconElement } from '../components/core/kt-icon.js';
-import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop.js';
-import { KtInput as KtInputElement } from '../components/forms/kt-input.js';
-import { KtInputMenu as KtInputMenuElement } from '../components/forms/kt-input-menu.js';
-import { KtLabelInput as KtLabelInputElement } from '../components/forms/kt-label-input.js';
-import { KtSelect as KtSelectElement } from '../components/forms/kt-select.js';
-import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea.js';
-import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle.js';
-import { KtBreadcrumb as KtBreadcrumbElement } from '../components/navigation/kt-breadcrumb.js';
-import { KtSegmentedControl as KtSegmentedControlElement } from '../components/navigation/kt-segmented-control.js';
-import { KtSubMenuNavigation as KtSubMenuNavigationElement } from '../components/navigation/kt-sub-menu-navigation.js';
-import { KtToggleButton as KtToggleButtonElement } from '../components/navigation/kt-toggle-button.js';
-import { KtToggleButtonGroup as KtToggleButtonGroupElement } from '../components/navigation/kt-toggle-button-group.js';
-import { KtProgressBar as KtProgressBarElement } from '../components/feedback/kt-progress-bar.js';
-import { KtSkeleton as KtSkeletonElement } from '../components/feedback/kt-skeleton.js';
-import { KtToast as KtToastElement } from '../components/feedback/kt-toast.js';
-import { KtToastContainer as KtToastContainerElement } from '../components/feedback/kt-toast-container.js';
-import { KtTooltip as KtTooltipElement } from '../components/feedback/kt-tooltip.js';
-import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlays/kt-confirm-dialog.js';
-import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown.js';
-import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel.js';
-import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination.js';
-import { KtTable as KtTableElement } from '../components/data/kt-table.js';
+import { KtButton as KtButtonElement } from '../components/core/kt-button/kt-button.js';
+import { KtCard as KtCardElement } from '../components/core/kt-card/kt-card.js';
+import { KtChip as KtChipElement } from '../components/core/kt-chip/kt-chip.js';
+import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
+import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
+import { KtInput as KtInputElement } from '../components/forms/kt-input/kt-input.js';
+import { KtInputMenu as KtInputMenuElement } from '../components/forms/kt-input-menu/kt-input-menu.js';
+import { KtLabelInput as KtLabelInputElement } from '../components/forms/kt-label-input/kt-label-input.js';
+import { KtSelect as KtSelectElement } from '../components/forms/kt-select/kt-select.js';
+import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea/kt-textarea.js';
+import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle/kt-toggle.js';
+import { KtBreadcrumb as KtBreadcrumbElement } from '../components/navigation/kt-breadcrumb/kt-breadcrumb.js';
+import { KtSegmentedControl as KtSegmentedControlElement } from '../components/navigation/kt-segmented-control/kt-segmented-control.js';
+import { KtSubMenuNavigation as KtSubMenuNavigationElement } from '../components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
+import { KtToggleButton as KtToggleButtonElement } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
+import { KtToggleButtonGroup as KtToggleButtonGroupElement } from '../components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
+import { KtProgressBar as KtProgressBarElement } from '../components/feedback/kt-progress-bar/kt-progress-bar.js';
+import { KtSkeleton as KtSkeletonElement } from '../components/feedback/kt-skeleton/kt-skeleton.js';
+import { KtToast as KtToastElement } from '../components/feedback/kt-toast/kt-toast.js';
+import { KtToastContainer as KtToastContainerElement } from '../components/feedback/kt-toast-container/kt-toast-container.js';
+import { KtTooltip as KtTooltipElement } from '../components/feedback/kt-tooltip/kt-tooltip.js';
+import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
+import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown/kt-dropdown.js';
+import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel/kt-side-panel.js';
+import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination/kt-pagination.js';
+import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.js';
 
 /** Narrows an event name to the detail its element actually dispatches. */
 type Kt<T> = EventName<CustomEvent<T>>;
@@ -258,4 +258,4 @@ export const KtPagination = createComponent({
 });
 
 // The imperative toaster needs no wrapper.
-export { toaster } from '../components/feedback/toaster.js';
+export { toaster } from '../components/feedback/kt-toast-container/toaster.js';

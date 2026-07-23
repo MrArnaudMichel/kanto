@@ -34,32 +34,32 @@ import type { Plugin } from 'vue';
 
 import '../index.js';
 
-import type { KtButton } from '../components/core/kt-button.js';
-import type { KtCard } from '../components/core/kt-card.js';
-import type { KtChip } from '../components/core/kt-chip.js';
-import type { KtIcon } from '../components/core/kt-icon.js';
-import type { KtDragDrop } from '../components/forms/kt-drag-drop.js';
-import type { KtInput } from '../components/forms/kt-input.js';
-import type { KtInputMenu } from '../components/forms/kt-input-menu.js';
-import type { KtLabelInput } from '../components/forms/kt-label-input.js';
-import type { KtSelect } from '../components/forms/kt-select.js';
-import type { KtTextarea } from '../components/forms/kt-textarea.js';
-import type { KtToggle } from '../components/forms/kt-toggle.js';
-import type { KtBreadcrumb } from '../components/navigation/kt-breadcrumb.js';
-import type { KtSegmentedControl } from '../components/navigation/kt-segmented-control.js';
-import type { KtSubMenuNavigation } from '../components/navigation/kt-sub-menu-navigation.js';
-import type { KtToggleButton } from '../components/navigation/kt-toggle-button.js';
-import type { KtToggleButtonGroup } from '../components/navigation/kt-toggle-button-group.js';
-import type { KtProgressBar } from '../components/feedback/kt-progress-bar.js';
-import type { KtSkeleton } from '../components/feedback/kt-skeleton.js';
-import type { KtToast } from '../components/feedback/kt-toast.js';
-import type { KtToastContainer } from '../components/feedback/kt-toast-container.js';
-import type { KtTooltip } from '../components/feedback/kt-tooltip.js';
-import type { KtConfirmDialog } from '../components/overlays/kt-confirm-dialog.js';
-import type { KtDropdown } from '../components/overlays/kt-dropdown.js';
-import type { KtSidePanel } from '../components/overlays/kt-side-panel.js';
-import type { KtPagination } from '../components/data/kt-pagination.js';
-import type { KtTable } from '../components/data/kt-table.js';
+import type { KtButton } from '../components/core/kt-button/kt-button.js';
+import type { KtCard } from '../components/core/kt-card/kt-card.js';
+import type { KtChip } from '../components/core/kt-chip/kt-chip.js';
+import type { KtIcon } from '../components/core/kt-icon/kt-icon.js';
+import type { KtDragDrop } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
+import type { KtInput } from '../components/forms/kt-input/kt-input.js';
+import type { KtInputMenu } from '../components/forms/kt-input-menu/kt-input-menu.js';
+import type { KtLabelInput } from '../components/forms/kt-label-input/kt-label-input.js';
+import type { KtSelect } from '../components/forms/kt-select/kt-select.js';
+import type { KtTextarea } from '../components/forms/kt-textarea/kt-textarea.js';
+import type { KtToggle } from '../components/forms/kt-toggle/kt-toggle.js';
+import type { KtBreadcrumb } from '../components/navigation/kt-breadcrumb/kt-breadcrumb.js';
+import type { KtSegmentedControl } from '../components/navigation/kt-segmented-control/kt-segmented-control.js';
+import type { KtSubMenuNavigation } from '../components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
+import type { KtToggleButton } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
+import type { KtToggleButtonGroup } from '../components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
+import type { KtProgressBar } from '../components/feedback/kt-progress-bar/kt-progress-bar.js';
+import type { KtSkeleton } from '../components/feedback/kt-skeleton/kt-skeleton.js';
+import type { KtToast } from '../components/feedback/kt-toast/kt-toast.js';
+import type { KtToastContainer } from '../components/feedback/kt-toast-container/kt-toast-container.js';
+import type { KtTooltip } from '../components/feedback/kt-tooltip/kt-tooltip.js';
+import type { KtConfirmDialog } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
+import type { KtDropdown } from '../components/overlays/kt-dropdown/kt-dropdown.js';
+import type { KtSidePanel } from '../components/overlays/kt-side-panel/kt-side-panel.js';
+import type { KtPagination } from '../components/data/kt-pagination/kt-pagination.js';
+import type { KtTable } from '../components/data/kt-table/kt-table.js';
 
 /**
  * True for any Kanto custom element.
@@ -123,4 +123,4 @@ export const kanto: Plugin = {
   },
 };
 
-export { toaster } from '../components/feedback/toaster.js';
+export { toaster } from '../components/feedback/kt-toast-container/toaster.js';
