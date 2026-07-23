@@ -47,9 +47,109 @@
       "types": "./dist/vue/index.d.ts",
       "default": "./dist/vue/index.js"
     },
-    "./components/*": {
-      "types": "./dist/components/*.d.ts",
-      "default": "./dist/components/*.js"
+    "./components/core/kt-button": {
+      "types": "./dist/components/core/kt-button/kt-button.d.ts",
+      "default": "./dist/components/core/kt-button/kt-button.js"
+    },
+    "./components/core/kt-card": {
+      "types": "./dist/components/core/kt-card/kt-card.d.ts",
+      "default": "./dist/components/core/kt-card/kt-card.js"
+    },
+    "./components/core/kt-chip": {
+      "types": "./dist/components/core/kt-chip/kt-chip.d.ts",
+      "default": "./dist/components/core/kt-chip/kt-chip.js"
+    },
+    "./components/core/kt-icon": {
+      "types": "./dist/components/core/kt-icon/kt-icon.d.ts",
+      "default": "./dist/components/core/kt-icon/kt-icon.js"
+    },
+    "./components/data/kt-pagination": {
+      "types": "./dist/components/data/kt-pagination/kt-pagination.d.ts",
+      "default": "./dist/components/data/kt-pagination/kt-pagination.js"
+    },
+    "./components/data/kt-table": {
+      "types": "./dist/components/data/kt-table/kt-table.d.ts",
+      "default": "./dist/components/data/kt-table/kt-table.js"
+    },
+    "./components/feedback/kt-progress-bar": {
+      "types": "./dist/components/feedback/kt-progress-bar/kt-progress-bar.d.ts",
+      "default": "./dist/components/feedback/kt-progress-bar/kt-progress-bar.js"
+    },
+    "./components/feedback/kt-skeleton": {
+      "types": "./dist/components/feedback/kt-skeleton/kt-skeleton.d.ts",
+      "default": "./dist/components/feedback/kt-skeleton/kt-skeleton.js"
+    },
+    "./components/feedback/kt-toast": {
+      "types": "./dist/components/feedback/kt-toast/kt-toast.d.ts",
+      "default": "./dist/components/feedback/kt-toast/kt-toast.js"
+    },
+    "./components/feedback/kt-toast-container": {
+      "types": "./dist/components/feedback/kt-toast-container/kt-toast-container.d.ts",
+      "default": "./dist/components/feedback/kt-toast-container/kt-toast-container.js"
+    },
+    "./components/feedback/kt-tooltip": {
+      "types": "./dist/components/feedback/kt-tooltip/kt-tooltip.d.ts",
+      "default": "./dist/components/feedback/kt-tooltip/kt-tooltip.js"
+    },
+    "./components/forms/kt-drag-drop": {
+      "types": "./dist/components/forms/kt-drag-drop/kt-drag-drop.d.ts",
+      "default": "./dist/components/forms/kt-drag-drop/kt-drag-drop.js"
+    },
+    "./components/forms/kt-input": {
+      "types": "./dist/components/forms/kt-input/kt-input.d.ts",
+      "default": "./dist/components/forms/kt-input/kt-input.js"
+    },
+    "./components/forms/kt-input-menu": {
+      "types": "./dist/components/forms/kt-input-menu/kt-input-menu.d.ts",
+      "default": "./dist/components/forms/kt-input-menu/kt-input-menu.js"
+    },
+    "./components/forms/kt-label-input": {
+      "types": "./dist/components/forms/kt-label-input/kt-label-input.d.ts",
+      "default": "./dist/components/forms/kt-label-input/kt-label-input.js"
+    },
+    "./components/forms/kt-select": {
+      "types": "./dist/components/forms/kt-select/kt-select.d.ts",
+      "default": "./dist/components/forms/kt-select/kt-select.js"
+    },
+    "./components/forms/kt-textarea": {
+      "types": "./dist/components/forms/kt-textarea/kt-textarea.d.ts",
+      "default": "./dist/components/forms/kt-textarea/kt-textarea.js"
+    },
+    "./components/forms/kt-toggle": {
+      "types": "./dist/components/forms/kt-toggle/kt-toggle.d.ts",
+      "default": "./dist/components/forms/kt-toggle/kt-toggle.js"
+    },
+    "./components/navigation/kt-breadcrumb": {
+      "types": "./dist/components/navigation/kt-breadcrumb/kt-breadcrumb.d.ts",
+      "default": "./dist/components/navigation/kt-breadcrumb/kt-breadcrumb.js"
+    },
+    "./components/navigation/kt-segmented-control": {
+      "types": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.d.ts",
+      "default": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.js"
+    },
+    "./components/navigation/kt-sub-menu-navigation": {
+      "types": "./dist/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.d.ts",
+      "default": "./dist/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js"
+    },
+    "./components/navigation/kt-toggle-button": {
+      "types": "./dist/components/navigation/kt-toggle-button/kt-toggle-button.d.ts",
+      "default": "./dist/components/navigation/kt-toggle-button/kt-toggle-button.js"
+    },
+    "./components/navigation/kt-toggle-button-group": {
+      "types": "./dist/components/navigation/kt-toggle-button-group/kt-toggle-button-group.d.ts",
+      "default": "./dist/components/navigation/kt-toggle-button-group/kt-toggle-button-group.js"
+    },
+    "./components/overlays/kt-confirm-dialog": {
+      "types": "./dist/components/overlays/kt-confirm-dialog/kt-confirm-dialog.d.ts",
+      "default": "./dist/components/overlays/kt-confirm-dialog/kt-confirm-dialog.js"
+    },
+    "./components/overlays/kt-dropdown": {
+      "types": "./dist/components/overlays/kt-dropdown/kt-dropdown.d.ts",
+      "default": "./dist/components/overlays/kt-dropdown/kt-dropdown.js"
+    },
+    "./components/overlays/kt-side-panel": {
+      "types": "./dist/components/overlays/kt-side-panel/kt-side-panel.d.ts",
+      "default": "./dist/components/overlays/kt-side-panel/kt-side-panel.js"
     },
     "./styles.css": "./dist/styles.css",
     "./tokens/*": "./dist/tokens/*",

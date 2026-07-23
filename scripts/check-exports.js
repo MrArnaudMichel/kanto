@@ -16,7 +16,6 @@ const pkg = require(join(root, 'package.json'));
 
 /** A concrete example for each wildcard entry, so `*` can be resolved. */
 const SAMPLES = {
-  './components/*': 'core/kt-button',
   './tokens/*': 'index.css',
   './assets/*': 'fonts/README.md',
 };
