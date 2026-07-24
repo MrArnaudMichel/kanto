@@ -1,49 +1,32 @@
-# `<kt-toggle-button>` / `<kt-toggle-button-group>`
+# `<kt-toggle-button>`
 
-A button that stays pressed, and a way to join several into one bar.
+A button that stays pressed.
 
 ```html
 <kt-toggle-button icon="bold" label="Bold"></kt-toggle-button>
-
-<kt-toggle-button-group label="View">
-  <kt-toggle-button value="list">List</kt-toggle-button>
-  <kt-toggle-button value="grid">Grid</kt-toggle-button>
-  <kt-toggle-button value="map">Map</kt-toggle-button>
-</kt-toggle-button-group>
+<kt-toggle-button variant="outline" value="draft">Draft</kt-toggle-button>
 ```
 
 `aria-pressed`, not `aria-checked`: this is a control holding a state, not one
-option among several. When they _are_ options among several, and only one may
-be active, reach for `<kt-segmented-control>` instead — it has the right
-semantics and the right keyboard model.
+option among several. When they _are_ options among several and only one may be
+active, reach for [`<kt-segmented-control>`](../kt-segmented-control/kt-segmented-control.md)
+or [`<kt-tabs>`](../kt-tabs/kt-tabs.md) — they carry the right semantics and the
+right keyboard model.
 
-## The group owns the selection
+To draw several as one bar, wrap them in
+[`<kt-toggle-button-group>`](../kt-toggle-button-group/kt-toggle-button-group.md).
+Inside a group the button becomes controlled: it stops flipping itself and stops
+emitting, and the group drives it.
 
-Buttons are slotted rather than described by an options array, so a label can
-be anything — an icon, a count, a chip.
+## Variants
 
-Inside a group a button becomes **controlled**: it no longer flips itself and no
-longer emits. The group reads the click, works out what the selection now is,
-and writes `selected` back down. That is what keeps one press from producing two
-different `kt-change` events.
+| Variant     | Resting                                    |
+| ----------- | ------------------------------------------ |
+| `primary`   | Raised surface; solid indigo when pressed  |
+| `secondary` | Flat; soft indigo tint when pressed        |
+| `outline`   | Bordered, transparent; tinted when pressed |
 
-So: listen on the group, not on its buttons.
-
-```js
-group.addEventListener('kt-change', (e) => {
-  console.log(e.detail.value); // 'grid', or null
-});
-```
-
-Single mode behaves like a radio group with a deselect — pressing the active
-button clears it. `multiple` makes it a set of checkboxes drawn together, and
-`value` becomes an array.
-
-```html
-<kt-toggle-button-group multiple orientation="vertical"></kt-toggle-button-group>
-```
-
-## API — `<kt-toggle-button>`
+## API
 
 | Property       | Attribute       | Type                                    | Default     |
 | -------------- | --------------- | --------------------------------------- | ----------- |
@@ -60,15 +43,10 @@ button clears it. `multiple` makes it a set of checkboxes drawn together, and
 | ----------- | ------------------------------------------------ |
 | `kt-change` | `{ selected, value }` — not fired inside a group |
 
-## API — `<kt-toggle-button-group>`
+| Slot      | Description      |
+| --------- | ---------------- |
+| _default_ | The button label |
 
-| Property      | Attribute     | Type                         | Default        |
-| ------------- | ------------- | ---------------------------- | -------------- |
-| `value`       | —             | `string \| string[] \| null` | `null`         |
-| `multiple`    | `multiple`    | `boolean`                    | `false`        |
-| `orientation` | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| `label`       | `label`       | `string`                     | `''`           |
-
-| Event       | Detail      |
-| ----------- | ----------- |
-| `kt-change` | `{ value }` |
+| Part     | Description           |
+| -------- | --------------------- |
+| `button` | The native `<button>` |

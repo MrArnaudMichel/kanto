@@ -77,7 +77,7 @@ Full details in **[src/tokens/README.md](src/tokens/README.md)**.
 
 ## Components
 
-Twenty-three elements. Each has a `README`-style page beside its source.
+Twenty-eight elements. Each has a page beside its source.
 
 | Group          | Elements                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -142,7 +142,7 @@ shape. Some of what that meant:
 ```bash
 npm install
 npm run dev          # the documentation site, on src/
-npm test             # 247 tests
+npm test             # 266 tests
 npm run typecheck
 npm run lint
 npm run build        # JS, types, and the static CSS + fonts
