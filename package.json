@@ -131,6 +131,14 @@
       "types": "./dist/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.d.ts",
       "default": "./dist/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js"
     },
+    "./components/navigation/kt-tabs": {
+      "types": "./dist/components/navigation/kt-tabs/kt-tabs.d.ts",
+      "default": "./dist/components/navigation/kt-tabs/kt-tabs.js"
+    },
+    "./components/navigation/kt-header": {
+      "types": "./dist/components/navigation/kt-header/kt-header.d.ts",
+      "default": "./dist/components/navigation/kt-header/kt-header.js"
+    },
     "./components/navigation/kt-toggle-button": {
       "types": "./dist/components/navigation/kt-toggle-button/kt-toggle-button.d.ts",
       "default": "./dist/components/navigation/kt-toggle-button/kt-toggle-button.js"

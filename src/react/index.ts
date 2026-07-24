@@ -31,6 +31,8 @@ import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle/kt-to
 import { KtBreadcrumb as KtBreadcrumbElement } from '../components/navigation/kt-breadcrumb/kt-breadcrumb.js';
 import { KtSegmentedControl as KtSegmentedControlElement } from '../components/navigation/kt-segmented-control/kt-segmented-control.js';
 import { KtSubMenuNavigation as KtSubMenuNavigationElement } from '../components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
+import { KtTabs as KtTabsElement } from '../components/navigation/kt-tabs/kt-tabs.js';
+import { KtHeader as KtHeaderElement } from '../components/navigation/kt-header/kt-header.js';
 import { KtToggleButton as KtToggleButtonElement } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
 import { KtToggleButtonGroup as KtToggleButtonGroupElement } from '../components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
 import { KtProgressBar as KtProgressBarElement } from '../components/feedback/kt-progress-bar/kt-progress-bar.js';
@@ -157,6 +159,20 @@ export const KtSegmentedControl = createComponent({
   elementClass: KtSegmentedControlElement,
   react: React,
   events: { onKtChange: 'kt-change' as Kt<{ value: string | number }> },
+});
+
+export const KtTabs = createComponent({
+  tagName: 'kt-tabs',
+  elementClass: KtTabsElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | number }> },
+});
+
+export const KtHeader = createComponent({
+  tagName: 'kt-header',
+  elementClass: KtHeaderElement,
+  react: React,
+  events: { onKtMenuToggle: 'kt-menu-toggle' as Kt<{ open: boolean }> },
 });
 
 export const KtToggleButton = createComponent({
