@@ -48,6 +48,8 @@ import type { KtToggle } from '../components/forms/kt-toggle/kt-toggle.js';
 import type { KtBreadcrumb } from '../components/navigation/kt-breadcrumb/kt-breadcrumb.js';
 import type { KtSegmentedControl } from '../components/navigation/kt-segmented-control/kt-segmented-control.js';
 import type { KtSubMenuNavigation } from '../components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
+import type { KtTabs } from '../components/navigation/kt-tabs/kt-tabs.js';
+import type { KtHeader } from '../components/navigation/kt-header/kt-header.js';
 import type { KtToggleButton } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
 import type { KtToggleButtonGroup } from '../components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
 import type { KtProgressBar } from '../components/feedback/kt-progress-bar/kt-progress-bar.js';
@@ -97,6 +99,8 @@ declare module 'vue' {
     'kt-breadcrumb': KtProps<KtBreadcrumb>;
     'kt-segmented-control': KtProps<KtSegmentedControl>;
     'kt-sub-menu-navigation': KtProps<KtSubMenuNavigation>;
+    'kt-tabs': KtProps<KtTabs>;
+    'kt-header': KtProps<KtHeader>;
     'kt-toggle-button': KtProps<KtToggleButton>;
     'kt-toggle-button-group': KtProps<KtToggleButtonGroup>;
     'kt-progress-bar': KtProps<KtProgressBar>;

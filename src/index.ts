@@ -41,6 +41,9 @@ export type {
   KtSegmentedSize,
 } from './components/navigation/kt-segmented-control/kt-segmented-control.js';
 export { KtSubMenuNavigation } from './components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
+export { KtTabs } from './components/navigation/kt-tabs/kt-tabs.js';
+export type { KtTab } from './components/navigation/kt-tabs/kt-tabs.js';
+export { KtHeader } from './components/navigation/kt-header/kt-header.js';
 export type {
   KtNavItem,
   KtNavSection,
