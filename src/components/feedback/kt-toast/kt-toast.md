@@ -1,45 +1,11 @@
-# `<kt-toast>` / `<kt-toast-container>` / `toaster`
+# `<kt-toast>`
 
-Transient notifications. Three layers, use the highest one that fits.
+A transient notification.
 
-## `toaster` — the usual way
+For raising one, reach for [`toaster`](../kt-toast-container/kt-toast-container.md)
+— this page is the element itself.
 
-```js
-import { toaster } from 'kanto-ds';
-
-toaster.success('Entity created');
-toaster.error('Could not save', { description: 'Try again in a moment.' });
-```
-
-It creates one `<kt-toast-container>` on `<body>` the first time it is called
-and reuses it — including one you already put in your own markup, which it
-adopts rather than duplicating.
-
-Defaults that encode the intent: success and info dismiss after 4s, warnings
-after 6s, and **errors never dismiss themselves**. An error the user did not
-happen to be looking at is an error they never saw.
-
-## `<kt-toast-container>` — when placement matters
-
-```html
-<kt-toast-container position="top-right" limit="3"></kt-toast-container>
-```
-
-```js
-container.show({ variant: 'success', heading: 'Entity created', duration: 4000 });
-```
-
-The container owns the toasts: it appends them, and it removes them when they
-ask to go. A toast that removes itself from a list it does not own is how you
-end up with two of them and neither disappearing.
-
-Newest toasts stack towards the screen edge, so the newest is always nearest
-the corner. Past `limit`, the oldest is dropped.
-
-**Hovering the stack pauses every countdown**, and leaving it resumes them —
-otherwise a toast expires under the pointer of someone reading it.
-
-## `<kt-toast>` — one notification
+## Usage
 
 ```html
 <kt-toast variant="warning" heading="Approaching your quota" dismissible duration="6000"></kt-toast>
@@ -54,7 +20,7 @@ reader; everything else is `role="status"` / `polite` and waits its turn.
 This is the only element in Kanto with a real shadow, and the only one that
 blurs what is behind it. A toast floats above the page, so it says so.
 
-## API — `<kt-toast>`
+## API
 
 | Property      | Attribute     | Type                                                 | Default         |
 | ------------- | ------------- | ---------------------------------------------------- | --------------- |
@@ -73,27 +39,3 @@ blurs what is behind it. A toast floats above the page, so it says so.
 | Event            | Fired when                   |
 | ---------------- | ---------------------------- |
 | `kt-toast-close` | The toast asks to be removed |
-
-## API — `<kt-toast-container>`
-
-| Property   | Attribute  | Type                                                           | Default          |
-| ---------- | ---------- | -------------------------------------------------------------- | ---------------- |
-| `position` | `position` | `'top-left' \| 'top-right' \| 'bottom-left' \| 'bottom-right'` | `'bottom-right'` |
-| `limit`    | `limit`    | `number`                                                       | `5`              |
-
-| Method / getter  | Description                   |
-| ---------------- | ----------------------------- |
-| `show(options)`  | Raises a toast, returns it    |
-| `dismiss(toast)` | Removes one                   |
-| `clear()`        | Removes all                   |
-| `toasts`         | Those on screen, oldest first |
-
-## API — `toaster`
-
-| Member                                          | Description                          |
-| ----------------------------------------------- | ------------------------------------ |
-| `success/info/warning/error(heading, options?)` | Raises a toast, returns it           |
-| `show(options)`                                 | The general form                     |
-| `getContainer()`                                | The container, creating it if needed |
-| `clear()`                                       | Clears the stack                     |
-| `position`                                      | Where an auto-created container sits |
