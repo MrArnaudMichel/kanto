@@ -22,10 +22,18 @@ export type IconNode = [tag: string, attrs: Record<string, string | number | und
 
 const registry = new Map<string, IconNode>();
 
-/** `ChevronDown` / `chevronDown` / `chevron_down` → `chevron-down`. */
+/**
+ * `ChevronDown` → `chevron-down`, `Trash2` → `trash-2`, `AArrowDown` →
+ * `a-arrow-down`.
+ *
+ * The digit boundary matters: Lucide names that icon `trash-2`, so a rule that
+ * only splits on case produces `trash2` and the lookup quietly misses.
+ */
 export function toKebabCase(name: string): string {
   return name
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2') // acronym run before a word
+    .replace(/([a-zA-Z])(\d)/g, '$1-$2') // letter before a digit
+    .replace(/([a-z])([A-Z])/g, '$1-$2') // ordinary camel boundary
     .replace(/[\s_]+/g, '-')
     .toLowerCase();
 }
