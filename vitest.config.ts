@@ -1,9 +1,21 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  resolve: {
+    // The documentation site imports the library by its public name; the
+    // smoke test needs the same alias the demo's own Vite config sets up.
+    alias: [
+      { find: /^kanto$/, replacement: fileURLToPath(new URL('./src/index.ts', import.meta.url)) },
+      {
+        find: /^kanto\/styles\.css$/,
+        replacement: fileURLToPath(new URL('./src/styles.css', import.meta.url)),
+      },
+    ],
+  },
   test: {
     environment: 'happy-dom',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'demo/**/*.test.ts'],
     setupFiles: ['src/test/setup.ts'],
     coverage: {
       provider: 'v8',
