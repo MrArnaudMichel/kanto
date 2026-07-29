@@ -72,6 +72,12 @@ export class KtInput extends KtElement {
         gap: var(--gap-button);
         background-color: var(--color-dark-12);
         border-radius: var(--radius-input);
+        /* A transition needs somewhere to start. Without a resting
+           outline-color the animation begins at the initial value — which
+           resolves to the text colour — and hover flashes near-white before
+           settling. An outline takes no layout space, so declaring it
+           transparent costs nothing. */
+        outline: var(--outline-width) solid transparent;
         transition: outline-color var(--duration-instant);
       }
 

@@ -49,6 +49,9 @@ export class KtCard extends KtElement {
         background-color: transparent;
         border: var(--border-width) solid var(--border-subtle);
         border-radius: var(--border-radius-card);
+        /* Same reason as the fields: an outline-color with nothing to start
+           from animates out of the text colour. */
+        outline: var(--border-width) solid transparent;
         transition:
           background-color var(--duration-instant),
           border-color var(--duration-instant),
