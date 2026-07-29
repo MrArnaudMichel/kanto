@@ -55,7 +55,12 @@ export class KtInputMenu extends KtElement {
         background-color: var(--color-dark-20);
         border: none;
         border-radius: var(--radius-input);
-        outline: none;
+        /* A transition needs somewhere to start. Without a resting
+           outline-color the animation begins at the initial value — which
+           resolves to the text colour — and hover flashes near-white before
+           settling. An outline takes no layout space, so declaring it
+           transparent costs nothing. */
+        outline: var(--outline-width) solid transparent;
         cursor: text;
         transition:
           background-color var(--duration-instant),
