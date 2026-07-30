@@ -4,6 +4,7 @@ import type { CSSResultGroup } from 'lit';
 import { KtButton } from '../components/core/kt-button/kt-button.js';
 import { KtCard } from '../components/core/kt-card/kt-card.js';
 import { KtChip } from '../components/core/kt-chip/kt-chip.js';
+import { KtCode } from '../components/core/kt-code/kt-code.js';
 import { KtInput } from '../components/forms/kt-input/kt-input.js';
 import { KtInputMenu } from '../components/forms/kt-input-menu/kt-input-menu.js';
 import { KtSelect } from '../components/forms/kt-select/kt-select.js';
@@ -20,6 +21,7 @@ const ELEMENTS: readonly [string, { styles: CSSResultGroup }][] = [
   ['kt-button', KtButton],
   ['kt-card', KtCard],
   ['kt-chip', KtChip],
+  ['kt-code', KtCode],
   ['kt-input', KtInput],
   ['kt-input-menu', KtInputMenu],
   ['kt-select', KtSelect],
@@ -78,6 +80,33 @@ describe('component stylesheets', () => {
           /(^|[;{\s])outline-color\s*:/.test(body) ||
           /(^|[;{\s])outline\s*:[^;]*\b(transparent|rgb|hsl|var\()/.test(body);
         if (!declaresColour) offenders.push(`${tag} — ${selector}`);
+      }
+    }
+
+    expect(offenders).toEqual([]);
+  });
+
+  /**
+   * `--color-white` over a surface taken from the dark ramp.
+   *
+   * The ramp inverts between themes: `--color-dark-8` is the darkest surface
+   * under `:root` and pure white under `data-theme="light"`, while
+   * `--color-white` is near-white in both. Pairing them gives white on white
+   * the moment someone switches theme — which is exactly how the code chip and
+   * the tooltip disappeared.
+   *
+   * A recessed or inverted surface is a *role*, so it gets its own token:
+   * `--surface-code` / `--text-code`, `--surface-inverted` / `--text-inverted`.
+   */
+  it('never paints --color-white on a surface from the dark ramp', () => {
+    const offenders: string[] = [];
+
+    for (const [tag, element] of ELEMENTS) {
+      for (const { selector, body } of ruleBlocks(cssTextOf(element.styles))) {
+        const whiteText = /(^|[;{\s])color:\s*var\(--color-white\)/.test(body);
+        const rampSurface = /background(-color)?:\s*var\(--color-dark-\d+\)/.test(body);
+
+        if (whiteText && rampSurface) offenders.push(`${tag} — ${selector}`);
       }
     }
 
