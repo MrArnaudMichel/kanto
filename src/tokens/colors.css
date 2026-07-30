@@ -77,6 +77,17 @@
   --surface-raised: var(--color-dark-20);
   --surface-hover: var(--color-dark-22);
   --border-subtle: var(--color-dark-20);
+
+  /* Recessed surface for code. Not a ramp step: the ramp inverts between
+     themes and "the darkest surface" stops meaning "recessed" in light. */
+  --surface-code: var(--color-dark-8);
+  --text-code: var(--color-text-100);
+  --border-code: var(--color-dark-16);
+
+  /* Deliberately opposite the page, for anything that must read as floating
+     above it — the tooltip. */
+  --surface-inverted: var(--color-dark-8);
+  --text-inverted: var(--color-text-100);
   --text-body: var(--color-text-100);
   --text-muted: var(--color-text-400);
   --text-disabled: var(--color-text-700);
