@@ -46,10 +46,13 @@ export class KtTooltip extends KtElement {
         z-index: var(--z-tooltip);
         max-width: 260px;
         padding: var(--padding-chip);
-        color: var(--color-white);
+        /* Inverted against the page, so the bubble reads as floating in
+           both themes — the raw ramp step this used to name is pure white
+           under data-theme="light". */
+        color: var(--text-inverted);
         font: var(--font-code-regular);
         white-space: nowrap;
-        background: var(--color-dark-8);
+        background: var(--surface-inverted);
         border-radius: var(--radius-input);
         opacity: 0;
         pointer-events: none;

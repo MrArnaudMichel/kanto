@@ -51,12 +51,15 @@ export class KtChip extends KtElement {
         border-radius: var(--radius-pill);
       }
 
-      /* === CODE === */
+      /* === CODE ===
+         Uses the semantic code surface rather than a ramp step: --color-dark-8
+         is the darkest surface in the dark theme and pure white in the light
+         one, which made this chip white-on-white. */
       .code {
-        color: var(--color-white);
+        color: var(--text-code);
         font: var(--font-code-regular);
-        background-color: var(--color-dark-8);
-        border: none;
+        background-color: var(--surface-code);
+        border-color: var(--border-code);
       }
 
       /* === CATEGORY ===
