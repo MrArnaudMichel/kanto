@@ -17,6 +17,7 @@ export type {
 export { KtCard } from './components/core/kt-card/kt-card.js';
 export type { KtCardImagePosition } from './components/core/kt-card/kt-card.js';
 export { KtChip } from './components/core/kt-chip/kt-chip.js';
+export { KtCode } from './components/core/kt-code/kt-code.js';
 export type { KtChipVariant } from './components/core/kt-chip/kt-chip.js';
 export { KtIcon } from './components/core/kt-icon/kt-icon.js';
 

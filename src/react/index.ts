@@ -20,6 +20,7 @@ import { createComponent, type EventName } from '@lit/react';
 import { KtButton as KtButtonElement } from '../components/core/kt-button/kt-button.js';
 import { KtCard as KtCardElement } from '../components/core/kt-card/kt-card.js';
 import { KtChip as KtChipElement } from '../components/core/kt-chip/kt-chip.js';
+import { KtCode as KtCodeElement } from '../components/core/kt-code/kt-code.js';
 import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
 import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
 import { KtInput as KtInputElement } from '../components/forms/kt-input/kt-input.js';
@@ -68,6 +69,13 @@ export const KtChip = createComponent({
   elementClass: KtChipElement,
   react: React,
   events: { onKtChipClick: 'kt-chip-click' as Kt<never> },
+});
+
+export const KtCode = createComponent({
+  tagName: 'kt-code',
+  elementClass: KtCodeElement,
+  react: React,
+  events: { onKtCopy: 'kt-copy' as Kt<{ code: string }> },
 });
 
 export const KtIcon = createComponent({
