@@ -4,7 +4,6 @@ import * as lucide from 'lucide';
 import { registerIcons } from 'kanto-ds';
 import 'kanto-ds';
 import 'kanto-ds/styles.css';
-import 'highlight.js/styles/github-dark.css';
 import './shell.css';
 
 import { COMPONENTS } from './lib/registry.js';

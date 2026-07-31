@@ -53,9 +53,9 @@ describe('the documentation shell', () => {
     expect(app.querySelectorAll('.preview kt-button').length).toBeGreaterThan(3);
   });
 
-  it('renders the markdown body, with highlighted code and wrapped tables', () => {
+  it('renders the markdown body, with code blocks and wrapped tables', () => {
     expect(app.querySelector('.prose')).not.toBeNull();
-    expect(app.querySelector('.prose .code-block')).not.toBeNull();
+    expect(app.querySelector('.prose kt-code')).not.toBeNull();
     expect(app.querySelector('.prose .table-wrap table')).not.toBeNull();
   });
 

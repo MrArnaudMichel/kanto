@@ -89,7 +89,9 @@ export function renderDoc(source: string): RenderedDoc {
           ? hljs.highlight(text, { language }).value
           : escapeHtml(text);
 
-        return `<div class="code-block"><div class="code-lang">${language || 'text'}</div><pre><code class="hljs">${highlighted}</code></pre></div>`;
+        // The chrome is <kt-code>'s job; this only supplies the highlighted
+        // markup it slots.
+        return `<kt-code language="${language || 'text'}" copy>${highlighted}</kt-code>`;
       },
       table(token: Tokens.Table) {
         // Wrapped so a wide API table scrolls on its own instead of pushing

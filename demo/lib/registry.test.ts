@@ -74,11 +74,17 @@ describe('the rendered documentation', () => {
     }
   });
 
-  it('highlights fenced code and labels its language', () => {
+  it('renders a fenced block as <kt-code>, labelled and copyable', () => {
     const doc = renderDoc('# Thing\n\nSummary line here.\n\n```js\nconst a = 1;\n```\n');
-    expect(doc.html).toContain('class="code-block"');
-    expect(doc.html).toContain('javascript');
-    expect(doc.html).toContain('hljs');
+    expect(doc.html).toContain('<kt-code language="javascript" copy>');
+    // The chrome is the element's; only the highlighted markup is ours.
+    expect(doc.html).toContain('hljs-keyword');
+    expect(doc.html).not.toContain('code-block');
+  });
+
+  it('labels an unfenced language as text rather than leaving it blank', () => {
+    const doc = renderDoc('# Thing\n\nSummary line here.\n\n```\nplain\n```\n');
+    expect(doc.html).toContain('language="text"');
   });
 
   it('wraps tables so a wide one scrolls on its own', () => {

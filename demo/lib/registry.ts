@@ -69,6 +69,14 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-chip error>Failed</kt-chip>
     </div>`,
 
+  'kt-code': () =>
+    html`<div class="demo-stack" style="max-width:100%">
+      <kt-code language="js" copy
+        >const total = items.reduce((sum, i) => sum + i.amount, 0);</kt-code
+      >
+      <kt-code>npm install kanto-ds</kt-code>
+    </div>`,
+
   'kt-icon': () =>
     html`<div class="demo-row" style="gap:20px">
       ${['search', 'trash-2', 'circle-alert', 'trending-up', 'users', 'settings'].map(
