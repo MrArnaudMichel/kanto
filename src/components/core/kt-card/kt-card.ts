@@ -1,9 +1,10 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { KtElement, defineElement } from '../../../internal/kt-element.js';
 import { emit } from '../../../internal/events.js';
+import { hasAssignedContent } from '../../../internal/slots.js';
 
 export type KtCardImagePosition = 'left' | 'right' | 'top' | 'bottom';
 
@@ -134,14 +135,21 @@ export class KtCard extends KtElement {
         width: 100%;
       }
 
-      /* Hide the wrappers when nothing is slotted into them, so an empty
-         header does not add a 20px gap. */
-      .header:not(:has(*)),
-      .footer:not(:has(*)) {
+      /* Collapsed from JS, not from :has(): a wrapper around a <slot> always
+         has one element child — the slot — so :has(*) matches even when
+         nothing was assigned, and the rule never fired. */
+      .header.empty,
+      .footer.empty {
         display: none;
       }
     `,
   ];
+
+  @state()
+  private hasHeader = false;
+
+  @state()
+  private hasFooter = false;
 
   /** Makes the card a keyboard-reachable control. */
   @property({ type: Boolean, reflect: true })
@@ -161,6 +169,24 @@ export class KtCard extends KtElement {
   /** Width (left/right) or height (top/bottom) of the media well. */
   @property({ type: String, attribute: 'image-size' })
   imageSize = '120px';
+
+  /**
+   * The initial `slotchange` is queued as a microtask and can land after the
+   * first render has settled, so read the slots once directly as well.
+   */
+  override firstUpdated(): void {
+    this.readSlots();
+  }
+
+  private readSlots(): void {
+    const root = this.shadowRoot;
+    this.hasHeader = hasAssignedContent(root?.querySelector('slot[name="header"]'));
+    this.hasFooter = hasAssignedContent(root?.querySelector('slot[name="footer"]'));
+  }
+
+  private onSlotChange(): void {
+    this.readSlots();
+  }
 
   private activate(): void {
     if (this.clickable) emit(this, 'kt-card-click');
@@ -203,9 +229,13 @@ export class KtCard extends KtElement {
           : nothing
       }
       <div part="body" class="body">
-        <div class="header"><slot name="header"></slot></div>
+        <div class=${classMap({ header: true, empty: !this.hasHeader })}>
+          <slot name="header" @slotchange=${this.onSlotChange}></slot>
+        </div>
         <div class="content"><slot></slot></div>
-        <div class="footer"><slot name="footer"></slot></div>
+        <div class=${classMap({ footer: true, empty: !this.hasFooter })}>
+          <slot name="footer" @slotchange=${this.onSlotChange}></slot>
+        </div>
       </div>
     </div>`;
   }

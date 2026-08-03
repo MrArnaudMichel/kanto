@@ -41,6 +41,18 @@ describe('kt-card', () => {
     expect(listener).not.toHaveBeenCalled();
   });
 
+  it('collapses a header and footer nothing was slotted into', async () => {
+    const bare = await fixture<KtCard>('<kt-card>Body only</kt-card>');
+    expect(bare.shadowRoot!.querySelector('.header')!.classList.contains('empty')).toBe(true);
+    expect(bare.shadowRoot!.querySelector('.footer')!.classList.contains('empty')).toBe(true);
+
+    const full = await fixture<KtCard>(
+      '<kt-card><h6 slot="header">Title</h6>Body<span slot="footer">More</span></kt-card>',
+    );
+    expect(full.shadowRoot!.querySelector('.header')!.classList.contains('empty')).toBe(false);
+    expect(full.shadowRoot!.querySelector('.footer')!.classList.contains('empty')).toBe(false);
+  });
+
   it('renders no media well without an image', async () => {
     const el = await fixture<KtCard>('<kt-card>Content</kt-card>');
     expect(el.shadowRoot!.querySelector('.media')).toBeNull();
