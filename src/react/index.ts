@@ -23,6 +23,7 @@ import { KtChip as KtChipElement } from '../components/core/kt-chip/kt-chip.js';
 import { KtCode as KtCodeElement } from '../components/core/kt-code/kt-code.js';
 import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
 import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
+import { KtForm as KtFormElement } from '../components/forms/kt-form/kt-form.js';
 import { KtInput as KtInputElement } from '../components/forms/kt-input/kt-input.js';
 import { KtInputMenu as KtInputMenuElement } from '../components/forms/kt-input-menu/kt-input-menu.js';
 import { KtLabelInput as KtLabelInputElement } from '../components/forms/kt-label-input/kt-label-input.js';
@@ -85,6 +86,12 @@ export const KtIcon = createComponent({
 });
 
 // === FORMS ===
+export const KtForm = createComponent({
+  tagName: 'kt-form',
+  elementClass: KtFormElement,
+  react: React,
+});
+
 export const KtInput = createComponent({
   tagName: 'kt-input',
   elementClass: KtInputElement,

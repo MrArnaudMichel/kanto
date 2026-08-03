@@ -23,6 +23,7 @@ export { KtIcon } from './components/core/kt-icon/kt-icon.js';
 
 // === FORMS ===
 export { KtDragDrop } from './components/forms/kt-drag-drop/kt-drag-drop.js';
+export { KtForm } from './components/forms/kt-form/kt-form.js';
 export { KtInput } from './components/forms/kt-input/kt-input.js';
 export type { KtInputSize } from './components/forms/kt-input/kt-input.js';
 export { KtInputMenu } from './components/forms/kt-input-menu/kt-input-menu.js';
