@@ -44,7 +44,7 @@ export class KtTextarea extends KtElement {
         align-items: flex-start;
         width: 100%;
         min-height: var(--button-height);
-        background-color: var(--color-dark-12);
+        background-color: var(--surface-field);
         border-radius: var(--radius-input);
         /* A transition needs somewhere to start. Without a resting
            outline-color the animation begins at the initial value — which
