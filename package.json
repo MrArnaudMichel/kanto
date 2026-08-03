@@ -99,6 +99,10 @@
       "types": "./dist/components/forms/kt-drag-drop/kt-drag-drop.d.ts",
       "default": "./dist/components/forms/kt-drag-drop/kt-drag-drop.js"
     },
+    "./components/forms/kt-form": {
+      "types": "./dist/components/forms/kt-form/kt-form.d.ts",
+      "default": "./dist/components/forms/kt-form/kt-form.js"
+    },
     "./components/forms/kt-input": {
       "types": "./dist/components/forms/kt-input/kt-input.d.ts",
       "default": "./dist/components/forms/kt-input/kt-input.js"
