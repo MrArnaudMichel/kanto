@@ -78,6 +78,11 @@
   --surface-hover: var(--color-dark-22);
   --border-subtle: var(--color-dark-20);
 
+  /* A form panel sits one step above the page so its fields, which are
+     filled at --color-dark-12, read as wells recessed into it. */
+  --surface-form: var(--color-dark-16);
+  --surface-field: var(--color-dark-12);
+
   /* Recessed surface for code. Not a ramp step: the ramp inverts between
      themes and "the darkest surface" stops meaning "recessed" in light. */
   --surface-code: var(--color-dark-8);

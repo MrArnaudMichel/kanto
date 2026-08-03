@@ -70,7 +70,7 @@ export class KtInput extends KtElement {
         height: var(--button-height);
         padding: 0 var(--button-padding-x);
         gap: var(--gap-button);
-        background-color: var(--color-dark-12);
+        background-color: var(--surface-field);
         border-radius: var(--radius-input);
         /* A transition needs somewhere to start. Without a resting
            outline-color the animation begins at the initial value — which
