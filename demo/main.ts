@@ -7,12 +7,13 @@ import 'kanto-ds/styles.css';
 import './shell.css';
 
 import { COMPONENTS } from './lib/registry.js';
+import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { dashboardPage } from './pages/dashboard.js';
 import { formPage } from './pages/form.js';
-import { tablePage } from './pages/table.js';
+import { dataPage } from './pages/data.js';
 
 import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
@@ -80,7 +81,7 @@ const EXAMPLES: Route[] = [
     page: dashboardPage,
   },
   { section: 'examples', slug: 'form', label: 'Form', group: 'Screens', page: formPage },
-  { section: 'examples', slug: 'data', label: 'Data', group: 'Screens', page: tablePage },
+  { section: 'examples', slug: 'data', label: 'Entities', group: 'Screens', page: dataPage },
 ];
 
 const COMPONENT_ROUTES: Route[] = COMPONENTS.map((entry) => ({
@@ -348,6 +349,7 @@ function trackHeadings(): void {
   }
 }
 
+setRenderer(update);
 applyTheme(readTheme());
 
 window.addEventListener('hashchange', () => {
