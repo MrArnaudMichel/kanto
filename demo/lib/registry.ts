@@ -84,6 +84,20 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       )}
     </div>`,
 
+  'kt-form': () =>
+    html`<form @submit=${(e: Event) => e.preventDefault()}>
+      <kt-form heading="Identity" description="Fields sit one step below the panel.">
+        <kt-label-input label="Company name" required>
+          <kt-input name="company" value="Kanto Studio"></kt-input>
+        </kt-label-input>
+        <kt-label-input label="Region">
+          <kt-select placeholder="Select a region" .options=${REGIONS}></kt-select>
+        </kt-label-input>
+        <kt-button slot="footer" variant="dark" type="reset">Reset</kt-button>
+        <kt-button slot="footer" type="submit">Save</kt-button>
+      </kt-form>
+    </form>`,
+
   'kt-input': () =>
     html`<div class="demo-stack">
       <kt-input placeholder="Search everything..." icon="search"></kt-input>

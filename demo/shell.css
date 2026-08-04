@@ -566,3 +566,75 @@ section > h6 {
     display: none;
   }
 }
+
+/* === EXAMPLE SCREENS ===================================================== */
+
+/* The bulk action bar only exists while something is selected, so it is
+   sticky rather than reserving space it usually would not need. */
+.bulk-bar {
+  position: sticky;
+  top: calc(var(--kt-header-height, 64px) + 8px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-card);
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  color: var(--text-body);
+  background: var(--color-primary-soft);
+  border: var(--border-width) solid var(--color-primary-base);
+  border-radius: var(--border-radius);
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 10px;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+/* --- the token-drawn chart ------------------------------------------- */
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 200px;
+}
+
+.chart-col {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 6px;
+  cursor: default;
+}
+
+.chart-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition: background-color var(--duration-instant);
+}
+
+.chart-label {
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.chart-tip {
+  position: absolute;
+  bottom: 100%;
+  z-index: 1;
+  padding: 4px 8px;
+  color: var(--text-inverted);
+  font: var(--font-normal-small);
+  white-space: nowrap;
+  background: var(--surface-inverted);
+  border-radius: 5px;
+}
