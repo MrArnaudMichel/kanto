@@ -18,6 +18,21 @@ describe('kt-card', () => {
     expect(base(el).getAttribute('tabindex')).toBe('0');
   });
 
+  it('reports the selected state only when it is a control', async () => {
+    const plain = await fixture<KtCard>('<kt-card selected>Content</kt-card>');
+    expect(base(plain).classList.contains('selected')).toBe(true);
+    // Not a control, so nothing to press: no aria-pressed to contradict it.
+    expect(base(plain).hasAttribute('aria-pressed')).toBe(false);
+
+    const toggle = await fixture<KtCard>('<kt-card clickable>Content</kt-card>');
+    expect(base(toggle).getAttribute('aria-pressed')).toBe('false');
+
+    toggle.selected = true;
+    await settle(toggle);
+    expect(base(toggle).getAttribute('aria-pressed')).toBe('true');
+    expect(base(toggle).classList.contains('selected')).toBe(true);
+  });
+
   it('fires kt-card-click on pointer and on keyboard', async () => {
     const el = await fixture<KtCard>('<kt-card clickable>Content</kt-card>');
     const listener = vi.fn();

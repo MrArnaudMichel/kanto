@@ -28,6 +28,27 @@ Do not nest interactive elements inside a clickable card — a button inside a
 button is invalid, and the two hit targets fight. Either the card is the
 control, or the things inside it are.
 
+## Selected cards
+
+`selected` marks a card as chosen — one filter of several, a picked plan:
+
+```html
+<kt-card clickable selected>Pending</kt-card>
+```
+
+It tints the card, outlines it in the primary colour and sets `aria-pressed`,
+so the state is announced and not merely drawn.
+
+Pair it with `clickable`. A card the user cannot toggle has no business looking
+toggled, so a `selected` card that is not `clickable` gets the styling but no
+`aria-pressed` — there is nothing to press, and claiming otherwise would be a
+lie to a screen reader.
+
+The outline lives on the card's own box rather than on the host element. An
+outline only follows a `border-radius` declared on the same element, and the
+host has none — put one on the host and you get sharp corners around a rounded
+card.
+
 ## Media
 
 `image` is the convenience path; the `media` slot takes anything else.
@@ -48,6 +69,7 @@ control, or the things inside it are.
 | Property        | Attribute        | Type                                     | Default   |
 | --------------- | ---------------- | ---------------------------------------- | --------- |
 | `clickable`     | `clickable`      | `boolean`                                | `false`   |
+| `selected`      | `selected`       | `boolean`                                | `false`   |
 | `image`         | `image`          | `string`                                 | `''`      |
 | `imageAlt`      | `image-alt`      | `string`                                 | `''`      |
 | `imagePosition` | `image-position` | `'left' \| 'right' \| 'top' \| 'bottom'` | `'left'`  |

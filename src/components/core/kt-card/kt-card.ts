@@ -77,6 +77,16 @@ export class KtCard extends KtElement {
         outline-offset: 2px;
       }
 
+      /* Selection lives on the inner card, not the host: the radius is here,
+         and an outline only follows a radius the same element declares. */
+      .selected,
+      .selected:hover,
+      .selected:active {
+        background-color: var(--color-primary-soft);
+        border-color: var(--color-primary-base);
+        outline: var(--outline-width) solid var(--color-primary-base);
+      }
+
       .body {
         display: flex;
         flex: 1;
@@ -155,6 +165,15 @@ export class KtCard extends KtElement {
   @property({ type: Boolean, reflect: true })
   clickable = false;
 
+  /**
+   * Marks the card as chosen — one of a set of filters, a picked plan.
+   *
+   * Pairs with `clickable`: a card the user cannot toggle has no business
+   * looking toggled.
+   */
+  @property({ type: Boolean, reflect: true })
+  selected = false;
+
   /** Convenience image. For anything richer, use the `media` slot. */
   @property({ type: String })
   image = '';
@@ -208,9 +227,11 @@ export class KtCard extends KtElement {
       class=${classMap({
         card: true,
         clickable: this.clickable,
+        selected: this.selected,
         [`image-${this.imagePosition}`]: hasMedia,
       })}
       role=${this.clickable ? 'button' : nothing}
+      aria-pressed=${this.clickable ? String(this.selected) : nothing}
       tabindex=${this.clickable ? 0 : nothing}
       @click=${this.activate}
       @keydown=${this.onKeyDown}
