@@ -47,6 +47,10 @@
       "types": "./dist/vue/index.d.ts",
       "default": "./dist/vue/index.js"
     },
+    "./components/core/kt-avatar": {
+      "types": "./dist/components/core/kt-avatar/kt-avatar.d.ts",
+      "default": "./dist/components/core/kt-avatar/kt-avatar.js"
+    },
     "./components/core/kt-button": {
       "types": "./dist/components/core/kt-button/kt-button.d.ts",
       "default": "./dist/components/core/kt-button/kt-button.js"
@@ -131,6 +135,10 @@
       "types": "./dist/components/navigation/kt-breadcrumb/kt-breadcrumb.d.ts",
       "default": "./dist/components/navigation/kt-breadcrumb/kt-breadcrumb.js"
     },
+    "./components/navigation/kt-header": {
+      "types": "./dist/components/navigation/kt-header/kt-header.d.ts",
+      "default": "./dist/components/navigation/kt-header/kt-header.js"
+    },
     "./components/navigation/kt-segmented-control": {
       "types": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.d.ts",
       "default": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.js"
@@ -142,10 +150,6 @@
     "./components/navigation/kt-tabs": {
       "types": "./dist/components/navigation/kt-tabs/kt-tabs.d.ts",
       "default": "./dist/components/navigation/kt-tabs/kt-tabs.js"
-    },
-    "./components/navigation/kt-header": {
-      "types": "./dist/components/navigation/kt-header/kt-header.d.ts",
-      "default": "./dist/components/navigation/kt-header/kt-header.js"
     },
     "./components/navigation/kt-toggle-button": {
       "types": "./dist/components/navigation/kt-toggle-button/kt-toggle-button.d.ts",
