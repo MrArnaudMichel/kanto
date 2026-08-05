@@ -51,6 +51,10 @@
       "types": "./dist/components/core/kt-avatar/kt-avatar.d.ts",
       "default": "./dist/components/core/kt-avatar/kt-avatar.js"
     },
+    "./components/core/kt-badge": {
+      "types": "./dist/components/core/kt-badge/kt-badge.d.ts",
+      "default": "./dist/components/core/kt-badge/kt-badge.js"
+    },
     "./components/core/kt-button": {
       "types": "./dist/components/core/kt-button/kt-button.d.ts",
       "default": "./dist/components/core/kt-button/kt-button.js"

@@ -35,6 +35,7 @@ import type { Plugin } from 'vue';
 import '../index.js';
 
 import type { KtAvatar } from '../components/core/kt-avatar/kt-avatar.js';
+import type { KtBadge } from '../components/core/kt-badge/kt-badge.js';
 import type { KtButton } from '../components/core/kt-button/kt-button.js';
 import type { KtCard } from '../components/core/kt-card/kt-card.js';
 import type { KtChip } from '../components/core/kt-chip/kt-chip.js';
@@ -89,6 +90,7 @@ type KtProps<T> = Partial<T> &
 declare module 'vue' {
   interface GlobalComponents {
     'kt-avatar': KtProps<KtAvatar>;
+    'kt-badge': KtProps<KtBadge>;
     'kt-button': KtProps<KtButton>;
     'kt-card': KtProps<KtCard>;
     'kt-chip': KtProps<KtChip>;
