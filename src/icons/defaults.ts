@@ -26,6 +26,7 @@ import {
   Search,
   Trash2,
   TriangleAlert,
+  User,
   X,
 } from 'lucide';
 import { registerIcons } from './registry.js';
@@ -52,6 +53,7 @@ export const defaultIcons = {
   Search,
   Trash2,
   TriangleAlert,
+  User,
   X,
 };
 
