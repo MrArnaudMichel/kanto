@@ -80,7 +80,9 @@ function statCards(): TemplateResult {
   const t = totals();
   const cards = [
     {
-      key: 'all' as const,
+      // Revenue is the headline, not a status — there is nothing to filter by,
+      // so it is not a control and never looks like one.
+      key: null,
       label: 'Revenue',
       value: currency.format(t.revenue),
       delta: '+12.4%',
@@ -117,9 +119,10 @@ function statCards(): TemplateResult {
     ${cards.map(
       (card) =>
         html`<kt-card
-          clickable
-          style=${state.focus === card.key ? 'outline:2px solid var(--color-primary-base)' : ''}
+          ?clickable=${card.key !== null}
+          ?selected=${card.key !== null && state.focus === card.key}
           @kt-card-click=${() => {
+            if (card.key === null) return;
             state.focus = state.focus === card.key ? 'all' : card.key;
             rerender();
           }}

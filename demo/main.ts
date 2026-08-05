@@ -152,7 +152,6 @@ function sidebar(route: Route): TemplateResult {
       <kt-input
         id="docs-filter"
         placeholder="Filter..."
-        icon="search"
         .value=${filter}
         size="small"
         label="Filter the navigation"
