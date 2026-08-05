@@ -44,6 +44,15 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-avatar name="Kanto Studio" square size="large"></kt-avatar>
     </div>`,
 
+  'kt-badge': () =>
+    html`<div class="demo-row">
+      <kt-badge pill>4</kt-badge>
+      <kt-badge variant="success">+12%</kt-badge>
+      <kt-badge variant="danger">-2%</kt-badge>
+      <kt-badge variant="info">Beta</kt-badge>
+      <kt-badge pill max="99">128</kt-badge>
+    </div>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>

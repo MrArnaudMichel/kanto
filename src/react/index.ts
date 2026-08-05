@@ -18,6 +18,7 @@ import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';
 
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
+import { KtBadge as KtBadgeElement } from '../components/core/kt-badge/kt-badge.js';
 import { KtButton as KtButtonElement } from '../components/core/kt-button/kt-button.js';
 import { KtCard as KtCardElement } from '../components/core/kt-card/kt-card.js';
 import { KtChip as KtChipElement } from '../components/core/kt-chip/kt-chip.js';
@@ -56,6 +57,12 @@ type Kt<T> = EventName<CustomEvent<T>>;
 export const KtAvatar = createComponent({
   tagName: 'kt-avatar',
   elementClass: KtAvatarElement,
+  react: React,
+});
+
+export const KtBadge = createComponent({
+  tagName: 'kt-badge',
+  elementClass: KtBadgeElement,
   react: React,
 });
 

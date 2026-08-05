@@ -10,6 +10,8 @@
 // === CORE ===
 export { KtAvatar } from './components/core/kt-avatar/kt-avatar.js';
 export type { KtAvatarSize, KtAvatarStatus } from './components/core/kt-avatar/kt-avatar.js';
+export { KtBadge } from './components/core/kt-badge/kt-badge.js';
+export type { KtBadgeVariant } from './components/core/kt-badge/kt-badge.js';
 export { KtButton } from './components/core/kt-button/kt-button.js';
 export type {
   KtButtonSize,
