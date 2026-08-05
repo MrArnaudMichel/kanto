@@ -8,6 +8,8 @@
  */
 
 // === CORE ===
+export { KtAvatar } from './components/core/kt-avatar/kt-avatar.js';
+export type { KtAvatarSize, KtAvatarStatus } from './components/core/kt-avatar/kt-avatar.js';
 export { KtButton } from './components/core/kt-button/kt-button.js';
 export type {
   KtButtonSize,

@@ -36,6 +36,14 @@ const docs: Record<string, string> = import.meta.glob('../../src/components/*/kt
 
 /** Live previews, keyed by tag name. */
 const EXAMPLES: Record<string, () => TemplateResult> = {
+  'kt-avatar': () =>
+    html`<div class="demo-row">
+      <kt-avatar name="Benjamin Canac"></kt-avatar>
+      <kt-avatar name="Emma Davis" status="online"></kt-avatar>
+      <kt-avatar name="Frank Nguyen" size="large" status="busy"></kt-avatar>
+      <kt-avatar name="Kanto Studio" square size="large"></kt-avatar>
+    </div>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>
