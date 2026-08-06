@@ -91,6 +91,10 @@
       "types": "./dist/components/feedback/kt-alert/kt-alert.d.ts",
       "default": "./dist/components/feedback/kt-alert/kt-alert.js"
     },
+    "./components/feedback/kt-empty-state": {
+      "types": "./dist/components/feedback/kt-empty-state/kt-empty-state.d.ts",
+      "default": "./dist/components/feedback/kt-empty-state/kt-empty-state.js"
+    },
     "./components/feedback/kt-progress-bar": {
       "types": "./dist/components/feedback/kt-progress-bar/kt-progress-bar.d.ts",
       "default": "./dist/components/feedback/kt-progress-bar/kt-progress-bar.js"

@@ -76,6 +76,15 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-alert>
     </div>`,
 
+  'kt-empty-state': () =>
+    html`<kt-empty-state
+      icon="inbox"
+      heading="Nothing in your inbox"
+      description="New messages will appear here as they arrive."
+    >
+      <kt-button slot="actions" icon="plus">Compose</kt-button>
+    </kt-empty-state>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>

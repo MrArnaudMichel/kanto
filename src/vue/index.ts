@@ -58,6 +58,7 @@ import type { KtHeader } from '../components/navigation/kt-header/kt-header.js';
 import type { KtToggleButton } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
 import type { KtToggleButtonGroup } from '../components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
 import type { KtAlert } from '../components/feedback/kt-alert/kt-alert.js';
+import type { KtEmptyState } from '../components/feedback/kt-empty-state/kt-empty-state.js';
 import type { KtProgressBar } from '../components/feedback/kt-progress-bar/kt-progress-bar.js';
 import type { KtSkeleton } from '../components/feedback/kt-skeleton/kt-skeleton.js';
 import type { KtToast } from '../components/feedback/kt-toast/kt-toast.js';
@@ -115,6 +116,7 @@ declare module 'vue' {
     'kt-toggle-button': KtProps<KtToggleButton>;
     'kt-toggle-button-group': KtProps<KtToggleButtonGroup>;
     'kt-alert': KtProps<KtAlert>;
+    'kt-empty-state': KtProps<KtEmptyState>;
     'kt-progress-bar': KtProps<KtProgressBar>;
     'kt-skeleton': KtProps<KtSkeleton>;
     'kt-toast': KtProps<KtToast>;

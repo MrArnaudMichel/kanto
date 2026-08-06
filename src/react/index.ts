@@ -41,6 +41,7 @@ import { KtHeader as KtHeaderElement } from '../components/navigation/kt-header/
 import { KtToggleButton as KtToggleButtonElement } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
 import { KtToggleButtonGroup as KtToggleButtonGroupElement } from '../components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
 import { KtAlert as KtAlertElement } from '../components/feedback/kt-alert/kt-alert.js';
+import { KtEmptyState as KtEmptyStateElement } from '../components/feedback/kt-empty-state/kt-empty-state.js';
 import { KtProgressBar as KtProgressBarElement } from '../components/feedback/kt-progress-bar/kt-progress-bar.js';
 import { KtSkeleton as KtSkeletonElement } from '../components/feedback/kt-skeleton/kt-skeleton.js';
 import { KtToast as KtToastElement } from '../components/feedback/kt-toast/kt-toast.js';
@@ -232,6 +233,12 @@ export const KtAlert = createComponent({
   elementClass: KtAlertElement,
   react: React,
   events: { onKtClose: 'kt-close' as Kt<never> },
+});
+
+export const KtEmptyState = createComponent({
+  tagName: 'kt-empty-state',
+  elementClass: KtEmptyStateElement,
+  react: React,
 });
 
 export const KtProgressBar = createComponent({
