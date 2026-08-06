@@ -24,6 +24,7 @@ export { KtChip } from './components/core/kt-chip/kt-chip.js';
 export { KtCode } from './components/core/kt-code/kt-code.js';
 export type { KtChipVariant } from './components/core/kt-chip/kt-chip.js';
 export { KtIcon } from './components/core/kt-icon/kt-icon.js';
+export { KtKbd } from './components/core/kt-kbd/kt-kbd.js';
 
 // === FORMS ===
 export { KtDragDrop } from './components/forms/kt-drag-drop/kt-drag-drop.js';
