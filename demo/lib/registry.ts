@@ -60,6 +60,22 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-kbd>/</kt-kbd>
     </div>`,
 
+  'kt-alert': () =>
+    html`<div class="demo-stack" style="max-width:100%">
+      <kt-alert
+        variant="warning"
+        heading="Storage almost full"
+        description="You are using 88% of your quota."
+        dismissible
+      ></kt-alert>
+      <kt-alert variant="success" description="Your changes have been published."></kt-alert>
+      <kt-alert
+        variant="danger"
+        heading="Payment failed"
+        description="We could not charge your card."
+      ></kt-alert>
+    </div>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>

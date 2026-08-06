@@ -63,6 +63,8 @@ export type {
 export { KtToggleButtonGroup } from './components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
 
 // === FEEDBACK ===
+export { KtAlert } from './components/feedback/kt-alert/kt-alert.js';
+export type { KtAlertVariant } from './components/feedback/kt-alert/kt-alert.js';
 export { KtProgressBar } from './components/feedback/kt-progress-bar/kt-progress-bar.js';
 export type {
   KtProgressSize,
