@@ -87,6 +87,10 @@
       "types": "./dist/components/data/kt-table/kt-table.d.ts",
       "default": "./dist/components/data/kt-table/kt-table.js"
     },
+    "./components/feedback/kt-alert": {
+      "types": "./dist/components/feedback/kt-alert/kt-alert.d.ts",
+      "default": "./dist/components/feedback/kt-alert/kt-alert.js"
+    },
     "./components/feedback/kt-progress-bar": {
       "types": "./dist/components/feedback/kt-progress-bar/kt-progress-bar.d.ts",
       "default": "./dist/components/feedback/kt-progress-bar/kt-progress-bar.js"
