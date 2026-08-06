@@ -41,6 +41,7 @@ import type { KtCard } from '../components/core/kt-card/kt-card.js';
 import type { KtChip } from '../components/core/kt-chip/kt-chip.js';
 import type { KtCode } from '../components/core/kt-code/kt-code.js';
 import type { KtIcon } from '../components/core/kt-icon/kt-icon.js';
+import type { KtKbd } from '../components/core/kt-kbd/kt-kbd.js';
 import type { KtDragDrop } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
 import type { KtForm } from '../components/forms/kt-form/kt-form.js';
 import type { KtInput } from '../components/forms/kt-input/kt-input.js';
@@ -96,6 +97,7 @@ declare module 'vue' {
     'kt-chip': KtProps<KtChip>;
     'kt-code': KtProps<KtCode>;
     'kt-icon': KtProps<KtIcon>;
+    'kt-kbd': KtProps<KtKbd>;
     'kt-drag-drop': KtProps<KtDragDrop>;
     'kt-form': KtProps<KtForm>;
     'kt-input': KtProps<KtInput>;

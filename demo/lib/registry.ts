@@ -53,6 +53,13 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-badge pill max="99">128</kt-badge>
     </div>`,
 
+  'kt-kbd': () =>
+    html`<div class="demo-row">
+      <kt-kbd keys="mod k"></kt-kbd>
+      <kt-kbd keys="ctrl shift p"></kt-kbd>
+      <kt-kbd>/</kt-kbd>
+    </div>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>

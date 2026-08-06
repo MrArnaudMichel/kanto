@@ -24,6 +24,7 @@ import { KtCard as KtCardElement } from '../components/core/kt-card/kt-card.js';
 import { KtChip as KtChipElement } from '../components/core/kt-chip/kt-chip.js';
 import { KtCode as KtCodeElement } from '../components/core/kt-code/kt-code.js';
 import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
+import { KtKbd as KtKbdElement } from '../components/core/kt-kbd/kt-kbd.js';
 import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
 import { KtForm as KtFormElement } from '../components/forms/kt-form/kt-form.js';
 import { KtInput as KtInputElement } from '../components/forms/kt-input/kt-input.js';
@@ -96,6 +97,12 @@ export const KtCode = createComponent({
 export const KtIcon = createComponent({
   tagName: 'kt-icon',
   elementClass: KtIconElement,
+  react: React,
+});
+
+export const KtKbd = createComponent({
+  tagName: 'kt-kbd',
+  elementClass: KtKbdElement,
   react: React,
 });
 
