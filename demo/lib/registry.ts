@@ -85,6 +85,32 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button slot="actions" icon="plus">Compose</kt-button>
     </kt-empty-state>`,
 
+  'kt-stat': () =>
+    html`<div class="demo-grid">
+      <kt-card
+        ><kt-stat
+          label="Revenue"
+          value="$292,342"
+          delta="-3%"
+          trend="down"
+          icon="trending-up"
+        ></kt-stat
+      ></kt-card>
+      <kt-card
+        ><kt-stat label="Customers" value="712" delta="+12%" trend="up" icon="users"></kt-stat
+      ></kt-card>
+      <kt-card
+        ><kt-stat
+          label="Churn"
+          value="2.1%"
+          delta="-0.4%"
+          trend="down"
+          inverted
+          icon="clock"
+        ></kt-stat
+      ></kt-card>
+    </div>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>

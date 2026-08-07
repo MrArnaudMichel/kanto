@@ -51,6 +51,7 @@ import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlay
 import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown/kt-dropdown.js';
 import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel/kt-side-panel.js';
 import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination/kt-pagination.js';
+import { KtStat as KtStatElement } from '../components/data/kt-stat/kt-stat.js';
 import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.js';
 
 /** Narrows an event name to the detail its element actually dispatches. */
@@ -326,4 +327,10 @@ export const KtPagination = createComponent({
 
 // The imperative toaster needs no wrapper.
 export { toaster } from '../components/feedback/kt-toast-container/toaster.js';
+
+export const KtStat = createComponent({
+  tagName: 'kt-stat',
+  elementClass: KtStatElement,
+  react: React,
+});
 

@@ -93,6 +93,8 @@ export { KtSidePanel } from './components/overlays/kt-side-panel/kt-side-panel.j
 
 // === DATA ===
 export { KtPagination } from './components/data/kt-pagination/kt-pagination.js';
+export { KtStat } from './components/data/kt-stat/kt-stat.js';
+export type { KtStatTrend } from './components/data/kt-stat/kt-stat.js';
 export { KtTable } from './components/data/kt-table/kt-table.js';
 export type {
   KtCellRenderer,
