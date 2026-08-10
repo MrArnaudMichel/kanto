@@ -46,6 +46,21 @@
   --color-overlay: rgba(80, 80, 90, 0.8);
   --color-backdrop: rgba(0, 0, 0, 0.25);
 
+  /* The same eight hues, stepped for the light surface — not an automatic
+     flip. Four sit below 3:1 there, so the chart always ships its data
+     table: the relief the contrast warning requires. */
+  --chart-series-1: #2a78d6;
+  --chart-series-2: #eb6834;
+  --chart-series-3: #1baf7a;
+  --chart-series-4: #eda100;
+  --chart-series-5: #e87ba4;
+  --chart-series-6: #008300;
+  --chart-series-7: #4a3aa7;
+  --chart-series-8: #e34948;
+
+  --chart-grid: var(--color-dark-20);
+  --chart-axis: var(--color-text-500);
+
   /* The relationship survives the flip: the panel stays one step above the
      fields, both just lighter now. */
   --surface-form: var(--color-dark-14);
@@ -94,6 +109,21 @@
 
     --color-overlay: rgba(80, 80, 90, 0.8);
     --color-backdrop: rgba(0, 0, 0, 0.25);
+
+    /* The same eight hues, stepped for the light surface — not an automatic
+       flip. Four sit below 3:1 there, so the chart always ships its data
+       table: the relief the contrast warning requires. */
+    --chart-series-1: #2a78d6;
+    --chart-series-2: #eb6834;
+    --chart-series-3: #1baf7a;
+    --chart-series-4: #eda100;
+    --chart-series-5: #e87ba4;
+    --chart-series-6: #008300;
+    --chart-series-7: #4a3aa7;
+    --chart-series-8: #e34948;
+
+    --chart-grid: var(--color-dark-20);
+    --chart-axis: var(--color-text-500);
 
     --surface-form: var(--color-dark-14);
     --surface-field: var(--color-dark-8);
