@@ -78,6 +78,26 @@
   --surface-hover: var(--color-dark-22);
   --border-subtle: var(--color-dark-20);
 
+  /* === CHART ===
+     A categorical order, fixed and never cycled, kept clear of the semantic
+     colours so a series can never be mistaken for a status. Validated against
+     the card surface in both themes: worst adjacent CVD ΔE 8.4, normal-vision
+     ΔE 19.3, every slot at least 3:1 here.
+
+     A single-series chart uses --color-primary-base instead: with one series
+     there is no identity to encode, and the title names it. */
+  --chart-series-1: #3987e5;
+  --chart-series-2: #d95926;
+  --chart-series-3: #199e70;
+  --chart-series-4: #c98500;
+  --chart-series-5: #d55181;
+  --chart-series-6: #008300;
+  --chart-series-7: #9085e9;
+  --chart-series-8: #e66767;
+
+  --chart-grid: var(--color-dark-20);
+  --chart-axis: var(--color-text-500);
+
   /* A form panel sits one step above the page so its fields, which are
      filled at --color-dark-12, read as wells recessed into it. */
   --surface-form: var(--color-dark-16);
