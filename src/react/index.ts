@@ -50,6 +50,7 @@ import { KtTooltip as KtTooltipElement } from '../components/feedback/kt-tooltip
 import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown/kt-dropdown.js';
 import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel/kt-side-panel.js';
+import { KtChart as KtChartElement } from '../components/data/kt-chart/kt-chart.js';
 import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination/kt-pagination.js';
 import { KtStat as KtStatElement } from '../components/data/kt-stat/kt-stat.js';
 import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.js';
@@ -303,6 +304,13 @@ export const KtConfirmDialog = createComponent({
 });
 
 // === DATA ===
+export const KtChart = createComponent({
+  tagName: 'kt-chart',
+  elementClass: KtChartElement,
+  react: React,
+  events: { onKtPointHover: 'kt-point-hover' as Kt<{ index: number }> },
+});
+
 export const KtTable = createComponent({
   tagName: 'kt-table',
   elementClass: KtTableElement,

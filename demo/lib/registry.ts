@@ -1,4 +1,5 @@
 import { html, type TemplateResult } from 'lit';
+import { MONTHS, monthlyRevenue } from './data.js';
 
 /**
  * The component catalogue behind the documentation site.
@@ -109,6 +110,28 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
           icon="clock"
         ></kt-stat
       ></kt-card>
+    </div>`,
+
+  'kt-chart': () =>
+    html`<div class="demo-stack" style="max-width:100%">
+      <kt-chart
+        label="Revenue by month"
+        height="200"
+        smooth
+        .labels=${MONTHS}
+        .series=${[{ name: 'Revenue', values: monthlyRevenue(7) }]}
+        .format=${(n: number) => `$${(n * 220).toLocaleString('en-US')}`}
+      ></kt-chart>
+      <kt-chart
+        type="bar"
+        label="Orders by region"
+        height="160"
+        .labels=${['North East', 'South West', 'Midlands', 'North West']}
+        .series=${[
+          { name: 'This quarter', values: [42, 58, 36, 71] },
+          { name: 'Last quarter', values: [38, 44, 41, 55] },
+        ]}
+      ></kt-chart>
     </div>`,
 
   'kt-button': () =>

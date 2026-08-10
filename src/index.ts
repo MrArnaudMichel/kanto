@@ -92,6 +92,8 @@ export type { KtDropdownPlacement } from './components/overlays/kt-dropdown/kt-d
 export { KtSidePanel } from './components/overlays/kt-side-panel/kt-side-panel.js';
 
 // === DATA ===
+export { KtChart } from './components/data/kt-chart/kt-chart.js';
+export type { KtChartType, KtSeries } from './components/data/kt-chart/kt-chart.js';
 export { KtPagination } from './components/data/kt-pagination/kt-pagination.js';
 export { KtStat } from './components/data/kt-stat/kt-stat.js';
 export type { KtStatTrend } from './components/data/kt-stat/kt-stat.js';
