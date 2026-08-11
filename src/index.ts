@@ -85,6 +85,7 @@ export { KtTooltip } from './components/feedback/kt-tooltip/kt-tooltip.js';
 export type { KtTooltipPlacement } from './components/feedback/kt-tooltip/kt-tooltip.js';
 
 // === OVERLAYS ===
+export { KtCollapsible } from './components/overlays/kt-collapsible/kt-collapsible.js';
 export { KtConfirmDialog } from './components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 export type { KtConfirmVariant } from './components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 export { KtDropdown } from './components/overlays/kt-dropdown/kt-dropdown.js';

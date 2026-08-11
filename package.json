@@ -183,6 +183,10 @@
       "types": "./dist/components/navigation/kt-toggle-button-group/kt-toggle-button-group.d.ts",
       "default": "./dist/components/navigation/kt-toggle-button-group/kt-toggle-button-group.js"
     },
+    "./components/overlays/kt-collapsible": {
+      "types": "./dist/components/overlays/kt-collapsible/kt-collapsible.d.ts",
+      "default": "./dist/components/overlays/kt-collapsible/kt-collapsible.js"
+    },
     "./components/overlays/kt-confirm-dialog": {
       "types": "./dist/components/overlays/kt-confirm-dialog/kt-confirm-dialog.d.ts",
       "default": "./dist/components/overlays/kt-confirm-dialog/kt-confirm-dialog.js"
