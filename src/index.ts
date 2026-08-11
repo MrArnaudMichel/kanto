@@ -89,6 +89,8 @@ export { KtConfirmDialog } from './components/overlays/kt-confirm-dialog/kt-conf
 export type { KtConfirmVariant } from './components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 export { KtDropdown } from './components/overlays/kt-dropdown/kt-dropdown.js';
 export type { KtDropdownPlacement } from './components/overlays/kt-dropdown/kt-dropdown.js';
+export { KtModal } from './components/overlays/kt-modal/kt-modal.js';
+export type { KtModalSize } from './components/overlays/kt-modal/kt-modal.js';
 export { KtSidePanel } from './components/overlays/kt-side-panel/kt-side-panel.js';
 
 // === DATA ===
