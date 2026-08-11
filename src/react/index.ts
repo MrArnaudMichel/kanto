@@ -49,6 +49,7 @@ import { KtToastContainer as KtToastContainerElement } from '../components/feedb
 import { KtTooltip as KtTooltipElement } from '../components/feedback/kt-tooltip/kt-tooltip.js';
 import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown/kt-dropdown.js';
+import { KtModal as KtModalElement } from '../components/overlays/kt-modal/kt-modal.js';
 import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel/kt-side-panel.js';
 import { KtChart as KtChartElement } from '../components/data/kt-chart/kt-chart.js';
 import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination/kt-pagination.js';
@@ -284,6 +285,13 @@ export const KtDropdown = createComponent({
     onKtOpen: 'kt-open' as Kt<never>,
     onKtClose: 'kt-close' as Kt<never>,
   },
+});
+
+export const KtModal = createComponent({
+  tagName: 'kt-modal',
+  elementClass: KtModalElement,
+  react: React,
+  events: { onKtClose: 'kt-close' as Kt<never> },
 });
 
 export const KtSidePanel = createComponent({

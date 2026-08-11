@@ -66,6 +66,7 @@ import type { KtToastContainer } from '../components/feedback/kt-toast-container
 import type { KtTooltip } from '../components/feedback/kt-tooltip/kt-tooltip.js';
 import type { KtConfirmDialog } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 import type { KtDropdown } from '../components/overlays/kt-dropdown/kt-dropdown.js';
+import type { KtModal } from '../components/overlays/kt-modal/kt-modal.js';
 import type { KtSidePanel } from '../components/overlays/kt-side-panel/kt-side-panel.js';
 import type { KtChart } from '../components/data/kt-chart/kt-chart.js';
 import type { KtPagination } from '../components/data/kt-pagination/kt-pagination.js';
@@ -126,6 +127,7 @@ declare module 'vue' {
     'kt-tooltip': KtProps<KtTooltip>;
     'kt-confirm-dialog': KtProps<KtConfirmDialog>;
     'kt-dropdown': KtProps<KtDropdown>;
+    'kt-modal': KtProps<KtModal>;
     'kt-side-panel': KtProps<KtSidePanel>;
     'kt-chart': KtProps<KtChart>;
     'kt-pagination': KtProps<KtPagination>;

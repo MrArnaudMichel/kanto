@@ -134,6 +134,22 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-chart>
     </div>`,
 
+  'kt-modal': () =>
+    html`<div class="demo-row">
+      <kt-button
+        variant="secondary"
+        @click=${(e: Event) => {
+          (e.target as HTMLElement).closest('.demo-row')!.querySelector('kt-modal')!.open = true;
+        }}
+        >Open the modal</kt-button
+      >
+      <kt-modal heading="Compose" description="This goes to the whole team.">
+        <kt-textarea rows="5" placeholder="Write something..."></kt-textarea>
+        <kt-button slot="footer" variant="dark">Save draft</kt-button>
+        <kt-button slot="footer">Send</kt-button>
+      </kt-modal>
+    </div>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>

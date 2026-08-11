@@ -191,6 +191,10 @@
       "types": "./dist/components/overlays/kt-dropdown/kt-dropdown.d.ts",
       "default": "./dist/components/overlays/kt-dropdown/kt-dropdown.js"
     },
+    "./components/overlays/kt-modal": {
+      "types": "./dist/components/overlays/kt-modal/kt-modal.d.ts",
+      "default": "./dist/components/overlays/kt-modal/kt-modal.js"
+    },
     "./components/overlays/kt-side-panel": {
       "types": "./dist/components/overlays/kt-side-panel/kt-side-panel.d.ts",
       "default": "./dist/components/overlays/kt-side-panel/kt-side-panel.js"
