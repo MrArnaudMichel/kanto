@@ -47,6 +47,7 @@ import { KtSkeleton as KtSkeletonElement } from '../components/feedback/kt-skele
 import { KtToast as KtToastElement } from '../components/feedback/kt-toast/kt-toast.js';
 import { KtToastContainer as KtToastContainerElement } from '../components/feedback/kt-toast-container/kt-toast-container.js';
 import { KtTooltip as KtTooltipElement } from '../components/feedback/kt-tooltip/kt-tooltip.js';
+import { KtCollapsible as KtCollapsibleElement } from '../components/overlays/kt-collapsible/kt-collapsible.js';
 import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown/kt-dropdown.js';
 import { KtModal as KtModalElement } from '../components/overlays/kt-modal/kt-modal.js';
@@ -276,6 +277,13 @@ export const KtToastContainer = createComponent({
 });
 
 // === OVERLAYS ===
+export const KtCollapsible = createComponent({
+  tagName: 'kt-collapsible',
+  elementClass: KtCollapsibleElement,
+  react: React,
+  events: { onKtToggle: 'kt-toggle' as Kt<{ open: boolean }> },
+});
+
 export const KtDropdown = createComponent({
   tagName: 'kt-dropdown',
   elementClass: KtDropdownElement,

@@ -64,6 +64,7 @@ import type { KtSkeleton } from '../components/feedback/kt-skeleton/kt-skeleton.
 import type { KtToast } from '../components/feedback/kt-toast/kt-toast.js';
 import type { KtToastContainer } from '../components/feedback/kt-toast-container/kt-toast-container.js';
 import type { KtTooltip } from '../components/feedback/kt-tooltip/kt-tooltip.js';
+import type { KtCollapsible } from '../components/overlays/kt-collapsible/kt-collapsible.js';
 import type { KtConfirmDialog } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 import type { KtDropdown } from '../components/overlays/kt-dropdown/kt-dropdown.js';
 import type { KtModal } from '../components/overlays/kt-modal/kt-modal.js';
@@ -125,6 +126,7 @@ declare module 'vue' {
     'kt-toast': KtProps<KtToast>;
     'kt-toast-container': KtProps<KtToastContainer>;
     'kt-tooltip': KtProps<KtTooltip>;
+    'kt-collapsible': KtProps<KtCollapsible>;
     'kt-confirm-dialog': KtProps<KtConfirmDialog>;
     'kt-dropdown': KtProps<KtDropdown>;
     'kt-modal': KtProps<KtModal>;

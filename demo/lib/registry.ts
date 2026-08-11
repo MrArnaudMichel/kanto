@@ -150,6 +150,19 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       </kt-modal>
     </div>`,
 
+  'kt-collapsible': () =>
+    html`<div class="demo-stack" style="max-width:100%">
+      <kt-collapsible heading="Notifications" open>
+        <div class="demo-stack">
+          <kt-toggle checked>Email me about mentions</kt-toggle>
+          <kt-toggle>Email me a weekly digest</kt-toggle>
+        </div>
+      </kt-collapsible>
+      <kt-collapsible heading="Security">
+        <span class="muted">Two-factor authentication is enabled.</span>
+      </kt-collapsible>
+    </div>`,
+
   'kt-button': () =>
     html`<div class="demo-row">
       <kt-button icon="plus">New entity</kt-button>
