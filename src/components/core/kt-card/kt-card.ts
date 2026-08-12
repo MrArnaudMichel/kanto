@@ -37,8 +37,12 @@ export class KtCard extends KtElement {
     css`
       :host {
         display: block;
-        height: 100%;
       }
+
+      /* No height on the host: a grid or a flex row stretches it already, and
+         forcing 100% made a card in a flex *column* grow to the container
+         instead of to its contents. .card fills whatever the host ends up
+         being, which is what kept equal-height rows working. */
 
       .card {
         display: flex;
