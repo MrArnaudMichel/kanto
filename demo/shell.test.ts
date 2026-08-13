@@ -25,9 +25,9 @@ describe('the documentation shell', () => {
     expect(app.querySelector('.toc')).not.toBeNull();
   });
 
-  it('puts the three top-level sections in the header', () => {
+  it('puts the top-level sections in the header', () => {
     const labels = [...app.querySelectorAll('.top-nav a')].map((a) => a.textContent!.trim());
-    expect(labels).toEqual(['Guide', 'Components', 'Examples']);
+    expect(labels).toEqual(['Guide', 'Components', 'Examples', 'Apps']);
   });
 
   it('lists the components in the sidebar, grouped', () => {

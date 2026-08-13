@@ -1,0 +1,359 @@
+/* ==========================================================================
+   The showcase applications.
+
+   Layout only. Every visual decision below reads a Kanto token, so these
+   screens follow the theme exactly as the components do.
+   ========================================================================== */
+
+/* === CONSOLE SHELL ======================================================= */
+
+.app {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--surface-page);
+}
+
+.app.collapsed {
+  grid-template-columns: 64px minmax(0, 1fr);
+}
+
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100vh;
+  padding: 14px 12px;
+  overflow: hidden auto;
+  background: var(--color-dark-8);
+  border-right: var(--border-width) solid var(--border-subtle);
+  scrollbar-width: thin;
+  position: sticky;
+  top: 0;
+}
+
+.workspace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  color: var(--text-body);
+  font: var(--font-normal-medium);
+  text-align: left;
+  background: transparent;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.workspace:hover {
+  background: var(--surface-card);
+}
+
+.workspace-name {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  background: var(--surface-field);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.app-search:hover {
+  border-color: var(--color-text-700);
+}
+
+.app-search span {
+  flex: 1;
+  text-align: left;
+}
+
+.app-nav,
+.app-subnav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-nav {
+  flex: 1;
+}
+
+.app-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  color: var(--text-muted);
+  font: var(--font-normal-medium);
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.app-nav-item:hover {
+  color: var(--text-body);
+  background: var(--surface-card);
+  text-decoration: none;
+}
+
+.app-nav-item.active {
+  color: var(--color-primary-base);
+  background: var(--color-primary-soft);
+}
+
+.app-nav-label {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-subnav {
+  margin: 2px 0 2px 26px;
+  padding-left: 10px;
+  border-left: var(--border-width) solid var(--border-subtle);
+}
+
+.app-nav-item.sub {
+  padding: 5px 10px;
+  font: var(--font-normal-regular);
+}
+
+.app-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 10px;
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+
+/* Collapsed: icons only, labels gone rather than clipped. */
+.app.collapsed .workspace-name,
+.app.collapsed .app-nav-label,
+.app.collapsed .app-search span,
+.app.collapsed .app-search kt-kbd,
+.app.collapsed .app-subnav,
+.app.collapsed kt-badge {
+  display: none;
+}
+
+.app.collapsed .app-nav-item,
+.app.collapsed .app-search,
+.app.collapsed .workspace {
+  justify-content: center;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 20px;
+  background: var(--surface-page);
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.app-topbar h1 {
+  flex: 1;
+  color: var(--text-body);
+  font: var(--font-title-h6);
+}
+
+.app-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bell {
+  position: relative;
+  display: inline-flex;
+}
+
+.bell-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 7px;
+  height: 7px;
+  background: var(--color-danger-base);
+  border: 2px solid var(--surface-page);
+  border-radius: var(--radius-full);
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px;
+}
+
+/* Flex items shrink by default, and a column that overflows the viewport
+   squeezes them. The stat row lost half its height that way — silently,
+   because it clips its own overflow. Nothing in this column should shrink;
+   the page scrolls instead. */
+.app-content > * {
+  flex: none;
+}
+
+.app-content > .mail {
+  flex: 1;
+  min-height: 520px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Not a kt-card: a card puts slotted children in an inner wrapper that
+   exposes no part, so the grid could never reach them from out here. */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  overflow: hidden;
+  background: transparent;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+
+.stat-row kt-stat {
+  border-right: var(--border-width) solid var(--border-subtle);
+}
+
+.stat-row kt-stat:last-child {
+  border-right: none;
+}
+
+@media (max-width: 900px) {
+  .stat-row kt-stat {
+    border-right: none;
+    border-bottom: var(--border-width) solid var(--border-subtle);
+  }
+}
+
+.cell-person {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cookie-bar {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: var(--z-toast);
+  max-width: 380px;
+}
+
+/* === COMMAND PALETTE ===================================================== */
+
+.palette-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+}
+
+.palette-item:hover {
+  color: var(--text-body);
+  background: var(--surface-raised);
+  text-decoration: none;
+}
+
+.palette-label {
+  flex: 1;
+}
+
+.palette-hint {
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+/* === RESPONSIVE ========================================================== */
+
+@media (max-width: 1023px) {
+  .settings-grid,
+  .portfolio-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mail-reading {
+    border-top: var(--border-width) solid var(--border-subtle);
+  }
+}
+
+@media (max-width: 767px) {
+  .app,
+  .chat {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-sidebar,
+  .chat-threads {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: var(--border-width) solid var(--border-subtle);
+  }
+
+  .portrait {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 56px;
+  }
+}
+
+/* Kanto fields are borderless fills. That works when they sit on a panel, and
+   not at all when they sit straight on the page — page and field are one ramp
+   step apart in dark and almost identical in light, so the field disappears.
+   Toolbars get a surface for exactly that reason. */
+.toolbar-card::part(base) {
+  padding: 12px 14px;
+}

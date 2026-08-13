@@ -5,9 +5,12 @@ import { registerIcons } from 'kanto-ds';
 import 'kanto-ds';
 import 'kanto-ds/styles.css';
 import './shell.css';
+import './apps.css';
 
 import { COMPONENTS } from './lib/registry.js';
 import { setRenderer } from './lib/render.js';
+import { consoleHome } from './apps/console/home.js';
+import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
@@ -24,7 +27,7 @@ registerIcons(lucide);
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'guide' | 'components' | 'examples';
+type Section = 'guide' | 'components' | 'examples' | 'apps';
 
 interface Route {
   readonly section: Section;
@@ -33,6 +36,10 @@ interface Route {
   readonly group: string;
   readonly page: () => DocPage | TemplateResult;
 }
+
+const SHOWCASE = [
+  { slug: 'console/home', label: 'Console', description: 'A four-section admin product.' },
+];
 
 const GUIDE: Route[] = [
   {
@@ -92,13 +99,45 @@ const COMPONENT_ROUTES: Route[] = COMPONENTS.map((entry) => ({
   page: () => componentPage(entry),
 }));
 
-const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...EXAMPLES];
+const APP_ROUTES: Route[] = SHOWCASE.map((entry) => ({
+  section: 'apps' as const,
+  slug: entry.slug.replace(/\//g, '-'),
+  label: entry.label,
+  group: 'Applications',
+  page: () =>
+    markdownPage(
+      `# ${entry.label}\n\n${entry.description}\n\nIt opens without the documentation chrome — [launch it](#/app/${entry.slug}).\n`,
+      'demo/apps',
+      'Apps',
+    ),
+}));
+
+const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...EXAMPLES, ...APP_ROUTES];
 
 const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
   { id: 'examples', label: 'Examples', icon: 'layout-dashboard' },
+  { id: 'apps', label: 'Apps', icon: 'app-window' },
 ];
+
+/**
+ * The full-bleed applications.
+ *
+ * They take the whole viewport rather than sitting inside the documentation
+ * chrome: an application shell wrapped in another application shell reads as
+ * neither, and the point of these pages is what a whole product looks like.
+ */
+const APPS: Record<string, () => TemplateResult> = {
+  'console/home': consoleHome,
+};
+
+/** `#/app/<path>` — anything under it renders without the docs chrome. */
+function currentApp(): (() => TemplateResult) | null {
+  const match = /^#\/app\/(.+)$/.exec(location.hash);
+  if (!match) return null;
+  return APPS[match[1]!] ?? null;
+}
 
 function currentRoute(): Route {
   const [section, slug] = location.hash.replace(/^#\/?/, '').split('/');
@@ -267,6 +306,9 @@ function docLayout(route: Route, page: DocPage): TemplateResult {
 }
 
 function shell(): TemplateResult {
+  const app = currentApp();
+  if (app) return app();
+
   const route = currentRoute();
   const result = route.page();
   const isDoc = typeof result === 'object' && 'headings' in result;
@@ -357,6 +399,16 @@ window.addEventListener('hashchange', () => {
   window.scrollTo({ top: 0 });
   update();
   document.querySelector('kt-header')?.closeMenu();
+});
+
+// ⌘K / Ctrl-K opens the console's command palette wherever you are in it.
+window.addEventListener('keydown', (event) => {
+  if (event.key.toLowerCase() !== 'k' || !(event.metaKey || event.ctrlKey)) return;
+  if (!location.hash.startsWith('#/app/console')) return;
+
+  event.preventDefault();
+  shellState.paletteOpen = !shellState.paletteOpen;
+  update();
 });
 
 // `/` jumps to the filter, the way every docs site people already use does.
