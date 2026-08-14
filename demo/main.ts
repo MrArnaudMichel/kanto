@@ -10,6 +10,7 @@ import './apps.css';
 import { COMPONENTS } from './lib/registry.js';
 import { setRenderer } from './lib/render.js';
 import { consoleHome } from './apps/console/home.js';
+import { consoleInbox } from './apps/console/inbox.js';
 import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
@@ -130,6 +131,7 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
  */
 const APPS: Record<string, () => TemplateResult> = {
   'console/home': consoleHome,
+  'console/inbox': consoleInbox,
 };
 
 /** `#/app/<path>` — anything under it renders without the docs chrome. */
