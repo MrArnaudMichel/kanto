@@ -12,6 +12,7 @@ import { setRenderer } from './lib/render.js';
 import { consoleHome } from './apps/console/home.js';
 import { consoleInbox } from './apps/console/inbox.js';
 import { consoleCustomers } from './apps/console/customers.js';
+import { consoleSettings } from './apps/console/settings.js';
 import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
@@ -134,6 +135,10 @@ const APPS: Record<string, () => TemplateResult> = {
   'console/home': consoleHome,
   'console/inbox': consoleInbox,
   'console/customers': consoleCustomers,
+  'console/settings/general': () => consoleSettings('general'),
+  'console/settings/members': () => consoleSettings('members'),
+  'console/settings/notifications': () => consoleSettings('notifications'),
+  'console/settings/security': () => consoleSettings('security'),
 };
 
 /** `#/app/<path>` — anything under it renders without the docs chrome. */

@@ -453,6 +453,35 @@
   border-top: var(--border-width) solid var(--border-subtle);
 }
 
+/* === SETTINGS ============================================================ */
+
+.settings-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.settings-narrow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
 /* === RESPONSIVE ========================================================== */
 
 @media (max-width: 1023px) {
