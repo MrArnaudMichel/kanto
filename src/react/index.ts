@@ -56,6 +56,10 @@ import { KtChart as KtChartElement } from '../components/data/kt-chart/kt-chart.
 import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination/kt-pagination.js';
 import { KtStat as KtStatElement } from '../components/data/kt-stat/kt-stat.js';
 import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.js';
+import {
+  KtTimeline as KtTimelineElement,
+  KtTimelineItem as KtTimelineItemElement,
+} from '../components/data/kt-timeline/kt-timeline.js';
 
 /** Narrows an event name to the detail its element actually dispatches. */
 type Kt<T> = EventName<CustomEvent<T>>;
@@ -358,3 +362,14 @@ export const KtStat = createComponent({
   react: React,
 });
 
+export const KtTimeline = createComponent({
+  tagName: 'kt-timeline',
+  elementClass: KtTimelineElement,
+  react: React,
+});
+
+export const KtTimelineItem = createComponent({
+  tagName: 'kt-timeline-item',
+  elementClass: KtTimelineItemElement,
+  react: React,
+});

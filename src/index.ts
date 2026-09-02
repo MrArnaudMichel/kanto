@@ -108,6 +108,8 @@ export type {
   KtTableColumn,
   KtTableRow,
 } from './components/data/kt-table/kt-table.js';
+export { KtTimeline, KtTimelineItem } from './components/data/kt-timeline/kt-timeline.js';
+export type { KtTimelineVariant } from './components/data/kt-timeline/kt-timeline.js';
 
 // === SHARED TYPES ===
 export type { KtOption } from './internal/listbox.js';

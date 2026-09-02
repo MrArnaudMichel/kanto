@@ -95,6 +95,10 @@
       "types": "./dist/components/data/kt-table/kt-table.d.ts",
       "default": "./dist/components/data/kt-table/kt-table.js"
     },
+    "./components/data/kt-timeline": {
+      "types": "./dist/components/data/kt-timeline/kt-timeline.d.ts",
+      "default": "./dist/components/data/kt-timeline/kt-timeline.js"
+    },
     "./components/feedback/kt-alert": {
       "types": "./dist/components/feedback/kt-alert/kt-alert.d.ts",
       "default": "./dist/components/feedback/kt-alert/kt-alert.js"

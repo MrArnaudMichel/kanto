@@ -112,6 +112,25 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-card>
     </div>`,
 
+  'kt-timeline': () =>
+    html`<kt-timeline style="max-width:520px">
+      <kt-timeline-item
+        heading="Deployed to production"
+        time="09:24"
+        variant="success"
+        icon="rocket"
+      >
+        Build 4210. Twelve commits since the last release.
+      </kt-timeline-item>
+      <kt-timeline-item heading="Checks passed" time="09:18" variant="info" icon="check">
+        Unit, types and the visual suite.
+      </kt-timeline-item>
+      <kt-timeline-item heading="Review requested" time="09:02">
+        Two files, forty lines.
+      </kt-timeline-item>
+      <kt-timeline-item heading="Branch opened" time="08:41"></kt-timeline-item>
+    </kt-timeline>`,
+
   'kt-chart': () =>
     html`<div class="demo-stack" style="max-width:100%">
       <kt-chart
