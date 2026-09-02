@@ -73,6 +73,7 @@ import type { KtChart } from '../components/data/kt-chart/kt-chart.js';
 import type { KtPagination } from '../components/data/kt-pagination/kt-pagination.js';
 import type { KtStat } from '../components/data/kt-stat/kt-stat.js';
 import type { KtTable } from '../components/data/kt-table/kt-table.js';
+import type { KtTimeline, KtTimelineItem } from '../components/data/kt-timeline/kt-timeline.js';
 
 /**
  * True for any Kanto custom element.
@@ -135,6 +136,8 @@ declare module 'vue' {
     'kt-pagination': KtProps<KtPagination>;
     'kt-stat': KtProps<KtStat>;
     'kt-table': KtProps<KtTable>;
+    'kt-timeline': KtProps<KtTimeline>;
+    'kt-timeline-item': KtProps<KtTimelineItem>;
   }
 }
 
