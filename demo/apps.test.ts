@@ -19,6 +19,7 @@ const APP_ROUTES = [
   { hash: '#/app/console/settings/security', marker: '.settings-narrow', label: 'Settings' },
   { hash: '#/app/landing', marker: '.hero', label: null },
   { hash: '#/app/chat', marker: '.chat-transcript', label: null },
+  { hash: '#/app/portfolio', marker: '.portrait', label: null },
 ] as const;
 
 describe('the full-bleed applications', () => {

@@ -603,6 +603,221 @@
   border-top: var(--border-width) solid var(--border-subtle);
 }
 
+/* === PORTFOLIO =========================================================== */
+
+.portfolio {
+  min-height: 100vh;
+  background: var(--surface-page);
+}
+
+.portrait {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 88px 24px 40px;
+}
+
+/* kt-avatar's largest size is 48px, which is a UI size, not a portrait. The
+   element derives everything — initials, status dot — from one custom property,
+   so a portrait is that property and nothing else. */
+.portrait-avatar {
+  --kt-avatar-size: 128px;
+}
+
+.portrait-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.portrait-copy h1 {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--text-body);
+  font: var(--font-title-studio);
+}
+
+.portrait-copy p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.portfolio-numbers {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* The bands centre their headings; these two sections are left-aligned
+   columns, so they opt out rather than fight it. */
+.band h2.left {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.section-head h2 {
+  margin: 0;
+  text-align: left;
+}
+
+/* Stretched, not start-aligned: work cards read as a set, and a row of three
+   with three different heights reads as three unrelated things. */
+.work-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: stretch;
+}
+
+.work-card::part(base) {
+  height: 100%;
+}
+
+.work-mark {
+  display: block;
+  width: 28px;
+  height: 6px;
+  border-radius: var(--radius-full);
+}
+
+.work-name {
+  margin: 0 0 4px;
+  color: var(--text-body);
+  font: var(--font-title-h5);
+}
+
+.work-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary-base);
+  font: var(--font-medium-regular);
+}
+
+.portfolio-split {
+  display: grid;
+  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.writing {
+  display: flex;
+  flex-direction: column;
+}
+
+.writing-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 12px;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.writing-row:last-child {
+  border-bottom: none;
+}
+
+.writing-row:hover {
+  background: var(--surface-card);
+}
+
+.writing-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.writing-title {
+  color: var(--text-body);
+  font: var(--font-medium-regular);
+}
+
+.writing-when {
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.contact-card {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.contact-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* === CASE STUDY PANEL ==================================================== */
+
+.case {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.case-tagline {
+  margin: 0;
+  color: var(--text-body);
+  font: var(--font-title-h6);
+  line-height: 1.5;
+}
+
+.case-outcomes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 14px;
+  background: var(--surface-raised);
+  border-radius: var(--border-radius-card);
+}
+
+.case-outcome {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.case-outcome-value {
+  color: var(--text-body);
+  font: var(--font-title-h5);
+  font-variant-numeric: tabular-nums;
+}
+
+.case-outcome-label {
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+  line-height: 1.4;
+}
+
+.case-heading {
+  margin: 12px 0 0;
+  color: var(--text-body);
+  font: var(--font-title-h6);
+}
+
 /* === CHAT ================================================================ */
 
 .chat {

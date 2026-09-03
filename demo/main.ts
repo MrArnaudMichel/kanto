@@ -15,6 +15,7 @@ import { consoleCustomers } from './apps/console/customers.js';
 import { consoleSettings } from './apps/console/settings.js';
 import { landingPage } from './apps/landing.js';
 import { chatPage } from './apps/chat.js';
+import { portfolioPage } from './apps/portfolio.js';
 import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
@@ -46,6 +47,11 @@ const SHOWCASE = [
   { slug: 'console/home', label: 'Console', description: 'A four-section admin product.' },
   { slug: 'landing', label: 'Landing page', description: 'Marketing, from the same elements.' },
   { slug: 'chat', label: 'Assistant', description: 'A conversational interface.' },
+  {
+    slug: 'portfolio',
+    label: 'Portfolio',
+    description: 'A personal site — long measure, few controls.',
+  },
 ];
 
 const GUIDE: Route[] = [
@@ -145,6 +151,7 @@ const APPS: Record<string, () => TemplateResult> = {
   'console/settings/security': () => consoleSettings('security'),
   landing: landingPage,
   chat: chatPage,
+  portfolio: portfolioPage,
 };
 
 /** `#/app/<path>` — anything under it renders without the docs chrome. */
