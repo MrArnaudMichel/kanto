@@ -73,6 +73,20 @@ export function buildEntities(count = 87, seed = 20260731): Entity[] {
   });
 }
 
+/**
+ * A work address from a display name.
+ *
+ * Naive `[^a-z] -> .` turns "F. Nguyen" into "f..nguyen@" — the full stop and
+ * the space each become a dot. Collapse the run instead, and trim the ends.
+ */
+export function workEmail(name: string, domain = 'kanto.studio'): string {
+  const local = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '.')
+    .replace(/^\.|\.$/g, '');
+  return `${local}@${domain}`;
+}
+
 export const currency = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
