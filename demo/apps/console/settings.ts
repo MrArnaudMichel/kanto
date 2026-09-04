@@ -1,7 +1,7 @@
 import { html, type TemplateResult } from 'lit';
 import { toaster } from 'kanto';
 import { rerender } from '../../lib/render.js';
-import { buildEntities } from '../../lib/data.js';
+import { buildEntities, workEmail } from '../../lib/data.js';
 import { consoleShell } from '../shell.js';
 
 /**
@@ -151,9 +151,7 @@ function members(): TemplateResult {
             <span class="stack" style="gap:0">
               <span>${row['owner']}</span>
               <span class="muted" style="font:var(--font-normal-small)"
-                >${String(row['owner'])
-                  .toLowerCase()
-                  .replace(/[^a-z]/g, '.')}@kanto.studio</span
+                >${workEmail(String(row['owner']))}</span
               >
             </span>
           </span>`;
