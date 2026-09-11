@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LitElement } from 'lit';
-import { defineElement } from './kt-element.js';
+import { defineElement } from 'kanto-ds';
 import { emit, uniqueId } from './events.js';
 
 describe('defineElement', () => {

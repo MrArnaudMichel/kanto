@@ -1,6 +1,6 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
+import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
 import '../../core/kt-icon/kt-icon.js';
 import '../../core/kt-badge/kt-badge.js';
 import '../../feedback/kt-skeleton/kt-skeleton.js';

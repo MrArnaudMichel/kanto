@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-form.js';
 import '../kt-input/kt-input.js';
 import '../kt-label-input/kt-label-input.js';
 import '../../core/kt-button/kt-button.js';
-import type { KtForm } from './kt-form.js';
-import type { KtInput } from '../kt-input/kt-input.js';
+import type { KtForm } from 'kanto-ds';
+import type { KtInput } from 'kanto-ds';
 
 const fieldset = (el: KtForm) => el.shadowRoot!.querySelector('fieldset')!;
 const legend = (el: KtForm) => el.shadowRoot!.querySelector('legend')!;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-meter.js';
-import type { KtMeter } from './kt-meter.js';
+import type { KtMeter } from 'kanto-ds';
 
 const widths = (el: KtMeter) =>
   [...el.shadowRoot!.querySelectorAll<HTMLElement>('.segment')].map((s) => s.style.width);

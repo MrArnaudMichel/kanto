@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-header.js';
-import type { KtHeader } from './kt-header.js';
+import type { KtHeader } from 'kanto-ds';
 
 const banner = (el: KtHeader) => el.shadowRoot!.querySelector('header')!;
 const menuButton = (el: KtHeader) => el.shadowRoot!.querySelector('.menu-button')!;

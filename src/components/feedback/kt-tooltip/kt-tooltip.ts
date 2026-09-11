@@ -1,8 +1,8 @@
 import { css, html, type PropertyValues, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { uniqueId } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
+import { uniqueId } from 'kanto-ds/internal/events';
 
 export type KtTooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-drag-drop.js';
-import type { KtDragDrop } from './kt-drag-drop.js';
+import type { KtDragDrop } from 'kanto-ds';
 
 const zone = (el: KtDragDrop) => el.shadowRoot!.querySelector<HTMLElement>('.zone')!;
 const items = (el: KtDragDrop) => [...el.shadowRoot!.querySelectorAll<HTMLElement>('.item')];

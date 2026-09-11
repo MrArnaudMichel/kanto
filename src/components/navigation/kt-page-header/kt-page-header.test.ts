@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-page-header.js';
-import type { KtPageHeader } from './kt-page-header.js';
+import type { KtPageHeader } from 'kanto-ds';
 
 describe('kt-page-header', () => {
   it('renders an eyebrow, a heading and a description', async () => {

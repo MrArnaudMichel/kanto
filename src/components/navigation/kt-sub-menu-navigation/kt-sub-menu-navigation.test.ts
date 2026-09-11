@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-sub-menu-navigation.js';
-import type { KtNavSection, KtSubMenuNavigation } from './kt-sub-menu-navigation.js';
+import type { KtNavSection, KtSubMenuNavigation } from 'kanto-ds';
 
 const SECTIONS: KtNavSection[] = [
   {

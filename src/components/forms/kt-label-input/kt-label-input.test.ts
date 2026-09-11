@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-label-input.js';
 import '../kt-input/kt-input.js';
-import type { KtLabelInput } from './kt-label-input.js';
-import type { KtInput } from '../kt-input/kt-input.js';
+import type { KtLabelInput } from 'kanto-ds';
+import type { KtInput } from 'kanto-ds';
 
 const labelEl = (el: KtLabelInput) => el.shadowRoot!.querySelector('label')!;
 

@@ -1,7 +1,7 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { getIcon, type IconNode } from '../../../icons/registry.js';
+import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
+import { getIcon, type IconNode } from 'kanto-ds/icons';
 import '../../../icons/defaults.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';

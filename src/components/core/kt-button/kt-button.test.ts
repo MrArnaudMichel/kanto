@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-button.js';
-import type { KtButton } from './kt-button.js';
+import type { KtButton } from 'kanto-ds';
 
 const nativeButton = (el: KtButton) => el.shadowRoot!.querySelector('button')!;
 

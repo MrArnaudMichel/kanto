@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-code.js';
-import type { KtCode } from './kt-code.js';
+import type { KtCode } from 'kanto-ds';
 
 const header = (el: KtCode) => el.shadowRoot!.querySelector('.header');
 const copyButton = (el: KtCode) => el.shadowRoot!.querySelector<HTMLButtonElement>('.copy');

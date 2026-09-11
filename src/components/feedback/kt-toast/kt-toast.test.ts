@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-toast.js';
 import '../kt-toast-container/kt-toast-container.js';
-import { toaster } from '../kt-toast-container/toaster.js';
-import type { KtToast } from './kt-toast.js';
-import type { KtToastContainer } from '../kt-toast-container/kt-toast-container.js';
+import { toaster } from 'kanto-ds';
+import type { KtToast } from 'kanto-ds';
+import type { KtToastContainer } from 'kanto-ds';
 
 const surface = (el: KtToast) => el.shadowRoot!.querySelector('.toast')!;
 

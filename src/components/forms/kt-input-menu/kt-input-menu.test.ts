@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-input-menu.js';
-import type { KtInputMenu } from './kt-input-menu.js';
-import type { KtOption } from '../../../internal/listbox.js';
+import type { KtInputMenu } from 'kanto-ds';
+import type { KtOption } from 'kanto-ds';
 
 const OPTIONS: KtOption[] = [
   { id: 'fr', label: 'France' },

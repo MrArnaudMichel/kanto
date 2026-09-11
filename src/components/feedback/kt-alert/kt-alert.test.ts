@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-alert.js';
-import type { KtAlert } from './kt-alert.js';
+import type { KtAlert } from 'kanto-ds';
 
 const base = (el: KtAlert) => el.shadowRoot!.querySelector('.alert')!;
 const icon = (el: KtAlert) => el.shadowRoot!.querySelector('kt-icon');

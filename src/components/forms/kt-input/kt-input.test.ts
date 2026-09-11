@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-input.js';
-import type { KtInput } from './kt-input.js';
+import type { KtInput } from 'kanto-ds';
 
 const field = (el: KtInput) => el.shadowRoot!.querySelector('.field')!;
 const control = (el: KtInput) => el.shadowRoot!.querySelector('input')!;

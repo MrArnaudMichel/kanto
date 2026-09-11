@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-badge.js';
-import type { KtBadge } from './kt-badge.js';
+import type { KtBadge } from 'kanto-ds';
 
 const base = (el: KtBadge) => el.shadowRoot!.querySelector('.badge')!;
 

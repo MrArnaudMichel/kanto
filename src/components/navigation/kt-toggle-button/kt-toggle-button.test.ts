@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-toggle-button.js';
 import '../kt-toggle-button-group/kt-toggle-button-group.js';
-import type { KtToggleButton } from './kt-toggle-button.js';
-import type { KtToggleButtonGroup } from '../kt-toggle-button-group/kt-toggle-button-group.js';
+import type { KtToggleButton } from 'kanto-ds';
+import type { KtToggleButtonGroup } from 'kanto-ds';
 
 const native = (el: KtToggleButton) => el.shadowRoot!.querySelector('button')!;
 

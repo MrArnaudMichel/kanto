@@ -1,7 +1,7 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
+import { emit } from 'kanto-ds/internal/events';
 import '../../core/kt-icon/kt-icon.js';
 
 export interface KtBreadcrumbItem {

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { html } from 'lit';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-table.js';
-import type { KtTable, KtTableColumn, KtTableRow } from './kt-table.js';
+import type { KtTable, KtTableColumn, KtTableRow } from 'kanto-ds';
 
 const COLUMNS: KtTableColumn[] = [
   { key: 'name', label: 'Name', sortable: true },

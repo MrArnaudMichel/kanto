@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture } from '../../../test/fixture.js';
+import { fixture } from 'kanto-ds/test/fixture';
 import './kt-kbd.js';
-import type { KtKbd } from './kt-kbd.js';
+import type { KtKbd } from 'kanto-ds';
 
 const keys = (el: KtKbd) =>
   [...el.shadowRoot!.querySelectorAll('kbd')].map((k) => k.textContent!.trim());

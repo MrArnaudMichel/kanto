@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-tooltip.js';
-import type { KtTooltip } from './kt-tooltip.js';
+import type { KtTooltip } from 'kanto-ds';
 
 const bubble = (el: KtTooltip) => el.shadowRoot!.querySelector('.bubble')!;
 const trigger = (el: KtTooltip) => el.querySelector('button')!;

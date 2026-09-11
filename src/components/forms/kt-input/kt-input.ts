@@ -2,14 +2,14 @@ import { css, html, nothing, type PropertyValues, type TemplateResult } from 'li
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
+import { emit } from 'kanto-ds/internal/events';
 import {
   attachFormInternals,
   setFormValue,
   setValidity,
   type UsableInternals,
-} from '../../../internal/form-control.js';
+} from 'kanto-ds/internal/form-control';
 import {
   DEFAULT_COUNTRIES,
   digitsOnly,
@@ -17,7 +17,7 @@ import {
   formatNationalNumber,
   searchCountries,
   type KtCountry,
-} from '../../../internal/countries.js';
+} from 'kanto-ds/internal/countries';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtInputSize = 'small' | 'medium' | 'large';

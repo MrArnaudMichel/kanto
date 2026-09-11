@@ -1,6 +1,6 @@
 import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
+import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
 import type { KtToast, KtToastVariant } from '../kt-toast/kt-toast.js';
 import '../kt-toast/kt-toast.js';
 

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-chart.js';
-import type { KtChart } from './kt-chart.js';
+import type { KtChart } from 'kanto-ds';
 
 /** happy-dom has no layout, so the width the ResizeObserver would report is faked. */
 async function sized(markup: string, width = 480): Promise<KtChart> {

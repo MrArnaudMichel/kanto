@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-collapsible.js';
-import type { KtCollapsible } from './kt-collapsible.js';
+import type { KtCollapsible } from 'kanto-ds';
 
 const details = (el: KtCollapsible) => el.shadowRoot!.querySelector('details')!;
 

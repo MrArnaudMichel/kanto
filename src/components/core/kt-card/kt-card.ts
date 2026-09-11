@@ -2,9 +2,9 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit } from '../../../internal/events.js';
-import { hasAssignedContent } from '../../../internal/slots.js';
+import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
+import { emit } from 'kanto-ds/internal/events';
+import { hasAssignedContent } from 'kanto-ds/internal/slots';
 
 export type KtCardImagePosition = 'left' | 'right' | 'top' | 'bottom';
 

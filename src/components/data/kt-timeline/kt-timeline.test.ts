@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture } from '../../../test/fixture.js';
+import { fixture } from 'kanto-ds/test/fixture';
 import './kt-timeline.js';
-import type { KtTimeline, KtTimelineItem } from './kt-timeline.js';
+import type { KtTimeline, KtTimelineItem } from 'kanto-ds';
 
 const three = `<kt-timeline>
   <kt-timeline-item heading="Opened" time="09:02"></kt-timeline-item>

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-toggle.js';
-import type { KtToggle } from './kt-toggle.js';
+import type { KtToggle } from 'kanto-ds';
 
 const control = (el: KtToggle) => el.shadowRoot!.querySelector('button')!;
 

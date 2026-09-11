@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
 import './kt-card.js';
-import type { KtCard } from './kt-card.js';
+import type { KtCard } from 'kanto-ds';
 
 const base = (el: KtCard) => el.shadowRoot!.querySelector('.card')!;
 

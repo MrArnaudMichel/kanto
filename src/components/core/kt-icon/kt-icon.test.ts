@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
-import { registerIcon } from '../../../icons/registry.js';
+import { fixture, settle } from 'kanto-ds/test/fixture';
+import { registerIcon } from 'kanto-ds';
 import './kt-icon.js';
-import type { KtIcon } from './kt-icon.js';
+import type { KtIcon } from 'kanto-ds';
 
 const svgOf = (el: KtIcon) => el.shadowRoot!.querySelector('svg')!;
 
