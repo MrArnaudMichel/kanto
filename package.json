@@ -247,7 +247,10 @@
     "format:check": "prettier --check .",
     "clean": "node -e \"fs.rmSync(dist,{recursive:true,force:true})\"",
     "check:exports": "node scripts/check-exports.js",
-    "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports"
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports && npm run build:demo",
+    "release": "node scripts/release.js",
+    "release:dry": "node scripts/release.js --dry-run",
+    "prepublishOnly": "npm run verify"
   },
   "dependencies": {
     "@lit/react": "^1.0.8",

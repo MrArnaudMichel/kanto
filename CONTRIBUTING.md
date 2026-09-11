@@ -57,14 +57,12 @@ badly; tests that assert on the rendered result and the events do not.
 ## Before opening a pull request
 
 ```bash
-npm run format
-npm run lint
-npm run typecheck
-npm test
-npm run build
+npm run format   # rewrites; the rest only report
+npm run verify   # format:check, lint, typecheck, test, both builds, check:exports
 ```
 
-CI runs all of these, plus both builds and a resolver check on the exports map.
+`verify` is the same chain CI runs and the same one a release refuses to skip,
+so a green `verify` locally means a green pipeline.
 
 ## Commit messages
 
@@ -78,3 +76,48 @@ docs(core): document kt-button
 
 Say **why** in the body when the change is not obvious from the diff. The
 message is the only place that reasoning survives.
+
+## Releasing
+
+`CHANGELOG.md` is the source. The notes on the GitHub release are extracted
+from it, never written twice — two copies of the same text are two chances to
+disagree, and the one nobody re-reads is always the one that goes stale.
+
+Add the section at the top of the changelog, with the version and the date you
+want published:
+
+```markdown
+## [1.1.0] — 2026-09-12
+
+### Added
+
+- `kt-splitter`, a two-pane resizer.
+```
+
+Then:
+
+```bash
+npm run release:dry   # the checks, and the exact notes that would be published
+npm run release       # the real thing
+```
+
+`release` refuses to do anything until it is happy: on `main`, clean tree, tag
+free, in step with origin, `gh` authenticated, and the whole `verify` chain
+green. Only then does it bump `package.json`, commit `chore(release): 1.1.0`,
+tag `v1.1.0`, push, and create the GitHub release.
+
+Publishing that release deploys the documentation site — the site follows the
+releases, so what a reader sees is the system as it shipped. The **Documentation
+site** workflow also runs by hand from the Actions tab, which rebuilds the
+latest release, or any ref you pass it.
+
+### Setting up Pages, once
+
+Settings → Pages → Source: **GitHub Actions**. Nothing else; the workflow
+brings its own permissions and artifact.
+
+Two things follow from the repository being private. Pages from a private
+repository needs a paid plan, and the release page cannot read the GitHub API
+anonymously — it falls back to the changelog this repository ships, which is
+why that fallback exists. Both resolve themselves the day the repository goes
+public, with no change here.
