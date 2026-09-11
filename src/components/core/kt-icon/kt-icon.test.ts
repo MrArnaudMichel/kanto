@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import { registerIcon } from 'kanto';
 import './kt-icon.js';
 import type { KtIcon } from 'kanto';

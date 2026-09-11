@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-breadcrumb.js';
 import type { KtBreadcrumb, KtBreadcrumbItem } from 'kanto';
 

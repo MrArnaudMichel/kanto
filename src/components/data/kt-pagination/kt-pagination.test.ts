@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-pagination.js';
 import type { KtPagination } from 'kanto';
 

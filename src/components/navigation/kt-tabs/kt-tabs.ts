@@ -1,8 +1,8 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, queryAll } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { KtElement, defineElement } from 'kanto/internal/kt-element';
-import { emit } from 'kanto/internal/events';
+import { KtElement, defineElement } from '#internal/kt-element';
+import { emit } from '#internal/events';
 import '../../core/kt-icon/kt-icon.js';
 import '../../feedback/kt-skeleton/kt-skeleton.js';
 

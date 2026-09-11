@@ -1,6 +1,6 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { KtElement, defineElement } from '#internal/kt-element';
 
 /**
  * The block every screen opens with: an overline, a title, a sentence, and the

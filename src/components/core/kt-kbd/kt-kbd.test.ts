@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fixture } from 'kanto/test/fixture';
+import { fixture } from '#test/fixture';
 import './kt-kbd.js';
 import type { KtKbd } from 'kanto';
 

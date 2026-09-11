@@ -42,6 +42,14 @@ elements — check before adding a property, because shadowing an `HTMLElement`
 member fails in ways that are hard to trace. `heading` is the convention where
 `title` would have been natural.
 
+**`#internal`, never `kanto`.** Shared plumbing is imported as
+`#internal/kt-element`, a private subpath: it resolves to the sources here and
+to the emitted declarations in a consumer's install, without ever becoming
+part of the public API. Reaching for the same thing through `kanto` pulls in
+the barrel — every element, and a cycle back onto the file that started it.
+Test helpers are `#test/fixture`. The public entry points are for the demo site
+and the tests, not for the library's own modules.
+
 **A test per behaviour, not per method.** The suite should read as a
 description of what the component does. Tests that assert on internals age
 badly; tests that assert on the rendered result and the events do not.

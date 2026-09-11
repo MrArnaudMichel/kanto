@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { fixture, settle } from 'kanto/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-sub-menu-navigation.js';
 import type { KtNavSection, KtSubMenuNavigation } from 'kanto';
 

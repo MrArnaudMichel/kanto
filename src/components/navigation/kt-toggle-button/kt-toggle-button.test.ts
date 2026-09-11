@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-toggle-button.js';
 import '../kt-toggle-button-group/kt-toggle-button-group.js';
 import type { KtToggleButton } from 'kanto';

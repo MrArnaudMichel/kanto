@@ -1,6 +1,6 @@
 import { css, html, type TemplateResult } from 'lit';
 import { property, query } from 'lit/decorators.js';
-import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { KtElement, defineElement } from '#internal/kt-element';
 
 /** Anything that can take an accessible name from the label. */
 interface Labelable extends HTMLElement {

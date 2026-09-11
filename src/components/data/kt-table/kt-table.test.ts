@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { html } from 'lit';
-import { fixture, settle } from 'kanto/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-table.js';
 import type { KtTable, KtTableColumn, KtTableRow } from 'kanto';
 

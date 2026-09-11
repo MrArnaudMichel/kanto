@@ -1,7 +1,7 @@
 import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from 'kanto/internal/kt-element';
-import { emit } from 'kanto/internal/events';
+import { KtElement, defineElement } from '#internal/kt-element';
+import { emit } from '#internal/events';
 import '../../core/kt-button/kt-button.js';
 
 /**
@@ -71,7 +71,7 @@ export class KtPagination extends KtElement {
     return html`<nav aria-label=${this.label}>
       <kt-button
         part="previous"
-        variant="secondary"
+        variant="dark"
         size="small"
         icon="chevron-left"
         ?disabled=${first}
@@ -87,7 +87,7 @@ export class KtPagination extends KtElement {
 
       <kt-button
         part="next"
-        variant="secondary"
+        variant="dark"
         size="small"
         icon="chevron-right"
         icon-position="right"

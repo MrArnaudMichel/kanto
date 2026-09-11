@@ -2,7 +2,7 @@ import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { KtElement, defineElement } from '#internal/kt-element';
 
 export type KtSkeletonVariant = 'text' | 'rect' | 'circle';
 

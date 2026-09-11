@@ -33,6 +33,16 @@ function entries(): Record<string, string> {
 }
 
 export default defineConfig({
+  resolve: {
+    // A few modules reach for a public entry point of the library itself
+    // ("kanto/icons"); resolve those to the sources being built rather than to
+    // the dist/ left over from the previous build. Exact match first: an
+    // object alias for "kanto" would also swallow "kanto/icons".
+    alias: [
+      { find: /^kanto$/, replacement: join(src, 'index.ts') },
+      { find: /^kanto\//, replacement: `${src}/` },
+    ],
+  },
   build: {
     target: 'es2022',
     outDir: 'dist',

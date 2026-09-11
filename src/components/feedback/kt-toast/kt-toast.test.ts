@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-toast.js';
 import '../kt-toast-container/kt-toast-container.js';
 import { toaster } from 'kanto';
