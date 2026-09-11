@@ -62,13 +62,15 @@ describe('parseRelease', () => {
     expect(() => parseRelease('## [1.1] — 2026-09-12\n\nNotes.\n')).toThrow(/no version/i);
   });
 
+  /* On the real file, and on its shape rather than on today's contents: this
+     runs inside `npm run verify`, which a release runs before tagging, so a
+     test pinned to the current version would fail on every release. */
   it("parses this repository's own changelog", () => {
     const real = readFileSync(fileURLToPath(new URL('../CHANGELOG.md', import.meta.url)), 'utf8');
     const release = parseRelease(real);
 
-    expect(release.version).toBe('1.0.0');
-    expect(release.date).toBe('2026-09-09');
-    expect(release.notes).toMatch(/^First release of Kanto/);
-    expect(release.notes).toMatch(/commercial/);
+    expect(release.version).toMatch(/^\d+\.\d+\.\d+/);
+    expect(release.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(release.notes.length).toBeGreaterThan(0);
   });
 });
