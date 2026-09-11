@@ -38,7 +38,7 @@ const PROJECTS: readonly Project[] = [
   {
     slug: 'kanto',
     name: 'Kanto',
-    tagline: 'A dark-first design system for tools people live in',
+    tagline: 'A design system for tools people live in',
     year: '2026',
     role: 'Design and engineering',
     tags: ['Design systems', 'Open source'],

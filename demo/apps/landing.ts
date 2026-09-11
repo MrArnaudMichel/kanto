@@ -92,7 +92,7 @@ const FAQ = [
   ],
   [
     'Can I theme it?',
-    'Redefine tokens on :root. Dark is canonical, light is opt-in, and no component carries theme-specific CSS.',
+    'Redefine tokens on :root. Dark is the default, light is one attribute away, and no component carries theme-specific CSS.',
   ],
   [
     'Is server rendering supported?',
@@ -132,8 +132,8 @@ export function landingPage(): TemplateResult {
       <kt-badge tone="primary">v1.0 is out</kt-badge>
       <h1>A design system for tools people work in all day</h1>
       <p>
-        Dark-first, data-dense, and framework-agnostic. Thirty custom elements that run anywhere,
-        built on one token layer that makes the light theme free.
+        Data-dense and framework-agnostic. Thirty custom elements that run anywhere, built on one
+        token layer that carries both themes.
       </p>
       <div class="row" style="justify-content:center">
         <kt-button

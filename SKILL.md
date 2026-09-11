@@ -1,12 +1,12 @@
 ---
 name: kanto-design
-description: Use this skill to build well-branded interfaces with Kanto, the dark-first design system by Arnaud Michel. Contains the design guidelines, colour and type tokens, fonts, and 23 framework-agnostic components for production code or throwaway prototypes.
+description: Use this skill to build well-branded interfaces with Kanto, the design system by Arnaud Michel. Contains the design guidelines, colour and type tokens, fonts, and 23 framework-agnostic components for production code or throwaway prototypes.
 user-invocable: true
 ---
 
 # Kanto
 
-A dark-first design system for data-dense product interfaces, shipped as
+A design system for data-dense product interfaces, shipped as
 standard custom elements. Works in React, Vue, Angular, Svelte or plain HTML.
 
 ## Start here

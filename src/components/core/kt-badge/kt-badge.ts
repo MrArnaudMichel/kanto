@@ -95,8 +95,8 @@ export class KtBadge extends KtElement {
 
       /* === CATEGORY ===
          color-mix keeps the 20% fill honest for any colour notation the host
-         hands us; the old build concatenated a "33" onto a hex string and
-         produced garbage for rgb() and named colours. */
+         hands us; concatenating a "33" onto a hex string produces garbage
+         for rgb() and named colours. */
       .category {
         color: var(--kt-badge-color);
         background-color: color-mix(in srgb, var(--kt-badge-color) 20%, transparent);

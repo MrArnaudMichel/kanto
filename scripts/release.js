@@ -64,7 +64,7 @@ const title = `Kanto ${version}`;
 const prerelease = version.includes('-');
 
 console.log(`\n${dryRun ? 'Dry run —' : 'Releasing'} ${title}${prerelease ? ' (prerelease)' : ''}`);
-console.log(`  from CHANGELOG.md, dated ${date || 'nothing — add a date to the heading'}\n`);
+console.log(`  from CHANGELOG.md, dated ${date}\n`);
 
 // ─── Is the repository in a state to release from? ────────────────────────────
 

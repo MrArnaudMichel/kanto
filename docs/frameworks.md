@@ -121,9 +121,6 @@ import 'kanto';
 export class FiltersComponent {}
 ```
 
-If you are already on [`kanto-ng`](https://github.com/MrArnaudMichel/kanto-ng),
-stay there — it is the same design system with Angular-native components.
-
 ## Svelte
 
 Nothing to configure. Svelte sets properties on elements it does not recognise

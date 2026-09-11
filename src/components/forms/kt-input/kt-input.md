@@ -70,9 +70,9 @@ Six countries ship by default. Pass your own list for a wider audience:
 input.countries = [{ id: 'ca', name: 'Canada', dialCode: '1', format: '123-456-7890' }, ...];
 ```
 
-Phone mode is now reached **only** through `type="tel"`. The React port also
-sniffed the placeholder, the name and the icon for `/tel|phone/`, which turned
-any field named `telephone_verifie` into a country picker.
+Phone mode is reached **only** through `type="tel"`. Sniffing the placeholder,
+the name or the icon for `/tel|phone/` instead would turn any field named
+`telephone_verifie` into a country picker.
 
 ## Labelling
 

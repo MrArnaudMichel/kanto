@@ -5,17 +5,17 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.0.0] — 2026-09-09
+## [1.0.0] — 2026-09-12
 
-First release of Kanto as a framework-agnostic design system. It replaces the
-Angular-only [`kanto-ng`](https://github.com/MrArnaudMichel/kanto-ng), and its
-short-lived React port, with one implementation built on custom elements.
+First release of Kanto, a design system for data-dense product interfaces:
+one implementation, built on standard custom elements, that runs wherever HTML
+does.
 
 ### Added
 
 **Token layer** — colours, typography, spacing, motion and z-index as CSS
-custom properties. Dark is canonical; light and `auto` remap the same names, so
-no component carries theme-specific CSS. Responsive scales for mobile, tablet
+custom properties. Dark is the default; light and `auto` remap the same names,
+so no component carries theme-specific CSS. Responsive scales for mobile, tablet
 and ultra-wide, plus a `prefers-reduced-motion` block that zeroes every
 duration in the system at once.
 
@@ -83,23 +83,27 @@ a screenshot:
 They are the reason several elements above exist. A gallery proves a button
 renders; only a whole screen shows what happens when forty of them share one.
 
-### Changed from the React port
+### Conventions
 
-- **Sizes are `small`/`medium`/`large` everywhere.** Fields used `sm`/`md`/`lg`;
-  the system now has one scale.
-- **`secondaryNoBg` is `secondary-no-bg`.** Attribute values are authored
-  lowercase in HTML, and the camelCase spelling silently failed half the time.
-- **Phone mode requires `type="tel"`.** The old build sniffed the placeholder,
-  the name and the icon for `/tel|phone/`, which turned a field named
-  `telephone_verifie` into a country picker.
+Decisions that hold across the system, stated once because every element
+depends on them:
+
+- **Sizes are `small`/`medium`/`large` everywhere.** One scale for every
+  element, rather than a short spelling for fields and a long one elsewhere.
+- **Attribute values are lowercase and hyphenated** — `secondary-no-bg`, never
+  `secondaryNoBg`. HTML authors attribute values in lowercase, so a camelCase
+  spelling silently fails half the time.
+- **Phone mode requires `type="tel"`.** Sniffing the placeholder, the name or
+  the icon for `/tel|phone/` would turn a field named `telephone_verifie` into
+  a country picker.
 - **A phone field submits the full international number**, not bare national
-  digits — posting `612345678` with no country threw away what the picker
+  digits — posting `612345678` with no country throws away what the picker
   exists to capture.
-- **`title` is `heading`** on `kt-toast`, `kt-side-panel` and `kt-drag-drop`.
-  Every element already has a `title`, and shadowing it put the text in a
-  native tooltip.
-- **Icons come from the `lucide` package**, through a registry, instead of a
-  UMD `<script>` and `window.lucide`.
+- **`heading`, not `title`**, on `kt-toast`, `kt-side-panel` and
+  `kt-drag-drop`. Every element already has a `title`, and shadowing it puts
+  the text in a native tooltip.
+- **Icons come from the `lucide` package**, through a registry, rather than a
+  UMD `<script>` and a global.
 - **Component CSS lives in `static styles`**, not in strings injected into
   `<head>` on first render.
 

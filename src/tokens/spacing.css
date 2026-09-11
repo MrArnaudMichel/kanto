@@ -1,7 +1,6 @@
 /**
- * Kanto spacing, radius and dimension tokens — ported from kanto-ng
- * `_base.scss` (desktop scale). Responsive overrides live in
- * `responsive.css`.
+ * Kanto spacing, radius and dimension tokens (desktop scale). Responsive
+ * overrides live in `responsive.css`.
  */
 
 :root {

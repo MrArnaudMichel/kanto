@@ -1,5 +1,5 @@
 /**
- * Global element styles — ported from kanto-ng `_base.scss`.
+ * Global element styles.
  *
  * Optional. Custom elements style themselves inside their shadow roots, so
  * Kanto components render correctly without this file; it exists so the

@@ -1,7 +1,7 @@
 /**
  * Kanto light theme — the same token names as `colors.css`, remapped.
  *
- * Dark is canonical; light is opt-in. Set it explicitly:
+ * Dark is the default; light is one attribute away. Set it explicitly:
  *
  *     <html data-theme="light">
  *
