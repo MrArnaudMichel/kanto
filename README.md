@@ -27,12 +27,10 @@ import 'kanto/styles.css';
 
 ## Showcase
 
-![dashboard.png](demo/public/dashboard.png) 
+![dashboard.png](demo/public/dashboard.png)
 
 | ![guide.png](demo/public/guide.png) | ![component.png](demo/public/component.png) |
-|-------------------------------------|---------------------------------------------|
-
-
+| ----------------------------------- | ------------------------------------------- |
 
 ## Why custom elements
 
