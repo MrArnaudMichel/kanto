@@ -54,11 +54,11 @@ jobs:
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
           echo "Publishing \`$ref\` — $why." >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ steps.target.outputs.ref }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -71,7 +71,7 @@ jobs:
       - name: Build the documentation site
         run: npm run build:demo
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist-demo
 
@@ -86,4 +86,4 @@ jobs:
 
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

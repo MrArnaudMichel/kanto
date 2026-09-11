@@ -113,8 +113,18 @@ latest release, or any ref you pass it.
 
 ### Setting up Pages, once
 
-Settings → Pages → Source: **GitHub Actions**. Nothing else; the workflow
-brings its own permissions and artifact.
+Two settings, both one-time:
+
+1. **Settings → Pages → Source: GitHub Actions.** The workflow brings its own
+   permissions and artifact, so nothing else is needed here.
+2. **Settings → Environments → `github-pages` → Deployment branches and tags →
+   Add rule**, with ref type **Tag** and the pattern `v*`.
+
+The second one is not optional and is easy to miss. Turning on Pages creates a
+`github-pages` environment that only lets the default branch deploy, and this
+site deploys from the release tag — so without that rule the build succeeds,
+the deploy is rejected, and the run fails with _Tag "v1.0.0" is not allowed to
+deploy to github-pages due to environment protection rules_.
 
 Two things follow from the repository being private. Pages from a private
 repository needs a paid plan, and the release page cannot read the GitHub API
