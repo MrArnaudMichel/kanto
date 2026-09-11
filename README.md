@@ -27,9 +27,10 @@ import 'kanto-ds/styles.css';
 
 ## Showcase
 
-| ![dashboard.png](demo/public/dashboard.png) | ![component.png](demo/public/component.png) |
-| ------------------------------------------- | ------------------------------------------- |
-| ![guide.png](demo/public/guide.png)         | ![apps.png](demo/public/apps.png)           |
+![dashboard.png](demo/public/dashboard.png)
+
+| ![guide.png](demo/public/guide.png) | ![component.png](demo/public/component.png) |
+| ----------------------------------- | ------------------------------------------- |
 
 ## Why custom elements
 
