@@ -25,6 +25,13 @@ import 'kanto/styles.css';
 
 ---
 
+## Showcase
+
+| ![dashboard.png](demo/public/dashboard.png) | ![component.png](demo/public/component.png) |
+|---------------------------------------------|---------------------------------------------|
+| ![guide.png](demo/public/guide.png)         | ![apps.png](demo/public/apps.png)           |
+
+
 ## Why custom elements
 
 One implementation, every framework. The alternative — a React port, a Vue
