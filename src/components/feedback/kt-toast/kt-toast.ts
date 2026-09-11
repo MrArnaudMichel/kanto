@@ -1,7 +1,7 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { emit } from 'kanto/internal/events';
 import '../../core/kt-icon/kt-icon.js';
 import '../kt-progress-bar/kt-progress-bar.js';
 

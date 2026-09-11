@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-breadcrumb.js';
-import type { KtBreadcrumb, KtBreadcrumbItem } from './kt-breadcrumb.js';
+import type { KtBreadcrumb, KtBreadcrumbItem } from 'kanto';
 
 const ITEMS: KtBreadcrumbItem[] = [
   { label: 'Accueil', href: '/' },

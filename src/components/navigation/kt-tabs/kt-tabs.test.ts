@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-tabs.js';
-import type { KtTab, KtTabs } from './kt-tabs.js';
+import type { KtTab, KtTabs } from 'kanto';
 
 const TABS: KtTab[] = [
   { value: 'usage', label: 'Usage' },

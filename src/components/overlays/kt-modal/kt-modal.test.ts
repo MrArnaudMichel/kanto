@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-modal.js';
-import type { KtModal } from './kt-modal.js';
+import type { KtModal } from 'kanto';
 
 const dialog = (el: KtModal) => el.shadowRoot!.querySelector('dialog')!;
 const closeButton = (el: KtModal) =>

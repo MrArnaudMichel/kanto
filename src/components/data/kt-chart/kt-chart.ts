@@ -1,7 +1,7 @@
 import { css, html, nothing, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit, uniqueId } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { emit, uniqueId } from 'kanto/internal/events';
 
 export type KtChartType = 'area' | 'line' | 'bar';
 

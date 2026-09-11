@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-select.js';
-import type { KtSelect } from './kt-select.js';
-import type { KtOption } from '../../../internal/listbox.js';
+import type { KtSelect } from 'kanto';
+import type { KtOption } from 'kanto';
 
 const OPTIONS: KtOption[] = [
   { id: 'ne', label: 'North East' },

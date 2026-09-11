@@ -2,8 +2,8 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit, uniqueId } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { emit, uniqueId } from 'kanto/internal/events';
 import {
   filterOptions,
   firstEnabledIndex,
@@ -12,7 +12,7 @@ import {
   nextEnabledIndex,
   optionLabel,
   type KtOption,
-} from '../../../internal/listbox.js';
+} from 'kanto/internal/listbox';
 import '../../core/kt-icon/kt-icon.js';
 
 /**

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-skeleton.js';
-import type { KtSkeleton } from './kt-skeleton.js';
+import type { KtSkeleton } from 'kanto';
 
 const lines = (el: KtSkeleton) => [...el.shadowRoot!.querySelectorAll<HTMLElement>('.line')];
 

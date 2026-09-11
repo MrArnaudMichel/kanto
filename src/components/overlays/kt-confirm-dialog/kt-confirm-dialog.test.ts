@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-confirm-dialog.js';
-import type { KtConfirmDialog } from './kt-confirm-dialog.js';
+import type { KtConfirmDialog } from 'kanto';
 
 const dialog = (el: KtConfirmDialog) => el.shadowRoot!.querySelector('dialog')!;
 const buttons = (el: KtConfirmDialog) => [

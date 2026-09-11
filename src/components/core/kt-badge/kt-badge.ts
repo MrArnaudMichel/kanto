@@ -2,8 +2,8 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { emit } from 'kanto/internal/events';
 import '../kt-icon/kt-icon.js';
 
 export type KtBadgeVariant = 'tag' | 'code' | 'category' | 'count';

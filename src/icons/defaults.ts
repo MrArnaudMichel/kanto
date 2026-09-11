@@ -29,7 +29,7 @@ import {
   User,
   X,
 } from 'lucide';
-import { registerIcons } from './registry.js';
+import { registerIcons } from 'kanto';
 
 /** Icons referenced by Kanto elements, keyed by their Lucide name. */
 export const defaultIcons = {

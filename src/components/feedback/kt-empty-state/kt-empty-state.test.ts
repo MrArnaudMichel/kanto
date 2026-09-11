@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture } from '../../../test/fixture.js';
+import { fixture } from 'kanto/test/fixture';
 import './kt-empty-state.js';
-import type { KtEmptyState } from './kt-empty-state.js';
+import type { KtEmptyState } from 'kanto';
 
 describe('kt-empty-state', () => {
   it('renders an icon, a heading and a description', async () => {

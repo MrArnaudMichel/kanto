@@ -1,7 +1,7 @@
 import { css, html, type PropertyValues, type TemplateResult } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit } from '../../../internal/events.js';
+import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { emit } from 'kanto/internal/events';
 import { KtToggleButton } from '../kt-toggle-button/kt-toggle-button.js';
 
 /**

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-side-panel.js';
-import type { KtSidePanel } from './kt-side-panel.js';
+import type { KtSidePanel } from 'kanto';
 
 const dialog = (el: KtSidePanel) => el.shadowRoot!.querySelector('dialog')!;
 const closeButton = (el: KtSidePanel) =>

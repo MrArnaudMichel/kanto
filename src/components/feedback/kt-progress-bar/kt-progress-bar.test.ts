@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-progress-bar.js';
-import type { KtProgressBar } from './kt-progress-bar.js';
+import type { KtProgressBar } from 'kanto';
 
 const track = (el: KtProgressBar) => el.shadowRoot!.querySelector('.track')!;
 const fill = (el: KtProgressBar) => el.shadowRoot!.querySelector<HTMLElement>('.fill')!;

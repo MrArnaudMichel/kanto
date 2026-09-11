@@ -1,21 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import type { CSSResultGroup } from 'lit';
 
-import { KtButton } from '../components/core/kt-button/kt-button.js';
-import { KtCard } from '../components/core/kt-card/kt-card.js';
-import { KtBadge } from '../components/core/kt-badge/kt-badge.js';
-import { KtCode } from '../components/core/kt-code/kt-code.js';
-import { KtInput } from '../components/forms/kt-input/kt-input.js';
-import { KtInputMenu } from '../components/forms/kt-input-menu/kt-input-menu.js';
-import { KtSelect } from '../components/forms/kt-select/kt-select.js';
-import { KtTextarea } from '../components/forms/kt-textarea/kt-textarea.js';
-import { KtToggle } from '../components/forms/kt-toggle/kt-toggle.js';
-import { KtDragDrop } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
-import { KtTabs } from '../components/navigation/kt-tabs/kt-tabs.js';
-import { KtSegmentedControl } from '../components/navigation/kt-segmented-control/kt-segmented-control.js';
-import { KtToggleButton } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
-import { KtTable } from '../components/data/kt-table/kt-table.js';
-import { KtDropdown } from '../components/overlays/kt-dropdown/kt-dropdown.js';
+import { KtButton } from 'kanto';
+import { KtCard } from 'kanto';
+import { KtBadge } from 'kanto';
+import { KtCode } from 'kanto';
+import { KtInput } from 'kanto';
+import { KtInputMenu } from 'kanto';
+import { KtSelect } from 'kanto';
+import { KtTextarea } from 'kanto';
+import { KtToggle } from 'kanto';
+import { KtDragDrop } from 'kanto';
+import { KtTabs } from 'kanto';
+import { KtSegmentedControl } from 'kanto';
+import { KtToggleButton } from 'kanto';
+import { KtTable } from 'kanto';
+import { KtDropdown } from 'kanto';
 
 const ELEMENTS: readonly [string, { styles: CSSResultGroup }][] = [
   ['kt-button', KtButton],

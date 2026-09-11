@@ -1,7 +1,7 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, queryAssignedElements, state } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { hasAssignedContent } from '../../../internal/slots.js';
+import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { hasAssignedContent } from 'kanto/internal/slots';
 import '../../feedback/kt-skeleton/kt-skeleton.js';
 
 /** Anything the panel can switch off along with itself. */

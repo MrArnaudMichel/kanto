@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-segmented-control.js';
-import type { KtSegmentedControl, KtSegmentedOption } from './kt-segmented-control.js';
+import type { KtSegmentedControl, KtSegmentedOption } from 'kanto';
 
 const OPTIONS: KtSegmentedOption[] = [
   { value: 'day', label: 'Day' },

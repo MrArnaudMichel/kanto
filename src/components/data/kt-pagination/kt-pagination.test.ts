@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-pagination.js';
-import type { KtPagination } from './kt-pagination.js';
+import type { KtPagination } from 'kanto';
 
 /** The two controls are <kt-button>s, so reach through to their own buttons. */
 const buttons = (el: KtPagination) =>

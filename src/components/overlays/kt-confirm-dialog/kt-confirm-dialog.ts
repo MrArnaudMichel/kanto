@@ -1,8 +1,8 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, query } from 'lit/decorators.js';
-import { KtElement, defineElement } from '../../../internal/kt-element.js';
-import { emit } from '../../../internal/events.js';
-import { closeDialog, isBackdropClick, openModal } from '../../../internal/dialog.js';
+import { KtElement, defineElement } from 'kanto/internal/kt-element';
+import { emit } from 'kanto/internal/events';
+import { closeDialog, isBackdropClick, openModal } from 'kanto/internal/dialog';
 import '../../core/kt-button/kt-button.js';
 
 export type KtConfirmVariant = 'danger' | 'primary';

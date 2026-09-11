@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '../../../test/fixture.js';
+import { fixture, settle } from 'kanto/test/fixture';
 import './kt-textarea.js';
-import type { KtTextarea } from './kt-textarea.js';
+import type { KtTextarea } from 'kanto';
 
 const control = (el: KtTextarea) => el.shadowRoot!.querySelector('textarea')!;
 const counter = (el: KtTextarea) => el.shadowRoot!.querySelector('.counter');
