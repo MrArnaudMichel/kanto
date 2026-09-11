@@ -2,14 +2,14 @@ import { css, html, nothing, type PropertyValues, type TemplateResult } from 'li
 import { property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
-import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
-import { emit } from 'kanto-ds/internal/events';
+import { KtElement, defineElement } from '#internal/kt-element';
+import { emit } from '#internal/events';
 import {
   attachFormInternals,
   setFormValue,
   setValidity,
   type UsableInternals,
-} from 'kanto-ds/internal/form-control';
+} from '#internal/form-control';
 import '../../core/kt-icon/kt-icon.js';
 
 /**

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto-ds/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-segmented-control.js';
 import type { KtSegmentedControl, KtSegmentedOption } from 'kanto-ds';
 

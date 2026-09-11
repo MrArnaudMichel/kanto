@@ -1,7 +1,7 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
+import { KtElement, defineElement } from '#internal/kt-element';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtTimelineVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';

@@ -1,12 +1,8 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
-import { emit } from 'kanto-ds/internal/events';
-import {
-  attachFormInternals,
-  setFormValue,
-  type UsableInternals,
-} from 'kanto-ds/internal/form-control';
+import { KtElement, defineElement } from '#internal/kt-element';
+import { emit } from '#internal/events';
+import { attachFormInternals, setFormValue, type UsableInternals } from '#internal/form-control';
 
 export type KtToggleSize = 'small' | 'medium' | 'large';
 

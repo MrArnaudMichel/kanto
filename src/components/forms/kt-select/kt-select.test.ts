@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto-ds/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-select.js';
 import type { KtSelect } from 'kanto-ds';
 import type { KtOption } from 'kanto-ds';

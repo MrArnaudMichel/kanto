@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fixture } from 'kanto-ds/test/fixture';
+import { fixture } from '#test/fixture';
 import './kt-timeline.js';
 import type { KtTimeline, KtTimelineItem } from 'kanto-ds';
 

@@ -1,6 +1,6 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
+import { KtElement, defineElement } from '#internal/kt-element';
 
 export interface KtMeterSegment {
   readonly label: string;

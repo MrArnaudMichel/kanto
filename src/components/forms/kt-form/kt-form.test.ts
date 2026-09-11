@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from 'kanto-ds/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-form.js';
 import '../kt-input/kt-input.js';
 import '../kt-label-input/kt-label-input.js';

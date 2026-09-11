@@ -6,8 +6,7 @@
     "emitDeclarationOnly": true,
     "outDir": "dist",
     "rootDir": "src",
-    "allowJs": false,
-    "paths": {}
+    "allowJs": false
   },
   /* Only the library: no demo site, no tests, no test helpers. */
   "include": ["src"],

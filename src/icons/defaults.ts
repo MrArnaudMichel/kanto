@@ -29,7 +29,10 @@ import {
   User,
   X,
 } from 'lucide';
-import { registerIcons } from 'kanto-ds';
+// The sibling registry, not the `kanto-ds` barrel: the barrel pulls in every
+// element, and one of them pulls in this file — a cycle that leaves
+// `registerIcons` undefined by the time the call below runs.
+import { registerIcons } from './registry.js';
 
 /** Icons referenced by Kanto elements, keyed by their Lucide name. */
 export const defaultIcons = {

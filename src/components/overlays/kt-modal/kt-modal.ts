@@ -1,9 +1,9 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, query } from 'lit/decorators.js';
-import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
-import { emit } from 'kanto-ds/internal/events';
-import { hasAssignedContent } from 'kanto-ds/internal/slots';
-import { closeDialog, isBackdropClick, openModal } from 'kanto-ds/internal/dialog';
+import { KtElement, defineElement } from '#internal/kt-element';
+import { emit } from '#internal/events';
+import { hasAssignedContent } from '#internal/slots';
+import { closeDialog, isBackdropClick, openModal } from '#internal/dialog';
 import '../../core/kt-button/kt-button.js';
 
 export type KtModalSize = 'small' | 'medium' | 'large' | 'full';

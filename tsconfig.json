@@ -30,7 +30,12 @@
     "paths": {
       "kanto-ds": ["./src/index.ts"],
       "kanto-ds/*": ["./src/*"]
-    }
+    },
+
+    /* Private `#internal/*` modules resolve to the sources here and to the
+       emitted declarations in a consumer's install. Both spellings live in
+       package.json's `imports`; this condition picks the source one. */
+    "customConditions": ["kanto-source"]
   },
   /* Everything, so the editor and ESLint understand every file in the repo.
      The published build narrows this down in tsconfig.build.json. */

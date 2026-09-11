@@ -1,9 +1,9 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
-import { emit } from 'kanto-ds/internal/events';
-import { optionLabel, type KtOption } from 'kanto-ds/internal/listbox';
+import { KtElement, defineElement } from '#internal/kt-element';
+import { emit } from '#internal/events';
+import { optionLabel, type KtOption } from '#internal/listbox';
 
 export type KtDropdownPlacement = 'bottom' | 'top';
 

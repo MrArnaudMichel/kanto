@@ -1,14 +1,14 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { KtElement, defineElement } from 'kanto-ds/internal/kt-element';
-import { emit, uniqueId } from 'kanto-ds/internal/events';
+import { KtElement, defineElement } from '#internal/kt-element';
+import { emit, uniqueId } from '#internal/events';
 import {
   attachFormInternals,
   setFormValue,
   setValidity,
   type UsableInternals,
-} from 'kanto-ds/internal/form-control';
+} from '#internal/form-control';
 import {
   firstEnabledIndex,
   lastEnabledIndex,
@@ -16,7 +16,7 @@ import {
   nextEnabledIndex,
   optionLabel,
   type KtOption,
-} from 'kanto-ds/internal/listbox';
+} from '#internal/listbox';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtSelectSize = 'small' | 'medium' | 'large';

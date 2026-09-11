@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fixture, settle } from 'kanto-ds/test/fixture';
+import { fixture, settle } from '#test/fixture';
 import './kt-stat.js';
 import type { KtStat } from 'kanto-ds';
 

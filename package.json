@@ -30,6 +30,14 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "imports": {
+    "#internal/*": {
+      "kanto-source": "./src/internal/*.ts",
+      "types": "./dist/internal/*.d.ts",
+      "default": "./src/internal/*.ts"
+    },
+    "#test/*": "./src/test/*.ts"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
