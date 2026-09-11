@@ -1,0 +1,89 @@
+name: Documentation site
+
+# The published site follows the releases, not main: what a reader sees is the
+# system as it was actually shipped. Publishing a release deploys it; the manual
+# run is there to rebuild on demand, or to put a specific ref up for a look.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Tag, branch or SHA to publish — empty means the latest release'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and never cancel the one in flight: an interrupted
+# deploy can leave the site on a half-published version.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Work out what to publish
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_REF: ${{ inputs.ref }}
+        run: |
+          if [ -n "$RELEASE_TAG" ]; then
+            ref="$RELEASE_TAG"
+            why="the release being published"
+          elif [ -n "$INPUT_REF" ]; then
+            ref="$INPUT_REF"
+            why="asked for by hand"
+          elif ref=$(gh release view --json tagName --jq .tagName 2>/dev/null); then
+            why="the latest release"
+          else
+            echo "::error::No release to publish yet. Cut one with \`npm run release\`, or pass a ref to this workflow."
+            exit 1
+          fi
+
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Publishing \`$ref\` — $why." >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The site imports the library from src/, so there is no dist/ to build
+      # first: what deploys is the source at this ref, the same thing the dev
+      # server shows.
+      - name: Build the documentation site
+        run: npm run build:demo
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-demo
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
