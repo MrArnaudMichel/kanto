@@ -1,7 +1,7 @@
 {
   "name": "kanto-ds",
   "version": "1.0.0",
-  "description": "Dark-first, framework-agnostic design system for data-dense product interfaces.",
+  "description": "Framework-agnostic design system for data-dense product interfaces.",
   "keywords": [
     "design-system",
     "web-components",

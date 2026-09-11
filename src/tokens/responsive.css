@@ -4,8 +4,6 @@
  * Kanto rescales by redefining tokens rather than by writing breakpoints in
  * every component, so a component's CSS stays breakpoint-free and a new
  * breakpoint is added in exactly one place.
- *
- * Ported from the media queries in kanto-ng `_base.scss`.
  */
 
 /* === MOBILE (< 600px) === */

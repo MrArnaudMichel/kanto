@@ -49,6 +49,15 @@ describe('parseRelease', () => {
     expect(() => parseRelease(unreleased)).toThrow(/Unreleased/);
   });
 
+  it('refuses a date that is not YYYY-MM-DD, the format Keep a Changelog sets', () => {
+    const slashes = '# Changelog\n\n## [1.1.0] — 2026/09/12\n\nNotes.\n';
+    expect(() => parseRelease(slashes)).toThrow(/YYYY-MM-DD/);
+  });
+
+  it('refuses a heading with no date at all', () => {
+    expect(() => parseRelease('## [1.1.0]\n\nNotes.\n')).toThrow(/YYYY-MM-DD/);
+  });
+
   it('refuses a changelog with no version section', () => {
     expect(() => parseRelease('# Changelog\n\nNothing yet.\n')).toThrow(/no version/i);
   });

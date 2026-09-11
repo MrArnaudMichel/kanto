@@ -12,9 +12,8 @@
  *
  *     registerIcons({ Rocket, Wallet });
  *
- * Names are normalised to kebab-case, matching the `KtIcon` convention in
- * kanto-ng, so `Rocket`, `rocket` and `ChevronDown` / `chevron-down` all
- * resolve.
+ * Names are normalised to kebab-case, so `Rocket`, `rocket` and
+ * `ChevronDown` / `chevron-down` all resolve.
  */
 
 /** A Lucide icon: a flat list of SVG children, each `[tag, attributes]`. */

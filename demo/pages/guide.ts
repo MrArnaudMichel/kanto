@@ -2,13 +2,13 @@
 
 export const INTRODUCTION = `# Introduction
 
-Kanto is a dark-first design system for data-dense product interfaces — dashboards, admin tools, forms.
+Kanto is a design system for data-dense product interfaces — dashboards, admin tools, forms.
 
 The components are standard custom elements, so they run in React, Vue, Angular, Svelte or plain HTML without a per-framework rewrite. One implementation, one place a fix has to land.
 
 ## Why custom elements
 
-The alternative — a React port, a Vue port, an Angular library — is three codebases drifting apart. This project started as exactly that drift, and this is the answer to it.
+The alternative — a React port, a Vue port, an Angular library — is three codebases drifting apart.
 
 The trade is real and worth naming: custom elements need JavaScript to upgrade, so they render unstyled-but-present during server rendering until the bundle lands. In return, a component is written once and every consumer gets the same fix at the same time.
 
@@ -79,7 +79,7 @@ registerIcons({ Rocket, Wallet });
 
 ## Theme
 
-Dark is canonical and needs no setup. Light is opt-in:
+Dark is the default and needs no setup. Light is one attribute away:
 
 \`\`\`html
 <html data-theme="light">

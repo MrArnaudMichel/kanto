@@ -16,6 +16,9 @@ const HEADING = /^## \[([^\]]+)\](?:\s*[—–-]\s*(\S+))?\s*$/;
 /** Keep a Changelog says nothing about the version; semver does. */
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 
+/** ISO 8601, the one date format that sorts the same way it reads. */
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+
 /**
  * @typedef {object} Release
  * @property {string} version Semver, without the `v`.
@@ -43,6 +46,10 @@ export function parseRelease(markdown) {
   }
   if (!SEMVER.test(label)) {
     throw new Error(`CHANGELOG.md has no version section: "${label}" is not a semver version.`);
+  }
+  if (!DATE.test(date)) {
+    const found = date === '' ? 'is not dated' : `is dated "${date}"`;
+    throw new Error(`Version ${label} in CHANGELOG.md ${found}. Dates are YYYY-MM-DD.`);
   }
 
   // The next version heading, or the end of the file for the first release.

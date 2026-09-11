@@ -1,12 +1,10 @@
 # Kanto
 
-**Dark-first design system for data-dense product interfaces** — dashboards,
-admin tools, forms.
+**A design system for data-dense product interfaces** — dashboards, admin
+tools, forms.
 
-Kanto is the framework-agnostic successor to
-[`kanto-ng`](https://github.com/MrArnaudMichel/kanto-ng). The components are
-standard custom elements, so they run in React, Vue, Angular, Svelte or plain
-HTML without a per-framework rewrite.
+The components are standard custom elements, so they run in React, Vue,
+Angular, Svelte or plain HTML without a per-framework rewrite.
 
 ```bash
 npm install kanto-ds
@@ -30,8 +28,7 @@ import 'kanto-ds/styles.css';
 ## Why custom elements
 
 One implementation, every framework. The alternative — a React port, a Vue
-port, an Angular library — is three codebases drifting apart, and this project
-started as exactly that drift.
+port, an Angular library — is three codebases drifting apart.
 
 The trade is real and worth naming: custom elements need JavaScript to upgrade,
 so they render unstyled-but-present during SSR until the bundle lands. In
@@ -49,9 +46,10 @@ Two rules hold everywhere:
 
 ## The system
 
-**Dark is canonical.** `:root` carries the dark palette; light is opt-in with
-`data-theme="light"`, or `data-theme="auto"` to follow the OS. Both use the same
-token names, so no component has theme-specific CSS.
+**Two complete themes.** `:root` carries dark, which is what you get by
+default; `data-theme="light"` switches, and `data-theme="auto"` follows the OS.
+Both are built from the same token names, so no component has theme-specific
+CSS and neither theme is an afterthought.
 
 **Elevation is a lighter surface, not a shadow.** Surfaces are an eleven-step
 ramp, `--color-dark-8` through `--color-dark-24`. The only real shadow in the
@@ -142,10 +140,9 @@ shape. Some of what that meant:
 ```bash
 npm install
 npm run dev          # the documentation site, on src/
-npm test             # 450 tests
-npm run typecheck
-npm run lint
+npm test             # 459 tests
 npm run build        # JS, types, and the static CSS + fonts
+npm run verify       # everything CI runs, and everything a release requires
 ```
 
 The docs site is built from the design system itself, so a broken component

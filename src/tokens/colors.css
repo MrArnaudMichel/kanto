@@ -1,8 +1,8 @@
 /**
  * Kanto colour tokens.
  *
- * Ported from kanto-ng `_theme-dark.scss`. Dark is the canonical theme: it is
- * what `:root` carries, so a page that sets nothing gets the intended look.
+ * Dark is what `:root` carries, so a page that sets nothing gets it. Light
+ * remaps the same names, so neither theme costs a component any CSS.
  *
  * Surfaces are an eleven-step ramp (`--color-dark-8` … `--color-dark-24`)
  * rather than a shadow scale — in Kanto, elevation means "slightly lighter
