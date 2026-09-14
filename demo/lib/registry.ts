@@ -184,6 +184,29 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button disabled>Disabled</kt-button>
     </div>`,
 
+  'kt-split-button': () =>
+    html`<div class="demo-row">
+      <kt-split-button
+        icon="check"
+        .items=${[
+          { id: 'close', label: 'Save and close' },
+          { id: 'copy', label: 'Save a copy' },
+          { id: 'pdf', label: 'Export as PDF', icon: 'file' },
+          { id: 'discard', label: 'Discard changes', variant: 'danger' },
+        ]}
+        >Save</kt-split-button
+      >
+      <kt-split-button
+        variant="secondary"
+        .items=${[
+          { id: 'csv', label: 'Export as CSV' },
+          { id: 'json', label: 'Export as JSON' },
+          { id: 'api', label: 'Open in the API', disabled: true },
+        ]}
+        >Export</kt-split-button
+      >
+    </div>`,
+
   'kt-card': () =>
     html`<div class="demo-grid">
       <kt-card>

@@ -37,6 +37,7 @@ import '../index.js';
 import type { KtAvatar } from 'kanto-ds';
 import type { KtBadge } from 'kanto-ds';
 import type { KtButton } from 'kanto-ds';
+import type { KtSplitButton } from 'kanto-ds';
 import type { KtCard } from 'kanto-ds';
 import type { KtCode } from 'kanto-ds';
 import type { KtIcon } from 'kanto-ds';
@@ -101,6 +102,7 @@ declare module 'vue' {
     'kt-avatar': KtProps<KtAvatar>;
     'kt-badge': KtProps<KtBadge>;
     'kt-button': KtProps<KtButton>;
+    'kt-split-button': KtProps<KtSplitButton>;
     'kt-card': KtProps<KtCard>;
     'kt-code': KtProps<KtCode>;
     'kt-icon': KtProps<KtIcon>;

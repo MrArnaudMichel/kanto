@@ -1,6 +1,6 @@
 {
   "name": "kanto-ds",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Framework-agnostic design system for data-dense product interfaces.",
   "keywords": [
     "design-system",
@@ -66,6 +66,10 @@
     "./components/core/kt-button": {
       "types": "./dist/components/core/kt-button/kt-button.d.ts",
       "default": "./dist/components/core/kt-button/kt-button.js"
+    },
+    "./components/core/kt-split-button": {
+      "types": "./dist/components/core/kt-split-button/kt-split-button.d.ts",
+      "default": "./dist/components/core/kt-split-button/kt-split-button.js"
     },
     "./components/core/kt-card": {
       "types": "./dist/components/core/kt-card/kt-card.d.ts",

@@ -22,6 +22,8 @@ export type {
   KtButtonType,
   KtButtonVariant,
 } from './components/core/kt-button/kt-button.js';
+export { KtSplitButton } from './components/core/kt-split-button/kt-split-button.js';
+export type { KtSplitButtonItem } from './components/core/kt-split-button/kt-split-button.js';
 export { KtCard } from './components/core/kt-card/kt-card.js';
 export type { KtCardImagePosition } from './components/core/kt-card/kt-card.js';
 export { KtCode } from './components/core/kt-code/kt-code.js';
@@ -92,7 +94,10 @@ export { KtCollapsible } from './components/overlays/kt-collapsible/kt-collapsib
 export { KtConfirmDialog } from './components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 export type { KtConfirmVariant } from './components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 export { KtDropdown } from './components/overlays/kt-dropdown/kt-dropdown.js';
-export type { KtDropdownPlacement } from './components/overlays/kt-dropdown/kt-dropdown.js';
+export type {
+  KtDropdownAlign,
+  KtDropdownPlacement,
+} from './components/overlays/kt-dropdown/kt-dropdown.js';
 export { KtModal } from './components/overlays/kt-modal/kt-modal.js';
 export type { KtModalSize } from './components/overlays/kt-modal/kt-modal.js';
 export { KtSidePanel } from './components/overlays/kt-side-panel/kt-side-panel.js';

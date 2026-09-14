@@ -6,6 +6,7 @@ import { emit } from '#internal/events';
 import { optionLabel, type KtOption } from '#internal/listbox';
 
 export type KtDropdownPlacement = 'bottom' | 'top';
+export type KtDropdownAlign = 'start' | 'end';
 
 /** Panel height plus the 6px offset, used to decide whether it fits below. */
 const PANEL_SPACE = 224 + 6;
@@ -78,6 +79,18 @@ export class KtDropdown extends KtElement {
         transform-origin: bottom left;
       }
 
+      /* Hangs the panel off the trigger's right edge, for a trigger that sits
+         at the right of what it belongs to — the caret of a split button. */
+      .panel.end {
+        right: 0;
+        left: auto;
+        transform-origin: top right;
+      }
+
+      .panel.end.top {
+        transform-origin: bottom right;
+      }
+
       .panel.open {
         visibility: visible;
         opacity: 1;
@@ -148,6 +161,10 @@ export class KtDropdown extends KtElement {
   /** Where to put the panel when there is room on both sides. */
   @property({ type: String, attribute: 'preferred-placement' })
   preferredPlacement: KtDropdownPlacement = 'bottom';
+
+  /** Which edge of the trigger the panel lines up with. */
+  @property({ type: String, reflect: true })
+  align: KtDropdownAlign = 'start';
 
   @property({ type: Boolean, reflect: true })
   disabled = false;
@@ -244,7 +261,12 @@ export class KtDropdown extends KtElement {
 
       <div
         part="panel"
-        class=${classMap({ panel: true, open: this.open, top: this.placement === 'top' })}
+        class=${classMap({
+          panel: true,
+          open: this.open,
+          top: this.placement === 'top',
+          end: this.align === 'end',
+        })}
         role=${this.options.length > 0 ? 'menu' : 'group'}
         aria-hidden=${this.open ? 'false' : 'true'}
       >

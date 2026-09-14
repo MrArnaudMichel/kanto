@@ -129,3 +129,23 @@ describe('kt-dropdown', () => {
     expect(custom.shadowRoot!.querySelector('.list')).toBeNull();
   });
 });
+
+describe('kt-dropdown alignment', () => {
+  it('aligns the panel on the trigger start edge by default', async () => {
+    const el = await fixture<KtDropdown>(
+      '<kt-dropdown><button slot="trigger">Actions</button></kt-dropdown>',
+    );
+
+    expect(el.align).toBe('start');
+    expect(panel(el).classList.contains('end')).toBe(false);
+  });
+
+  it('aligns the panel on the trigger end edge when asked', async () => {
+    const el = await fixture<KtDropdown>(
+      '<kt-dropdown align="end"><button slot="trigger">Actions</button></kt-dropdown>',
+    );
+
+    expect(el.align).toBe('end');
+    expect(panel(el).classList.contains('end')).toBe(true);
+  });
+});

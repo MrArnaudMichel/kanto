@@ -20,6 +20,7 @@ import { createComponent, type EventName } from '@lit/react';
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
 import { KtBadge as KtBadgeElement } from '../components/core/kt-badge/kt-badge.js';
 import { KtButton as KtButtonElement } from '../components/core/kt-button/kt-button.js';
+import { KtSplitButton as KtSplitButtonElement } from '../components/core/kt-split-button/kt-split-button.js';
 import { KtCard as KtCardElement } from '../components/core/kt-card/kt-card.js';
 import { KtCode as KtCodeElement } from '../components/core/kt-code/kt-code.js';
 import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
@@ -86,6 +87,17 @@ export const KtButton = createComponent({
   tagName: 'kt-button',
   elementClass: KtButtonElement,
   react: React,
+});
+
+export const KtSplitButton = createComponent({
+  tagName: 'kt-split-button',
+  elementClass: KtSplitButtonElement,
+  react: React,
+  events: {
+    onKtSelect: 'kt-select' as Kt<{ value: string | number }>,
+    onKtOpen: 'kt-open' as Kt<never>,
+    onKtClose: 'kt-close' as Kt<never>,
+  },
 });
 
 export const KtCard = createComponent({

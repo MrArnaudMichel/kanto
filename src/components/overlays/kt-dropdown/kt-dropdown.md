@@ -31,6 +31,10 @@ room — or, when neither side fits, to whichever has more. Set
 
 Placement is recalculated on open and on window resize.
 
+Horizontally the panel lines up with the trigger's left edge. `align="end"`
+lines it up with the right edge instead — for a trigger that sits at the right
+of the thing it belongs to, such as the caret of a `<kt-split-button>`.
+
 ## API
 
 | Property             | Attribute             | Type                       | Default        |
@@ -38,6 +42,7 @@ Placement is recalculated on open and on window resize.
 | `options`            | —                     | `KtOption[]`               | `[]`           |
 | `value`              | `value`               | `string \| number \| null` | `null`         |
 | `preferredPlacement` | `preferred-placement` | `'bottom' \| 'top'`        | `'bottom'`     |
+| `align`              | `align`               | `'start' \| 'end'`         | `'start'`      |
 | `disabled`           | `disabled`            | `boolean`                  | `false`        |
 | `emptyText`          | `empty-text`          | `string`                   | `'No results'` |
 

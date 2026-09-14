@@ -5,6 +5,16 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] — 2026-09-15
+
+### Added
+
+- `kt-split-button`, a primary action with a menu of related ones hanging off a
+  caret. A caret press never surfaces as a `click` on the host, so one `click`
+  listener means the primary action and nothing else.
+- `align` on `kt-dropdown`, lining the panel up with the trigger's right edge
+  instead of its left. Defaults to the existing behaviour.
+
 ## [1.0.0] — 2026-09-12
 
 First release of Kanto, a design system for data-dense product interfaces:
