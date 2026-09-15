@@ -304,16 +304,36 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
   'kt-sub-menu-navigation': () =>
     html`<kt-sub-menu-navigation
       style="max-width:280px"
-      active-href="#b"
+      active-href="#nav-roles"
       .sections=${[
         {
-          title: 'Forms',
+          title: 'Workspace',
           items: [
-            { label: 'Input', href: '#a' },
-            { label: 'Select', href: '#b' },
+            { label: 'Home', href: '#nav-home', icon: 'house' },
+            { label: 'Inbox', href: '#nav-inbox', icon: 'inbox', badge: '4' },
+            { label: 'Customers', href: '#nav-customers', icon: 'users' },
           ],
         },
-        { title: 'Data', items: [{ label: 'Table', href: '#c' }] },
+        {
+          title: 'Administration',
+          items: [
+            {
+              label: 'Settings',
+              icon: 'settings',
+              children: [
+                { label: 'General', href: '#nav-general' },
+                {
+                  label: 'Members',
+                  children: [
+                    { label: 'People', href: '#nav-people' },
+                    { label: 'Roles', href: '#nav-roles' },
+                  ],
+                },
+              ],
+            },
+            { label: 'Logs', href: '#nav-logs', icon: 'scroll-text' },
+          ],
+        },
       ]}
     ></kt-sub-menu-navigation>`,
 
