@@ -34,6 +34,7 @@ import { KtSelect as KtSelectElement } from '../components/forms/kt-select/kt-se
 import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea/kt-textarea.js';
 import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle/kt-toggle.js';
 import { KtBreadcrumb as KtBreadcrumbElement } from '../components/navigation/kt-breadcrumb/kt-breadcrumb.js';
+import { KtPageHeader as KtPageHeaderElement } from '../components/navigation/kt-page-header/kt-page-header.js';
 import { KtSegmentedControl as KtSegmentedControlElement } from '../components/navigation/kt-segmented-control/kt-segmented-control.js';
 import { KtSubMenuNavigation as KtSubMenuNavigationElement } from '../components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
 import { KtTabs as KtTabsElement } from '../components/navigation/kt-tabs/kt-tabs.js';
@@ -198,6 +199,12 @@ export const KtSubMenuNavigation = createComponent({
   elementClass: KtSubMenuNavigationElement,
   react: React,
   events: { onKtNavigate: 'kt-navigate' as Kt<unknown> },
+});
+
+export const KtPageHeader = createComponent({
+  tagName: 'kt-page-header',
+  elementClass: KtPageHeaderElement,
+  react: React,
 });
 
 export const KtSegmentedControl = createComponent({

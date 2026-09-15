@@ -51,6 +51,7 @@ import type { KtSelect } from '../components/forms/kt-select/kt-select.js';
 import type { KtTextarea } from '../components/forms/kt-textarea/kt-textarea.js';
 import type { KtToggle } from '../components/forms/kt-toggle/kt-toggle.js';
 import type { KtBreadcrumb } from '../components/navigation/kt-breadcrumb/kt-breadcrumb.js';
+import type { KtPageHeader } from '../components/navigation/kt-page-header/kt-page-header.js';
 import type { KtSegmentedControl } from '../components/navigation/kt-segmented-control/kt-segmented-control.js';
 import type { KtSubMenuNavigation } from '../components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
 import type { KtTabs } from '../components/navigation/kt-tabs/kt-tabs.js';
@@ -114,6 +115,7 @@ declare module 'vue' {
     'kt-textarea': KtProps<KtTextarea>;
     'kt-toggle': KtProps<KtToggle>;
     'kt-breadcrumb': KtProps<KtBreadcrumb>;
+    'kt-page-header': KtProps<KtPageHeader>;
     'kt-segmented-control': KtProps<KtSegmentedControl>;
     'kt-sub-menu-navigation': KtProps<KtSubMenuNavigation>;
     'kt-tabs': KtProps<KtTabs>;

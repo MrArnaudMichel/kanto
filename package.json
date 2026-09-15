@@ -167,6 +167,10 @@
       "types": "./dist/components/navigation/kt-header/kt-header.d.ts",
       "default": "./dist/components/navigation/kt-header/kt-header.js"
     },
+    "./components/navigation/kt-page-header": {
+      "types": "./dist/components/navigation/kt-page-header/kt-page-header.d.ts",
+      "default": "./dist/components/navigation/kt-page-header/kt-page-header.js"
+    },
     "./components/navigation/kt-segmented-control": {
       "types": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.d.ts",
       "default": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.js"

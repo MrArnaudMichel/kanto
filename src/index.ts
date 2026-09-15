@@ -42,6 +42,7 @@ export type { KtToggleSize } from './components/forms/kt-toggle/kt-toggle.js';
 // === NAVIGATION ===
 export { KtBreadcrumb } from './components/navigation/kt-breadcrumb/kt-breadcrumb.js';
 export type { KtBreadcrumbItem } from './components/navigation/kt-breadcrumb/kt-breadcrumb.js';
+export { KtPageHeader } from './components/navigation/kt-page-header/kt-page-header.js';
 export { KtSegmentedControl } from './components/navigation/kt-segmented-control/kt-segmented-control.js';
 export type {
   KtSegmentedOption,
