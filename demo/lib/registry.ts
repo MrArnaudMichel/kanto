@@ -337,6 +337,21 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ]}
     ></kt-sub-menu-navigation>`,
 
+  'kt-page-header': () =>
+    html`<div class="demo-stack" style="max-width:100%">
+      <kt-page-header
+        eyebrow="Dashboard"
+        heading="Good evening"
+        description="An overview of your workspace: recent files, integrations and activity."
+      >
+        <kt-button slot="actions" variant="dark" icon="upload">Upload a file</kt-button>
+        <kt-button slot="actions" icon="plus">New document</kt-button>
+      </kt-page-header>
+      <kt-page-header level="section" heading="Recently opened">
+        <a slot="actions" href="#/components/kt-table">See all files</a>
+      </kt-page-header>
+    </div>`,
+
   'kt-tabs': () =>
     html`<kt-tabs
       label="Sections"
