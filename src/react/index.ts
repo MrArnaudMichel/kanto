@@ -54,6 +54,7 @@ import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropd
 import { KtModal as KtModalElement } from '../components/overlays/kt-modal/kt-modal.js';
 import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel/kt-side-panel.js';
 import { KtChart as KtChartElement } from '../components/data/kt-chart/kt-chart.js';
+import { KtMeter as KtMeterElement } from '../components/data/kt-meter/kt-meter.js';
 import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination/kt-pagination.js';
 import { KtStat as KtStatElement } from '../components/data/kt-stat/kt-stat.js';
 import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.js';
@@ -351,6 +352,12 @@ export const KtTable = createComponent({
     onKtRowClick: 'kt-row-click' as Kt<{ index: number }>,
     onKtPageChange: 'kt-page-change' as Kt<{ page: number }>,
   },
+});
+
+export const KtMeter = createComponent({
+  tagName: 'kt-meter',
+  elementClass: KtMeterElement,
+  react: React,
 });
 
 export const KtPagination = createComponent({

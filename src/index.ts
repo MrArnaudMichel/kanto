@@ -98,6 +98,8 @@ export { KtSidePanel } from './components/overlays/kt-side-panel/kt-side-panel.j
 // === DATA ===
 export { KtChart } from './components/data/kt-chart/kt-chart.js';
 export type { KtChartType, KtSeries } from './components/data/kt-chart/kt-chart.js';
+export { KtMeter } from './components/data/kt-meter/kt-meter.js';
+export type { KtMeterSegment } from './components/data/kt-meter/kt-meter.js';
 export { KtPagination } from './components/data/kt-pagination/kt-pagination.js';
 export { KtStat } from './components/data/kt-stat/kt-stat.js';
 export type { KtStatTrend } from './components/data/kt-stat/kt-stat.js';
