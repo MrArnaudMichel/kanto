@@ -352,6 +352,22 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       </kt-page-header>
     </div>`,
 
+  'kt-meter': () =>
+    html`<div class="demo-stack" style="max-width:480px">
+      <kt-meter label="Storage" used="25.8 GB used" total="of 983 GB" value="3"></kt-meter>
+      <kt-meter
+        show-legend
+        max=${40}
+        .format=${(n: number) => `${n} GB`}
+        .segments=${[
+          { label: 'Documents', value: 16.1 },
+          { label: 'Photos', value: 8.4 },
+          { label: 'Video', value: 5.7 },
+          { label: 'Other', value: 3.2 },
+        ]}
+      ></kt-meter>
+    </div>`,
+
   'kt-tabs': () =>
     html`<kt-tabs
       label="Sections"

@@ -71,6 +71,7 @@ import type { KtDropdown } from '../components/overlays/kt-dropdown/kt-dropdown.
 import type { KtModal } from '../components/overlays/kt-modal/kt-modal.js';
 import type { KtSidePanel } from '../components/overlays/kt-side-panel/kt-side-panel.js';
 import type { KtChart } from '../components/data/kt-chart/kt-chart.js';
+import type { KtMeter } from '../components/data/kt-meter/kt-meter.js';
 import type { KtPagination } from '../components/data/kt-pagination/kt-pagination.js';
 import type { KtStat } from '../components/data/kt-stat/kt-stat.js';
 import type { KtTable } from '../components/data/kt-table/kt-table.js';
@@ -135,6 +136,7 @@ declare module 'vue' {
     'kt-modal': KtProps<KtModal>;
     'kt-side-panel': KtProps<KtSidePanel>;
     'kt-chart': KtProps<KtChart>;
+    'kt-meter': KtProps<KtMeter>;
     'kt-pagination': KtProps<KtPagination>;
     'kt-stat': KtProps<KtStat>;
     'kt-table': KtProps<KtTable>;

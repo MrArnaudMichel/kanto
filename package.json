@@ -83,6 +83,10 @@
       "types": "./dist/components/data/kt-chart/kt-chart.d.ts",
       "default": "./dist/components/data/kt-chart/kt-chart.js"
     },
+    "./components/data/kt-meter": {
+      "types": "./dist/components/data/kt-meter/kt-meter.d.ts",
+      "default": "./dist/components/data/kt-meter/kt-meter.js"
+    },
     "./components/data/kt-pagination": {
       "types": "./dist/components/data/kt-pagination/kt-pagination.d.ts",
       "default": "./dist/components/data/kt-pagination/kt-pagination.js"
