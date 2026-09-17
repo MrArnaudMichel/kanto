@@ -10,13 +10,21 @@ import { beforeAll, describe, expect, it } from 'vitest';
  */
 
 const APP_ROUTES = [
-  { hash: '#/app/console/home', marker: '.stat-row', label: 'Home' },
+  { hash: '#/app/console/home', marker: '.tile-row', label: 'Good evening' },
   { hash: '#/app/console/inbox', marker: '.mail', label: 'Inbox' },
   { hash: '#/app/console/customers', marker: 'kt-table', label: 'Customers' },
-  { hash: '#/app/console/settings/general', marker: '.settings-grid', label: 'Settings' },
-  { hash: '#/app/console/settings/members', marker: 'kt-table', label: 'Settings' },
-  { hash: '#/app/console/settings/notifications', marker: '.settings-narrow', label: 'Settings' },
-  { hash: '#/app/console/settings/security', marker: '.settings-narrow', label: 'Settings' },
+  { hash: '#/app/console/files', marker: 'kt-table', label: 'Files' },
+  { hash: '#/app/console/activity', marker: 'kt-timeline', label: 'Activity' },
+  { hash: '#/app/console/integrations', marker: '.integration-grid', label: 'Integrations' },
+  { hash: '#/app/console/settings/general', marker: '.settings-grid', label: 'General' },
+  { hash: '#/app/console/settings/members/people', marker: 'kt-table', label: 'People' },
+  { hash: '#/app/console/settings/members/roles', marker: 'kt-table', label: 'Roles' },
+  {
+    hash: '#/app/console/settings/notifications',
+    marker: '.settings-narrow',
+    label: 'Notifications',
+  },
+  { hash: '#/app/console/settings/security', marker: '.settings-narrow', label: 'Security' },
   { hash: '#/app/landing', marker: '.hero', label: null },
   { hash: '#/app/chat', marker: '.chat-transcript', label: null },
   { hash: '#/app/portfolio', marker: '.portrait', label: null },
@@ -60,18 +68,41 @@ describe('the full-bleed applications', () => {
     expect(app.querySelector('.toc')).not.toBeNull();
   });
 
-  it('titles each console page', async () => {
+  it('titles each console page in the page, not the top bar', async () => {
+    // A heading repeated in two places is a heading nobody reads: the bar
+    // carries search and notifications, the page carries its own name.
     for (const route of APP_ROUTES) {
       if (!route.label) continue;
       await show(route.hash);
-      expect(app.querySelector('.app-topbar h1')!.textContent, route.hash).toContain(route.label);
+      expect(app.querySelector('.app-topbar h1'), route.hash).toBeNull();
+      expect(app.querySelector('kt-page-header')!.getAttribute('heading'), route.hash).toContain(
+        route.label,
+      );
     }
   });
 
+  it('drives the whole console sidebar from kt-sub-menu-navigation', async () => {
+    // Including the third level. If the console has to hand-roll its own
+    // nesting, the component is not finished.
+    await show('#/app/console/settings/members/roles');
+
+    const nav = app.querySelector('kt-sub-menu-navigation')!;
+    expect(app.querySelectorAll('.app-sidebar nav')).toHaveLength(0);
+
+    const rows = [...nav.shadowRoot!.querySelectorAll('.item')].map((row) =>
+      row.querySelector('.label')!.textContent!.trim(),
+    );
+    expect(rows).toContain('Settings');
+    expect(rows).toContain('Members');
+    expect(rows).toContain('Roles');
+
+    const current = nav.shadowRoot!.querySelector('[aria-current="page"]')!;
+    expect(current.querySelector('.label')!.textContent!.trim()).toBe('Roles');
+  });
+
   it('has a documentation page for every application', async () => {
-    for (const route of APP_ROUTES) {
-      const slug = route.hash.replace('#/app/', '').split('/')[0]!;
-      await show(`#/apps/${slug === 'console' ? 'console-home' : slug}`);
+    for (const slug of ['console-home', 'landing', 'chat', 'portfolio']) {
+      await show(`#/apps/${slug}`);
       expect(app.querySelector('main'), slug).not.toBeNull();
       expect(app.querySelector('main')!.textContent!.trim().length).toBeGreaterThan(40);
     }

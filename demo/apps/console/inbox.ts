@@ -263,21 +263,25 @@ export function consoleInbox(): TemplateResult {
     </div>
   </div>`;
 
-  const actions = html`<kt-button
-    size="small"
-    variant="dark"
-    icon="pencil"
-    @click=${() => {
-      state.composing = true;
-      rerender();
-    }}
-    >Compose</kt-button
-  >`;
-
   return consoleShell(
     'inbox',
-    'Inbox',
-    html`${body}
+    html`<kt-page-header
+        eyebrow="Workspace"
+        heading="Inbox"
+        description="Everything addressed to the workspace, in one thread list."
+      >
+        <kt-button
+          slot="actions"
+          variant="dark"
+          icon="pencil"
+          @click=${() => {
+            state.composing = true;
+            rerender();
+          }}
+          >Compose</kt-button
+        >
+      </kt-page-header>
+      ${body}
       <kt-modal
         ?open=${state.composing}
         heading="New message"
@@ -318,6 +322,5 @@ export function consoleInbox(): TemplateResult {
           >Send</kt-button
         >
       </kt-modal>`,
-    actions,
   );
 }
