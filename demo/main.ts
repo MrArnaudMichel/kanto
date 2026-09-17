@@ -13,6 +13,9 @@ import { consoleHome } from './apps/console/home.js';
 import { consoleInbox } from './apps/console/inbox.js';
 import { consoleCustomers } from './apps/console/customers.js';
 import { consoleSettings } from './apps/console/settings.js';
+import { consoleFiles } from './apps/console/files.js';
+import { consoleActivity } from './apps/console/activity.js';
+import { consoleIntegrations } from './apps/console/integrations.js';
 import { landingPage } from './apps/landing.js';
 import { chatPage } from './apps/chat.js';
 import { portfolioPage } from './apps/portfolio.js';
@@ -145,8 +148,12 @@ const APPS: Record<string, () => TemplateResult> = {
   'console/home': consoleHome,
   'console/inbox': consoleInbox,
   'console/customers': consoleCustomers,
+  'console/files': consoleFiles,
+  'console/activity': consoleActivity,
+  'console/integrations': consoleIntegrations,
   'console/settings/general': () => consoleSettings('general'),
-  'console/settings/members': () => consoleSettings('members'),
+  'console/settings/members/people': () => consoleSettings('people'),
+  'console/settings/members/roles': () => consoleSettings('roles'),
   'console/settings/notifications': () => consoleSettings('notifications'),
   'console/settings/security': () => consoleSettings('security'),
   landing: landingPage,

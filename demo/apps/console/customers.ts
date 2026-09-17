@@ -277,8 +277,14 @@ export function consoleCustomers(): TemplateResult {
 
   return consoleShell(
     'customers',
-    'Customers',
-    body,
-    html`<kt-button size="small" variant="dark" icon="plus">Add customer</kt-button>`,
+    html`<kt-page-header
+        eyebrow="Workspace"
+        heading="Customers"
+        description="Every account this workspace bills, with the filters the support team actually uses."
+      >
+        <kt-button slot="actions" variant="dark" icon="download">Export</kt-button>
+        <kt-button slot="actions" icon="plus">Add customer</kt-button>
+      </kt-page-header>
+      ${body}`,
   );
 }

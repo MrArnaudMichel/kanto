@@ -7,20 +7,19 @@ import {
   STATUS_TONE,
   type Status,
 } from '../../lib/data.js';
-import { consoleShell } from '../shell.js';
+import { appHref, consoleShell } from '../shell.js';
 
-/** The console's overview: the numbers, the trend, and the latest orders. */
+/** The console's overview: the numbers, the trend, and what happened lately. */
 
 type Grain = 'daily' | 'weekly' | 'monthly';
 
 const state = {
   grain: 'daily' as Grain,
-  range: '30d',
   hovered: -1,
   loading: false,
 };
 
-const ORDERS = buildEntities(6, 4242);
+const ORDERS = buildEntities(5, 4242);
 
 /** Points per grain, so switching it genuinely changes the resolution. */
 const POINTS: Record<Grain, number> = { daily: 30, weekly: 12, monthly: 6 };
@@ -45,15 +44,96 @@ function seriesFor(grain: Grain): { labels: string[]; values: number[] } {
   return { labels, values };
 }
 
+/**
+ * The four figures across the top.
+ *
+ * `tone` is the icon chip's colour and carries nothing on its own — it is a
+ * label the eye can find a tile by, not a status. The delta beside the value is
+ * what says whether the news is good, and it says so in words as well as hue.
+ */
+const TILES = [
+  { label: 'Customers', value: '712', delta: '+4.6%', trend: 'up', icon: 'users', tone: 'blue' },
+  {
+    label: 'Conversions',
+    value: '1,602',
+    delta: '-8%',
+    trend: 'down',
+    icon: 'chart-pie',
+    tone: 'violet',
+  },
+  {
+    label: 'Revenue',
+    value: currency.format(292342),
+    delta: '-3%',
+    trend: 'down',
+    icon: 'dollar-sign',
+    tone: 'green',
+  },
+  {
+    label: 'Open tickets',
+    value: '18',
+    delta: '-11%',
+    trend: 'down',
+    inverted: true,
+    icon: 'life-buoy',
+    tone: 'amber',
+  },
+] as const;
+
+const ACTIVITY = [
+  {
+    heading: 'Invoice #4820 settled',
+    time: '11 min ago',
+    icon: 'check',
+    variant: 'success' as const,
+    body: 'Meridian Freight paid in full, two days early.',
+  },
+  {
+    heading: 'Sync agent quiet',
+    time: '2 h ago',
+    icon: 'triangle-alert',
+    variant: 'warning' as const,
+    body: 'No word from the eu-west-1 agent since 07:12.',
+  },
+  {
+    heading: 'Three seats added',
+    time: 'Yesterday',
+    icon: 'user-plus',
+    variant: 'info' as const,
+    body: 'Requested by Dana Whitfield, applied at the next renewal.',
+  },
+  {
+    heading: 'Retention policy changed',
+    time: 'Monday',
+    icon: 'shield',
+    variant: 'neutral' as const,
+    body: 'Audit logs now kept for 400 days.',
+  },
+];
+
+const INTEGRATIONS = [
+  { name: 'Stripe', note: 'Billing and invoices', icon: 'credit-card', connected: true },
+  { name: 'Postgres', note: 'Primary datastore', icon: 'database', connected: true },
+  { name: 'Slack', note: 'Alerts to #ops', icon: 'message-circle', connected: false },
+];
+
 export function consoleHome(): TemplateResult {
   const { labels, values } = seriesFor(state.grain);
   // Scale so the headline matches the Revenue tile above it rather than
   // quoting a second, unexplained number.
   const scale = 292342 / values.reduce((sum, n) => sum + n, 0);
-  const total = 292342;
   const hoveredValue = state.hovered >= 0 ? values[state.hovered] : undefined;
 
   const body = html`
+    <kt-page-header
+      eyebrow="Dashboard"
+      heading="Good evening, Dana"
+      description="An overview of the workspace: revenue, recent orders, integrations and what changed."
+    >
+      <kt-button slot="actions" variant="dark" icon="download">Export</kt-button>
+      <kt-button slot="actions" icon="plus">New order</kt-button>
+    </kt-page-header>
+
     <kt-card class="toolbar-card">
       <div class="toolbar">
         <kt-button variant="dark" icon="calendar" icon-position="left">
@@ -92,28 +172,23 @@ export function consoleHome(): TemplateResult {
       </div>
     </kt-card>
 
-    <div class="stat-row">
-      ${[
-        { label: 'Customers', value: '712', delta: '-2%', trend: 'down', icon: 'users' },
-        { label: 'Conversions', value: '1,602', delta: '-8%', trend: 'down', icon: 'chart-pie' },
-        {
-          label: 'Revenue',
-          value: currency.format(292342),
-          delta: '-3%',
-          trend: 'down',
-          icon: 'dollar-sign',
-        },
-        { label: 'Orders', value: '178', delta: '+2%', trend: 'up', icon: 'shopping-cart' },
-      ].map(
-        (stat) =>
-          html`<kt-stat
-            label=${stat.label}
-            value=${stat.value}
-            delta=${stat.delta}
-            trend=${stat.trend}
-            icon=${stat.icon}
-            ?loading=${state.loading}
-          ></kt-stat>`,
+    <div class="tile-row">
+      ${TILES.map(
+        (tile) => html`
+          <kt-card class="tile">
+            <span class=${`tile-icon ${tile.tone}`}>
+              <kt-icon name=${tile.icon} size="18"></kt-icon>
+            </span>
+            <kt-stat
+              label=${tile.label}
+              value=${tile.value}
+              delta=${tile.delta}
+              trend=${tile.trend}
+              ?inverted=${'inverted' in tile}
+              ?loading=${state.loading}
+            ></kt-stat>
+          </kt-card>
+        `,
       )}
     </div>
 
@@ -123,7 +198,7 @@ export function consoleHome(): TemplateResult {
         <div style="font:var(--font-title-h1);line-height:1.1">
           ${
             hoveredValue === undefined
-              ? currency.format(total)
+              ? currency.format(292342)
               : currency.format(hoveredValue * scale)
           }
         </div>
@@ -138,10 +213,10 @@ export function consoleHome(): TemplateResult {
 
       ${
         state.loading
-          ? html`<kt-skeleton variant="rect" height="260px"></kt-skeleton>`
+          ? html`<kt-skeleton variant="rect" height="240px"></kt-skeleton>`
           : html`<kt-chart
               type="area"
-              height="260"
+              height="240"
               smooth
               label="Revenue over the selected period"
               .labels=${labels}
@@ -155,34 +230,110 @@ export function consoleHome(): TemplateResult {
       }
     </kt-card>
 
-    <kt-card>
-      <h6 slot="header">Latest orders</h6>
-      <kt-table
-        label="Latest orders"
-        compact
-        .loading=${state.loading}
-        .columns=${[
-          { key: 'ref', label: 'ID', sortable: true, width: '110px' },
-          { key: 'updated', label: 'Date' },
-          { key: 'status', label: 'Status', width: '130px' },
-          { key: 'owner', label: 'Customer', sortable: true },
-          { key: 'amount', label: 'Amount', sortable: true, align: 'right' },
-        ]}
-        .data=${ORDERS}
-        .renderCell=${(row: Record<string, unknown>, column: { key: string }) => {
-          if (column.key === 'amount') return currencyPrecise.format(Number(row['amount']));
-          if (column.key === 'status') {
-            return html`<kt-chip variant="category" color=${STATUS_TONE[row['status'] as Status]}
-              >${row['status']}</kt-chip
-            >`;
-          }
-          if (column.key === 'ref') return html`<code>#${row['ref']}</code>`;
-          return undefined;
-        }}
-      ></kt-table>
-      <kt-button slot="footer" variant="text">View all orders</kt-button>
-    </kt-card>
+    <section>
+      <kt-page-header level="section" heading="Latest orders">
+        <a slot="actions" href=${appHref('customers')}>See all customers</a>
+      </kt-page-header>
+      <kt-card style="margin-top:12px">
+        <kt-table
+          label="Latest orders"
+          compact
+          .loading=${state.loading}
+          .columns=${[
+            { key: 'ref', label: 'ID', sortable: true, width: '110px' },
+            { key: 'updated', label: 'Date' },
+            { key: 'status', label: 'Status', width: '130px' },
+            { key: 'owner', label: 'Customer', sortable: true },
+            { key: 'amount', label: 'Amount', sortable: true, align: 'right' },
+          ]}
+          .data=${ORDERS}
+          .renderCell=${(row: Record<string, unknown>, column: { key: string }) => {
+            if (column.key === 'amount') return currencyPrecise.format(Number(row['amount']));
+            if (column.key === 'status') {
+              return html`<kt-chip variant="category" color=${STATUS_TONE[row['status'] as Status]}
+                >${row['status']}</kt-chip
+              >`;
+            }
+            if (column.key === 'ref') return html`<code>#${row['ref']}</code>`;
+            return undefined;
+          }}
+        ></kt-table>
+      </kt-card>
+    </section>
+
+    <div class="panel-row">
+      <kt-card>
+        <div slot="header" style="width:100%">
+          <kt-page-header level="section" heading="Recent activity">
+            <a slot="actions" href=${appHref('activity')}>All activity</a>
+          </kt-page-header>
+        </div>
+        <kt-timeline compact>
+          ${ACTIVITY.slice(0, 3).map(
+            (event) => html`
+              <kt-timeline-item
+                heading=${event.heading}
+                time=${event.time}
+                icon=${event.icon}
+                variant=${event.variant}
+                >${event.body}</kt-timeline-item
+              >
+            `,
+          )}
+        </kt-timeline>
+      </kt-card>
+
+      <kt-card>
+        <div slot="header" style="width:100%">
+          <kt-page-header level="section" heading="Integrations">
+            <a slot="actions" href=${appHref('integrations')}>Manage</a>
+          </kt-page-header>
+        </div>
+        <ul class="mini-list">
+          ${INTEGRATIONS.map(
+            (integration) => html`
+              <li class="mini-row">
+                <span class="mini-icon">
+                  <kt-icon name=${integration.icon} size="16"></kt-icon>
+                </span>
+                <span class="mini-copy">
+                  <span class="mini-title">${integration.name}</span>
+                  <span class="muted" style="font:var(--font-normal-small)"
+                    >${integration.note}</span
+                  >
+                </span>
+                <kt-badge variant=${integration.connected ? 'success' : 'neutral'}
+                  >${integration.connected ? 'Connected' : 'Off'}</kt-badge
+                >
+              </li>
+            `,
+          )}
+        </ul>
+      </kt-card>
+
+      <kt-card>
+        <div slot="header" style="width:100%">
+          <kt-page-header level="section" heading="Storage">
+            <a slot="actions" href=${appHref('files')}>Details</a>
+          </kt-page-header>
+        </div>
+        <kt-meter
+          show-legend
+          max=${120}
+          .format=${(n: number) => `${n} GB`}
+          .segments=${[
+            { label: 'Documents', value: 11.2 },
+            { label: 'Exports', value: 7.4 },
+            { label: 'Backups', value: 5.1 },
+            { label: 'Other', value: 2.1 },
+          ]}
+        ></kt-meter>
+        <p class="muted" style="margin:12px 0 0;font:var(--font-normal-small)">
+          25.8 GB of 120 GB used. Backups are pruned after 90 days.
+        </p>
+      </kt-card>
+    </div>
   `;
 
-  return consoleShell('home', 'Home', body);
+  return consoleShell('home', body);
 }

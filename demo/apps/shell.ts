@@ -1,5 +1,6 @@
-import { html, type TemplateResult } from 'lit';
+import { html, nothing, type TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
+import type { KtNavItem, KtNavSection } from 'kanto';
 import { rerender } from '../lib/render.js';
 
 /**
@@ -7,38 +8,59 @@ import { rerender } from '../lib/render.js';
  *
  * This is the point of the whole exercise: a real application shell, built only
  * from Kanto elements, that the component pages can be judged against. A
- * gallery shows that a button exists; this shows what happens when thirty of
+ * gallery shows that a button exists; this shows what happens when forty of
  * them have to share a screen.
+ *
+ * The sidebar is `<kt-sub-menu-navigation>` rather than markup written for this
+ * screen — including the three-level branch under Administration. That was the
+ * test: if the console has to hand-roll its own nesting, the component is not
+ * finished.
  */
 
-export interface NavItem {
-  readonly slug: string;
-  readonly label: string;
-  readonly icon: string;
-  readonly badge?: string;
-  readonly children?: readonly { slug: string; label: string }[];
-}
+export const appHref = (path: string) => `#/app/console/${path}`;
 
-export const NAV: readonly NavItem[] = [
-  { slug: 'home', label: 'Home', icon: 'house' },
-  { slug: 'inbox', label: 'Inbox', icon: 'inbox', badge: '4' },
-  { slug: 'customers', label: 'Customers', icon: 'users' },
+export const NAV: readonly KtNavSection[] = [
   {
-    slug: 'settings',
-    label: 'Settings',
-    icon: 'settings',
-    children: [
-      { slug: 'general', label: 'General' },
-      { slug: 'members', label: 'Members' },
-      { slug: 'notifications', label: 'Notifications' },
-      { slug: 'security', label: 'Security' },
+    title: 'Workspace',
+    items: [
+      { label: 'Home', href: appHref('home'), icon: 'house' },
+      { label: 'Inbox', href: appHref('inbox'), icon: 'inbox', badge: '4' },
+      { label: 'Customers', href: appHref('customers'), icon: 'users' },
+      { label: 'Files', href: appHref('files'), icon: 'folder' },
+    ],
+  },
+  {
+    title: 'System',
+    items: [
+      { label: 'Activity', href: appHref('activity'), icon: 'activity' },
+      { label: 'Integrations', href: appHref('integrations'), icon: 'plug', badge: '3' },
+    ],
+  },
+  {
+    title: 'Administration',
+    items: [
+      {
+        label: 'Settings',
+        icon: 'settings',
+        children: [
+          { label: 'General', href: appHref('settings/general') },
+          {
+            label: 'Members',
+            children: [
+              { label: 'People', href: appHref('settings/members/people') },
+              { label: 'Roles', href: appHref('settings/members/roles') },
+            ],
+          },
+          { label: 'Notifications', href: appHref('settings/notifications') },
+          { label: 'Security', href: appHref('settings/security') },
+        ],
+      },
     ],
   },
 ];
 
 interface ShellState {
   collapsed: boolean;
-  settingsOpen: boolean;
   paletteOpen: boolean;
   paletteQuery: string;
   cookiesAccepted: boolean;
@@ -47,37 +69,44 @@ interface ShellState {
 
 export const shellState: ShellState = {
   collapsed: false,
-  settingsOpen: true,
   paletteOpen: false,
   paletteQuery: '',
   cookiesAccepted: false,
   unread: 4,
 };
 
-export const appHref = (path: string) => `#/app/console/${path}`;
+/** Every leaf in NAV, flattened — the palette and the tests both want it. */
+export function navLeaves(
+  sections: readonly KtNavSection[] = NAV,
+): { label: string; href: string; icon: string }[] {
+  const out: { label: string; href: string; icon: string }[] = [];
 
-/** Everything the palette can jump to. */
-const COMMANDS = [
-  { label: 'Home', hint: 'Go to', icon: 'house', href: appHref('home') },
-  { label: 'Inbox', hint: 'Go to', icon: 'inbox', href: appHref('inbox') },
-  { label: 'Customers', hint: 'Go to', icon: 'users', href: appHref('customers') },
-  { label: 'General settings', hint: 'Go to', icon: 'settings', href: appHref('settings/general') },
-  { label: 'Members', hint: 'Go to', icon: 'users', href: appHref('settings/members') },
-  { label: 'Notifications', hint: 'Go to', icon: 'bell', href: appHref('settings/notifications') },
-  { label: 'Security', hint: 'Go to', icon: 'shield', href: appHref('settings/security') },
-  {
-    label: 'Back to the documentation',
-    hint: 'Leave',
-    icon: 'book-open',
-    href: '#/guide/introduction',
-  },
-];
+  const walk = (items: readonly KtNavItem[], icon: string) => {
+    for (const item of items) {
+      const own = item.icon ?? icon;
+      if (item.href) out.push({ label: item.label, href: item.href, icon: own });
+      if (item.children) walk(item.children, own);
+    }
+  };
+
+  for (const section of sections) walk(section.items, 'circle');
+  return out;
+}
 
 function commandPalette(): TemplateResult {
+  const commands = [
+    ...navLeaves().map((leaf) => ({ ...leaf, hint: 'Go to' })),
+    {
+      label: 'Back to the documentation',
+      hint: 'Leave',
+      icon: 'book-open',
+      href: '#/guide/introduction',
+    },
+  ];
   const needle = shellState.paletteQuery.trim().toLowerCase();
   const matches = needle
-    ? COMMANDS.filter((c) => c.label.toLowerCase().includes(needle))
-    : COMMANDS;
+    ? commands.filter((c) => c.label.toLowerCase().includes(needle))
+    : commands;
 
   return html`<kt-modal
     ?open=${shellState.paletteOpen}
@@ -92,6 +121,7 @@ function commandPalette(): TemplateResult {
     <div slot="header" style="width:100%">
       <kt-input
         id="palette-input"
+        icon="search"
         placeholder="Search commands..."
         .value=${shellState.paletteQuery}
         @kt-input=${(e: CustomEvent<{ value: string }>) => {
@@ -133,23 +163,16 @@ function commandPalette(): TemplateResult {
 }
 
 function sidebar(active: string): TemplateResult {
-  const isActive = (slug: string) => active === slug || active.startsWith(`${slug}/`);
+  const collapsed = shellState.collapsed;
 
-  return html`<aside class=${classMap({ 'app-sidebar': true, collapsed: shellState.collapsed })}>
-    <kt-dropdown
-      .options=${[
-        { id: 'kanto', label: 'Kanto Studio' },
-        { id: 'acme', label: 'Acme Corp' },
-        { id: 'new', label: '+ New workspace' },
-      ]}
-      .value=${'kanto'}
-    >
-      <button slot="trigger" class="workspace">
-        <kt-avatar name="Kanto Studio" square size="small"></kt-avatar>
-        <span class="workspace-name">Kanto Studio</span>
-        <kt-icon name="chevrons-up-down" size="14"></kt-icon>
-      </button>
-    </kt-dropdown>
+  return html`<aside class=${classMap({ 'app-sidebar': true, collapsed })}>
+    <a class="brand" href=${appHref('home')}>
+      <span class="brand-mark"><kt-icon name="layers" size="18"></kt-icon></span>
+      <span class="brand-copy">
+        <span class="brand-name">Northwind</span>
+        <span class="brand-sub">Operations console</span>
+      </span>
+    </a>
 
     <button
       class="app-search"
@@ -163,69 +186,28 @@ function sidebar(active: string): TemplateResult {
       <kt-kbd keys="mod k"></kt-kbd>
     </button>
 
-    <nav class="app-nav" aria-label="Console">
-      ${NAV.map((item) =>
-        item.children
-          ? html`<div>
-              <button
-                class=${classMap({ 'app-nav-item': true, active: isActive(item.slug) })}
-                aria-expanded=${shellState.settingsOpen ? 'true' : 'false'}
-                @click=${() => {
-                  shellState.settingsOpen = !shellState.settingsOpen;
-                  rerender();
-                }}
-              >
-                <kt-icon name=${item.icon} size="16"></kt-icon>
-                <span class="app-nav-label">${item.label}</span>
-                <kt-icon
-                  name=${shellState.settingsOpen ? 'chevron-up' : 'chevron-down'}
-                  size="14"
-                ></kt-icon>
-              </button>
-              ${
-                shellState.settingsOpen
-                  ? html`<div class="app-subnav">
-                      ${item.children.map(
-                        (child) =>
-                          html`<a
-                            class=${classMap({
-                              'app-nav-item': true,
-                              sub: true,
-                              active: active === `${item.slug}/${child.slug}`,
-                            })}
-                            href=${appHref(`${item.slug}/${child.slug}`)}
-                            >${child.label}</a
-                          >`,
-                      )}
-                    </div>`
-                  : ''
-              }
-            </div>`
-          : html`<a
-              class=${classMap({ 'app-nav-item': true, active: isActive(item.slug) })}
-              href=${appHref(item.slug)}
-              aria-current=${isActive(item.slug) ? 'page' : undefined}
-            >
-              <kt-icon name=${item.icon} size="16"></kt-icon>
-              <span class="app-nav-label">${item.label}</span>
-              ${
-                item.slug === 'inbox' && shellState.unread > 0
-                  ? html`<kt-badge pill>${String(shellState.unread)}</kt-badge>`
-                  : ''
-              }
-            </a>`,
-      )}
-    </nav>
+    <kt-sub-menu-navigation
+      flush
+      class="app-nav"
+      label="Console"
+      ?collapsed=${collapsed}
+      active-href=${appHref(active)}
+      .sections=${NAV}
+    ></kt-sub-menu-navigation>
 
     <div class="app-sidebar-footer">
-      <a class="app-nav-item" href="#/guide/introduction">
-        <kt-icon name="message-circle" size="16"></kt-icon>
-        <span class="app-nav-label">Feedback</span>
-      </a>
-      <a class="app-nav-item" href="#/guide/introduction">
-        <kt-icon name="circle-help" size="16"></kt-icon>
-        <span class="app-nav-label">Help &amp; Support</span>
-      </a>
+      ${
+        collapsed
+          ? nothing
+          : html`<div class="storage">
+              <kt-meter label="Storage" used="25.8 GB" total="of 120 GB" value="21"></kt-meter>
+            </div>`
+      }
+
+      <span class="node-status">
+        <span class="node-dot"></span>
+        <span class="node-label">eu-west-1 · healthy</span>
+      </span>
 
       <kt-dropdown
         preferred-placement="top"
@@ -235,9 +217,12 @@ function sidebar(active: string): TemplateResult {
           { id: 'out', label: 'Sign out' },
         ]}
       >
-        <button slot="trigger" class="workspace">
-          <kt-avatar name="Arnaud Michel" size="small" status="online"></kt-avatar>
-          <span class="workspace-name">Arnaud Michel</span>
+        <button slot="trigger" class="account">
+          <kt-avatar name="Dana Whitfield" size="small" status="online"></kt-avatar>
+          <span class="account-copy">
+            <span class="account-name">Dana Whitfield</span>
+            <span class="account-mail">dana@northwind.example</span>
+          </span>
           <kt-icon name="chevrons-up-down" size="14"></kt-icon>
         </button>
       </kt-dropdown>
@@ -245,10 +230,15 @@ function sidebar(active: string): TemplateResult {
   </aside>`;
 }
 
-/** Wraps a console page in the application chrome. */
+/**
+ * Wraps a console page in the application chrome.
+ *
+ * The page title lives in the page, not the top bar: a heading repeated in two
+ * places is a heading nobody reads. The bar carries what is true everywhere —
+ * search, notifications, the one action a screen always offers.
+ */
 export function consoleShell(
   active: string,
-  title: string,
   body: TemplateResult,
   actions?: TemplateResult,
 ): TemplateResult {
@@ -267,7 +257,18 @@ export function consoleShell(
             rerender();
           }}
         ></kt-button>
-        <h1>${title}</h1>
+
+        <button
+          class="topbar-search"
+          @click=${() => {
+            shellState.paletteOpen = true;
+            rerender();
+          }}
+        >
+          <kt-icon name="search" size="16"></kt-icon>
+          <span>Search customers, files and settings...</span>
+          <kt-kbd keys="mod k"></kt-kbd>
+        </button>
 
         <div class="app-topbar-actions">
           ${actions ?? ''}
@@ -279,10 +280,13 @@ export function consoleShell(
                 icon="bell"
                 label="Notifications"
               ></kt-button>
-              ${shellState.unread > 0 ? html`<span class="bell-dot"></span>` : ''}
+              ${
+                shellState.unread > 0
+                  ? html`<span class="bell-count">${String(shellState.unread)}</span>`
+                  : nothing
+              }
             </span>
           </kt-tooltip>
-          <kt-button size="small" icon="plus" label="New"></kt-button>
         </div>
       </header>
 

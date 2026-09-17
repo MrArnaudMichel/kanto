@@ -5,13 +5,15 @@ import { buildEntities, workEmail } from '../../lib/data.js';
 import { consoleShell } from '../shell.js';
 
 /**
- * Settings, as four screens rather than one long scroll.
+ * Settings, as five screens rather than one long scroll.
  *
- * Each is a different shape on purpose: a form, a table of people, a grid of
- * switches, and a page that is mostly warnings.
+ * Each is a different shape on purpose: a form, a table of people, a table of
+ * capabilities, a grid of switches, and a page that is mostly warnings. Members
+ * and Roles sit a level deeper than the rest, which is what the sidebar's third
+ * level is there for.
  */
 
-export type SettingsSection = 'general' | 'members' | 'notifications' | 'security';
+export type SettingsSection = 'general' | 'people' | 'roles' | 'notifications' | 'security';
 
 const MEMBERS = buildEntities(6, 8080).map((row, index) => ({
   ...row,
@@ -33,10 +35,93 @@ const state = {
 
 const TITLES: Record<SettingsSection, string> = {
   general: 'General',
-  members: 'Members',
+  people: 'People',
+  roles: 'Roles',
   notifications: 'Notifications',
   security: 'Security',
 };
+
+/** Where each screen sits in the sidebar. Two of them are three levels down. */
+const NAV_PATH: Record<SettingsSection, string> = {
+  general: 'settings/general',
+  people: 'settings/members/people',
+  roles: 'settings/members/roles',
+  notifications: 'settings/notifications',
+  security: 'settings/security',
+};
+
+const CAPABILITIES = [
+  ['Read customers', true, true, true, true],
+  ['Edit customers', true, true, true, false],
+  ['Export data', true, true, false, false],
+  ['Manage members', true, true, false, false],
+  ['Change billing', true, false, false, false],
+  ['Delete the workspace', true, false, false, false],
+] as const;
+
+const ROLE_NAMES = ['Owner', 'Admin', 'Member', 'Viewer'] as const;
+
+function roles(): TemplateResult {
+  return html`<div class="stack" style="gap:16px">
+    <kt-alert
+      variant="neutral"
+      icon="info"
+      description="Roles are fixed in this plan. Custom roles arrive with Enterprise."
+    ></kt-alert>
+
+    <kt-card>
+      <div slot="header" style="width:100%">
+        <kt-page-header level="section" heading="What each role can do"></kt-page-header>
+      </div>
+      <kt-table
+        label="Capabilities by role"
+        compact
+        .columns=${[
+          { key: 'capability', label: 'Capability' },
+          ...ROLE_NAMES.map((name) => ({
+            key: name.toLowerCase(),
+            label: name,
+            width: '110px',
+            align: 'center' as const,
+          })),
+        ]}
+        .data=${CAPABILITIES.map(([capability, ...allowed]) => ({
+          capability,
+          owner: allowed[0],
+          admin: allowed[1],
+          member: allowed[2],
+          viewer: allowed[3],
+        }))}
+        .renderCell=${(row: Record<string, unknown>, column: { key: string }) => {
+          if (column.key === 'capability') return undefined;
+          return row[column.key]
+            ? html`<kt-icon
+                name="check"
+                size="16"
+                style="color:var(--color-success-base)"
+              ></kt-icon>`
+            : html`<kt-icon name="minus" size="16" style="color:var(--text-disabled)"></kt-icon>`;
+        }}
+      ></kt-table>
+    </kt-card>
+
+    <div class="tile-row">
+      ${ROLE_NAMES.map(
+        (name, index) => html`
+          <kt-card class="tile">
+            <span class=${`tile-icon ${['violet', 'blue', 'green', 'amber'][index]}`}>
+              <kt-icon
+                name=${['crown', 'shield', 'user', 'eye'][index] ?? 'user'}
+                size="18"
+              ></kt-icon>
+            </span>
+            <kt-stat label=${name} value=${String([1, 1, 2, 2][index])}></kt-stat>
+          </kt-card>
+        `,
+      )}
+    </div>
+  </div>`;
+}
 
 function general(): TemplateResult {
   return html`<form
@@ -312,11 +397,28 @@ function security(): TemplateResult {
 
 const SECTIONS: Record<SettingsSection, () => TemplateResult> = {
   general,
-  members,
+  people: members,
+  roles,
   notifications,
   security,
 };
 
+const BLURBS: Record<SettingsSection, string> = {
+  general: 'The name, the address and the defaults everything else inherits.',
+  people: 'Who is in this workspace, and when each of them was last here.',
+  roles: 'What each role can reach. Membership is set on the People screen.',
+  notifications: 'What the workspace tells you about, and where it tells you.',
+  security: 'Sign-in, sessions and the keys that let machines in.',
+};
+
 export function consoleSettings(section: SettingsSection): TemplateResult {
-  return consoleShell(`settings/${section}`, `Settings — ${TITLES[section]}`, SECTIONS[section]());
+  return consoleShell(
+    NAV_PATH[section],
+    html`<kt-page-header
+        eyebrow="Settings"
+        heading=${TITLES[section]}
+        description=${BLURBS[section]}
+      ></kt-page-header>
+      ${SECTIONS[section]()}`,
+  );
 }

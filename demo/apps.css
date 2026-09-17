@@ -9,53 +9,68 @@
 
 .app {
   display: grid;
-  grid-template-columns: 264px minmax(0, 1fr);
+  grid-template-columns: 268px minmax(0, 1fr);
   min-height: 100vh;
   background: var(--surface-page);
 }
 
 .app.collapsed {
-  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-columns: 68px minmax(0, 1fr);
 }
 
 .app-sidebar {
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   height: 100vh;
-  padding: 14px 12px;
+  padding: 16px 12px;
   overflow: hidden auto;
   background: var(--color-dark-8);
   border-right: var(--border-width) solid var(--border-subtle);
   scrollbar-width: thin;
-  position: sticky;
-  top: 0;
 }
 
-.workspace {
+.brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 6px 8px;
+  gap: 10px;
+  padding: 4px 6px;
+  text-decoration: none;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  color: var(--color-white);
+  background: var(--color-primary-base);
+  border-radius: 10px;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.brand-name {
   color: var(--text-body);
-  font: var(--font-normal-medium);
-  text-align: left;
-  background: transparent;
-  border: var(--border-width) solid transparent;
-  border-radius: var(--border-radius);
-  cursor: pointer;
+  font: var(--font-medium-regular);
 }
 
-.workspace:hover {
-  background: var(--surface-card);
-}
-
-.workspace-name {
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.brand-sub {
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
 }
 
 .app-search {
@@ -63,9 +78,10 @@
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 7px 10px;
+  padding: 8px 10px;
   color: var(--text-muted);
   font: var(--font-normal-regular);
+  text-align: left;
   background: var(--surface-field);
   border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--border-radius);
@@ -73,91 +89,107 @@
 }
 
 .app-search:hover {
-  border-color: var(--color-text-700);
+  color: var(--text-body);
+  border-color: var(--surface-hover);
 }
 
 .app-search span {
-  flex: 1;
-  text-align: left;
-}
-
-.app-nav,
-.app-subnav {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.app-nav {
-  flex: 1;
-}
-
-.app-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 7px 10px;
-  color: var(--text-muted);
-  font: var(--font-normal-medium);
-  text-align: left;
-  text-decoration: none;
-  background: transparent;
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-}
-
-.app-nav-item:hover {
-  color: var(--text-body);
-  background: var(--surface-card);
-  text-decoration: none;
-}
-
-.app-nav-item.active {
-  color: var(--color-primary-base);
-  background: var(--color-primary-soft);
-}
-
-.app-nav-label {
   flex: 1;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.app-subnav {
-  margin: 2px 0 2px 26px;
-  padding-left: 10px;
-  border-left: var(--border-width) solid var(--border-subtle);
-}
-
-.app-nav-item.sub {
-  padding: 5px 10px;
-  font: var(--font-normal-regular);
+.app-nav {
+  flex: 1;
 }
 
 .app-sidebar-footer {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding-top: 10px;
+  gap: 12px;
+  padding-top: 12px;
   border-top: var(--border-width) solid var(--border-subtle);
 }
 
-/* Collapsed: icons only, labels gone rather than clipped. */
-.app.collapsed .workspace-name,
-.app.collapsed .app-nav-label,
+.storage {
+  padding: 10px 12px;
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+}
+
+.node-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.node-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--color-success-base);
+  border-radius: var(--radius-full);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.account:hover {
+  background: var(--surface-card);
+}
+
+.account-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.account-name {
+  overflow: hidden;
+  color: var(--text-body);
+  font: var(--font-normal-regular);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.account-mail {
+  overflow: hidden;
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Collapsed: icons only, labels gone rather than clipped. The nav element
+   handles its own rows; this is everything around them. */
+.app.collapsed .brand-copy,
 .app.collapsed .app-search span,
 .app.collapsed .app-search kt-kbd,
-.app.collapsed .app-subnav,
-.app.collapsed kt-badge {
+.app.collapsed .account-copy,
+.app.collapsed .node-label {
   display: none;
 }
 
-.app.collapsed .app-nav-item,
 .app.collapsed .app-search,
-.app.collapsed .workspace {
+.app.collapsed .account,
+.app.collapsed .brand,
+.app.collapsed .node-status {
   justify-content: center;
 }
 
@@ -170,26 +202,51 @@
 .app-topbar {
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 3;
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 56px;
-  padding: 0 20px;
+  padding: 12px 24px;
   background: var(--surface-page);
   border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
-.app-topbar h1 {
+/* The page title lives in the page, not here: a heading repeated in two places
+   is a heading nobody reads. The bar carries what is true everywhere. */
+.topbar-search {
+  display: flex;
   flex: 1;
+  align-items: center;
+  gap: 10px;
+  max-width: 520px;
+  padding: 8px 12px;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  text-align: left;
+  background: var(--surface-field);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.topbar-search:hover {
   color: var(--text-body);
-  font: var(--font-title-h6);
+  border-color: var(--surface-hover);
+}
+
+.topbar-search span {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .app-topbar-actions {
   display: flex;
+  flex: none;
   align-items: center;
   gap: 8px;
+  margin-left: auto;
 }
 
 .bell {
@@ -197,30 +254,38 @@
   display: inline-flex;
 }
 
-.bell-dot {
+.bell-count {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 7px;
-  height: 7px;
+  top: -3px;
+  right: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  color: var(--color-white);
+  font: var(--font-normal-small);
+  font-size: 10px;
+  line-height: 1;
   background: var(--color-danger-base);
   border: 2px solid var(--surface-page);
   border-radius: var(--radius-full);
+  pointer-events: none;
 }
 
 .app-content {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-  padding: 20px;
+  gap: 20px;
+  padding: 24px;
+  overflow: hidden;
 }
 
 /* Flex items shrink by default, and a column that overflows the viewport
    squeezes them. The stat row lost half its height that way — silently,
-   because it clips its own overflow. Nothing in this column should shrink;
-   the page scrolls instead. */
+   because it clips its own overflow. */
 .app-content > * {
   flex: none;
 }
@@ -237,44 +302,154 @@
   gap: 10px;
 }
 
-/* Not a kt-card: a card puts slotted children in an inner wrapper that
-   exposes no part, so the grid could never reach them from out here. */
-.stat-row {
+/* === TILES AND PANELS ==================================================== */
+
+.tile-row,
+.panel-row,
+.integration-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  overflow: hidden;
-  background: transparent;
-  border: var(--border-width) solid var(--border-subtle);
-  border-radius: var(--border-radius-card);
+  gap: 16px;
+  align-items: stretch;
 }
 
-.stat-row kt-stat {
-  border-right: var(--border-width) solid var(--border-subtle);
+/* Wide enough that a currency value and its delta stay on one line: one tile
+   wrapping makes the whole row taller, and the extra height reads as a gap
+   rather than as a wrap. */
+.tile-row {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
-.stat-row kt-stat:last-child {
-  border-right: none;
+.panel-row {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-@media (max-width: 900px) {
-  .stat-row kt-stat {
-    border-right: none;
-    border-bottom: var(--border-width) solid var(--border-subtle);
-  }
+.integration-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-.cell-person {
+.tile::part(base),
+.panel-row kt-card::part(base),
+.integration-grid kt-card::part(base) {
+  height: 100%;
+}
+
+/* A tile is icon-then-figure, not two stacked blocks: the card's own rhythm is
+   built for prose and leaves a hole here. */
+.tile::part(base) {
+  gap: 14px;
+}
+
+.tile::part(body) {
+  gap: 0;
+}
+
+/* Four across, a currency value and its delta on one line. kt-stat wraps the
+   delta under a long value rather than pushing it off, which is right — but a
+   single wrapped tile makes all four taller, and the extra height reads as a
+   mistake. One step down the scale is enough to keep the row on one line. */
+.tile kt-stat::part(value) {
+  font: var(--font-title-h2);
+}
+
+/* A soft-tinted chip the eye can find a tile by. It carries no meaning on its
+   own — the delta beside the value is what says whether the news is good. */
+.tile-icon {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.tile-icon.blue {
+  color: var(--chart-series-1);
+  background: color-mix(in srgb, var(--chart-series-1) 16%, transparent);
+}
+
+.tile-icon.violet {
+  color: var(--color-primary-base);
+  background: var(--color-primary-soft);
+}
+
+.tile-icon.green {
+  color: var(--color-success-base);
+  background: var(--color-success-soft);
+}
+
+.tile-icon.amber {
+  color: var(--color-warning-base);
+  background: var(--color-warning-soft);
+}
+
+.mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mini-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.mini-row + .mini-row {
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+
+.mini-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: var(--text-muted);
+  background: var(--surface-raised);
+  border-radius: 8px;
+}
+
+.mini-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.mini-title {
+  color: var(--text-body);
+  font: var(--font-normal-regular);
+}
+
+.cell-person,
+.cell-file {
+  display: flex;
+  align-items: center;
   gap: 8px;
+  min-width: 0;
+}
+
+.event-actor {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
 }
 
 .cookie-bar {
   position: fixed;
   right: 20px;
   bottom: 20px;
-  z-index: var(--z-toast);
-  max-width: 380px;
+  z-index: 40;
+  max-width: 420px;
 }
 
 /* === COMMAND PALETTE ===================================================== */
