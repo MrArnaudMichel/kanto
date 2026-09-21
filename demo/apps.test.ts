@@ -100,10 +100,12 @@ describe('the full-bleed applications', () => {
     expect(current.querySelector('.label')!.textContent!.trim()).toBe('Roles');
   });
 
-  it('has a documentation page for every application', async () => {
+  it('previews the running application on its documentation page', async () => {
     for (const slug of ['console-home', 'landing', 'chat', 'portfolio']) {
       await show(`#/apps/${slug}`);
-      expect(app.querySelector('main'), slug).not.toBeNull();
+      const frame = app.querySelector<HTMLIFrameElement>('.app-preview-frame');
+      expect(frame, slug).not.toBeNull();
+      expect(frame!.getAttribute('src'), slug).toContain('#/app/');
       expect(app.querySelector('main')!.textContent!.trim().length).toBeGreaterThan(40);
     }
   });

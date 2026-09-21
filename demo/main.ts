@@ -21,11 +21,9 @@ import { chatPage } from './apps/chat.js';
 import { portfolioPage } from './apps/portfolio.js';
 import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
+import { appPage } from './pages/app.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
-import { dashboardPage } from './pages/dashboard.js';
-import { formPage } from './pages/form.js';
-import { dataPage } from './pages/data.js';
 
 import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
@@ -36,7 +34,7 @@ registerIcons(lucide);
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'guide' | 'components' | 'examples' | 'apps';
+type Section = 'guide' | 'components' | 'apps';
 
 interface Route {
   readonly section: Section;
@@ -47,13 +45,75 @@ interface Route {
 }
 
 const SHOWCASE = [
-  { slug: 'console/home', label: 'Console', description: 'A four-section admin product.' },
-  { slug: 'landing', label: 'Landing page', description: 'Marketing, from the same elements.' },
-  { slug: 'chat', label: 'Assistant', description: 'A conversational interface.' },
+  {
+    slug: 'console/home',
+    label: 'Console',
+    description: 'A seven-screen admin product sharing one shell.',
+    notes: `## What it is
+
+An operations console: a dashboard, a mailbox, a customer table and four
+settings screens, all hanging off one shell.
+
+## What to try
+
+- The sidebar nests three levels deep under **Administration**, and it is
+  \`<kt-sub-menu-navigation>\` doing it rather than markup written for this
+  screen. Navigate to a nested page and watch the branch open itself.
+- **⌘K** anywhere opens the command palette.
+- Collapse the sidebar from the top bar: labels are hidden, not clipped.
+- On **Customers**, tick some rows to raise the bulk bar, then delete — it asks
+  first.
+`,
+  },
+  {
+    slug: 'landing',
+    label: 'Landing page',
+    description: 'Marketing, from the same elements.',
+    notes: `## What it is
+
+A marketing page, to check that a system built for data-dense tools can still
+say hello: long measure, generous rhythm, one message per band.
+
+## What to try
+
+- The pricing control really swaps the plans.
+- The FAQ is \`<kt-collapsible>\`, a disclosure rather than an accordion —
+  opening one answer does not close the one you were comparing it to.
+`,
+  },
+  {
+    slug: 'chat',
+    label: 'Assistant',
+    description: 'A conversational workspace.',
+    notes: `## What it is
+
+An assistant with the parts a real one has: a thread list, sources beside the
+answer, tool calls that show their work, and a composer with attachments and a
+model picker.
+
+## What to try
+
+- Ask anything — replies stream a token at a time, and the transcript stays
+  pinned to the bottom while they do.
+- Open a **tool call** to see the arguments and the result.
+- The sources rail on the right follows the turn you are reading.
+`,
+  },
   {
     slug: 'portfolio',
     label: 'Portfolio',
     description: 'A personal site — long measure, few controls.',
+    notes: `## What it is
+
+The third kind of screen, after the console and the marketing page: typography
+rather than density, one thing said at a time.
+
+## What to try
+
+- Filter the work, then open a case study — the panel carries a
+  \`<kt-timeline>\`, the same element as the career list on the page.
+- The contact form validates before it pretends to send.
+`,
   },
 ];
 
@@ -95,17 +155,6 @@ const GUIDE: Route[] = [
   },
 ];
 
-const EXAMPLES: Route[] = [
-  {
-    section: 'examples',
-    slug: 'dashboard',
-    label: 'Dashboard',
-    group: 'Screens',
-    page: dashboardPage,
-  },
-  { section: 'examples', slug: 'form', label: 'Form', group: 'Screens', page: formPage },
-  { section: 'examples', slug: 'data', label: 'Entities', group: 'Screens', page: dataPage },
-];
 
 const COMPONENT_ROUTES: Route[] = COMPONENTS.map((entry) => ({
   section: 'components' as const,
@@ -120,20 +169,14 @@ const APP_ROUTES: Route[] = SHOWCASE.map((entry) => ({
   slug: entry.slug.replace(/\//g, '-'),
   label: entry.label,
   group: 'Applications',
-  page: () =>
-    markdownPage(
-      `# ${entry.label}\n\n${entry.description}\n\nIt opens without the documentation chrome — [launch it](#/app/${entry.slug}).\n`,
-      'demo/apps',
-      'Apps',
-    ),
+  page: () => appPage(entry),
 }));
 
-const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...EXAMPLES, ...APP_ROUTES];
+const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...APP_ROUTES];
 
 const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
-  { id: 'examples', label: 'Examples', icon: 'layout-dashboard' },
   { id: 'apps', label: 'Apps', icon: 'app-window' },
 ];
 
