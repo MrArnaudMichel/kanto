@@ -15,6 +15,44 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - `align` on `kt-dropdown`, lining the panel up with the trigger's right edge
   instead of its left. Defaults to the existing behaviour.
 
+### Changed
+
+**`kt-chart` covers every common chart type.** It drew line, area and bar; it
+now also draws horizontal, stacked and mixed bar-and-line charts, scatter,
+bubble, pie, doughnut, polar area and radar — one element, one `type`
+attribute, one data model. Existing charts keep working unchanged.
+
+- **A value axis on every chart**, with ticks on round steps, formatted by
+  `format`. `min` and `max` pin it; `no-axis` hides it for small charts.
+- **A tooltip on every type**, bars and slices included. It opens beside a mark
+  when there is no room above it, never on top of it.
+- **The legend is a set of toggles.** Pressing an item hides the series, or the
+  slice, and rescales the chart; the other colours stay where they were.
+  `kt-series-toggle` reports it and can be cancelled.
+- **Keyboard access.** The plot is focusable; arrow keys, Home, End and Escape
+  walk the points, and the tooltip announces each one.
+- **`smooth` is a true monotone spline.** It was documented as one and drew a
+  curve with flat tangents at every sample.
+- New properties: `stacked`, `horizontal`, `min`, `max`, `no-axis`, `formatX`,
+  `center-label`, `total-label`. `KtSeries` gains `points` and `type`;
+  `KtPoint` and `KtMark` are exported. `kt-point-hover` adds `series` to its
+  detail.
+
+The rules that made the chart honest still hold, and now cover the new types:
+one value axis, bars and areas from zero, bubbles and polar slices sized by
+area, slices read from a single series, the eight categorical hues in fixed
+order, and the data always rendered as a table.
+
+### Fixed
+
+- **Bar charts no longer fuse into a wall.** Bars filled their whole band with
+  no gap between categories; groups now take 64% of it.
+- **Category labels sit under their bars.** They were placed with a line
+  chart's geometry, so the first hung off the left edge and the last was
+  clipped.
+- **Bars are square at the baseline** and rounded only at the tip, so they stand
+  on the axis instead of floating above it.
+
 ## [1.0.0] — 2026-09-12
 
 First release of Kanto, a design system for data-dense product interfaces:

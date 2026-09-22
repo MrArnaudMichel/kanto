@@ -4,9 +4,9 @@
  *
  * Write the section, run this, and the rest follows: the version is taken from
  * the changelog, the notes on the GitHub release are the ones you just wrote,
- * and publishing that release is what deploys the documentation site. There is
- * one place to edit and one command to run, which is the only arrangement that
- * stays honest over time.
+ * and publishing that release is what publishes the package to npm and deploys
+ * the documentation site. There is one place to edit and one command to run,
+ * which is the only arrangement that stays honest over time.
  *
  * Everything that can be checked is checked before anything is written, and
  * nothing is pushed until the whole verification chain has passed. `--dry-run`
@@ -146,4 +146,6 @@ const args = ['release', 'create', tag, '--title', title, '--notes-file', '-'];
 if (prerelease) args.push('--prerelease');
 execFileSync('gh', args, { cwd: root, input: notes, stdio: ['pipe', 'inherit', 'inherit'] });
 
-console.log(`\n✓ ${title} published. Publishing the release deploys the site.\n`);
+console.log(
+  `\n✓ ${title} published. Publishing the release publishes to npm and deploys the site.\n`,
+);

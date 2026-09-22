@@ -11,6 +11,12 @@ export interface DocPage {
   readonly body: TemplateResult;
   /** Path of the file this page renders, for the "Edit this page" link. */
   readonly source: string;
+  /**
+   * Headings of this page worth a place in the sidebar as well as in the
+   * contents — the versions on the release page. Listed under `group`, below
+   * the section's own pages.
+   */
+  readonly sidebar?: { readonly group: string; readonly items: readonly Heading[] };
 }
 
 /**

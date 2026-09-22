@@ -1,14 +1,36 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'lit';
 import { clearReleaseCache } from '../lib/github.js';
+import { INSTALL_COMMAND, VERSION, VERSION_TAG } from '../lib/project.js';
 import { releasePage, resetReleaseState } from './release.js';
 
-const CHANGELOG = '# Changelog\n\nAll notable changes are documented here.\n';
+/**
+ * A changelog whose newest section is the version the manifest says is
+ * current, so the tests follow `package.json` instead of pinning a number.
+ */
+const CHANGELOG = `# Changelog
+
+All notable changes are documented here.
+
+## [${VERSION}] — 2026-09-15
+
+### Added
+
+- \`kt-split-button\`, a primary action with a menu.
+
+## [0.9.0] — 2026-08-01
+
+The first preview.
+
+### Fixed
+
+- Something that was broken.
+`;
 
 /** Renders the page as it stands and returns the resulting DOM. */
-function paint(): HTMLElement {
+function paint(changelog = CHANGELOG): HTMLElement {
   const host = document.createElement('div');
-  render(releasePage(CHANGELOG).body, host);
+  render(releasePage(changelog).body, host);
   return host;
 }
 
@@ -21,33 +43,65 @@ const ok = (payload: unknown) =>
 const failed = (status: number) =>
   ({ ok: false, status, headers: new Headers(), json: async () => ({}) }) as Response;
 
+const pending = () => vi.fn(() => new Promise<Response>(() => {}));
+
+const history = (host: HTMLElement) =>
+  [...host.querySelectorAll('kt-timeline-item')].map((item) => item.getAttribute('heading'));
+
+const sections = (host: HTMLElement) =>
+  [...host.querySelectorAll('.release-entry h3')].map((heading) => heading.textContent!.trim());
+
 describe('the release page', () => {
   beforeEach(() => {
     clearReleaseCache();
     resetReleaseState();
   });
 
-  it('shows skeletons while it is asking', () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() => new Promise<Response>(() => {})),
-    );
+  it('shows the history from the changelog straight away, without waiting on GitHub', () => {
+    vi.stubGlobal('fetch', pending());
     const host = paint();
-    expect(host.querySelectorAll('kt-skeleton').length).toBeGreaterThan(0);
+
+    expect(history(host)).toEqual([VERSION_TAG, 'v0.9.0']);
+    expect(host.querySelectorAll('kt-skeleton')).toHaveLength(0);
   });
 
-  it('lists what the repository actually returned', async () => {
+  it('leads with the current release and the command to install it', () => {
+    vi.stubGlobal('fetch', pending());
+    const current = paint().querySelector('.release-current')!;
+
+    expect(current.querySelector('.release-current-tag')!.textContent).toBe(VERSION_TAG);
+    expect(current.querySelector('kt-code')!.textContent).toContain(INSTALL_COMMAND);
+    expect(current.textContent).toContain('15 September 2026');
+  });
+
+  it('gives each version its notes once, in its own section', () => {
+    vi.stubGlobal('fetch', pending());
+    const host = paint();
+
+    expect(sections(host)).toEqual([VERSION_TAG, 'v0.9.0']);
+    expect(host.textContent!.match(/Something that was broken/g)).toHaveLength(1);
+  });
+
+  it('lists the versions in the contents, not every "Added" and "Fixed"', () => {
+    vi.stubGlobal('fetch', pending());
+    const { headings } = releasePage(CHANGELOG);
+
+    const texts = headings.map((heading) => heading.text);
+    expect(texts).toEqual(['Current release', 'History', 'Release notes', VERSION_TAG, 'v0.9.0']);
+    expect(texts).not.toContain('Added');
+  });
+
+  it('takes the date and the notes from GitHub once it answers', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () =>
         ok([
           {
-            tag_name: 'v1.1.0',
-            name: 'Meter and page header',
-            published_at: '2026-10-02T14:00:00Z',
-            body: '## Added\n- `kt-meter`',
+            tag_name: VERSION_TAG,
+            published_at: '2026-09-16T09:00:00Z',
+            body: '## Added\n\n- Written on GitHub.',
           },
-          { tag_name: 'v1.0.0', published_at: '2026-09-09T09:00:00Z', body: '' },
+          { tag_name: 'v0.9.0', published_at: '2026-08-01T09:00:00Z', body: '' },
         ]),
       ),
     );
@@ -56,37 +110,46 @@ describe('the release page', () => {
     await settle();
     const host = paint();
 
-    const cards = [...host.querySelectorAll('.release-version')].map((e) => e.textContent!.trim());
-    expect(cards).toEqual(['v1.1.0', 'v1.0.0']);
-    expect(host.textContent).toContain('2 October 2026');
-    expect(host.textContent).toContain('kt-meter');
-    // The newest one is the current one; nothing here is hard-coded.
-    expect(host.querySelector('kt-badge')!.textContent).toContain('Latest');
+    expect(host.querySelector('.release-current')!.textContent).toContain('16 September 2026');
+    expect(host.textContent).toContain('Written on GitHub.');
+    // An empty body on GitHub does not erase what the changelog says.
+    expect(host.textContent).toContain('Something that was broken');
+    expect(host.querySelector('.release-current kt-badge')!.textContent).toContain('Latest');
   });
 
-  it('says a tag with no notes has none, rather than showing an empty card', async () => {
+  it('says when the current version is in the changelog but not tagged yet', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ok([{ tag_name: 'v0.9.0', body: '   ' }])),
+      vi.fn(async () => ok([{ tag_name: 'v0.9.0', body: 'Old.' }])),
     );
+
     paint();
     await settle();
-    expect(paint().textContent).toContain('No notes were written for this tag');
+    const badge = paint().querySelector('.release-current kt-badge')!;
+
+    expect(badge.textContent).toContain('Not tagged yet');
   });
 
-  it('falls back to the changelog, and says why, when GitHub cannot be read', async () => {
+  it('keeps the whole history when GitHub cannot be read, and says why in one line', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => failed(404)),
     );
+
     paint();
     await settle();
     const host = paint();
 
-    expect(host.querySelector('.release-grid')).toBeNull();
-    expect(host.querySelector('kt-alert')!.getAttribute('description')).toContain('not public yet');
-    // The reason someone came to this page is still on it.
-    expect(host.querySelector('.prose')!.textContent).toContain('All notable changes');
+    expect(history(host)).toEqual([VERSION_TAG, 'v0.9.0']);
+    expect(host.querySelector('.release-source')!.textContent).toContain('not public yet');
+    expect(host.querySelector('kt-alert')).toBeNull();
+  });
+
+  it('says a version with no notes has none, rather than leaving a blank', () => {
+    vi.stubGlobal('fetch', pending());
+    const host = paint(`## [${VERSION}] — 2026-09-15\n`);
+
+    expect(host.querySelector('.release-entry')!.textContent).toContain('No notes were written');
   });
 
   it('asks once, however many times it renders', async () => {

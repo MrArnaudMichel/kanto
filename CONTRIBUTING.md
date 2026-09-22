@@ -106,10 +106,19 @@ free, in step with origin, `gh` authenticated, and the whole `verify` chain
 green. Only then does it bump `package.json`, commit `chore(release): 1.1.0`,
 tag `v1.1.0`, push, and create the GitHub release.
 
-Publishing that release deploys the documentation site — the site follows the
-releases, so what a reader sees is the system as it shipped. The **Documentation
+Publishing that release publishes the package to npm (the **Publish to npm**
+workflow) and deploys the documentation site — both follow the releases, so what
+a reader installs and reads is the system as it shipped. The **Documentation
 site** workflow also runs by hand from the Actions tab, which rebuilds the
 latest release, or any ref you pass it.
+
+### Setting up npm, once
+
+The workflow publishes without a token: npm trusts it directly. On npmjs.com,
+**kanto-ds → Settings → Trusted Publisher → GitHub Actions**, with the owner
+`MrArnaudMichel`, the repository `kanto` and the workflow `publish.yml`. The
+package has to exist before it can be configured, which is why 1.0.0 was
+published by hand.
 
 ### Setting up Pages, once
 

@@ -122,7 +122,11 @@ export function consoleHome(): TemplateResult {
   // Scale so the headline matches the Revenue tile above it rather than
   // quoting a second, unexplained number.
   const scale = 292342 / values.reduce((sum, n) => sum + n, 0);
-  const hoveredValue = state.hovered >= 0 ? values[state.hovered] : undefined;
+  // The chart gets the dollar amounts themselves, not an index formatted into
+  // dollars: its axis ticks land on round values of whatever it is given, so
+  // only real amounts give round dollar ticks.
+  const revenue = values.map((n) => Math.round(n * scale));
+  const hoveredValue = state.hovered >= 0 ? revenue[state.hovered] : undefined;
 
   const body = html`
     <kt-page-header
@@ -196,11 +200,7 @@ export function consoleHome(): TemplateResult {
       <div slot="header">
         <div class="overline">Revenue</div>
         <div style="font:var(--font-title-h1);line-height:1.1">
-          ${
-            hoveredValue === undefined
-              ? currency.format(292342)
-              : currency.format(hoveredValue * scale)
-          }
+          ${hoveredValue === undefined ? currency.format(292342) : currency.format(hoveredValue)}
         </div>
         <div class="muted" style="font:var(--font-normal-small)">
           ${
@@ -220,8 +220,8 @@ export function consoleHome(): TemplateResult {
               smooth
               label="Revenue over the selected period"
               .labels=${labels}
-              .series=${[{ name: 'Revenue', values }]}
-              .format=${(n: number) => currency.format(n * scale)}
+              .series=${[{ name: 'Revenue', values: revenue }]}
+              .format=${(n: number) => currency.format(n)}
               @kt-point-hover=${(e: CustomEvent<{ index: number }>) => {
                 state.hovered = e.detail.index;
                 rerender();

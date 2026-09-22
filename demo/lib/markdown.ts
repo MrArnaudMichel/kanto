@@ -133,13 +133,33 @@ export function renderDoc(source: string): RenderedDoc {
  * the same privileges as the docs themselves. Dropping the `html` tokens is the
  * precise fix: every other construct still renders, and there is no HTML left
  * to insert. Headings get no anchors either, since these are not page sections.
+ *
+ * `headingBase` places the notes under a heading of the page: the shallowest
+ * heading in the source becomes that level and the rest keep their distance
+ * from it. The changelog nests its sections at `###` and a GitHub release body
+ * usually at `##`, and without this the same "Fixed" would render at two
+ * different sizes depending on which source answered.
  */
-export function renderUntrustedMarkdown(source: string): string {
+export function renderUntrustedMarkdown(
+  source: string,
+  { headingBase }: { headingBase?: number } = {},
+): string {
+  // From the lexer rather than a regex over lines, so a `#` comment inside a
+  // fenced block is not mistaken for a heading.
+  const depths = new Marked()
+    .lexer(source)
+    .flatMap((token) => (token.type === 'heading' ? [(token as Tokens.Heading).depth] : []));
+  const shift = headingBase && depths.length > 0 ? headingBase - Math.min(...depths) : 0;
+
   const marked = new Marked({
     gfm: true,
     breaks: false,
     renderer: {
       html: () => '',
+      heading({ depth, tokens }: Tokens.Heading) {
+        const level = Math.min(Math.max(depth + shift, 1), 6);
+        return `<h${level}>${this.parser.parseInline(tokens)}</h${level}>`;
+      },
       code({ text }: Tokens.Code) {
         return `<kt-code>${escapeHtml(text)}</kt-code>`;
       },

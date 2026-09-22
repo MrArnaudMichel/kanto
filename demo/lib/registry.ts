@@ -122,27 +122,219 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-timeline-item heading="Branch opened" time="08:41"></kt-timeline-item>
     </kt-timeline>`,
 
-  'kt-chart': () =>
-    html`<div class="demo-stack" style="max-width:100%">
-      <kt-chart
-        label="Revenue by month"
-        height="200"
-        smooth
-        .labels=${MONTHS}
-        .series=${[{ name: 'Revenue', values: monthlyRevenue(7) }]}
-        .format=${(n: number) => `$${(n * 220).toLocaleString('en-US')}`}
-      ></kt-chart>
-      <kt-chart
-        type="bar"
-        label="Orders by region"
-        height="160"
-        .labels=${['North East', 'South West', 'Midlands', 'North West']}
-        .series=${[
-          { name: 'This quarter', values: [42, 58, 36, 71] },
-          { name: 'Last quarter', values: [38, 44, 41, 55] },
-        ]}
-      ></kt-chart>
-    </div>`,
+  'kt-chart': () => {
+    const money = (n: number) => `$${n}k`;
+    const figure = (name: string, note: string, chart: TemplateResult) =>
+      html`<figure class="chart-figure">
+        <figcaption>
+          <span class="chart-figure-name">${name}</span>
+          <span class="chart-figure-note">${note}</span>
+        </figcaption>
+        ${chart}
+      </figure>`;
+
+    return html`<div class="chart-gallery">
+      ${figure(
+        'Line',
+        'A measure over time, where the shape of the change is the point.',
+        html`<kt-chart
+          type="line"
+          label="Revenue and costs by month"
+          height="220"
+          .labels=${MONTHS}
+          .series=${[
+            { name: 'Revenue', values: monthlyRevenue(7) },
+            { name: 'Costs', values: monthlyRevenue(3).map((n) => Math.round(n * 0.62)) },
+          ]}
+          .format=${money}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Stacked area',
+        'Parts of a total over time: how big it is, and what it is made of.',
+        html`<kt-chart
+          type="area"
+          stacked
+          smooth
+          label="Visits by channel"
+          height="220"
+          .labels=${MONTHS.slice(0, 8)}
+          .series=${[
+            { name: 'Search', values: [42, 46, 51, 49, 58, 62, 60, 67] },
+            { name: 'Direct', values: [30, 31, 29, 35, 34, 38, 41, 40] },
+            { name: 'Social', values: [12, 15, 14, 18, 22, 21, 25, 28] },
+          ]}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Bar',
+        'Comparing categories. Bars always start at zero.',
+        html`<kt-chart
+          type="bar"
+          label="Orders by region"
+          height="220"
+          .labels=${['North East', 'South West', 'Midlands', 'North West']}
+          .series=${[
+            { name: 'This quarter', values: [42, 58, 36, 71] },
+            { name: 'Last quarter', values: [38, 44, 41, 55] },
+          ]}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Horizontal bar',
+        'For long category names, or a ranking read top to bottom.',
+        html`<kt-chart
+          type="bar"
+          horizontal
+          label="Median hours to resolve, by team"
+          height="220"
+          .labels=${['Payments', 'Identity', 'Infrastructure', 'Mobile', 'Growth']}
+          .series=${[{ name: 'Hours', values: [6.5, 4.2, 11.8, 8.1, 3.4] }]}
+          .format=${(n: number) => `${n}h`}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Stacked bar',
+        'A total per category, split into parts. The tooltip gives the sum.',
+        html`<kt-chart
+          type="bar"
+          stacked
+          label="Tickets by status, per week"
+          height="220"
+          .labels=${['W14', 'W15', 'W16', 'W17', 'W18', 'W19']}
+          .series=${[
+            { name: 'Resolved', values: [38, 44, 41, 52, 47, 58] },
+            { name: 'Pending', values: [12, 9, 15, 11, 14, 8] },
+            { name: 'Escalated', values: [4, 6, 3, 5, 2, 4] },
+          ]}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Mixed',
+        'Bars for the measure, a line for what it is held against.',
+        html`<kt-chart
+          type="bar"
+          label="Signups against target"
+          height="220"
+          .labels=${MONTHS.slice(0, 6)}
+          .series=${[
+            { name: 'Signups', values: [320, 410, 380, 520, 490, 610] },
+            { name: 'Target', values: [400, 420, 440, 460, 480, 500], type: 'line' },
+          ]}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Scatter',
+        'Whether two measures move together. Neither axis is forced through zero.',
+        html`<kt-chart
+          type="scatter"
+          label="Deal size against days to close"
+          height="220"
+          .series=${[
+            {
+              name: 'Self-serve',
+              points: [
+                [8, 4],
+                [12, 6],
+                [15, 5],
+                [21, 9],
+                [9, 3],
+                [18, 7],
+                [25, 8],
+                [14, 6],
+              ].map(([x, y]) => ({ x: x!, y: y! })),
+            },
+            {
+              name: 'Sales-led',
+              points: [
+                [34, 22],
+                [48, 31],
+                [41, 27],
+                [62, 44],
+                [55, 36],
+                [70, 52],
+                [38, 25],
+              ].map(([x, y]) => ({ x: x!, y: y! })),
+            },
+          ]}
+          .format=${money}
+          .formatX=${(n: number) => `${n}d`}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Bubble',
+        'A third measure as size. Area carries the value, not the radius.',
+        html`<kt-chart
+          type="bubble"
+          label="Markets by growth, margin and revenue"
+          height="220"
+          .series=${[
+            {
+              name: 'Markets',
+              points: [
+                { x: 4, y: 18, r: 120, label: 'France' },
+                { x: 9, y: 24, r: 64, label: 'Germany' },
+                { x: 14, y: 12, r: 30, label: 'Spain' },
+                { x: 6, y: 31, r: 88, label: 'United Kingdom' },
+                { x: 18, y: 21, r: 16, label: 'Portugal' },
+              ],
+            },
+          ]}
+          .format=${(n: number) => `${n}%`}
+          .formatX=${(n: number) => `${n}%`}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Pie',
+        'A few parts of one whole. Past five slices, reach for a bar.',
+        html`<kt-chart
+          type="pie"
+          label="Traffic by source"
+          height="220"
+          .labels=${['Search', 'Direct', 'Social', 'Referral']}
+          .series=${[{ name: 'Visits', values: [412, 298, 120, 64] }]}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Doughnut',
+        'A pie with room for the total in the middle.',
+        html`<kt-chart
+          type="doughnut"
+          label="Storage by file type"
+          center-label="Used"
+          height="220"
+          .labels=${['Video', 'Images', 'Documents', 'Other']}
+          .series=${[{ name: 'Storage', values: [182, 96, 41, 23] }]}
+          .format=${(n: number) => `${n} GB`}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Polar area',
+        'Cyclic categories compared by size. The area encodes the value.',
+        html`<kt-chart
+          type="polar-area"
+          label="Support conversations by channel"
+          height="220"
+          .labels=${['Chat', 'Email', 'Phone', 'Forum', 'Social']}
+          .series=${[{ name: 'Conversations', values: [340, 210, 96, 150, 58] }]}
+        ></kt-chart>`,
+      )}
+      ${figure(
+        'Radar',
+        'A profile across several measures of the same scale.',
+        html`<kt-chart
+          type="radar"
+          label="Plans compared"
+          height="220"
+          .labels=${['Speed', 'Storage', 'Support', 'Security', 'Integrations', 'Price']}
+          .series=${[
+            { name: 'Pro', values: [72, 60, 55, 80, 65, 70] },
+            { name: 'Enterprise', values: [90, 95, 90, 95, 88, 40] },
+          ]}
+        ></kt-chart>`,
+      )}
+    </div>`;
+  },
 
   'kt-modal': () =>
     html`<div class="demo-row">

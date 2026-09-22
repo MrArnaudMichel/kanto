@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
+import { VERSION_TAG } from './lib/project.js';
 
 /**
  * Mounts the whole documentation site once and inspects what came out.
@@ -66,6 +67,23 @@ describe('the documentation shell', () => {
 
     expect(ids.length).toBeGreaterThan(2);
     for (const id of ids) {
+      expect(app.querySelector(`#${CSS.escape(id)}`), id).not.toBeNull();
+    }
+  });
+
+  it('lists every version in the sidebar on the release page, each pointing at its notes', async () => {
+    location.hash = '#/release/releases';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const group = [...app.querySelectorAll('.sidebar-group')].find(
+      (candidate) => candidate.querySelector('.overline')!.textContent!.trim() === 'Versions',
+    );
+    expect(group, 'a Versions group').toBeDefined();
+
+    const links = [...group!.querySelectorAll('a')];
+    expect(links.map((link) => link.textContent!.trim())).toContain(VERSION_TAG);
+    for (const link of links) {
+      const id = link.getAttribute('href')!.split('#').pop()!;
       expect(app.querySelector(`#${CSS.escape(id)}`), id).not.toBeNull();
     }
   });

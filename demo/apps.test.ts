@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
+import { NPM_URL, REPO_URL, VERSION_TAG } from './lib/project.js';
 
 /**
  * Mounts every full-bleed application once.
@@ -111,14 +112,14 @@ describe('the full-bleed applications', () => {
   });
 
   it('links the release page to the repository, and ships the changelog either way', async () => {
-    // The version list is fetched, so it may be a list, a set of skeletons or
-    // the fallback depending on what GitHub said. What must always be here is
-    // the way out to the repository and the changelog itself.
+    // GitHub may or may not answer here. Either way the history comes from the
+    // changelog this repository ships, so the version the manifest names is on
+    // the page, with the way out to the repository and to npm.
     await show('#/release/releases');
 
     const links = [...app.querySelectorAll<HTMLAnchorElement>('a')].map((a) => a.href);
-    expect(links.some((h) => h.includes('github.com/MrArnaudMichel/kanto'))).toBe(true);
-    expect(links.some((h) => h.includes('npmjs.com/package/kanto-ds'))).toBe(true);
-    expect(app.querySelector('.prose')!.textContent).toContain('Changelog');
+    expect(links.some((h) => h.includes(REPO_URL))).toBe(true);
+    expect(links.some((h) => h.includes(NPM_URL))).toBe(true);
+    expect(app.querySelector('.release-current-tag')!.textContent).toBe(VERSION_TAG);
   });
 });

@@ -8,6 +8,8 @@ import './shell.css';
 import './apps.css';
 
 import { COMPONENTS } from './lib/registry.js';
+import { REPO_URL, VERSION_TAG } from './lib/project.js';
+import { activeSection, railPosition, readingStops } from './lib/progress.js';
 import { setRenderer } from './lib/render.js';
 import { consoleHome } from './apps/console/home.js';
 import { consoleInbox } from './apps/console/inbox.js';
@@ -262,7 +264,20 @@ function applyTheme(theme: Theme): void {
 
 /* ------------------------------------------------------------------ layout */
 
-function sidebar(route: Route): TemplateResult {
+/**
+ * Scrolls to a heading of the current page. The site routes on the hash, so an
+ * in-page link cannot simply be `#id` — that would navigate away.
+ */
+function jumpToHeading(event: Event, id: string): void {
+  event.preventDefault();
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  activeHeading = id;
+  update();
+}
+
+const headingHref = (id: string) => `${location.hash.split('#').slice(0, 2).join('#')}#${id}`;
+
+function sidebar(route: Route, page?: DocPage): TemplateResult {
   const inSection = ROUTES.filter((candidate) => candidate.section === route.section);
   const needle = filter.trim().toLowerCase();
   const matches = needle
@@ -270,6 +285,11 @@ function sidebar(route: Route): TemplateResult {
     : inSection;
 
   const groups = [...new Set(matches.map((candidate) => candidate.group))];
+
+  const extra = page?.sidebar;
+  const extraItems = (extra?.items ?? []).filter((item) =>
+    item.text.toLowerCase().includes(needle),
+  );
 
   return html`<aside class="sidebar">
     <div class="sidebar-filter">
@@ -289,7 +309,7 @@ function sidebar(route: Route): TemplateResult {
 
     <nav class="sidebar-nav" aria-label="${route.section} navigation">
       ${
-        matches.length === 0
+        matches.length === 0 && extraItems.length === 0
           ? html`<p class="muted sidebar-empty">Nothing matches “${filter}”.</p>`
           : groups.map(
               (group) =>
@@ -313,6 +333,26 @@ function sidebar(route: Route): TemplateResult {
                 </div>`,
             )
       }
+      ${
+        extra && extraItems.length > 0
+          ? html`<div class="sidebar-group">
+              <div class="overline">${extra.group}</div>
+              <ul>
+                ${extraItems.map(
+                  (item) =>
+                    html`<li>
+                      <a
+                        class=${classMap({ active: item.id === activeHeading })}
+                        href=${headingHref(item.id)}
+                        @click=${(event: Event) => jumpToHeading(event, item.id)}
+                        >${item.text}</a
+                      >
+                    </li>`,
+                )}
+              </ul>
+            </div>`
+          : ''
+      }
     </nav>
   </aside>`;
 }
@@ -330,13 +370,8 @@ function tableOfContents(page: DocPage): TemplateResult {
               html`<li class=${`level-${heading.level}`}>
                 <a
                   class=${classMap({ active: heading.id === activeHeading })}
-                  href=${`${location.hash.split('#').slice(0, 2).join('#')}#${heading.id}`}
-                  @click=${(event: Event) => {
-                    event.preventDefault();
-                    document.getElementById(heading.id)?.scrollIntoView({ behavior: 'smooth' });
-                    activeHeading = heading.id;
-                    update();
-                  }}
+                  href=${headingHref(heading.id)}
+                  @click=${(event: Event) => jumpToHeading(event, heading.id)}
                   >${heading.text}</a
                 >
               </li>`,
@@ -345,11 +380,7 @@ function tableOfContents(page: DocPage): TemplateResult {
       </nav>
 
       <div class="toc-links">
-        <a
-          href=${`https://github.com/MrArnaudMichel/kanto/blob/main/${page.source}`}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a href=${`${REPO_URL}/blob/main/${page.source}`} target="_blank" rel="noreferrer">
           <kt-icon name="pencil" size="14"></kt-icon> Edit this page
         </a>
       </div>
@@ -358,7 +389,7 @@ function tableOfContents(page: DocPage): TemplateResult {
 }
 
 function docLayout(route: Route, page: DocPage): TemplateResult {
-  return html`${sidebar(route)}
+  return html`${sidebar(route, page)}
     <main>
       <article class="doc">
         <div class="doc-head">
@@ -370,7 +401,7 @@ function docLayout(route: Route, page: DocPage): TemplateResult {
                 size="small"
                 variant="dark"
                 icon="git-branch"
-                @click=${() => window.open('https://github.com/MrArnaudMichel/kanto', '_blank')}
+                @click=${() => window.open(REPO_URL, '_blank')}
                 >GitHub</kt-button
               >
               <kt-button
@@ -405,7 +436,7 @@ function shell(): TemplateResult {
       <!-- In the brand slot, not the default one: the header centres the
            default slot as a group, and a version chip belongs beside the
            wordmark rather than beside the sections. -->
-      <kt-badge slot="brand" variant="code">v1.0.0</kt-badge>
+      <kt-badge slot="brand" variant="code">${VERSION_TAG}</kt-badge>
 
       <nav class="top-nav">
         ${SECTIONS.map(
@@ -437,7 +468,7 @@ function shell(): TemplateResult {
           variant="secondary-no-bg"
           icon="git-branch"
           label="GitHub"
-          @click=${() => window.open('https://github.com/MrArnaudMichel/kanto', '_blank')}
+          @click=${() => window.open(REPO_URL, '_blank')}
         ></kt-button>
       </div>
 
@@ -462,18 +493,71 @@ function shell(): TemplateResult {
 
 function update(): void {
   render(shell(), document.querySelector<HTMLElement>('#app')!);
+  // The rail's entries only exist once rendered, and a page that does not
+  // scroll would otherwise never place its fill.
+  trackReading();
 }
 
-/** Highlights the heading currently under the top of the viewport. */
-function trackHeadings(): void {
-  const headings = [...document.querySelectorAll<HTMLElement>('main h2[id], main h3[id]')];
-  if (headings.length === 0) return;
+/** How far below the top of the viewport a heading counts as being read. */
+const READING_LINE = 120;
 
-  const top = window.scrollY + 120;
-  const current = headings.filter((heading) => heading.offsetTop <= top).pop() ?? headings[0]!;
+/**
+ * Follows the reader down the page: lights the contents entry for the section
+ * being read, and moves the rail's marker.
+ *
+ * Both come from one set of stops (see `lib/progress.ts`), measured in scroll
+ * positions — a section arrives at the scroll offset that brings its heading
+ * to the reading line. Computing them once for both is what keeps the fill
+ * and the lit entry from ever disagreeing, which they did as soon as the fill
+ * was a percentage of the page and the highlight a heading test.
+ *
+ * The marker goes straight to a custom property rather than through a
+ * re-render: this runs on every scroll frame, and re-rendering the page at
+ * that rate to move a 2px bar is not a trade worth making. Only a change of
+ * section re-renders.
+ */
+function trackReading(): void {
+  const nav = document.querySelector<HTMLElement>('.toc nav');
+  if (!nav) return;
 
-  if (current.id !== activeHeading) {
-    activeHeading = current.id;
+  const navTop = nav.getBoundingClientRect().top;
+  const entries = [...nav.querySelectorAll<HTMLAnchorElement>('a')].flatMap((link) => {
+    const id = link.getAttribute('href')?.split('#').pop() ?? '';
+    const heading = document.getElementById(id);
+    if (!heading) return [];
+
+    const box = link.getBoundingClientRect();
+    return [
+      {
+        id,
+        section: heading.getBoundingClientRect().top + window.scrollY - READING_LINE,
+        centre: box.top - navTop + box.height / 2,
+      },
+    ];
+  });
+  if (entries.length === 0) return;
+
+  const stops = readingStops(
+    entries.map((entry) => entry.section),
+    document.documentElement.scrollHeight - window.innerHeight,
+  );
+
+  // The marker is one entry tall and centred on its position, kept inside the rail.
+  const size = nav.querySelector('a')?.getBoundingClientRect().height ?? 0;
+  const centre = railPosition(
+    window.scrollY,
+    stops,
+    entries.map((entry) => entry.centre),
+  );
+  const top = Math.min(Math.max(centre - size / 2, 0), nav.offsetHeight - size);
+  nav.style.setProperty('--toc-marker-top', `${top}px`);
+  nav.style.setProperty('--toc-marker-size', `${size}px`);
+
+  // Before the first section arrives, the first entry is still the one to show.
+  const index = activeSection(window.scrollY, stops);
+  const current = entries[Math.max(index, 0)]!.id;
+  if (current !== activeHeading) {
+    activeHeading = current;
     update();
   }
 }
@@ -517,7 +601,7 @@ window.addEventListener(
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      trackHeadings();
+      trackReading();
       ticking = false;
     });
   },

@@ -62,3 +62,36 @@ describe('renderUntrustedMarkdown', () => {
     expect(out).not.toContain('<script>');
   });
 });
+
+describe('renderUntrustedMarkdown under a heading of the page', () => {
+  it('moves the shallowest heading to the level it is given, keeping the rest in step', () => {
+    const out = renderUntrustedMarkdown('## Added\n\n#### Detail\n\n- x', { headingBase: 4 });
+
+    expect(out).toContain('<h4');
+    expect(out).toContain('<h6');
+    expect(out).not.toContain('<h2');
+  });
+
+  it('treats a changelog section and a GitHub release body alike', () => {
+    // The changelog nests its sections at ###, a release body usually at ##.
+    // Under the same page heading they must come out at the same level.
+    const fromChangelog = renderUntrustedMarkdown('### Fixed\n\n- y', { headingBase: 4 });
+    const fromGitHub = renderUntrustedMarkdown('## Fixed\n\n- y', { headingBase: 4 });
+
+    expect(fromChangelog).toBe(fromGitHub);
+  });
+
+  it('never goes deeper than h6', () => {
+    const out = renderUntrustedMarkdown('# A\n\n### B', { headingBase: 5 });
+
+    expect(out).toContain('<h5');
+    expect(out).toContain('<h6');
+    expect(out).not.toContain('<h7');
+  });
+
+  it('ignores a hash inside a code block when working out the levels', () => {
+    const out = renderUntrustedMarkdown('```sh\n# a comment\n```\n\n## Added', { headingBase: 4 });
+
+    expect(out).toContain('<h4');
+  });
+});

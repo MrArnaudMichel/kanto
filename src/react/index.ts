@@ -344,7 +344,10 @@ export const KtChart = createComponent({
   tagName: 'kt-chart',
   elementClass: KtChartElement,
   react: React,
-  events: { onKtPointHover: 'kt-point-hover' as Kt<{ index: number }> },
+  events: {
+    onKtPointHover: 'kt-point-hover' as Kt<{ index: number; series: number }>,
+    onKtSeriesToggle: 'kt-series-toggle' as Kt<{ series: number; hidden: boolean }>,
+  },
 });
 
 export const KtTable = createComponent({

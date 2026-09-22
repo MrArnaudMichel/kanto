@@ -1,15 +1,15 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { renderDoc, renderUntrustedMarkdown } from '../lib/markdown.js';
+import { renderUntrustedMarkdown, type Heading } from '../lib/markdown.js';
 import { rerender } from '../lib/render.js';
 import {
-  REPO_URL,
   clearReleaseCache,
   fetchReleases,
-  formatReleaseDate,
   type Release,
   type ReleaseFailure,
 } from '../lib/github.js';
+import { INSTALL_COMMAND, NPM_URL, REPO_URL, VERSION_TAG } from '../lib/project.js';
+import { mergeReleases, parseChangelog, summarize, type ReleaseEntry } from '../lib/releases.js';
 import type { DocPage } from './component.js';
 
 export const REPO = REPO_URL;
@@ -17,32 +17,40 @@ export const REPO = REPO_URL;
 /**
  * The release page.
  *
- * The list comes from the repository's own releases rather than from a copy
- * kept here: a hand-written list is a promise to keep it in step with the tags,
- * and that promise is always broken eventually.
+ * One history, read in three passes: the release you would install today, a
+ * rail of every version to scan, then each version's notes at a reading
+ * measure. The history is the changelog and GitHub folded together (see
+ * `lib/releases.ts`), so the page is complete from the first paint — the
+ * changelog ships with the site — and GitHub only sharpens it when it answers:
+ * the date a tag was actually published, the notes written on the release.
  *
- * The changelog underneath is this repository's own file, and it is also what
- * the page falls back to when GitHub cannot be reached. Somebody arriving to
- * find out what changed should be told what changed, not shown an error where
- * the content was supposed to be.
+ * It used to render GitHub's notes in cards and then the whole changelog
+ * underneath, which is the same text twice, the first time in a type size
+ * meant for captions.
  */
 
 type Status = 'idle' | 'loading' | 'ready' | 'failed';
 
 const state = {
   status: 'idle' as Status,
-  releases: [] as readonly Release[],
+  releases: null as readonly Release[] | null,
   reason: 'unavailable' as ReleaseFailure,
 };
 
 const EXPLANATION: Record<ReleaseFailure, string> = {
   offline: 'GitHub could not be reached from this browser.',
-  'rate-limited':
-    'GitHub is rate-limiting anonymous requests from this network. It clears within the hour.',
-  'not-published': 'This repository is not public yet, so it has no releases to read.',
-  'none-yet': 'The repository is public but has not been tagged yet.',
-  unavailable: 'GitHub answered, but not with a list of releases.',
+  'rate-limited': 'GitHub is rate-limiting this network; it clears within the hour.',
+  'not-published': 'the repository is not public yet.',
+  'none-yet': 'nothing has been tagged on GitHub yet.',
+  unavailable: 'GitHub did not answer with a list of releases.',
 };
+
+/** Forgets what was fetched. For the tests, which run several pages' worth. */
+export function resetReleaseState(): void {
+  state.status = 'idle';
+  state.releases = null;
+  state.reason = 'unavailable';
+}
 
 /**
  * Starts the one fetch this page makes.
@@ -52,13 +60,6 @@ const EXPLANATION: Record<ReleaseFailure, string> = {
  * fetch, resolve from cache, re-render, and start another — a render loop that
  * spins the tab at full speed. Retrying is the button's job, not the render's.
  */
-/** Forgets what was fetched. For the tests, which run several pages' worth. */
-export function resetReleaseState(): void {
-  state.status = 'idle';
-  state.releases = [];
-  state.reason = 'unavailable';
-}
-
 function load(): void {
   if (state.status !== 'idle') return;
 
@@ -77,162 +78,176 @@ function load(): void {
 
 function retry(): void {
   clearReleaseCache();
-  state.status = 'idle';
-  state.releases = [];
+  resetReleaseState();
   load();
   rerender();
 }
 
-function skeletons(): TemplateResult {
-  return html`<div class="release-grid">
-    ${[0, 1, 2].map(
-      () => html`
-        <kt-card>
-          <div slot="header" class="row" style="justify-content:space-between">
-            <kt-skeleton variant="text" width="80px"></kt-skeleton>
-            <kt-skeleton variant="text" width="56px"></kt-skeleton>
-          </div>
-          <kt-skeleton variant="text"></kt-skeleton>
-          <kt-skeleton variant="text" width="70%"></kt-skeleton>
-        </kt-card>
-      `,
-    )}
-  </div>`;
+/* ------------------------------------------------------------------ pieces */
+
+/** `v1.0.1` → `notes-v1-0-1`. Prefixed so a tag can never collide with a page section. */
+const anchorFor = (tag: string) => `notes-${tag.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
+
+/**
+ * In-page links go through `scrollIntoView`: the site routes on the hash, so a
+ * bare `#notes-v1-0-1` would navigate away from the page instead of down it.
+ */
+function jumpTo(id: string, label: TemplateResult | string): TemplateResult {
+  return html`<a
+    href=${`${location.hash.split('#').slice(0, 2).join('#')}#${id}`}
+    @click=${(event: Event) => {
+      event.preventDefault();
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }}
+    >${label}</a
+  >`;
 }
 
-function releaseCard(release: Release, index: number): TemplateResult {
-  const date = formatReleaseDate(release.publishedAt);
-
-  return html`
-    <kt-card>
-      <div slot="header" class="row" style="justify-content:space-between">
-        <span class="release-version">${release.tag}</span>
-        ${
-          release.prerelease
-            ? html`<kt-badge tone="warning" size="small">Pre-release</kt-badge>`
-            : index === 0
-              ? html`<kt-badge tone="success" size="small">Latest</kt-badge>`
-              : html`<kt-badge size="small">Archived</kt-badge>`
-        }
-      </div>
-
-      ${
-        release.name !== release.tag
-          ? html`<span class="release-name">${release.name}</span>`
-          : nothing
-      }
-      ${
-        release.body.trim() === ''
-          ? html`<p class="muted" style="margin:0">No notes were written for this tag.</p>`
-          : html`<div class="prose release-notes">
-              ${unsafeHTML(renderUntrustedMarkdown(release.body))}
-            </div>`
-      }
-
-      <div slot="footer" class="row" style="justify-content:space-between;width:100%">
-        <span class="muted" style="font:var(--font-normal-small)">${date}</span>
-        <a href=${release.url} target="_blank" rel="noreferrer">Release notes</a>
-      </div>
-    </kt-card>
-  `;
+/** What a version is, as far as anyone can tell. Nothing, for the ordinary case. */
+function badge(entry: ReleaseEntry, isCurrent: boolean): TemplateResult | typeof nothing {
+  if (entry.status === 'untagged') {
+    return html`<kt-badge tone="warning" size="small">Not tagged yet</kt-badge>`;
+  }
+  if (entry.prerelease) return html`<kt-badge tone="warning" size="small">Pre-release</kt-badge>`;
+  if (isCurrent && entry.status === 'published') {
+    return html`<kt-badge tone="success" size="small">Latest</kt-badge>`;
+  }
+  return nothing;
 }
 
-function versions(): TemplateResult {
-  if (state.status === 'loading' || state.status === 'idle') return skeletons();
-
+function sourceLine(): TemplateResult {
   if (state.status === 'failed') {
-    return html`
-      <kt-alert
-        variant="neutral"
-        icon="git-branch"
-        heading="No releases to show yet"
-        description=${`${EXPLANATION[state.reason]} The changelog below is this repository's own file and is always current.`}
-      >
-        <kt-button slot="actions" size="small" variant="dark" icon="refresh-cw" @click=${retry}
-          >Try again</kt-button
-        >
-        <kt-button
-          slot="actions"
-          size="small"
-          icon="arrow-up-right"
-          icon-position="right"
-          @click=${() => window.open(`${REPO_URL}/releases`, '_blank', 'noreferrer')}
-          >Open on GitHub</kt-button
-        >
-      </kt-alert>
-    `;
+    return html`<p class="release-source">
+      <span>From the changelog, because ${EXPLANATION[state.reason]}</span>
+      <kt-button size="small" variant="text" @click=${retry}>Try GitHub again</kt-button>
+    </p>`;
   }
 
-  return html`<div class="release-grid">
-    ${state.releases.map((release, index) => releaseCard(release, index))}
+  return html`<p class="release-source">
+    ${state.status === 'ready' ? 'Dates and tags from GitHub' : 'Checking GitHub for tags…'}
+  </p>`;
+}
+
+/**
+ * No summary here: the first line of the history, directly below, already
+ * says it, and the panel's one job is to get the right version installed.
+ */
+function currentRelease(entry: ReleaseEntry): TemplateResult {
+  return html`<div class="release-current">
+    <div class="release-current-head">
+      <span class="release-current-tag">${entry.tag}</span>
+      ${badge(entry, true)}
+      ${entry.date ? html`<span class="release-current-date">${entry.date}</span>` : nothing}
+    </div>
+
+    <kt-code language="shell" copy>${INSTALL_COMMAND}</kt-code>
+
+    <div class="release-current-links">
+      ${jumpTo(anchorFor(entry.tag), 'Read the notes')}
+      <a href=${entry.url} target="_blank" rel="noreferrer">The tag on GitHub</a>
+      <a href=${NPM_URL} target="_blank" rel="noreferrer">The package on npm</a>
+    </div>
   </div>`;
 }
+
+function historyRail(entries: readonly ReleaseEntry[], current: ReleaseEntry): TemplateResult {
+  return html`<kt-timeline class="release-history">
+    ${entries.map((entry) => {
+      const isCurrent = entry === current;
+      const summary = summarize(entry.notes);
+
+      return html`<kt-timeline-item
+        heading=${entry.tag}
+        time=${entry.date}
+        variant=${isCurrent ? 'primary' : 'neutral'}
+        icon=${isCurrent ? 'tag' : ''}
+      >
+        <span slot="actions" class="release-history-actions">
+          ${badge(entry, isCurrent)} ${jumpTo(anchorFor(entry.tag), 'Notes')}
+        </span>
+        ${summary ? html`<p class="release-history-summary">${summary}</p>` : nothing}
+      </kt-timeline-item>`;
+    })}
+  </kt-timeline>`;
+}
+
+function notesFor(entry: ReleaseEntry, isCurrent: boolean): TemplateResult {
+  const id = anchorFor(entry.tag);
+
+  return html`<section class="release-entry" aria-labelledby=${id}>
+    <header class="release-entry-head">
+      <h3 id=${id}>${entry.tag}</h3>
+      ${badge(entry, isCurrent)}
+      <span class="release-entry-meta">
+        ${entry.date}
+        ${
+          entry.status === 'published'
+            ? html`<a href=${entry.url} target="_blank" rel="noreferrer">On GitHub</a>`
+            : nothing
+        }
+      </span>
+    </header>
+
+    ${
+      entry.notes.trim() === ''
+        ? html`<p class="muted">No notes were written for this version.</p>`
+        : html`<div class="prose release-notes">
+            ${unsafeHTML(renderUntrustedMarkdown(entry.notes, { headingBase: 4 }))}
+          </div>`
+    }
+  </section>`;
+}
+
+/* -------------------------------------------------------------------- page */
 
 export function releasePage(changelog: string): DocPage {
   load();
 
-  const doc = renderDoc(changelog);
-  const latest = state.status === 'ready' ? state.releases[0] : undefined;
+  const entries = mergeReleases(parseChangelog(changelog), state.releases);
+  // The version the site itself was built as, so the page and the header chip
+  // never disagree; the newest entry only when the manifest's is not listed.
+  const current = entries.find((entry) => entry.tag === VERSION_TAG) ?? entries[0];
+
+  const versions: Heading[] = entries.map((entry) => ({
+    id: anchorFor(entry.tag),
+    text: entry.tag,
+    level: 3,
+  }));
+
+  const headings: Heading[] = [
+    { id: 'current-release', text: 'Current release', level: 2 },
+    { id: 'history', text: 'History', level: 2 },
+    { id: 'release-notes', text: 'Release notes', level: 2 },
+    ...versions,
+  ];
 
   return {
     title: 'Releases',
-    summary: latest
-      ? `Kanto is published on npm and tagged in the repository. The current release is ${latest.tag}.`
-      : 'Kanto is published on npm and tagged in the repository. This page reads the tags directly.',
+    summary: current
+      ? `The current release is ${current.tag}${current.date ? `, from ${current.date}` : ''}.`
+      : 'Nothing has been released yet.',
     eyebrow: 'Release',
-    headings: [{ id: 'versions', text: 'Versions', level: 2 }, ...doc.headings],
+    headings,
+    sidebar: { group: 'Versions', items: versions },
     source: 'CHANGELOG.md',
-    body: html`
-      <section class="preview-section">
-        <div class="app-preview-head">
-          <h2 id="versions">Versions</h2>
-          <span class="muted" style="font:var(--font-normal-small)">
-            ${
-              state.status === 'ready'
-                ? `Read from GitHub · ${state.releases.length} ${
-                    state.releases.length === 1 ? 'release' : 'releases'
-                  }`
-                : 'Read from GitHub'
-            }
-          </span>
-        </div>
+    body: current
+      ? html`
+          <h2 class="release-heading" id="current-release">Current release</h2>
+          ${currentRelease(current)}
 
-        ${versions()}
+          <div class="release-heading-row">
+            <h2 class="release-heading" id="history">History</h2>
+            ${sourceLine()}
+          </div>
+          ${historyRail(entries, current)}
 
-        <div class="release-links">
-          <a class="release-link" href=${REPO_URL} target="_blank" rel="noreferrer">
-            <kt-icon name="git-branch" size="18"></kt-icon>
-            <span class="release-link-copy">
-              <span class="release-link-title">MrArnaudMichel/kanto</span>
-              <span class="muted">Source, issues and pull requests</span>
-            </span>
-            <kt-icon name="arrow-up-right" size="16"></kt-icon>
-          </a>
-          <a class="release-link" href=${`${REPO_URL}/releases`} target="_blank" rel="noreferrer">
-            <kt-icon name="tag" size="18"></kt-icon>
-            <span class="release-link-copy">
-              <span class="release-link-title">Releases</span>
-              <span class="muted">Every tag, with its notes</span>
-            </span>
-            <kt-icon name="arrow-up-right" size="16"></kt-icon>
-          </a>
-          <a
-            class="release-link"
-            href="https://www.npmjs.com/package/kanto-ds"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <kt-icon name="package" size="18"></kt-icon>
-            <span class="release-link-copy">
-              <span class="release-link-title">kanto-ds on npm</span>
-              <span class="muted">npm install kanto-ds</span>
-            </span>
-            <kt-icon name="arrow-up-right" size="16"></kt-icon>
-          </a>
-        </div>
-      </section>
-
-      <div class="prose">${unsafeHTML(doc.html)}</div>
-    `,
+          <h2 class="release-heading release-heading-notes" id="release-notes">Release notes</h2>
+          ${entries.map((entry) => notesFor(entry, entry === current))}
+        `
+      : html`<kt-empty-state
+          icon="tag"
+          heading="Nothing released yet"
+          description="The changelog has no version sections, and GitHub has no tags."
+        ></kt-empty-state>`,
   };
 }

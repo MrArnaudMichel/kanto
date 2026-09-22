@@ -2,6 +2,7 @@ import { html, type TemplateResult } from 'lit';
 import { toaster } from 'kanto-ds';
 import { rerender } from '../lib/render.js';
 import { MONTHS, monthlyRevenue } from '../lib/data.js';
+import { VERSION_MINOR } from '../lib/project.js';
 
 /**
  * A marketing page.
@@ -129,7 +130,7 @@ export function landingPage(): TemplateResult {
     </kt-header>
 
     <section class="hero">
-      <kt-badge tone="primary">v1.0 is out</kt-badge>
+      <kt-badge tone="primary">v${VERSION_MINOR} is out</kt-badge>
       <h1>A design system for tools people work in all day</h1>
       <p>
         Data-dense and framework-agnostic. Thirty custom elements that run anywhere, built on one
@@ -172,8 +173,8 @@ export function landingPage(): TemplateResult {
           smooth
           label="Revenue by month"
           .labels=${MONTHS}
-          .series=${[{ name: 'Revenue', values: monthlyRevenue(11) }]}
-          .format=${(n: number) => `$${(n * 220).toLocaleString('en-US')}`}
+          .series=${[{ name: 'Revenue', values: monthlyRevenue(11).map((n) => n * 220) }]}
+          .format=${(n: number) => `$${n.toLocaleString('en-US')}`}
         ></kt-chart>
       </kt-card>
     </section>

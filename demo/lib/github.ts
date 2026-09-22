@@ -14,11 +14,11 @@
  * content should be.
  */
 
-export const REPO_OWNER = 'MrArnaudMichel';
-export const REPO_NAME = 'kanto-ds';
-export const REPO_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}`;
+import { REPO_SLUG, REPO_URL } from './project.js';
 
-const API = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases?per_page=20`;
+export { REPO_OWNER, REPO_NAME, REPO_URL } from './project.js';
+
+const API = `https://api.github.com/repos/${REPO_SLUG}/releases?per_page=20`;
 const CACHE_KEY = 'kanto-releases';
 
 export interface Release {
@@ -148,10 +148,14 @@ export function clearReleaseCache(): void {
   }
 }
 
+// In UTC: a changelog date is a bare `YYYY-MM-DD`, which parses as UTC
+// midnight, and formatting it in the reader's zone would put every release a
+// day early for anyone west of Greenwich.
 const FORMATTER = new Intl.DateTimeFormat('en-GB', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
+  timeZone: 'UTC',
 });
 
 export function formatReleaseDate(iso: string): string {
