@@ -397,6 +397,57 @@ main {
   font: var(--font-normal-small);
 }
 
+/* === RELEASE ============================================================= */
+
+.release-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-bottom: 20px;
+}
+
+.release-version {
+  color: var(--text-body);
+  font: var(--font-title-h6);
+  font-variant-numeric: tabular-nums;
+}
+
+.release-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.release-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  color: var(--text-muted);
+  text-decoration: none;
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+
+.release-link:hover {
+  color: var(--text-body);
+  background: var(--surface-hover);
+  text-decoration: none;
+}
+
+.release-link-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.release-link-title {
+  color: var(--text-body);
+  font: var(--font-medium-regular);
+}
+
 /* === PROSE =============================================================== */
 
 .prose {

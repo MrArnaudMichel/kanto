@@ -22,11 +22,13 @@ import { portfolioPage } from './apps/portfolio.js';
 import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
+import { releasePage } from './pages/release.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 
 import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
+import changelogDoc from '../CHANGELOG.md?raw';
 
 // The docs draw on far more icons than the seventeen the library ships. This
 // is the "prototyping" registration the icon page warns against in production.
@@ -34,7 +36,7 @@ registerIcons(lucide);
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'guide' | 'components' | 'apps';
+type Section = 'guide' | 'components' | 'apps' | 'release';
 
 interface Route {
   readonly section: Section;
@@ -155,6 +157,15 @@ const GUIDE: Route[] = [
   },
 ];
 
+const RELEASE: Route[] = [
+  {
+    section: 'release',
+    slug: 'releases',
+    label: 'Releases',
+    group: 'Release',
+    page: () => releasePage(changelogDoc),
+  },
+];
 
 const COMPONENT_ROUTES: Route[] = COMPONENTS.map((entry) => ({
   section: 'components' as const,
@@ -172,12 +183,13 @@ const APP_ROUTES: Route[] = SHOWCASE.map((entry) => ({
   page: () => appPage(entry),
 }));
 
-const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...APP_ROUTES];
+const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...APP_ROUTES, ...RELEASE];
 
 const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
   { id: 'apps', label: 'Apps', icon: 'app-window' },
+  { id: 'release', label: 'Release', icon: 'tag' },
 ];
 
 /**

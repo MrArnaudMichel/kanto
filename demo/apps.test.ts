@@ -109,4 +109,11 @@ describe('the full-bleed applications', () => {
       expect(app.querySelector('main')!.textContent!.trim().length).toBeGreaterThan(40);
     }
   });
+
+  it('links the release page to the repository', async () => {
+    await show('#/release/releases');
+    const links = [...app.querySelectorAll<HTMLAnchorElement>('a')].map((a) => a.href);
+    expect(links.some((h) => h.includes('github.com/MrArnaudMichel/kanto'))).toBe(true);
+    expect(app.querySelector('.release-grid')).not.toBeNull();
+  });
 });
