@@ -202,7 +202,7 @@ const PROJECTS: readonly Project[] = [
 
 const CAREER = [
   {
-    heading: 'Principal engineer · Kanto Studio',
+    heading: 'Principal engineer · Northwind',
     time: '2024 — now',
     icon: 'component',
     variant: 'primary' as const,
@@ -346,7 +346,7 @@ export function portfolioPage(): TemplateResult {
 
   return html`<div class="portfolio">
     <kt-header sticky class="landing-header">
-      <a slot="brand" class="wordmark" href="#/app/portfolio">ARNAUD <span>MICHEL</span></a>
+      <a slot="brand" class="wordmark" href="#/app/portfolio">ROWAN <span>ELLIS</span></a>
       <nav class="landing-nav">
         <a href="#/app/portfolio">Work</a>
         <a href="#/app/portfolio">Writing</a>
@@ -368,7 +368,7 @@ export function portfolioPage(): TemplateResult {
 
     <section class="portrait">
       <kt-avatar
-        name="Arnaud Michel"
+        name="Rowan Ellis"
         size="large"
         status="online"
         class="portrait-avatar"

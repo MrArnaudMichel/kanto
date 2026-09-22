@@ -299,7 +299,7 @@ export function landingPage(): TemplateResult {
     </section>
 
     <footer class="landing-footer">
-      <span class="muted">Kanto · a design system by Arnaud Michel</span>
+      <span class="muted">Kanto · a design system for data-dense product interfaces</span>
       <a href="#/guide/introduction">Documentation</a>
     </footer>
   </div>`;
