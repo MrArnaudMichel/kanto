@@ -48,8 +48,9 @@ export class KtModal extends KtElement {
         display: contents;
       }
 
+      /* Closed by default — see kt-confirm-dialog.ts's identical comment: an unconditional \`display: flex\` here left a never-opened dialog occupying its centred box (\`opacity: 0\`, but still in flow and hit-testable), silently eating clicks meant for whatever sat underneath it on the page. */
       dialog {
-        display: flex;
+        display: none;
         flex-direction: column;
         gap: var(--gap-modal);
         box-sizing: border-box;
@@ -82,6 +83,7 @@ export class KtModal extends KtElement {
       }
 
       dialog[open] {
+        display: flex;
         opacity: 1;
         transform: translateY(0);
       }

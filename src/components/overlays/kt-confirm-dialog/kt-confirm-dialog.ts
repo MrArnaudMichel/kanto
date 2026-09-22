@@ -43,8 +43,23 @@ export class KtConfirmDialog extends KtElement {
         display: contents;
       }
 
+      /*
+       * Closed by default (\`display: none\`, the native UA default a plain
+       * \`dialog\` selector here would otherwise override): before this,
+       * \`display: flex\` applied unconditionally, so a \`<kt-confirm-dialog>\`
+       * that had never been opened still rendered its \`<dialog>\` in normal
+       * flow — \`opacity: 0\` hides it, but does not stop it from occupying
+       * its box or intercepting clicks meant for whatever sits underneath.
+       * Verified against a real page: a closed dialog several screens away
+       * from where it was declared silently ate clicks on the content
+       * behind it. \`display\` is already in the transition list below with
+       * \`allow-discrete\` for exactly this swap — switching \`dialog[open]\`
+       * to set \`display: flex\` is what makes that transition real instead
+       * of a no-op, and the close animation (opacity/transform) still plays
+       * in full before \`display\` flips back to \`none\`.
+       */
       dialog {
-        display: flex;
+        display: none;
         flex-direction: column;
         gap: var(--gap-modal);
         box-sizing: border-box;
@@ -65,6 +80,7 @@ export class KtConfirmDialog extends KtElement {
       }
 
       dialog[open] {
+        display: flex;
         transform: translateY(0);
         opacity: 1;
       }
