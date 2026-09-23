@@ -105,7 +105,7 @@ export class KtButton extends KtElement {
       }
 
       .secondary {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background-color: var(--color-primary-soft);
       }
       .secondary:hover {
@@ -116,7 +116,7 @@ export class KtButton extends KtElement {
       }
 
       .secondary-no-bg {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background: none;
       }
       .secondary-no-bg:hover {
@@ -138,7 +138,7 @@ export class KtButton extends KtElement {
       }
 
       .danger {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
         background-color: var(--color-danger-soft);
       }
       .danger:hover {
@@ -150,14 +150,14 @@ export class KtButton extends KtElement {
 
       .delete {
         color: var(--color-white);
-        background-color: var(--color-navigation-icon-close);
+        background-color: var(--color-danger-solid);
       }
       .delete:hover {
-        background-color: var(--color-danger-base);
+        background-color: var(--color-danger-solid-hover);
       }
 
       .warning {
-        color: var(--color-warning-base);
+        color: var(--color-warning-text);
         background-color: var(--color-warning-soft);
       }
       .warning:hover {
@@ -165,7 +165,7 @@ export class KtButton extends KtElement {
       }
 
       .info {
-        color: var(--color-info-base);
+        color: var(--color-info-text);
         background-color: var(--color-info-soft);
       }
       .info:hover {
@@ -173,7 +173,7 @@ export class KtButton extends KtElement {
       }
 
       .success {
-        color: var(--color-success-base);
+        color: var(--color-success-text);
         background-color: var(--color-success-soft);
       }
       .success:hover {
@@ -183,7 +183,7 @@ export class KtButton extends KtElement {
       .text {
         height: auto;
         padding: 0;
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background: none;
       }
       .text:active {

@@ -83,16 +83,16 @@ export class KtAlert extends KtElement {
       }
 
       :host([variant='info']) .icon {
-        color: var(--color-info-base);
+        color: var(--color-info-text);
       }
       :host([variant='success']) .icon {
-        color: var(--color-success-base);
+        color: var(--color-success-text);
       }
       :host([variant='warning']) .icon {
-        color: var(--color-warning-base);
+        color: var(--color-warning-text);
       }
       :host([variant='danger']) .icon {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
       :host([variant='neutral']) .icon {
         color: var(--text-muted);

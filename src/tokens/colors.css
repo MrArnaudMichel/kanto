@@ -8,7 +8,13 @@
  * rather than a shadow scale — in Kanto, elevation means "slightly lighter
  * surface". Semantic colours each ship three variants: `-base` (opaque, for
  * text and solid fills), `-soft` (12% alpha, for tinted backgrounds) and
- * `-hover` (16% alpha).
+ * `-hover` (16% alpha). Each also has a `-text` step for when it colours
+ * text or an icon rather than a fill: base colours are tuned to carry white
+ * text, which makes them too dark for text on a dark surface and too light on
+ * a light one. Every `-text` holds 4.5:1 on the surfaces text sits on — page,
+ * card and raised, up to --color-dark-20 — and on its own soft tint. They are
+ * fitted in OKLCH at the most chroma sRGB allows, so passing does not cost
+ * them their colour.
  */
 
 :root {
@@ -16,15 +22,20 @@
 
   /* === BRAND === */
   --color-white: rgba(244, 244, 245, 1);
-  --color-primary-base: rgba(101, 98, 248, 1);
-  --color-primary-hover: rgba(111, 109, 248, 1);
-  --color-primary-soft: rgba(101, 98, 248, 0.12);
+  /* Dark enough to carry white text at 4.5:1 in both themes — hover steps
+     darker, not lighter, for the same reason. */
+  --color-primary-base: rgba(95, 93, 234, 1);
+  --color-primary-hover: rgba(88, 86, 224, 1);
+  --color-primary-soft: rgba(95, 93, 234, 0.12);
   --color-secondary-hover: rgba(111, 116, 246, 0.16);
 
   /* === SEMANTIC === */
   --color-danger-base: rgba(245, 61, 92, 1);
   --color-danger-hover: rgba(243, 73, 107, 0.16);
   --color-danger-soft: rgba(245, 61, 92, 0.12);
+  /* A solid red that carries white text at 4.5:1, for destructive buttons. */
+  --color-danger-solid: #d62934;
+  --color-danger-solid-hover: #c4242f;
 
   --color-info-base: rgba(53, 175, 243, 1);
   --color-info-hover: rgba(53, 175, 243, 0.16);
@@ -38,9 +49,17 @@
   --color-success-hover: rgba(53, 221, 131, 0.16);
   --color-success-soft: rgba(53, 221, 131, 0.12);
 
+  /* === TEXT STEPS OF THE BRAND AND SEMANTIC COLOURS === */
+  --color-primary-text: #8e97ff;
+  --color-danger-text: #ff727f;
+  --color-info-text: #06b0fc;
+  --color-warning-text: #fca80d;
+  --color-success-text: #01df7e;
+
   /* === TEXT (100 = highest contrast) === */
   --color-text-100: rgba(244, 244, 245, 1);
-  --color-text-400: rgba(145, 145, 161, 1);
+  /* 4.5:1 on every surface up to --color-dark-24, and on the tinted alerts. */
+  --color-text-400: rgba(169, 169, 181, 1);
   --color-text-500: rgba(101, 101, 114, 1);
   --color-text-600: rgba(75, 75, 88, 1);
   --color-text-700: rgba(66, 66, 77, 1);

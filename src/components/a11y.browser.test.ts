@@ -201,37 +201,48 @@ const CASES: Record<string, Case> = {
   },
 };
 
-/**
- * Contrast failures that are known and waiting on a palette decision, by
- * theme. Only `color-contrast` is tolerated here, and only for these cases:
- * any other rule, or contrast failing anywhere else, still fails the suite.
- * An entry that stops failing fails too, so the list can only shrink.
+/*
+ * Every colour a variant can put text in. The palette is where contrast is won
+ * or lost, so each tone gets its own case rather than one sample per element.
  */
-const KNOWN_CONTRAST: Record<string, readonly string[]> = {
-  dark: [
-    'kt-alert',
-    'kt-avatar',
-    'kt-button',
-    'kt-code',
-    'kt-drag-drop',
-    'kt-page-header',
-    'kt-pagination',
-    'kt-select',
-    'kt-split-button',
-    'kt-stat',
-    'kt-sub-menu-navigation',
-    'kt-toggle-button-group',
-  ],
-  light: [
-    'kt-avatar',
-    'kt-badge',
-    'kt-code',
-    'kt-drag-drop',
-    'kt-input (error)',
-    'kt-select',
-    'kt-sub-menu-navigation',
-  ],
-};
+const TONES = ['primary', 'success', 'warning', 'danger', 'info'] as const;
+const BUTTON_VARIANTS = [
+  'primary',
+  'secondary',
+  'secondary-no-bg',
+  'dark',
+  'danger',
+  'delete',
+  'warning',
+  'info',
+  'success',
+  'text',
+] as const;
+
+for (const variant of BUTTON_VARIANTS) {
+  CASES[`kt-button ${variant}`] = { markup: `<kt-button variant="${variant}">Save</kt-button>` };
+}
+for (const tone of ['neutral', ...TONES]) {
+  CASES[`kt-badge ${tone}`] = { markup: `<kt-badge tone="${tone}">Paid</kt-badge>` };
+  CASES[`kt-badge count ${tone}`] = {
+    markup: `<kt-badge variant="count" tone="${tone}">12</kt-badge>`,
+  };
+}
+CASES['kt-badge category'] = { markup: '<kt-badge variant="category">Infrastructure</kt-badge>' };
+for (const variant of ['info', 'success', 'warning', 'danger', 'neutral']) {
+  CASES[`kt-alert ${variant}`] = {
+    markup: `<kt-alert variant="${variant}" heading="Heads up" description="Something changed."></kt-alert>`,
+  };
+}
+for (const variant of ['success', 'information', 'warning', 'error']) {
+  CASES[`kt-toast ${variant}`] = {
+    markup: `<kt-toast variant="${variant}" heading="Saved" description="All changes kept."></kt-toast>`,
+  };
+}
+// The hue is the name's char-code sum modulo eight: A to H reach all eight.
+for (const letter of 'ABCDEFGH') {
+  CASES[`kt-avatar hue of ${letter}`] = { markup: `<kt-avatar name="${letter}"></kt-avatar>` };
+}
 
 // A violation report is only useful whole.
 chai.config.truncateThreshold = 0;
@@ -264,22 +275,13 @@ afterEach(() => {
 });
 
 describe.each(['dark', 'light'])('accessibility, %s theme', (theme) => {
-  it.each(Object.entries(CASES))('%s has no axe violations', async (name, { markup, setup }) => {
+  it.each(Object.entries(CASES))('%s has no axe violations', async (_, { markup, setup }) => {
     if (theme === 'light') document.documentElement.dataset.theme = 'light';
 
     const element = await fixture<HTMLElement>(markup);
     setup?.(element);
 
-    const violations = await audit(element);
-    const known = KNOWN_CONTRAST[theme]!.includes(name);
-    const isContrast = (violation: string) => violation.startsWith('color-contrast ');
-
     // Joined, so a failure prints every violation rather than "Array(2)".
-    expect(violations.filter((v) => !(known && isContrast(v))).join('\n')).toBe('');
-    if (known) {
-      expect(violations.some(isContrast), `${name} now passes: drop it from KNOWN_CONTRAST`).toBe(
-        true,
-      );
-    }
+    expect((await audit(element)).join('\n')).toBe('');
   });
 });

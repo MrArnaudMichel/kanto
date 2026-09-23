@@ -50,9 +50,13 @@ Dark is the canonical theme and is what `:root` carries.
 - **Surfaces are a ramp, not a shadow scale.** Elevation means a lighter
   surface: `--color-dark-12` (page) → `--color-dark-16` (card) →
   `--color-dark-20` (raised). The only shadow in the system is on toasts.
-- **Semantic colours come in three variants.** `-base` is opaque, for text and
-  solid fills; `-soft` is the same hue at 12% alpha, for tinted backgrounds;
-  `-hover` is 16%.
+- **Semantic colours come in four variants.** `-base` is opaque, for solid
+  fills; `-soft` is the same hue at 12% alpha, for tinted backgrounds; `-hover`
+  is 16%; `-text` is for text and icons. Never colour text with `-base`: it is
+  tuned to carry white text, which makes it too dark on a dark surface and too
+  light on a light one. Every `-text` holds WCAG AA (4.5:1) on the page, card
+  and raised surfaces and on its own tint. `--color-danger-solid` is the red for a
+  filled destructive button.
 - **Prefer the aliases.** `--surface-card` over `--color-dark-16`,
   `--text-muted` over `--color-text-400`. The aliases survive a change to which
   ramp step a role uses.

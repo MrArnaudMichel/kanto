@@ -78,7 +78,7 @@ export class KtTextarea extends KtElement {
         outline: var(--outline-width) solid var(--color-danger-base);
       }
       .error textarea {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
 
       .disabled {
@@ -106,7 +106,7 @@ export class KtTextarea extends KtElement {
       }
 
       textarea::placeholder {
-        color: var(--color-text-500);
+        color: var(--text-muted);
       }
 
       .meta {
@@ -126,12 +126,12 @@ export class KtTextarea extends KtElement {
       }
 
       .counter.at-limit {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
 
       .error-icon {
         display: flex;
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
     `,
   ];

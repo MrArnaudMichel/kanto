@@ -113,7 +113,7 @@ export class KtInput extends KtElement {
         outline: var(--outline-width) solid var(--color-danger-base);
       }
       .error input {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
 
       .disabled {
@@ -136,7 +136,7 @@ export class KtInput extends KtElement {
       }
 
       input::placeholder {
-        color: var(--color-text-500);
+        color: var(--text-muted);
       }
 
       /* The clear button is ours; the browser's is redundant. */
@@ -181,7 +181,7 @@ export class KtInput extends KtElement {
       }
 
       .error-icon {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
 
       /* === PHONE MODE === */

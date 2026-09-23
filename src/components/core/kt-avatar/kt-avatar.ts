@@ -77,7 +77,10 @@ export class KtAvatar extends KtElement {
         width: var(--kt-avatar-size);
         height: var(--kt-avatar-size);
         overflow: hidden;
-        color: var(--kt-avatar-hue, var(--text-muted));
+        /* The hue alone is too faint on its own 12% tint. Pulled towards the
+           body text — lighter in dark, darker in light — it keeps its identity
+           and clears 4.5:1 for all eight hues in both themes. */
+        color: color-mix(in srgb, var(--kt-avatar-hue, var(--text-muted)) 45%, var(--text-body));
         font: 600 calc(var(--kt-avatar-size) * 0.36) / 1 var(--font-family-body);
         background: color-mix(in srgb, var(--kt-avatar-hue, transparent) 12%, transparent);
         border-radius: var(--radius-full);

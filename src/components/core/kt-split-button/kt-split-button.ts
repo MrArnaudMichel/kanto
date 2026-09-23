@@ -126,10 +126,10 @@ export class KtSplitButton extends KtElement {
       }
 
       .item.danger {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
       .item.danger:hover {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
         background: var(--color-danger-soft);
       }
 

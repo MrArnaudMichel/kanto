@@ -58,7 +58,7 @@ export class KtPageHeader extends KtElement {
       }
 
       .eyebrow {
-        color: var(--color-text-500);
+        color: var(--text-muted);
         font: var(--font-title-overline);
         letter-spacing: var(--letter-spacing-overline);
         text-transform: uppercase;

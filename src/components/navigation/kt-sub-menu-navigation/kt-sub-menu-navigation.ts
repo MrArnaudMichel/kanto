@@ -100,7 +100,7 @@ export class KtSubMenuNavigation extends KtElement {
       .title {
         margin: 0;
         padding: 0 var(--nav-inset, 0) 6px;
-        color: var(--color-text-500);
+        color: var(--text-muted);
         font: var(--font-title-overline);
         letter-spacing: var(--letter-spacing-overline);
         text-transform: uppercase;
@@ -154,12 +154,12 @@ export class KtSubMenuNavigation extends KtElement {
       }
 
       .active {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background-color: var(--color-primary-soft);
       }
 
       .active:hover {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background-color: var(--color-primary-soft);
       }
 
@@ -191,7 +191,7 @@ export class KtSubMenuNavigation extends KtElement {
 
       .chevron {
         flex: none;
-        color: var(--color-text-500);
+        color: var(--text-muted);
         transition: transform var(--duration-fast) var(--ease-standard);
       }
 

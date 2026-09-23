@@ -70,7 +70,7 @@ export class KtProgressBar extends KtElement {
       }
 
       .complete .caption-value {
-        color: var(--color-success-base);
+        color: var(--color-success-text);
       }
 
       .track {

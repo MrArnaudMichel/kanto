@@ -86,29 +86,29 @@ export class KtToast extends KtElement {
       }
 
       :host([variant='success']) .heading {
-        color: var(--color-success-base);
+        color: var(--color-success-text);
       }
       :host([variant='information']) .heading {
-        color: var(--color-info-base);
+        color: var(--color-info-text);
       }
       :host([variant='warning']) .heading {
-        color: var(--color-warning-base);
+        color: var(--color-warning-text);
       }
       :host([variant='error']) .heading {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
 
       :host([variant='success']) .icon {
-        color: var(--color-success-base);
+        color: var(--color-success-text);
       }
       :host([variant='information']) .icon {
-        color: var(--color-info-base);
+        color: var(--color-info-text);
       }
       :host([variant='warning']) .icon {
-        color: var(--color-warning-base);
+        color: var(--color-warning-text);
       }
       :host([variant='error']) .icon {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
 
       .body {

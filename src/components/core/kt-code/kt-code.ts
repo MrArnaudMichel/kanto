@@ -58,7 +58,7 @@ export class KtCode extends KtElement {
       }
 
       .language {
-        color: var(--color-text-500);
+        color: var(--text-muted);
         font: var(--font-normal-small);
         letter-spacing: 1px;
         text-transform: uppercase;
@@ -91,7 +91,7 @@ export class KtCode extends KtElement {
       }
 
       .copied {
-        color: var(--color-success-base);
+        color: var(--color-success-text);
       }
 
       pre {

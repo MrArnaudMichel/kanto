@@ -115,7 +115,7 @@ export class KtInputMenu extends KtElement {
       }
 
       input::placeholder {
-        color: var(--color-text-500);
+        color: var(--text-muted);
       }
 
       .icon-button {

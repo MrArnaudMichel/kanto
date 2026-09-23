@@ -103,7 +103,7 @@ export class KtToggleButton extends KtElement {
         background-color: var(--color-secondary-hover);
       }
       .secondary.selected {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background-color: var(--color-primary-soft);
       }
 
@@ -118,7 +118,7 @@ export class KtToggleButton extends KtElement {
         border-color: var(--text-muted);
       }
       .outline.selected {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background-color: var(--color-primary-soft);
         border-color: var(--color-primary-base);
       }

@@ -61,13 +61,13 @@ export class KtStat extends KtElement {
         justify-content: center;
         width: 34px;
         height: 34px;
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background: var(--color-primary-soft);
         border-radius: var(--radius-full);
       }
 
       .label {
-        color: var(--color-text-500);
+        color: var(--text-muted);
         font: var(--font-title-overline);
         letter-spacing: var(--letter-spacing-overline);
         text-transform: uppercase;

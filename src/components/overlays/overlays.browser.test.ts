@@ -15,17 +15,17 @@ import type { KtConfirmDialog, KtModal } from 'kanto-ds';
 
 type Dialog = KtModal | KtConfirmDialog;
 
+const probes: HTMLButtonElement[] = [];
+afterEach(() => {
+  for (const probe of probes.splice(0)) probe.remove();
+});
+
 /**
  * A page button, placed over `area` when given, else mid-viewport.
  *
  * A closed dialog that still has a box keeps it wherever normal flow put it,
  * so the button has to sit exactly there for a stray hit target to show.
  */
-const probes: HTMLButtonElement[] = [];
-afterEach(() => {
-  for (const probe of probes.splice(0)) probe.remove();
-});
-
 function pageButton(area?: DOMRect): HTMLButtonElement {
   const button = document.createElement('button');
   probes.push(button);

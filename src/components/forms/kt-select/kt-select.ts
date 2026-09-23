@@ -132,7 +132,7 @@ export class KtSelect extends KtElement {
       }
 
       .placeholder {
-        color: var(--color-text-500);
+        color: var(--text-muted);
       }
 
       .icons {

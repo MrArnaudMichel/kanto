@@ -86,7 +86,7 @@ export class KtDragDrop extends KtElement {
 
       .title {
         margin: 0;
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         font: var(--font-normal-medium);
       }
 
@@ -132,7 +132,7 @@ export class KtDragDrop extends KtElement {
         width: 48px;
         height: 48px;
         overflow: hidden;
-        color: var(--color-info-base);
+        color: var(--color-info-text);
         background: var(--color-dark-14);
         border-radius: 6px;
       }

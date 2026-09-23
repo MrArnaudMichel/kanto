@@ -142,7 +142,7 @@ export class KtTable extends KtElement {
       }
 
       .indicator {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         font-size: 10px;
       }
 

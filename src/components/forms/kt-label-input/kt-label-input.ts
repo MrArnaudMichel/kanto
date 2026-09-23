@@ -48,7 +48,7 @@ export class KtLabelInput extends KtElement {
 
       .required {
         margin-left: 2px;
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
       }
     `,
   ];

@@ -74,7 +74,7 @@ export class KtKbd extends KtElement {
         min-width: 20px;
         height: 20px;
         padding: 0 5px;
-        color: var(--color-text-500);
+        color: var(--text-muted);
         font: var(--font-normal-small);
         font-family: var(--font-family-body);
         background: var(--surface-card);

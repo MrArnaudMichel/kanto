@@ -54,7 +54,7 @@ export class KtBadge extends KtElement {
       :host {
         display: inline-flex;
         vertical-align: middle;
-        --kt-badge-color: var(--color-primary-hover);
+        --kt-badge-color: var(--color-primary-text);
       }
 
       .badge {
@@ -125,27 +125,27 @@ export class KtBadge extends KtElement {
          colour itself as the ink. The border follows on the bordered shapes
          and is simply absent on the count shape. */
       .primary {
-        color: var(--color-primary-base);
+        color: var(--color-primary-text);
         background-color: var(--color-primary-soft);
         border-color: var(--color-primary-base);
       }
       .success {
-        color: var(--color-success-base);
+        color: var(--color-success-text);
         background-color: var(--color-success-soft);
         border-color: var(--color-success-base);
       }
       .warning {
-        color: var(--color-warning-base);
+        color: var(--color-warning-text);
         background-color: var(--color-warning-soft);
         border-color: var(--color-warning-base);
       }
       .danger {
-        color: var(--color-danger-base);
+        color: var(--color-danger-text);
         background-color: var(--color-danger-soft);
         border-color: var(--color-danger-base);
       }
       .info {
-        color: var(--color-info-base);
+        color: var(--color-info-text);
         background-color: var(--color-info-soft);
         border-color: var(--color-info-base);
       }
