@@ -188,6 +188,7 @@ export class KtToggle extends KtElement {
         role="switch"
         aria-checked=${this.checked ? 'true' : 'false'}
         aria-label=${this.label || nothing}
+        aria-labelledby=${this.label ? nothing : 'label'}
         ?disabled=${this.disabled}
         @click=${this.toggle}
       >
@@ -195,7 +196,7 @@ export class KtToggle extends KtElement {
           <span part="thumb" class="thumb"></span>
         </span>
       </button>
-      <span class="label" @click=${this.toggle}><slot></slot></span>`;
+      <span id="label" class="label" @click=${this.toggle}><slot></slot></span>`;
   }
 }
 

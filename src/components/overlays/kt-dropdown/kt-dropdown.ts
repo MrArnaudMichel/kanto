@@ -143,6 +143,12 @@ export class KtDropdown extends KtElement {
   @query('.trigger')
   private triggerWrapper!: HTMLElement;
 
+  @query('slot[name="trigger"]')
+  private triggerSlot?: HTMLSlotElement;
+
+  @query('slot[name="panel"]')
+  private panelSlot?: HTMLSlotElement;
+
   @state()
   private open = false;
 
@@ -220,6 +226,35 @@ export class KtDropdown extends KtElement {
     if (event.key === 'Escape') this.hide();
   };
 
+  override updated(): void {
+    this.syncTrigger();
+  }
+
+  /**
+   * Puts the popup state on the slotted trigger — the element that takes focus,
+   * so the one a screen reader announces. A `<kt-button>` gets it through its
+   * properties and passes it to its inner button; anything else as attributes.
+   *
+   * Only a menu is announced as one: the built-in list of options, or a
+   * slotted panel that says `role="menu"` itself. A panel of free content is a
+   * disclosure — `aria-expanded` alone.
+   */
+  private syncTrigger = (): void => {
+    const trigger = this.triggerSlot?.assignedElements()[0];
+    if (!trigger) return;
+
+    const customMenu = this.panelSlot?.assignedElements()[0]?.getAttribute('role') === 'menu';
+    const popup = this.options.length > 0 || customMenu ? 'menu' : undefined;
+    if (isPopupTrigger(trigger)) {
+      trigger.popup = popup;
+      trigger.expanded = this.open;
+      return;
+    }
+    if (popup) trigger.setAttribute('aria-haspopup', popup);
+    else trigger.removeAttribute('aria-haspopup');
+    trigger.setAttribute('aria-expanded', String(this.open));
+  };
+
   /** Opens the panel. */
   show(): void {
     if (this.disabled || this.open) return;
@@ -249,14 +284,8 @@ export class KtDropdown extends KtElement {
   }
 
   override render(): TemplateResult {
-    return html`<div
-        part="trigger"
-        class="trigger"
-        aria-haspopup="menu"
-        aria-expanded=${this.open ? 'true' : 'false'}
-        @click=${this.toggle}
-      >
-        <slot name="trigger"></slot>
+    return html`<div part="trigger" class="trigger" @click=${this.toggle}>
+        <slot name="trigger" @slotchange=${this.syncTrigger}></slot>
       </div>
 
       <div
@@ -296,6 +325,16 @@ export class KtDropdown extends KtElement {
         }
       </div>`;
   }
+}
+
+/** A trigger that takes its popup state as properties, like `<kt-button>`. */
+interface PopupTrigger extends Element {
+  popup: 'menu' | undefined;
+  expanded: boolean | undefined;
+}
+
+function isPopupTrigger(element: Element): element is PopupTrigger {
+  return 'popup' in element && 'expanded' in element;
 }
 
 defineElement('kt-dropdown', KtDropdown);

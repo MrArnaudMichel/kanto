@@ -61,6 +61,14 @@ describe('kt-textarea', () => {
     expect(el.shadowRoot!.querySelector('kt-icon[name="circle-alert"]')).not.toBeNull();
   });
 
+  it('describes the control with its error message', async () => {
+    const el = await fixture<KtTextarea>('<kt-textarea error="Too short"></kt-textarea>');
+
+    const id = control(el).getAttribute('aria-describedby');
+    expect(id).toBeTruthy();
+    expect(el.shadowRoot!.getElementById(id!)!.textContent).toBe('Too short');
+  });
+
   it('restores the seeded value on form reset', async () => {
     const el = await fixture<KtTextarea>('<kt-textarea value="initial"></kt-textarea>');
     await type(el, 'edited');

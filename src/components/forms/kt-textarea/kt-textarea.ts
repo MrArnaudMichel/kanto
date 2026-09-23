@@ -243,6 +243,11 @@ export class KtTextarea extends KtElement {
         disabled: this.disabled,
       })}
     >
+      ${
+        this.error
+          ? html`<span id="error-message" class="visually-hidden">${this.error}</span>`
+          : nothing
+      }
       <textarea
         part="control"
         name=${this.name || nothing}
@@ -251,6 +256,7 @@ export class KtTextarea extends KtElement {
         placeholder=${this.placeholder || nothing}
         aria-label=${this.label || nothing}
         aria-invalid=${this.error ? 'true' : nothing}
+        aria-describedby=${this.error ? 'error-message' : nothing}
         .value=${live(this.value)}
         ?disabled=${this.disabled}
         ?readonly=${this.readonly}

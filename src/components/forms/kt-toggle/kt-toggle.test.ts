@@ -49,6 +49,23 @@ describe('kt-toggle', () => {
     expect(control(el).disabled).toBe(true);
   });
 
+  it('takes its accessible name from the slotted label', async () => {
+    const el = await fixture<KtToggle>('<kt-toggle>Notifications</kt-toggle>');
+    const button = el.shadowRoot!.querySelector('button')!;
+
+    const id = button.getAttribute('aria-labelledby');
+    expect(id).toBeTruthy();
+    expect(el.shadowRoot!.getElementById(id!)!.querySelector('slot')).not.toBeNull();
+  });
+
+  it('prefers the label property when there is one', async () => {
+    const el = await fixture<KtToggle>('<kt-toggle label="Dark mode"></kt-toggle>');
+    const button = el.shadowRoot!.querySelector('button')!;
+
+    expect(button.getAttribute('aria-label')).toBe('Dark mode');
+    expect(button.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
   it('restores its initial state on form reset', async () => {
     const el = await fixture<KtToggle>('<kt-toggle checked></kt-toggle>');
     control(el).click();

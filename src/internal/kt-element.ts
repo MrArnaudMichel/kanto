@@ -24,6 +24,16 @@ export class KtElement extends LitElement {
     *::after {
       box-sizing: inherit;
     }
+
+    /* Read by assistive technology, never drawn. */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
   `;
 }
 

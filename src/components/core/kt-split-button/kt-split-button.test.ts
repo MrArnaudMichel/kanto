@@ -35,6 +35,17 @@ describe('kt-split-button', () => {
     expect(caret(el).getAttribute('label')).toBe('More actions');
   });
 
+  it('announces the caret as opening a menu, and whether it is open', async () => {
+    const el = await mount();
+    const button = caret(el) as HTMLElement & { popup?: string; expanded?: boolean };
+    expect(button.popup).toBe('menu');
+    expect(button.expanded).toBe(false);
+
+    dropdown(el).show();
+    await settle(dropdown(el));
+    expect(button.expanded).toBe(true);
+  });
+
   it('renders one row per item, labelled', async () => {
     const el = await mount();
 

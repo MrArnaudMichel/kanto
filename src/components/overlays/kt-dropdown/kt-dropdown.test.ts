@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fixture, settle } from '#test/fixture';
 import './kt-dropdown.js';
+import '../../core/kt-button/kt-button.js';
 import type { KtDropdown } from 'kanto-ds';
 import type { KtOption } from 'kanto-ds';
 
@@ -26,15 +27,47 @@ describe('kt-dropdown', () => {
   });
 
   it('starts closed and opens on the trigger', async () => {
+    const button = el.querySelector('button')!;
     expect(el.isOpen).toBe(false);
-    expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
+    expect(button.getAttribute('aria-expanded')).toBe('false');
 
     trigger(el).click();
     await settle(el);
 
     expect(el.isOpen).toBe(true);
     expect(panel(el).classList.contains('open')).toBe(true);
-    expect(trigger(el).getAttribute('aria-expanded')).toBe('true');
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('puts the popup state on the trigger itself, where focus is', async () => {
+    // The wrapper around the slot is never focused, so state on it is never
+    // announced — and aria-expanded is not allowed on a generic element.
+    expect(trigger(el).hasAttribute('aria-expanded')).toBe(false);
+    expect(el.querySelector('button')!.getAttribute('aria-haspopup')).toBe('menu');
+  });
+
+  it('drives a kt-button trigger through its properties', async () => {
+    const dropdown = await fixture<KtDropdown>(
+      '<kt-dropdown><kt-button slot="trigger" label="Actions"></kt-button></kt-dropdown>',
+    );
+    dropdown.options = OPTIONS;
+    await settle(dropdown);
+    const button = dropdown.querySelector('kt-button')!;
+    expect(button.popup).toBe('menu');
+    expect(button.expanded).toBe(false);
+
+    dropdown.show();
+    await settle(dropdown);
+    expect(button.expanded).toBe(true);
+  });
+
+  it('is a plain disclosure around free content, not a menu', async () => {
+    const dropdown = await fixture<KtDropdown>(
+      '<kt-dropdown><button slot="trigger">Filters</button><div slot="panel">Content</div></kt-dropdown>',
+    );
+    const button = dropdown.querySelector('button')!;
+    expect(button.hasAttribute('aria-haspopup')).toBe(false);
+    expect(button.getAttribute('aria-expanded')).toBe('false');
   });
 
   it('announces opening and closing', async () => {

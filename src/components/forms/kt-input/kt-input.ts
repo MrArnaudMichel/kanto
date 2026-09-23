@@ -586,6 +586,14 @@ export class KtInput extends KtElement {
       @pointerdown=${this.onFieldPointerDown}
       @keydown=${this.onCountryKeyDown}
     >
+      ${
+        // The icon only shows that something is wrong; this is what gets read
+        // out. aria-describedby rather than aria-errormessage, which most
+        // screen readers still ignore.
+        this.error
+          ? html`<span id="error-message" class="visually-hidden">${this.error}</span>`
+          : nothing
+      }
       ${this.isPhone ? this.renderCountryPicker() : nothing}
 
       <input
@@ -599,7 +607,7 @@ export class KtInput extends KtElement {
         maxlength=${this.maxlength ?? nothing}
         aria-label=${this.label || nothing}
         aria-invalid=${this.error ? 'true' : nothing}
-        aria-errormessage=${this.error || nothing}
+        aria-describedby=${this.error ? 'error-message' : nothing}
         ?disabled=${this.disabled}
         ?readonly=${this.readonly}
         ?required=${this.required}

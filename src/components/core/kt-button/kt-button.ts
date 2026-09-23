@@ -246,6 +246,17 @@ export class KtButton extends KtElement {
   @property({ type: String })
   label = '';
 
+  /**
+   * The kind of popup this button opens, as `aria-haspopup` on the inner
+   * button. Set by `<kt-dropdown>` on its trigger; rarely by hand.
+   */
+  @property({ attribute: false })
+  popup: 'menu' | 'listbox' | 'dialog' | undefined = undefined;
+
+  /** Whether the popup or region this button controls is open, as `aria-expanded`. */
+  @property({ attribute: false })
+  expanded: boolean | undefined = undefined;
+
   /** Stretches the button to the width of its container. */
   @property({ type: Boolean, reflect: true, attribute: 'full-width' })
   fullWidth = false;
@@ -317,6 +328,8 @@ export class KtButton extends KtElement {
       type=${this.type}
       ?disabled=${this.disabled}
       aria-label=${this.label || nothing}
+      aria-haspopup=${this.popup ?? nothing}
+      aria-expanded=${this.expanded === undefined ? nothing : String(this.expanded)}
       @click=${this.onClick}
     >
       ${this.iconPosition === 'left' ? icon : nothing}

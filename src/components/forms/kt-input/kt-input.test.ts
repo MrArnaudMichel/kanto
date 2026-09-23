@@ -95,6 +95,21 @@ describe('kt-input', () => {
     expect(el.shadowRoot!.querySelector('kt-icon[name="circle-alert"]')).not.toBeNull();
   });
 
+  it('describes the control with its error message', async () => {
+    const el = await fixture<KtInput>('<kt-input error="Enter an email."></kt-input>');
+
+    const id = control(el).getAttribute('aria-describedby');
+    expect(id).toBeTruthy();
+    expect(el.shadowRoot!.getElementById(id!)!.textContent).toBe('Enter an email.');
+    // An id reference, never the message itself: that used to be read as a
+    // list of three ids that do not exist.
+    expect(control(el).hasAttribute('aria-errormessage')).toBe(false);
+
+    el.error = '';
+    await settle(el);
+    expect(control(el).hasAttribute('aria-describedby')).toBe(false);
+  });
+
   it('exposes no clear button and no pointer events when disabled', async () => {
     const el = await fixture<KtInput>('<kt-input value="x" disabled></kt-input>');
     expect(control(el).disabled).toBe(true);

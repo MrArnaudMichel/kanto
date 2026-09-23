@@ -12,6 +12,19 @@ describe('kt-button', () => {
     expect(nativeButton(el).classList.contains('medium')).toBe(true);
   });
 
+  it('exposes a popup it controls on the inner button', async () => {
+    const el = await fixture<KtButton>('<kt-button>Actions</kt-button>');
+    expect(nativeButton(el).hasAttribute('aria-expanded')).toBe(false);
+    expect(nativeButton(el).hasAttribute('aria-haspopup')).toBe(false);
+
+    el.popup = 'menu';
+    el.expanded = true;
+    await settle(el);
+
+    expect(nativeButton(el).getAttribute('aria-haspopup')).toBe('menu');
+    expect(nativeButton(el).getAttribute('aria-expanded')).toBe('true');
+  });
+
   it('reflects the variant and size onto the inner button', async () => {
     const el = await fixture<KtButton>('<kt-button variant="danger" size="large">X</kt-button>');
     expect(nativeButton(el).classList.contains('danger')).toBe(true);
