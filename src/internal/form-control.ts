@@ -26,8 +26,16 @@ export function attachFormInternals(host: HTMLElement): UsableInternals | null {
   return internals;
 }
 
-/** Pushes the control's current value into the enclosing form, if there is one. */
-export function setFormValue(internals: UsableInternals | null, value: string | null): void {
+/**
+ * Pushes the control's current value into the enclosing form, if there is one.
+ *
+ * A `FormData` submits each of its entries as they are named in it — which is
+ * how one control contributes several files under one name.
+ */
+export function setFormValue(
+  internals: UsableInternals | null,
+  value: string | FormData | null,
+): void {
   internals?.setFormValue(value);
 }
 

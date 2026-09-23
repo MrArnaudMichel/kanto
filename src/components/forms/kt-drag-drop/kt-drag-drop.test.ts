@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '#test/fixture';
+import { fixture, formFixture, settle } from '#test/fixture';
 import './kt-drag-drop.js';
 import type { KtDragDrop } from 'kanto-ds';
 
@@ -116,6 +116,80 @@ describe('kt-drag-drop', () => {
     await drop(el, [file('a.png')]);
 
     el.clear();
+    await settle(el);
+
+    expect(el.selectedFiles).toHaveLength(0);
+    expect(items(el)).toHaveLength(0);
+  });
+});
+
+describe('kt-drag-drop in a form', () => {
+  /** The files a FormData passed to setFormValue carries under `name`. */
+  const submitted = (value: unknown, name: string) =>
+    value instanceof FormData ? value.getAll(name).map((entry) => (entry as File).name) : value;
+
+  it('is a form-associated element', () => {
+    expect(customElements.get('kt-drag-drop')).toHaveProperty('formAssociated', true);
+  });
+
+  it('submits every held file under its name, and nothing while empty', async () => {
+    const { element, internals } = await formFixture<KtDragDrop>(
+      '<kt-drag-drop name="attachments"></kt-drag-drop>',
+    );
+    expect(internals.setFormValue).toHaveBeenLastCalledWith(null);
+
+    await drop(element, [file('a.png'), file('b.png')]);
+    expect(submitted(internals.setFormValue.mock.lastCall?.[0], 'attachments')).toEqual([
+      'a.png',
+      'b.png',
+    ]);
+
+    element.shadowRoot!.querySelector<HTMLElement>('.item kt-button')!.click();
+    await settle(element);
+    expect(submitted(internals.setFormValue.mock.lastCall?.[0], 'attachments')).toEqual(['b.png']);
+
+    element.clear();
+    await settle(element);
+    expect(internals.setFormValue).toHaveBeenLastCalledWith(null);
+  });
+
+  it('submits nothing without a name, as a native file input would', async () => {
+    const { element, internals } = await formFixture<KtDragDrop>('<kt-drag-drop></kt-drag-drop>');
+    await drop(element, [file('a.png')]);
+    expect(internals.setFormValue).toHaveBeenLastCalledWith(null);
+  });
+
+  it('reports a missing value while required', async () => {
+    const { element, internals } = await formFixture<KtDragDrop>(
+      '<kt-drag-drop name="cv" required></kt-drag-drop>',
+    );
+    expect(internals.setValidity).toHaveBeenLastCalledWith(
+      { valueMissing: true },
+      'Select a file.',
+      undefined,
+    );
+
+    await drop(element, [file('cv.pdf', 'application/pdf')]);
+    expect(internals.setValidity).toHaveBeenLastCalledWith({});
+  });
+
+  it('takes back the files the browser restores', async () => {
+    const el = await fixture<KtDragDrop>('<kt-drag-drop name="attachments"></kt-drag-drop>');
+    const state = new FormData();
+    state.append('attachments', file('a.png'));
+    state.append('other', file('b.png'));
+
+    el.formStateRestoreCallback(state);
+    await settle(el);
+
+    expect(el.selectedFiles.map((f) => f.name)).toEqual(['a.png']);
+  });
+
+  it('empties on form reset', async () => {
+    const el = await fixture<KtDragDrop>('<kt-drag-drop></kt-drag-drop>');
+    await drop(el, [file('a.png')]);
+
+    el.formResetCallback();
     await settle(el);
 
     expect(el.selectedFiles).toHaveLength(0);

@@ -31,6 +31,13 @@ page.
 Arrows both move and select, which is standard radio-group behaviour. Disabled
 segments are skipped, and the selection wraps at the ends.
 
+## In a form
+
+It is a form control: inside a `<form>` it submits the chosen `value` under
+`name`, `required` blocks submission until a segment is chosen, and
+`form.reset()` puts back the initial value. Use it for a choice the form sends —
+a billing period, a plan — as readily as for a view switch.
+
 ## API
 
 | Property      | Attribute     | Type                             | Default        |
@@ -41,6 +48,8 @@ segments are skipped, and the selection wraps at the ends.
 | `orientation` | `orientation` | `'horizontal' \| 'vertical'`     | `'horizontal'` |
 | `disabled`    | `disabled`    | `boolean`                        | `false`        |
 | `label`       | `label`       | `string`                         | `''`           |
+| `name`        | `name`        | `string`                         | `''`           |
+| `required`    | `required`    | `boolean`                        | `false`        |
 
 ```ts
 interface KtSegmentedOption {

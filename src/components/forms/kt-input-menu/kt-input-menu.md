@@ -44,6 +44,13 @@ menu.addEventListener('kt-filter', async (e) => {
 });
 ```
 
+## In a form
+
+`<kt-input-menu>` is a form control. Inside a `<form>` it submits the chosen
+option's `id` under `name` — never the label, and nothing at all while empty.
+`required` blocks submission until something is chosen, and `form.reset()` puts
+back the initial `value`.
+
 ## Keyboard
 
 | Key            | Does                                           |
@@ -63,7 +70,9 @@ The arrows walk the **filtered** list, not the full one.
 | `options`     | —             | `KtOption[]`               | `[]`            |
 | `value`       | `value`       | `string \| number \| null` | `null`          |
 | `placeholder` | `placeholder` | `string`                   | `''`            |
+| `name`        | `name`        | `string`                   | `''`            |
 | `disabled`    | `disabled`    | `boolean`                  | `false`         |
+| `required`    | `required`    | `boolean`                  | `false`         |
 | `error`       | `error`       | `string`                   | `''`            |
 | `label`       | `label`       | `string`                   | `''`            |
 | `emptyText`   | `empty-text`  | `string`                   | `'No options…'` |

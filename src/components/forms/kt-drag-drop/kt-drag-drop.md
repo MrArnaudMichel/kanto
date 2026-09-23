@@ -17,6 +17,21 @@ zone.addEventListener('kt-files-rejected', (e) => {
 The element holds the files and reports them. **Uploading is yours** — it makes
 no requests.
 
+## In a form
+
+Give it a `name` and it is a form control: a `<form>` submits every held file
+under that name, exactly as `<input type="file" multiple>` would, so a
+`multipart/form-data` post needs no extra code. Without a `name` it submits
+nothing, like the native input. `required` blocks submission until a file is
+held, and `form.reset()` empties it.
+
+```html
+<form method="post" enctype="multipart/form-data">
+  <kt-drag-drop name="attachments" required></kt-drag-drop>
+  <kt-button type="submit">Send</kt-button>
+</form>
+```
+
 ## Validation
 
 `accept` on a native input is advisory: the OS dialog filters by it, but a
@@ -45,6 +60,8 @@ buttons.
 | `accept`          | `accept`           | `string`  | `''`                  |
 | `maxSize`         | `max-size`         | `number`  | `0` (no limit)        |
 | `disabled`        | `disabled`         | `boolean` | `false`               |
+| `name`            | `name`             | `string`  | `''`                  |
+| `required`        | `required`         | `boolean` | `false`               |
 
 `heading` rather than `title`: an element already has a `title`, and reusing it
 would drop the prompt into a native tooltip over the whole zone.

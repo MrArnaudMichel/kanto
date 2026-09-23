@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '#test/fixture';
+import { fixture, formFixture, settle } from '#test/fixture';
 import './kt-input-menu.js';
 import type { KtInputMenu } from 'kanto-ds';
 import type { KtOption } from 'kanto-ds';
@@ -113,5 +113,74 @@ describe('kt-input-menu', () => {
     await settle(el);
 
     expect(popup(el).classList.contains('open')).toBe(false);
+  });
+});
+
+describe('kt-input-menu in a form', () => {
+  it('is a form-associated element', () => {
+    expect(customElements.get('kt-input-menu')).toHaveProperty('formAssociated', true);
+  });
+
+  it('submits the chosen option id, and nothing while empty', async () => {
+    const { element, internals } = await formFixture<KtInputMenu>(
+      '<kt-input-menu name="country"></kt-input-menu>',
+    );
+    element.options = OPTIONS;
+    await settle(element);
+    expect(internals.setFormValue).toHaveBeenLastCalledWith(null);
+
+    await typeQuery(element, 'belg');
+    key(element, 'Enter');
+    await settle(element);
+
+    expect(element.value).toBe('be');
+    expect(internals.setFormValue).toHaveBeenLastCalledWith('be');
+  });
+
+  it('reports a missing value while required', async () => {
+    const { element, internals } = await formFixture<KtInputMenu>(
+      '<kt-input-menu required></kt-input-menu>',
+    );
+    expect(internals.setValidity).toHaveBeenLastCalledWith(
+      { valueMissing: true, customError: false },
+      'Select an option.',
+      undefined,
+    );
+
+    element.options = OPTIONS;
+    element.value = 'fr';
+    await settle(element);
+
+    expect(internals.setValidity).toHaveBeenLastCalledWith({});
+  });
+
+  it('reports its error message as a custom validity error', async () => {
+    const { internals } = await formFixture<KtInputMenu>(
+      '<kt-input-menu error="Pick a supported country"></kt-input-menu>',
+    );
+    expect(internals.setValidity).toHaveBeenLastCalledWith(
+      { valueMissing: false, customError: true },
+      'Pick a supported country',
+      undefined,
+    );
+  });
+
+  it('restores its initial value on form reset', async () => {
+    const el = await fixture<KtInputMenu>('<kt-input-menu value="ch"></kt-input-menu>');
+    el.options = OPTIONS;
+    el.value = 'fr';
+    await settle(el);
+
+    el.formResetCallback();
+    await settle(el);
+
+    expect(el.value).toBe('ch');
+    expect(input(el).value).toBe('Switzerland');
+  });
+
+  it('takes the value the browser restores', async () => {
+    const el = await fixture<KtInputMenu>('<kt-input-menu></kt-input-menu>');
+    el.formStateRestoreCallback('be');
+    expect(el.value).toBe('be');
   });
 });

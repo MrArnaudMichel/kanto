@@ -1,8 +1,14 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, queryAll } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import {
+  attachFormInternals,
+  setFormValue,
+  setValidity,
+  type UsableInternals,
+} from '#internal/form-control';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtSegmentedSize = 'small' | 'medium' | 'large';
@@ -45,6 +51,7 @@ const ICON_SIZE: Record<KtSegmentedSize, number> = { small: 16, medium: 20, larg
  * ```
  */
 export class KtSegmentedControl extends KtElement {
+  static readonly formAssociated = true;
   static override styles = [
     KtElement.styles,
     css`
@@ -159,6 +166,9 @@ export class KtSegmentedControl extends KtElement {
   @queryAll('.option')
   private segments!: NodeListOf<HTMLButtonElement>;
 
+  private internals: UsableInternals | null = null;
+  private defaultValue: string | number | null = null;
+
   @property({ attribute: false })
   options: readonly KtSegmentedOption[] = [];
 
@@ -178,12 +188,43 @@ export class KtSegmentedControl extends KtElement {
   @property({ type: String })
   label = '';
 
+  @property({ type: String })
+  name = '';
+
+  @property({ type: Boolean, reflect: true })
+  required = false;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.internals ??= attachFormInternals(this);
+    this.defaultValue = this.value;
+  }
+
+  override willUpdate(changed: PropertyValues<this>): void {
+    if (changed.has('value') || changed.has('required')) {
+      setFormValue(this.internals, this.value === null ? null : String(this.value));
+
+      const missing = this.required && this.value === null;
+      setValidity(this.internals, { valueMissing: missing }, missing ? 'Select an option.' : '');
+    }
+  }
+
+  formResetCallback(): void {
+    this.value = this.defaultValue;
+  }
+
+  formStateRestoreCallback(state: string): void {
+    // The form stores a string; hand back the option's own value, which may be
+    // a number.
+    this.value = this.options.find((option) => String(option.value) === state)?.value ?? state;
+  }
+
   private get selectedIndex(): number {
     return this.options.findIndex((option) => option.value === this.value);
   }
 
   private choose(option: KtSegmentedOption): void {
-    if (option.disabled || this.value === option.value) return;
+    if (this.disabled || option.disabled || this.value === option.value) return;
     this.value = option.value;
     emit(this, 'kt-change', { value: option.value, option });
   }
@@ -264,7 +305,7 @@ export class KtSegmentedControl extends KtElement {
           aria-checked=${selected ? 'true' : 'false'}
           aria-label=${iconOnly ? (option.icon ?? '') : nothing}
           tabindex=${index === tabStop ? 0 : -1}
-          ?disabled=${option.disabled}
+          ?disabled=${this.disabled || option.disabled}
           @click=${() => this.choose(option)}
         >
           ${

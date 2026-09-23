@@ -1,9 +1,15 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit, uniqueId } from '#internal/events';
+import {
+  attachFormInternals,
+  setFormValue,
+  setValidity,
+  type UsableInternals,
+} from '#internal/form-control';
 import {
   filterOptions,
   firstEnabledIndex,
@@ -32,6 +38,8 @@ import '../../core/kt-icon/kt-icon.js';
  * @fires kt-filter - The query changed. `detail: { query }`.
  */
 export class KtInputMenu extends KtElement {
+  static readonly formAssociated = true;
+
   static override styles = [
     KtElement.styles,
     listboxStyles,
@@ -140,6 +148,8 @@ export class KtInputMenu extends KtElement {
   @query('input')
   private input!: HTMLInputElement;
 
+  private internals: UsableInternals | null = null;
+  private defaultValue: string | number | null = null;
   private readonly listId = uniqueId('kt-input-menu-list');
 
   @state()
@@ -160,8 +170,14 @@ export class KtInputMenu extends KtElement {
   @property({ type: String })
   placeholder = '';
 
+  @property({ type: String })
+  name = '';
+
   @property({ type: Boolean, reflect: true })
   disabled = false;
+
+  @property({ type: Boolean, reflect: true })
+  required = false;
 
   @property({ type: String, reflect: true })
   error = '';
@@ -174,12 +190,42 @@ export class KtInputMenu extends KtElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.internals ??= attachFormInternals(this);
+    this.defaultValue = this.value;
     document.addEventListener('pointerdown', this.onDocumentPointerDown);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     document.removeEventListener('pointerdown', this.onDocumentPointerDown);
+  }
+
+  override willUpdate(changed: PropertyValues<this>): void {
+    if (changed.has('value') || changed.has('required') || changed.has('error')) {
+      // The option id is what is submitted, never the label the field shows:
+      // the label is for people, the id is for the server.
+      setFormValue(this.internals, this.value === null ? null : String(this.value));
+
+      const missing = this.required && this.value === null;
+      setValidity(
+        this.internals,
+        { valueMissing: missing, customError: Boolean(this.error) },
+        this.error || (missing ? 'Select an option.' : ''),
+      );
+    }
+  }
+
+  formResetCallback(): void {
+    this.value = this.defaultValue;
+    this.close();
+  }
+
+  formStateRestoreCallback(state: string): void {
+    this.value = state;
+  }
+
+  override focus(options?: FocusOptions): void {
+    this.input?.focus(options);
   }
 
   get selectedOption(): KtOption | undefined {

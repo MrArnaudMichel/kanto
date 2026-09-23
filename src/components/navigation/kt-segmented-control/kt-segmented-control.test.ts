@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '#test/fixture';
+import { fixture, formFixture, settle } from '#test/fixture';
 import './kt-segmented-control.js';
 import type { KtSegmentedControl, KtSegmentedOption } from 'kanto-ds';
 
@@ -63,6 +63,17 @@ describe('kt-segmented-control', () => {
     expect(el.value).toBe('day');
   });
 
+  it('cannot be operated from the keyboard while disabled', async () => {
+    el.disabled = true;
+    await settle(el);
+
+    expect(segments(el).every((segment) => segment.disabled)).toBe(true);
+
+    key(el, 'ArrowRight');
+    await settle(el);
+    expect(el.value).toBe('day');
+  });
+
   it('moves and selects with the arrows, skipping disabled segments', async () => {
     key(el, 'ArrowRight');
     await settle(el);
@@ -105,5 +116,59 @@ describe('kt-segmented-control', () => {
     await settle(el);
 
     expect(listener).not.toHaveBeenCalled();
+  });
+});
+
+describe('kt-segmented-control in a form', () => {
+  it('is a form-associated element', () => {
+    expect(customElements.get('kt-segmented-control')).toHaveProperty('formAssociated', true);
+  });
+
+  it('submits the chosen value, and nothing while empty', async () => {
+    const { element, internals } = await formFixture<KtSegmentedControl>(
+      '<kt-segmented-control name="range"></kt-segmented-control>',
+    );
+    element.options = OPTIONS;
+    await settle(element);
+    expect(internals.setFormValue).toHaveBeenLastCalledWith(null);
+
+    segments(element)[2]!.click();
+    await settle(element);
+    expect(internals.setFormValue).toHaveBeenLastCalledWith('month');
+  });
+
+  it('reports a missing value while required', async () => {
+    const { element, internals } = await formFixture<KtSegmentedControl>(
+      '<kt-segmented-control required></kt-segmented-control>',
+    );
+    expect(internals.setValidity).toHaveBeenLastCalledWith(
+      { valueMissing: true },
+      'Select an option.',
+      undefined,
+    );
+
+    element.value = 'day';
+    await settle(element);
+    expect(internals.setValidity).toHaveBeenLastCalledWith({});
+  });
+
+  it('restores its initial value on form reset', async () => {
+    const el = await fixture<KtSegmentedControl>(
+      '<kt-segmented-control value="month"></kt-segmented-control>',
+    );
+    el.options = OPTIONS;
+    el.value = 'day';
+    await settle(el);
+
+    el.formResetCallback();
+    await settle(el);
+
+    expect(el.value).toBe('month');
+  });
+
+  it('takes the value the browser restores', async () => {
+    const el = await fixture<KtSegmentedControl>('<kt-segmented-control></kt-segmented-control>');
+    el.formStateRestoreCallback('day');
+    expect(el.value).toBe('day');
   });
 });

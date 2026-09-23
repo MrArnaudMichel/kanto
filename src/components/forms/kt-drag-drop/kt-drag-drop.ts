@@ -1,8 +1,14 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import {
+  attachFormInternals,
+  setFormValue,
+  setValidity,
+  type UsableInternals,
+} from '#internal/form-control';
 import { formatFileSize } from '#internal/format';
 import '../../core/kt-icon/kt-icon.js';
 import '../../core/kt-button/kt-button.js';
@@ -28,6 +34,7 @@ import '../../core/kt-button/kt-button.js';
  * ```
  */
 export class KtDragDrop extends KtElement {
+  static readonly formAssociated = true;
   static override styles = [
     KtElement.styles,
     css`
@@ -159,6 +166,8 @@ export class KtDragDrop extends KtElement {
   @query('input[type="file"]')
   private fileInput!: HTMLInputElement;
 
+  private internals: UsableInternals | null = null;
+
   @state()
   private dragging = false;
 
@@ -195,6 +204,49 @@ export class KtDragDrop extends KtElement {
 
   @property({ type: Boolean, reflect: true })
   disabled = false;
+
+  /** The files are submitted under this name, as by `<input type="file">`. */
+  @property({ type: String })
+  name = '';
+
+  @property({ type: Boolean, reflect: true })
+  required = false;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.internals ??= attachFormInternals(this);
+  }
+
+  // Untyped: `files` is private state, which PropertyValues<this> cannot name.
+  override willUpdate(changed: PropertyValues): void {
+    if (changed.has('files') || changed.has('name') || changed.has('required')) {
+      this.syncFormValue();
+    }
+  }
+
+  private syncFormValue(): void {
+    // Like a native file input: nothing is submitted without a name or without
+    // a file, and each file is its own entry under the one name.
+    let value: FormData | null = null;
+    if (this.name && this.files.length > 0) {
+      value = new FormData();
+      for (const file of this.files) value.append(this.name, file);
+    }
+    setFormValue(this.internals, value);
+
+    const missing = this.required && this.files.length === 0;
+    setValidity(this.internals, { valueMissing: missing }, missing ? 'Select a file.' : '');
+  }
+
+  formResetCallback(): void {
+    this.files = [];
+    this.dragging = false;
+  }
+
+  formStateRestoreCallback(state: string | File | FormData | null): void {
+    if (!(state instanceof FormData) || !this.name) return;
+    this.files = state.getAll(this.name).filter((entry): entry is File => entry instanceof File);
+  }
 
   /** The files currently held, newest last. */
   get selectedFiles(): readonly File[] {
