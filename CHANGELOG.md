@@ -5,6 +5,13 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.2] — 2026-09-23
+
+### Changed
+
+- `homepage` in `package.json` points to the documentation site,
+  <https://kanto.arnaudmichel.fr>, instead of the README.
+
 ## [1.0.1] — 2026-09-15
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "kanto-ds",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Framework-agnostic design system for data-dense product interfaces.",
   "keywords": [
     "design-system",
@@ -10,7 +10,7 @@
     "ui",
     "dark-theme"
   ],
-  "homepage": "https://github.com/MrArnaudMichel/kanto#readme",
+  "homepage": "https://kanto.arnaudmichel.fr",
   "bugs": "https://github.com/MrArnaudMichel/kanto/issues",
   "repository": {
     "type": "git",
