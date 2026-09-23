@@ -38,6 +38,10 @@ jobs:
 
       - run: npm ci
 
+      # `npm publish` runs the whole verify chain first (prepublishOnly), and
+      # that includes the browser tests.
+      - run: npx playwright install --with-deps chromium
+
       # A tag that disagrees with package.json would publish the wrong number,
       # and a version on npm can never be reused.
       - name: Check the tag matches package.json

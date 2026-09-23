@@ -2,6 +2,7 @@
 
 ```bash
 npm install
+npx playwright install chromium   # once, for the browser tests
 npm run dev      # documentation site at http://localhost:5173
 npm test
 ```
@@ -49,6 +50,17 @@ part of the public API. Reaching for the same thing through `kanto-ds` pulls in
 the barrel — every element, and a cycle back onto the file that started it.
 Test helpers are `#test/fixture`. The public entry points are for the demo site
 and the tests, not for the library's own modules.
+
+**Two test environments.** `*.test.ts` runs in happy-dom: fast, and right for
+rendering, events and state. `*.browser.test.ts` runs in headless Chromium, for
+what a simulated DOM cannot compute — layout, the top layer, hit testing, focus,
+and the axe audit in `src/components/a11y.browser.test.ts`, which checks every
+element in both themes. A new element gets a case there. `npm test` runs both;
+`npx vitest --project unit` runs only the fast one.
+
+Form controls are tested through `formFixture`, which fakes the
+`ElementInternals` happy-dom does not implement and returns spies for
+`setFormValue` and `setValidity`.
 
 **A test per behaviour, not per method.** The suite should read as a
 description of what the component does. Tests that assert on internals age

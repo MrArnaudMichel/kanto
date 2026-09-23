@@ -34,6 +34,10 @@ jobs:
       - name: Types
         run: npm run typecheck
 
+      # The browser project runs layout, hit-testing and axe audits in Chromium.
+      - name: Install Chromium for the browser tests
+        run: npx playwright install --with-deps chromium
+
       - name: Tests
         run: npm run test:coverage
 

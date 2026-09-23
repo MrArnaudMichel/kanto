@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'node:url';
+import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -16,9 +17,35 @@ export default defineConfig({
     ],
   },
   test: {
-    environment: 'happy-dom',
-    include: ['src/**/*.test.ts', 'demo/**/*.test.ts', 'scripts/**/*.test.ts'],
     setupFiles: ['src/test/setup.ts'],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'happy-dom',
+          include: ['src/**/*.test.ts', 'demo/**/*.test.ts', 'scripts/**/*.test.ts'],
+          exclude: ['**/*.browser.test.ts'],
+        },
+      },
+      /* What a simulated DOM cannot answer — layout, the top layer, real focus,
+         hit testing, computed colour contrast — runs in Chromium. Kept to its
+         own files so the fast suite stays fast. */
+      {
+        extends: true,
+        test: {
+          name: 'browser',
+          include: ['src/**/*.browser.test.ts'],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            headless: true,
+            instances: [{ browser: 'chromium' }],
+            screenshotFailures: false,
+          },
+        },
+      },
+    ],
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],
