@@ -22,7 +22,9 @@
   "sideEffects": [
     "*.css",
     "./dist/components/**",
-    "./dist/icons/defaults.js"
+    "./dist/icons/defaults.js",
+    "./src/components/**",
+    "./src/icons/defaults.ts"
   ],
   "engines": {
     "node": ">=20"
