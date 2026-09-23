@@ -49,6 +49,10 @@ for (const [entry, target] of Object.entries(pkg.exports)) {
   }
 }
 
+// Fields tools read outside the exports map: the manifest for Storybook and
+// docs generators, web-types for JetBrains IDEs.
+for (const field of ['customElements', 'web-types']) check(field, pkg[field]);
+
 if (failures.length > 0) {
   console.error(`\n${failures.length} entry point(s) do not exist. Did the build change shape?`);
   process.exit(1);

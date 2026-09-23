@@ -128,6 +128,24 @@ input — no hidden mirror inputs, no manual wiring.
 </form>
 ```
 
+## Editor support
+
+The package ships a [Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/)
+— every element's attributes, properties, events, slots and CSS parts — and
+editor data generated from it, so plain HTML gets completion and hover docs:
+
+- **WebStorm / JetBrains** read `web-types.json` from the package on their own.
+- **VS Code** needs pointing at it once, in `.vscode/settings.json`:
+
+  ```json
+  {
+    "html.customData": ["./node_modules/kanto-ds/dist/vscode.html-custom-data.json"],
+    "css.customData": ["./node_modules/kanto-ds/dist/vscode.css-custom-data.json"]
+  }
+  ```
+
+- **Storybook** and API-docs generators take `kanto-ds/custom-elements.json`.
+
 ## Accessibility
 
 Not a phase at the end; it is why several of these components exist in this

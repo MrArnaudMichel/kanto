@@ -32,6 +32,8 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "customElements": "./dist/custom-elements.json",
+  "web-types": "./dist/web-types.json",
   "imports": {
     "#internal/*": {
       "kanto-source": "./src/internal/*.ts",
@@ -228,6 +230,10 @@
     "./styles.css": "./dist/styles.css",
     "./tokens/*": "./dist/tokens/*",
     "./assets/*": "./dist/assets/*",
+    "./custom-elements.json": "./dist/custom-elements.json",
+    "./web-types.json": "./dist/web-types.json",
+    "./vscode.html-custom-data.json": "./dist/vscode.html-custom-data.json",
+    "./vscode.css-custom-data.json": "./dist/vscode.css-custom-data.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -238,10 +244,11 @@
   ],
   "scripts": {
     "dev": "vite --config demo/vite.config.ts",
-    "build": "npm run build:js && npm run build:types && npm run build:static",
+    "build": "npm run build:js && npm run build:types && npm run build:static && npm run build:manifest",
     "build:js": "vite build",
     "build:types": "tsc -p tsconfig.build.json",
     "build:static": "node scripts/copy-static.js",
+    "build:manifest": "cem analyze --config custom-elements-manifest.config.js",
     "build:demo": "vite build --config demo/vite.config.ts",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -280,9 +287,12 @@
     }
   },
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.11.0",
     "@eslint/js": "^10.0.1",
     "@types/react": "^19.2.18",
     "@vitest/coverage-v8": "^5.0.0",
+    "custom-element-jet-brains-integration": "^1.8.0",
+    "custom-element-vs-code-integration": "^1.5.0",
     "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-lit": "^2.3.1",
