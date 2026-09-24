@@ -53,10 +53,36 @@ describe('kt-progress-bar', () => {
 
   it('shows the percentage only when asked', async () => {
     const el = await fixture<KtProgressBar>('<kt-progress-bar value="42"></kt-progress-bar>');
-    expect(el.shadowRoot!.querySelector('.label')).toBeNull();
+    expect(el.shadowRoot!.querySelector('.caption')).toBeNull();
 
     el.showValue = true;
     await settle(el);
-    expect(el.shadowRoot!.querySelector('.label')!.textContent!.trim()).toBe('42%');
+    expect(el.shadowRoot!.querySelector('.caption-value')!.textContent!.trim()).toBe('42%');
+  });
+
+  it('keeps the percentage out of the track', async () => {
+    // Centred over an 8px bar it is half on the fill and half off it, so it is
+    // unreadable at one end of the range whatever colour it is given — and at
+    // size="small" the 4px track clips it outright.
+    const el = await fixture<KtProgressBar>(
+      '<kt-progress-bar value="42" show-value></kt-progress-bar>',
+    );
+    const track = el.shadowRoot!.querySelector('.track')!;
+    expect(track.textContent!.trim()).toBe('');
+    expect(el.shadowRoot!.querySelector('.caption-value')).not.toBeNull();
+  });
+
+  it('shows the label as text only when asked, and names the bar either way', async () => {
+    const el = await fixture<KtProgressBar>(
+      '<kt-progress-bar value="42" label="Uploading"></kt-progress-bar>',
+    );
+    expect(el.shadowRoot!.querySelector('[role="progressbar"]')!.getAttribute('aria-label')).toBe(
+      'Uploading',
+    );
+    expect(el.shadowRoot!.querySelector('.caption-label')).toBeNull();
+
+    el.showLabel = true;
+    await settle(el);
+    expect(el.shadowRoot!.querySelector('.caption-label')!.textContent!.trim()).toBe('Uploading');
   });
 });
