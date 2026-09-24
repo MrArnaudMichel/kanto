@@ -1,18 +1,21 @@
 /**
- * React wrappers for the Kanto elements.
+ * React wrappers for the Kanto elements — for React 18.
  *
- * React 19 can set custom-element properties and listen for custom events on
- * its own, so these wrappers are not strictly required. They are here for what
- * plain JSX still cannot give you: typed props with autocompletion, typed
- * event handlers as `onKtChange` rather than `useEffect` plus
- * `addEventListener`, and refs typed as the element rather than `HTMLElement`.
+ * React 18 sets every prop as a string attribute and cannot listen for custom
+ * events, so each element is wrapped with `@lit/react`: props become
+ * properties, `onKtChange` listens for `kt-change`, refs are typed as the
+ * element. `@lit/react` is an optional peer dependency — a React 18 project
+ * installs it alongside kanto-ds:
+ *
+ *     npm install kanto-ds @lit/react
  *
  *     import { KtButton, KtInput } from 'kanto-ds/react';
  *     import 'kanto-ds/styles.css';
  *
  *     <KtInput placeholder="Search" onKtChange={(e) => setQuery(e.detail.value)} />
  *
- * React is a peer dependency: the package works without it.
+ * React 19 needs none of this: it renders the `kt-*` tags directly, and
+ * `kanto-ds/react/jsx` types them.
  */
 import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';

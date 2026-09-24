@@ -26,6 +26,7 @@ function entries(): Record<string, string> {
     join(src, 'index.ts'),
     join(src, 'icons/index.ts'),
     join(src, 'react/index.ts'),
+    join(src, 'react/jsx.ts'),
     join(src, 'vue/index.ts'),
     ...walk(join(src, 'components'), (f) => /kt-[a-z-]+\.ts$/.test(f) && !f.endsWith('.test.ts')),
   ];

@@ -39,32 +39,56 @@ select.addEventListener('kt-change', (e) => console.log(e.detail.value));
 
 ## React
 
-React 19 can set custom-element properties and listen for custom events by
-itself, so the elements work in plain JSX. The wrappers exist for what JSX
-still cannot give you — typed props, typed `onKt*` handlers, and refs typed as
-the element:
+### React 19
+
+React 19 renders custom elements natively: a prop the element has is set as a
+property, so `options={regions}` arrives as an array, and a prop named `on` +
+an event name listens for that event. Use the tags directly — no wrapper, no
+extra package:
 
 ```tsx
-import { KtInput, KtSelect, KtButton } from 'kanto-ds/react';
+import 'kanto-ds';
 import 'kanto-ds/styles.css';
+import type {} from 'kanto-ds/react/jsx'; // types for the kt-* tags, loads nothing
 
 export function Filters() {
-  const [query, setQuery] = useState('');
+  const [region, setRegion] = useState<string | number | null>(null);
 
   return (
     <>
-      <KtInput
-        placeholder="Search everything..."
-        icon="search"
-        value={query}
-        onKtInput={(e) => setQuery(e.detail.value)}
-      />
-      <KtSelect options={regions} onKtChange={(e) => setRegion(e.detail.value)} />
-      <KtButton variant="primary">Appliquer</KtButton>
+      <kt-select options={regions} onkt-change={(e) => setRegion(e.detail.value)} />
+      <kt-button variant="primary">Apply</kt-button>
     </>
   );
 }
 ```
+
+Events keep their own name after `on`: `onkt-change` for `kt-change`,
+`onkt-files-change` for `kt-files-change`. `kanto-ds/react/jsx` is what lets
+TypeScript accept the `kt-*` tags, and it types each one's properties and each
+handler's `e.detail`. A plain JavaScript project can skip it.
+
+### React 18
+
+React 18 sets every prop as a string attribute and cannot listen for custom
+events, so it needs the wrappers in `kanto-ds/react`. They are built on
+`@lit/react`, which Kanto does not install for everyone — **install it
+alongside**:
+
+```bash
+npm install kanto-ds @lit/react
+```
+
+```tsx
+import { KtSelect, KtButton } from 'kanto-ds/react';
+import 'kanto-ds/styles.css';
+
+<KtSelect options={regions} onKtChange={(e) => setRegion(e.detail.value)} />
+<KtButton variant="primary">Apply</KtButton>
+```
+
+The wrappers also work on React 19, if you prefer `onKtChange` to
+`onkt-change`.
 
 ## Vue
 
