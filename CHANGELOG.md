@@ -5,7 +5,76 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.0.2] — 2026-09-23
+## [1.1.0] — 2026-09-24
+
+### Added
+
+- **Editor support.** The package ships a Custom Elements Manifest
+  (`kanto-ds/custom-elements.json`) describing every element's attributes,
+  properties, events, slots and CSS parts, and the editor data generated from
+  it: `web-types.json`, which JetBrains IDEs pick up on their own, and VS
+  Code's HTML and CSS custom data. Plain HTML gets completion and hover docs;
+  the README has the one-line VS Code setting.
+
+- `popup` and `expanded` on `kt-button`, passed to its inner button as
+  `aria-haspopup` and `aria-expanded`. `kt-dropdown` sets them on its trigger;
+  set them yourself when a button opens something else.
+
+- **A `-text` step for every brand and semantic colour** —
+  `--color-primary-text`, `--color-success-text`, `--color-warning-text`,
+  `--color-danger-text`, `--color-info-text` — for text and icons, and
+  `--color-danger-solid` for a filled destructive button.
+
+### Fixed
+
+**Every text colour meets WCAG AA in both themes.** An axe audit of every
+element, one case per tone and variant, found 21 places under 4.5:1 — the
+light success badge sat at 1.58:1. All pass now.
+
+- Text and icons use the new `-text` steps; fills keep `-base`, so tinted
+  backgrounds and solid buttons look as they did.
+- `--color-primary-base` is a shade darker (`#5f5dea`) so white text on a
+  primary button clears 4.5:1, and `--color-primary-hover` darkens instead of
+  lightening, for the same reason. The delete button moves to
+  `--color-danger-solid`.
+- `--color-text-400`, behind `--text-muted`, lifts from `#9191a1` to
+  `#a9a9b5` in dark. Labels, eyebrows and placeholders that were set in
+  `--color-text-500` use `--text-muted`.
+- Avatar initials mix the person's hue with the body text, so all eight hues
+  read on their tint.
+
+**Every field is a form control, as 1.0.0 promised.** `kt-input-menu`,
+`kt-drag-drop` and `kt-segmented-control` held a value but never reached the
+form around them, so a submission silently left them out. They are now
+form-associated, like the other fields: serialised into `FormData` under
+`name`, validated with `required`, and reset by `form.reset()`.
+
+- `kt-input-menu` submits the chosen option's `id`, never its label.
+- `kt-drag-drop` submits every held file under its `name`, exactly as
+  `<input type="file" multiple>` would, so a `multipart/form-data` post works
+  with no extra code. Without a `name` it submits nothing, like the native
+  input.
+- `kt-segmented-control` submits its `value`.
+- **A disabled `kt-segmented-control` ignores the keyboard.** It was dimmed and
+  ignored the pointer, but its segments kept their tab stop, and the arrow keys
+  still changed the value.
+
+**Screen readers hear what the screen shows.** An axe audit of every element in
+both themes, in a real browser, found these:
+
+- **`kt-toggle` had no accessible name** when its label was slotted: the switch
+  and the text beside it were not connected, so it was announced as an
+  unnamed switch.
+- **`kt-dropdown` announced its state nowhere.** `aria-expanded` sat on a
+  wrapper that never takes focus, where it is not even allowed. It now goes on
+  the trigger itself, and `aria-haspopup="menu"` only when the panel is a menu
+  — a panel of free content is a plain disclosure. `kt-split-button`'s caret
+  follows.
+- **`kt-input`'s error message was never read.** `aria-errormessage` held the
+  message text instead of an element id, so "Enter an email." was taken for
+  three ids that do not exist. The message is now linked with
+  `aria-describedby`, as it newly is on `kt-textarea`, which had no link at
+  all.
 
 ### Changed
 
