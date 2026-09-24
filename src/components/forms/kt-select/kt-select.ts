@@ -81,11 +81,21 @@ export class KtSelect extends KtElement {
         background-color: var(--color-dark-20);
         border: none;
         border-radius: var(--radius-input);
-        /* A transition needs somewhere to start. Without a resting
-           outline-color the animation begins at the initial value — which
-           resolves to the text colour — and hover flashes near-white before
-           settling. An outline takes no layout space, so declaring it
-           transparent costs nothing. */
+        /* A resting hairline. A field is a fill on --surface-field, which is
+           one ramp step from the page in dark and almost the same colour in
+           light — so on a card or inside a modal it simply disappeared and
+           read as a bare native control.
+
+           A border rather than an outline, because the control inside fills
+           the field exactly and a coincident outline is painted over by the
+           native widget. A border insets the control by its own width, so it
+           cannot be covered. box-sizing: border-box keeps the outer size.
+
+           The hover and focus rings stay outlines on top of it, and the
+           transparent resting outline is what they animate from: without it
+           outline-color starts at the initial value, which resolves to the
+           text colour, and hover flashed near-white before settling. */
+        border: var(--border-width) solid var(--border-field);
         outline: var(--outline-width) solid transparent;
         cursor: pointer;
         transition:

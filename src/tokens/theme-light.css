@@ -61,6 +61,10 @@
   --chart-grid: var(--color-dark-20);
   --chart-axis: var(--color-text-500);
 
+  /* Its own step, not a flip of the dark one: white fields on a near-white
+     page need a darker hairline than dark fields on a dark page do. */
+  --border-field: var(--color-dark-24);
+
   /* The relationship survives the flip: the panel stays one step above the
      fields, both just lighter now. */
   --surface-form: var(--color-dark-14);
@@ -124,6 +128,8 @@
 
     --chart-grid: var(--color-dark-20);
     --chart-axis: var(--color-text-500);
+
+    --border-field: var(--color-dark-24);
 
     --surface-form: var(--color-dark-14);
     --surface-field: var(--color-dark-8);

@@ -132,4 +132,25 @@ describe('component stylesheets', () => {
 
     expect(offenders).toEqual([]);
   });
+
+  /**
+   * A field is a fill on --surface-field, which is one ramp step from the page
+   * in dark and almost the same colour in light. Without a resting hairline it
+   * disappears the moment it sits on a card or in a modal, and reads as a bare
+   * native control rather than as a Kanto field.
+   */
+  it('gives every text field a resting hairline', () => {
+    const FIELDS = ['kt-input', 'kt-input-menu', 'kt-select', 'kt-textarea'];
+
+    for (const [name, element] of ELEMENTS) {
+      if (!FIELDS.includes(name)) continue;
+      const body = cssTextOf(element.styles);
+
+      // A border, not an outline: the control inside fills the field exactly,
+      // and a coincident outline is painted over by the native widget.
+      expect(body, `${name} has no resting hairline`).toMatch(
+        /border:\s*var\(--border-width\)\s+solid\s+var\(--border-field\)/,
+      );
+    }
+  });
 });

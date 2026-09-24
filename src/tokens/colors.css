@@ -98,6 +98,12 @@
   --chart-grid: var(--color-dark-20);
   --chart-axis: var(--color-text-500);
 
+  /* A field's hairline. Deliberately stronger than --border-subtle: a panel
+     divider only has to separate two areas of the same surface, while a field
+     has to read as a field on the page, on a card and inside a modal — three
+     different backgrounds, one of which it very nearly matches. */
+  --border-field: var(--color-text-700);
+
   /* A form panel sits one step above the page so its fields, which are
      filled at --color-dark-12, read as wells recessed into it. */
   --surface-form: var(--color-dark-16);
