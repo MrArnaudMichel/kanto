@@ -406,9 +406,23 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
 
   'kt-progress-bar': () =>
     html`<div class="demo-stack">
-      <kt-progress-bar value="64" show-value label="Importing"></kt-progress-bar>
-      <kt-progress-bar value="88" variant="warning" striped animated></kt-progress-bar>
-      <kt-progress-bar value="100"></kt-progress-bar>
+      <kt-progress-bar
+        value="64"
+        show-value
+        show-label
+        label="Importing 4,210 rows"
+      ></kt-progress-bar>
+      <kt-progress-bar
+        value="88"
+        show-value
+        show-label
+        label="Rebuilding the index"
+        variant="warning"
+        striped
+        animated
+      ></kt-progress-bar>
+      <kt-progress-bar value="100" show-value show-label label="Done"></kt-progress-bar>
+      <kt-progress-bar value="42" size="small" label="Uploading"></kt-progress-bar>
     </div>`,
 
   'kt-skeleton': () =>
