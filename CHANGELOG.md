@@ -5,6 +5,33 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] — 2026-09-24
+
+React 19 is now the first-class path: it renders the `kt-*` tags directly, so
+it needs no wrapper and no extra package. The React 18 wrappers stay, and stop
+costing everyone else a dependency.
+
+### Changed
+
+- **`@lit/react` is no longer installed with kanto-ds.** It is an optional peer
+  dependency, needed only by the wrappers in `kanto-ds/react`. **On React 18,
+  install it alongside:** `npm install @lit/react`. Without it, importing
+  `kanto-ds/react` fails to resolve. Vue, Angular, Svelte and React 19 projects
+  never install it.
+- `react-dom` is no longer listed as an optional peer dependency: nothing in
+  Kanto imports it.
+
+### Added
+
+- **`kanto-ds/react/jsx`**, JSX typings for React 19. Without it TypeScript
+  rejects every `kt-*` tag; with it, each tag takes its own properties and a
+  typed handler for each event it fires — `onkt-change={(e) => e.detail.value}`.
+  Types only: importing it loads nothing.
+
+### Fixed
+
+- The docs said Kanto ships seventeen default icons; it ships 22.
+
 ## [1.1.0] — 2026-09-24
 
 ### Added
