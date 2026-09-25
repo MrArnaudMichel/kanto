@@ -28,7 +28,7 @@ navigation and a row of actions.
 | Slot      | Where                                                      |
 | --------- | ---------------------------------------------------------- |
 | `brand`   | Start of the bar. Logo or wordmark.                        |
-| _default_ | Middle. Primary navigation.                                |
+| _default_ | Centre. Primary navigation.                                |
 | `actions` | End. Stays visible at every width.                         |
 | `menu`    | What the menu button reveals below the breakpoint.         |
 | `bottom`  | A second row under the bar — sub-navigation, a breadcrumb. |
@@ -36,6 +36,21 @@ navigation and a row of actions.
 `menu` is a separate slot rather than a reuse of the default one because a node
 can only be assigned to one slot. Put a compact copy of the navigation there —
 usually a plain stacked list rather than the horizontal bar.
+
+## Centring
+
+The bar is a three-column grid whose outer columns are equal, so the navigation
+sits in the middle of the **bar** rather than in the middle of whatever the
+brand and the actions left over. With a flex row it lands off-centre by half the
+difference between those two, which is small enough to look like a mistake
+rather than like a choice.
+
+Everything in the default slot is centred as one group, so put anything that
+belongs beside the wordmark — a version chip, an environment badge — in the
+`brand` slot rather than in the default one.
+
+Set `nav-align="start"` to butt the navigation against the brand instead, for a
+header whose middle column is a search field or a breadcrumb.
 
 ## Collapsing
 
@@ -57,11 +72,12 @@ hard to read.
 
 ## API
 
-| Property   | Attribute  | Type      | Default |
-| ---------- | ---------- | --------- | ------- |
-| `sticky`   | `sticky`   | `boolean` | `false` |
-| `bordered` | `bordered` | `boolean` | `true`  |
-| `label`    | `label`    | `string`  | `''`    |
+| Property   | Attribute   | Type                  | Default    |
+| ---------- | ----------- | --------------------- | ---------- |
+| `sticky`   | `sticky`    | `boolean`             | `false`    |
+| `bordered` | `bordered`  | `boolean`             | `true`     |
+| `label`    | `label`     | `string`              | `''`       |
+| `navAlign` | `nav-align` | `'center' \| 'start'` | `'center'` |
 
 | Method / getter | Description               |
 | --------------- | ------------------------- |

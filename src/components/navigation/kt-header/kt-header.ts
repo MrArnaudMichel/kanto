@@ -27,6 +27,11 @@ import '../../core/kt-button/kt-button.js';
  * @csspart bar - The main row.
  * @csspart bottom - The second row.
  *
+ * The bar is a three-column grid whose outer columns are equal, so the
+ * navigation is centred in the bar rather than in whatever the brand and the
+ * actions left over. Set `nav-align="start"` to butt it against the brand
+ * instead.
+ *
  * @cssproperty --kt-header-breakpoint - Where the navigation collapses. 900px.
  * @cssproperty --kt-header-height - Height of the main row. 64px.
  *
@@ -74,17 +79,26 @@ export class KtHeader extends KtElement {
         border-bottom: var(--border-width) solid var(--border-subtle);
       }
 
+      /* Three columns rather than a flex row, and the outer two share what is
+         left equally: with flex:1 on the middle, the navigation is centred in
+         the leftover space, so it sits off-centre by half the difference
+         between the brand and the actions — which is exactly how far off it
+         looked. Equal outer columns centre it in the bar itself. */
       .bar {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         align-items: center;
         gap: var(--gap-card);
         min-height: var(--kt-header-height);
         padding: 0 var(--padding-card);
       }
 
+      :host([nav-align='start']) .bar {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+      }
+
       .brand {
         display: flex;
-        flex: none;
         align-items: center;
         gap: var(--gap-button);
         color: var(--text-body);
@@ -93,15 +107,19 @@ export class KtHeader extends KtElement {
 
       .nav {
         display: flex;
-        flex: 1;
         align-items: center;
+        justify-content: center;
         min-width: 0;
+      }
+
+      :host([nav-align='start']) .nav {
+        justify-content: flex-start;
       }
 
       .actions {
         display: flex;
-        flex: none;
         align-items: center;
+        justify-content: flex-end;
         gap: var(--gap-button);
       }
 
@@ -144,6 +162,10 @@ export class KtHeader extends KtElement {
   /** Pins the header to the top of the viewport. */
   @property({ type: Boolean, reflect: true })
   sticky = false;
+
+  /** Where the navigation sits: centred in the bar, or against the brand. */
+  @property({ type: String, reflect: true, attribute: 'nav-align' })
+  navAlign: 'center' | 'start' = 'center';
 
   @property({ type: Boolean, reflect: true })
   bordered = true;
