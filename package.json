@@ -270,7 +270,8 @@
     "format:check": "prettier --check .",
     "clean": "node -e \"fs.rmSync(dist,{recursive:true,force:true})\"",
     "check:exports": "node scripts/check-exports.js",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports && npm run build:demo",
+    "check:size": "node scripts/check-size.js",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports && npm run check:size && npm run build:demo",
     "release": "node scripts/release.js",
     "release:dry": "node scripts/release.js --dry-run",
     "prepublishOnly": "npm run verify"
@@ -306,6 +307,7 @@
     "axe-core": "^4.13.0",
     "custom-element-jet-brains-integration": "^1.8.0",
     "custom-element-vs-code-integration": "^1.5.0",
+    "esbuild": "^0.28.2",
     "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-lit": "^2.3.1",

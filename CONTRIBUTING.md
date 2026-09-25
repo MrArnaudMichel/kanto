@@ -68,9 +68,14 @@ badly; tests that assert on the rendered result and the events do not.
 
 ## Before opening a pull request
 
+Every entry point has a gzipped size budget in `size-budget.json`, 10% above
+its size when last set. If a change grows a component on purpose, raise its
+budget in the same pull request with `node scripts/check-size.js --update`, so
+the growth shows up in review.
+
 ```bash
 npm run format   # rewrites; the rest only report
-npm run verify   # format:check, lint, typecheck, test, both builds, check:exports
+npm run verify   # format:check, lint, typecheck, test, both builds, check:exports, check:size
 ```
 
 `verify` is the same chain CI runs and the same one a release refuses to skip,

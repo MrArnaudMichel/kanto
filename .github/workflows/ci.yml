@@ -52,6 +52,11 @@ jobs:
       - name: Resolve every public entry point
         run: node scripts/check-exports.js
 
+      # Each entry point against size-budget.json: an accidental import that
+      # drags half the library into a button fails here, not in someone's app.
+      - name: Size budgets
+        run: node scripts/check-size.js
+
       - uses: actions/upload-artifact@v7
         if: always()
         with:
