@@ -187,4 +187,15 @@ describe('kt-sub-menu-navigation', () => {
     expect(el.hasAttribute('collapsed')).toBe(true);
     expect(el.shadowRoot!.querySelector('kt-icon[name="house"]')).not.toBeNull();
   });
+
+  it('gives a branch row the same width as a link row', async () => {
+    // A <button> sizes to its content even as a flex container, so without an
+    // explicit width the hover fill stopped at the end of the word.
+    el.sections = NESTED;
+    await settle(el);
+
+    const branchRow = branch(el, 'Settings');
+    expect(getComputedStyle(branchRow).width).toBe('100%');
+    expect(getComputedStyle(branchRow).boxSizing).toBe('border-box');
+  });
 });
