@@ -5,6 +5,43 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] — 2026-09-25
+
+### Added
+
+**`kt-checkbox`** — a choice that applies when the form is submitted.
+
+- A real `<input type="checkbox">` sits invisibly over the drawn box, so Space,
+  the click on the label, the indeterminate state and what a screen reader
+  announces all come from the platform.
+- `indeterminate` draws a dash for a "select all" over a partial selection;
+  the first click clears it, as on a native checkbox.
+- Three sizes, off the button heights like `kt-toggle`.
+- A form control: its `value` under `name` when checked, nothing otherwise;
+  `required`, `error` and `form.reset()`.
+
+**`kt-radio-group`** with **`kt-radio`** options — one choice among a few, all
+visible.
+
+- Native radios cannot form a group across shadow roots, so this is the ARIA
+  radio group pattern: one tab stop, landing on the chosen option; arrow keys
+  move and select, wrapping and skipping disabled options; Space selects.
+- The group owns the value and is the form control: `name`, `required`,
+  `error`, `form.reset()`. `orientation="horizontal"` lays the options in a
+  row.
+
+Both ship with React 18 wrappers, React 19 JSX and Vue typings.
+
+- `checkRequired` in `KtStrings`, the message of a required checkbox left
+  unchecked. The `minus` icon joins the defaults, for the indeterminate state.
+
+### Fixed
+
+- Four strings still fell back to English behind `||` and `??`: the
+  toggle-button group's "Options", the chart data table's "Chart data" caption
+  and "Value" column, and `kt-form`'s "Form section". They are now `options`,
+  `chartData`, `chartValue` and `formSection` in `KtStrings`.
+
 ## [1.3.0] — 2026-09-25
 
 ### Added
