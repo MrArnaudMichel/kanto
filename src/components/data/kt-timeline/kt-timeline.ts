@@ -114,7 +114,7 @@ export class KtTimelineItem extends KtElement {
 
       .item {
         display: grid;
-        grid-template-columns: 24px 1fr;
+        grid-template-columns: 26px 1fr;
         gap: 12px;
         padding-bottom: 20px;
       }
@@ -147,61 +147,61 @@ export class KtTimelineItem extends KtElement {
         content: none;
       }
 
+      /* Hairline, wash, ink — the same three parts a chip and a badge wear, so
+         a marker beside them reads as the same system. A soft fill with no
+         border is a different one's idea of a timeline. */
       .marker {
         display: flex;
         flex-shrink: 0;
         align-items: center;
         justify-content: center;
-        width: 24px;
-        height: 24px;
-        color: var(--text-muted);
-        background: var(--surface-raised);
+        box-sizing: border-box;
+        width: 26px;
+        height: 26px;
+        color: var(--marker-ink, var(--text-muted));
+        background: var(--marker-wash, var(--surface-raised));
+        border: var(--border-width) solid var(--marker-line, var(--border-subtle));
         border-radius: var(--radius-full);
       }
 
-      /* Without an icon the marker is a dot, not an empty ring. */
+      /* Without an icon the marker is a dot, not an empty ring — but it keeps
+         the ring, so the rail reads as one line of marks rather than two. */
       .marker.dot {
-        width: 9px;
-        height: 9px;
+        width: 11px;
+        height: 11px;
         margin-top: 7px;
-        background: var(--text-disabled);
+        background: var(--marker-ink, var(--text-disabled));
+        border-color: color-mix(
+          in srgb,
+          var(--marker-ink, var(--text-disabled)) 45%,
+          var(--surface-page)
+        );
       }
 
       .marker.primary {
-        color: var(--color-primary-base);
-        background: var(--color-primary-soft);
+        --marker-ink: var(--color-primary-base);
+        --marker-wash: var(--color-primary-soft);
+        --marker-line: color-mix(in srgb, var(--color-primary-base) 45%, transparent);
       }
       .marker.success {
-        color: var(--color-success-base);
-        background: var(--color-success-soft);
+        --marker-ink: var(--color-success-base);
+        --marker-wash: var(--color-success-soft);
+        --marker-line: color-mix(in srgb, var(--color-success-base) 45%, transparent);
       }
       .marker.warning {
-        color: var(--color-warning-base);
-        background: var(--color-warning-soft);
+        --marker-ink: var(--color-warning-base);
+        --marker-wash: var(--color-warning-soft);
+        --marker-line: color-mix(in srgb, var(--color-warning-base) 45%, transparent);
       }
       .marker.danger {
-        color: var(--color-danger-base);
-        background: var(--color-danger-soft);
+        --marker-ink: var(--color-danger-base);
+        --marker-wash: var(--color-danger-soft);
+        --marker-line: color-mix(in srgb, var(--color-danger-base) 45%, transparent);
       }
       .marker.info {
-        color: var(--color-info-base);
-        background: var(--color-info-soft);
-      }
-
-      .marker.dot.primary {
-        background: var(--color-primary-base);
-      }
-      .marker.dot.success {
-        background: var(--color-success-base);
-      }
-      .marker.dot.warning {
-        background: var(--color-warning-base);
-      }
-      .marker.dot.danger {
-        background: var(--color-danger-base);
-      }
-      .marker.dot.info {
-        background: var(--color-info-base);
+        --marker-ink: var(--color-info-base);
+        --marker-wash: var(--color-info-soft);
+        --marker-line: color-mix(in srgb, var(--color-info-base) 45%, transparent);
       }
 
       .content {

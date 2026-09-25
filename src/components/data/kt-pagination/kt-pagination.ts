@@ -2,6 +2,7 @@ import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '../../../internal/kt-element.js';
 import { emit } from '../../../internal/events.js';
+import '../../core/kt-icon/kt-icon.js';
 
 /**
  * Previous / next paging, with the position between them.
@@ -93,7 +94,8 @@ export class KtPagination extends KtElement {
         aria-label="Previous page"
         @click=${() => this.go(this.page - 1)}
       >
-        Prev
+        <kt-icon name="chevron-left" size="16"></kt-icon>
+        Previous
       </button>
 
       <!-- polite, so a page change is announced without interrupting whatever
@@ -110,6 +112,7 @@ export class KtPagination extends KtElement {
         @click=${() => this.go(this.page + 1)}
       >
         Next
+        <kt-icon name="chevron-right" size="16"></kt-icon>
       </button>
     </nav>`;
   }
