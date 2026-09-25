@@ -136,6 +136,27 @@ const CASES: Record<string, Case> = {
     },
   },
   'kt-textarea': { markup: '<kt-textarea label="Message"></kt-textarea>' },
+  'kt-checkbox': { markup: '<kt-checkbox>Send me updates</kt-checkbox>' },
+  'kt-checkbox checked': { markup: '<kt-checkbox checked>Send me updates</kt-checkbox>' },
+  'kt-checkbox indeterminate': { markup: '<kt-checkbox indeterminate>Select all</kt-checkbox>' },
+  'kt-checkbox (label property)': { markup: '<kt-checkbox label="Select row"></kt-checkbox>' },
+  'kt-checkbox (error)': {
+    markup: '<kt-checkbox error="Accept the terms to continue">I accept the terms</kt-checkbox>',
+  },
+  'kt-checkbox disabled': { markup: '<kt-checkbox disabled checked>Unavailable</kt-checkbox>' },
+  'kt-radio-group': {
+    markup: `<kt-radio-group label="Billing" value="monthly">
+      <kt-radio value="monthly">Monthly</kt-radio>
+      <kt-radio value="yearly">Yearly</kt-radio>
+      <kt-radio value="custom" disabled>Custom contract</kt-radio>
+    </kt-radio-group>`,
+  },
+  'kt-radio-group (error)': {
+    markup: `<kt-radio-group label="Plan" error="Choose a plan">
+      <kt-radio value="free">Free</kt-radio>
+      <kt-radio value="pro">Pro</kt-radio>
+    </kt-radio-group>`,
+  },
   'kt-toggle': { markup: '<kt-toggle>Notifications</kt-toggle>' },
   'kt-breadcrumb': {
     markup: '<kt-breadcrumb></kt-breadcrumb>',

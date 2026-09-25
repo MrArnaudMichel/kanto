@@ -503,6 +503,21 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-toggle disabled>Unavailable</kt-toggle>
     </div>`,
 
+  'kt-checkbox': () =>
+    html`<div class="demo-stack">
+      <kt-checkbox checked>Send me product updates</kt-checkbox>
+      <kt-checkbox indeterminate>Select all regions</kt-checkbox>
+      <kt-checkbox required>I accept the terms</kt-checkbox>
+      <kt-checkbox disabled>Unavailable</kt-checkbox>
+    </div>`,
+
+  'kt-radio-group': () =>
+    html`<kt-radio-group label="Billing" name="billing" value="monthly">
+      <kt-radio value="monthly">Monthly</kt-radio>
+      <kt-radio value="yearly">Yearly — two months free</kt-radio>
+      <kt-radio value="custom" disabled>Custom contract</kt-radio>
+    </kt-radio-group>`,
+
   'kt-drag-drop': () =>
     html`<kt-drag-drop accept="image/*" recommended-size="800×400px"></kt-drag-drop>`,
 

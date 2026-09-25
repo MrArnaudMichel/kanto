@@ -64,6 +64,8 @@ export interface KtStrings {
   required: string;
   selectOption: string;
   selectFile: string;
+  /** A required checkbox left unchecked. */
+  checkRequired: string;
 
   // --- Navigation ---
   openMenu: string;
@@ -138,6 +140,7 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   required: 'This field is required.',
   selectOption: 'Select an option.',
   selectFile: 'Select a file.',
+  checkRequired: 'Check this box to continue.',
 
   openMenu: 'Open menu',
   closeMenu: 'Close menu',

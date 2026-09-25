@@ -13,7 +13,7 @@ colour of the text around it, with no attribute to keep in sync.
 
 ## Registering icons
 
-Kanto ships only the 22 icons its own elements draw. Register whatever else
+Kanto ships only the 23 icons its own elements draw. Register whatever else
 the application uses, once, at start-up:
 
 ```js

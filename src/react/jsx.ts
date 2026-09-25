@@ -34,6 +34,9 @@ import type {
   KtLabelInput,
   KtToggle,
   KtSelect,
+  KtCheckbox,
+  KtRadioGroup,
+  KtRadio,
   KtInputMenu,
   KtDragDrop,
   KtBreadcrumb,
@@ -113,6 +116,9 @@ declare module 'react' {
       >;
       'kt-label-input': KtProps<KtLabelInput>;
       'kt-toggle': KtProps<KtToggle, { 'kt-change': { checked: boolean } }>;
+      'kt-checkbox': KtProps<KtCheckbox, { 'kt-change': { checked: boolean } }>;
+      'kt-radio-group': KtProps<KtRadioGroup, { 'kt-change': { value: string | null } }>;
+      'kt-radio': KtProps<KtRadio>;
       'kt-select': KtProps<KtSelect, { 'kt-change': { value: string | number | null } }>;
       'kt-input-menu': KtProps<
         KtInputMenu,

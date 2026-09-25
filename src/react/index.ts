@@ -28,11 +28,16 @@ import { KtCard as KtCardElement } from '../components/core/kt-card/kt-card.js';
 import { KtCode as KtCodeElement } from '../components/core/kt-code/kt-code.js';
 import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
 import { KtKbd as KtKbdElement } from '../components/core/kt-kbd/kt-kbd.js';
+import { KtCheckbox as KtCheckboxElement } from '../components/forms/kt-checkbox/kt-checkbox.js';
 import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
 import { KtForm as KtFormElement } from '../components/forms/kt-form/kt-form.js';
 import { KtInput as KtInputElement } from '../components/forms/kt-input/kt-input.js';
 import { KtInputMenu as KtInputMenuElement } from '../components/forms/kt-input-menu/kt-input-menu.js';
 import { KtLabelInput as KtLabelInputElement } from '../components/forms/kt-label-input/kt-label-input.js';
+import {
+  KtRadio as KtRadioElement,
+  KtRadioGroup as KtRadioGroupElement,
+} from '../components/forms/kt-radio-group/kt-radio-group.js';
 import { KtSelect as KtSelectElement } from '../components/forms/kt-select/kt-select.js';
 import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea/kt-textarea.js';
 import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle/kt-toggle.js';
@@ -169,6 +174,26 @@ export const KtToggle = createComponent({
   elementClass: KtToggleElement,
   react: React,
   events: { onKtChange: 'kt-change' as Kt<{ checked: boolean }> },
+});
+
+export const KtCheckbox = createComponent({
+  tagName: 'kt-checkbox',
+  elementClass: KtCheckboxElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ checked: boolean }> },
+});
+
+export const KtRadioGroup = createComponent({
+  tagName: 'kt-radio-group',
+  elementClass: KtRadioGroupElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | null }> },
+});
+
+export const KtRadio = createComponent({
+  tagName: 'kt-radio',
+  elementClass: KtRadioElement,
+  react: React,
 });
 
 export const KtSelect = createComponent({
