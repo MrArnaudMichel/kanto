@@ -5,6 +5,43 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] — 2026-09-25
+
+### Added
+
+**Every string the elements write can be translated.** The README promised that
+every default string was a property. About twenty were not — validation
+messages, "Previous" and "Next", the headers of the table every chart renders,
+and accessible names like "Clear" and "Dismiss" that only a screen reader hears
+— and could not be changed at all. They now all come from one registry:
+
+```js
+import { setStrings } from 'kanto-ds/strings';
+
+setStrings({
+  clear: 'Effacer',
+  noData: 'Aucune donnée',
+  pageOf: (page, total) => `Page ${page} sur ${total}`,
+});
+```
+
+- Anything left out stays in English. `KtStrings` lists every key.
+- Switching at runtime re-renders every element, validation messages included.
+- Strings that carry a value are functions, so a translation owns the word
+  order.
+- Text properties — `emptyText`, `placeholder`, `confirmLabel`… — still win for
+  the one element they are set on, an empty string included. Their default is
+  now `undefined`, meaning "from the registry".
+- `setStrings`, `resetStrings`, `getStrings` and `defaultStrings` are exported
+  from `kanto-ds` and from `kanto-ds/strings`, which loads no element.
+
+### Changed
+
+- **No more flash of raw content.** Until its script loads, a `kt-*` tag is an
+  unknown element whose slotted text shows unstyled, then jumps into place.
+  `base.css` (part of `styles.css`) now keeps Kanto's tags hidden while they
+  are `:not(:defined)`, with `visibility` so the layout holds.
+
 ## [1.2.0] — 2026-09-24
 
 React 19 is now the first-class path: it renders the `kt-*` tags directly, so
