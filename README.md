@@ -38,7 +38,7 @@ One implementation, every framework. The alternative — a React port, a Vue
 port, an Angular library — is three codebases drifting apart.
 
 The trade is real and worth naming: custom elements need JavaScript to upgrade,
-so they render unstyled-but-present during SSR until the bundle lands. In
+so during SSR they hold their place, hidden, until the bundle lands. In
 return, a component is written once and a fix reaches every consumer at the same
 time.
 

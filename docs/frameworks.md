@@ -164,7 +164,9 @@ and listens for any event name:
 
 The elements need a DOM at definition time. Import them in a client-only entry
 point (`onMount`, a dynamic `import()` in an effect, Next's `ssr: false`), and
-they will upgrade in place once they load — the markup renders unstyled but
-present in the meantime.
+they will upgrade in place once they load. Until then `styles.css` (through
+`base.css`) keeps every `kt-*` tag hidden with `visibility: hidden`, so the page
+holds its layout and nothing flashes raw. Importing only the tokens? Copy that
+one rule from `base.css`.
 
 The token layer is plain CSS and can be served from the very first byte.

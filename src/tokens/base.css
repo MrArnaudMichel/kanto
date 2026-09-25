@@ -77,3 +77,56 @@ pre {
   outline: var(--outline-width) solid var(--color-primary-base);
   outline-offset: 2px;
 }
+
+/* Before its definition loads, a custom element is an unknown inline element:
+   its slotted text and icons show raw, unstyled, then jump into place. Hidden
+   instead — `visibility`, not `display`, so the page keeps its layout and does
+   not shift twice. Scoped to Kanto's own tags, never to every :not(:defined)
+   element on the page. */
+:is(
+  kt-alert,
+  kt-avatar,
+  kt-badge,
+  kt-breadcrumb,
+  kt-button,
+  kt-card,
+  kt-chart,
+  kt-code,
+  kt-collapsible,
+  kt-confirm-dialog,
+  kt-drag-drop,
+  kt-dropdown,
+  kt-empty-state,
+  kt-form,
+  kt-header,
+  kt-icon,
+  kt-input,
+  kt-input-menu,
+  kt-kbd,
+  kt-label-input,
+  kt-meter,
+  kt-modal,
+  kt-page-header,
+  kt-pagination,
+  kt-progress-bar,
+  kt-segmented-control,
+  kt-select,
+  kt-side-panel,
+  kt-skeleton,
+  kt-split-button,
+  kt-stat,
+  kt-sub-menu-navigation,
+  kt-table,
+  kt-tabs,
+  kt-textarea,
+  kt-timeline,
+  kt-timeline-item,
+  kt-toast,
+  kt-toast-container,
+  kt-toggle,
+  kt-toggle-button,
+  kt-toggle-button-group,
+  kt-tooltip
+):not(:defined) {
+  visibility: hidden;
+}

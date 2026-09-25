@@ -10,7 +10,7 @@ The components are standard custom elements, so they run in React, Vue, Angular,
 
 The alternative — a React port, a Vue port, an Angular library — is three codebases drifting apart.
 
-The trade is real and worth naming: custom elements need JavaScript to upgrade, so they render unstyled-but-present during server rendering until the bundle lands. In return, a component is written once and every consumer gets the same fix at the same time.
+The trade is real and worth naming: custom elements need JavaScript to upgrade, so during server rendering they hold their place, hidden, until the bundle lands. In return, a component is written once and every consumer gets the same fix at the same time.
 
 ## Two rules that hold everywhere
 
