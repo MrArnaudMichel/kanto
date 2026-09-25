@@ -115,10 +115,15 @@ export class KtSubMenuNavigation extends KtElement {
         list-style: none;
       }
 
+      /* width: 100% matters on the branch rows: a <button> sizes to its content
+         even as a flex container, so a branch's hover and active fill stopped
+         at the end of its label while a link's ran the full row. */
       .item {
         position: relative;
         display: flex;
+        box-sizing: border-box;
         align-items: center;
+        width: 100%;
         gap: 10px;
         padding: var(--padding-sub-menu-item);
         padding-left: calc(var(--nav-pad-left, 16px) + var(--depth, 0) * 20px);
