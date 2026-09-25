@@ -5,11 +5,9 @@ import type { KtDatePicker } from 'kanto-ds';
 
 const $ = (el: KtDatePicker, selector: string) =>
   el.shadowRoot!.querySelector<HTMLElement>(selector)!;
-const $$ = (el: KtDatePicker, selector: string) => [
-  ...el.shadowRoot!.querySelectorAll<HTMLElement>(selector),
-];
-const day = (el: KtDatePicker, iso: string) => $(el, `[data-date="${iso}"]`);
-const focusedDay = (el: KtDatePicker) => $(el, '.day[tabindex="0"]').dataset.date;
+const calendar = (el: KtDatePicker) => el.shadowRoot!.querySelector('kt-calendar')!;
+const day = (el: KtDatePicker, iso: string) =>
+  calendar(el).shadowRoot!.querySelector<HTMLElement>(`[data-date="${iso}"]`)!;
 const medium = (iso: string, locale = 'en-GB') =>
   new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(`${iso}T12:00`));
 
@@ -18,8 +16,10 @@ async function open(el: KtDatePicker) {
   await settle(el);
 }
 
-async function key(el: KtDatePicker, name: string, init: KeyboardEventInit = {}) {
-  $(el, 'table').dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true, ...init }));
+/** Clicks inside the calendar, then lets both elements re-render. */
+async function pick(el: KtDatePicker, target: HTMLElement) {
+  target.click();
+  await settle(calendar(el));
   await settle(el);
 }
 
@@ -41,131 +41,6 @@ describe('kt-date-picker', () => {
     expect($(el, '.value').textContent!.trim()).toBe(medium('2026-09-25'));
   });
 
-  it('opens on the month of its value, with the value selected and focusable', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
-    );
-    await open(el);
-
-    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('true');
-    expect($$(el, '.day')).toHaveLength(42);
-    expect(day(el, '2026-09-25').getAttribute('aria-selected')).toBe('true');
-    expect(focusedDay(el)).toBe('2026-09-25');
-    expect($(el, '.title').textContent).toContain('2026');
-  });
-
-  it('starts weeks on the day the locale does', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker locale="fr-FR" value="2026-09-25"></kt-date-picker>',
-    );
-    await open(el);
-
-    const monday = new Intl.DateTimeFormat('fr-FR', { weekday: 'long' }).format(
-      new Date('2026-09-21T12:00'),
-    );
-    expect($(el, 'th abbr').getAttribute('title')).toBe(monday);
-  });
-
-  it('chooses a day with a click, closes and reports it', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
-    );
-    const changed = vi.fn();
-    el.addEventListener('kt-change', changed);
-    await open(el);
-
-    day(el, '2026-09-10').click();
-    await settle(el);
-
-    expect(el.value).toBe('2026-09-10');
-    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('false');
-    expect((changed.mock.calls[0]![0] as CustomEvent).detail).toEqual({ value: '2026-09-10' });
-  });
-
-  it('walks the grid from the keyboard and chooses with Enter', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
-    );
-    await open(el);
-
-    await key(el, 'ArrowRight');
-    expect(focusedDay(el)).toBe('2026-09-26');
-    await key(el, 'ArrowDown');
-    expect(focusedDay(el)).toBe('2026-10-03');
-    await key(el, 'PageUp');
-    expect(focusedDay(el)).toBe('2026-09-03');
-    await key(el, 'PageDown', { shiftKey: true });
-    expect(focusedDay(el)).toBe('2027-09-03');
-    await key(el, 'Home');
-    expect(focusedDay(el)).toBe('2027-08-30'); // the Monday of that week
-    await key(el, 'End');
-    expect(focusedDay(el)).toBe('2027-09-05');
-
-    await key(el, 'Enter');
-    expect(el.value).toBe('2027-09-05');
-  });
-
-  it('pages months with the header buttons', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
-    );
-    await open(el);
-
-    $$(el, '.nav')[1]!.click();
-    await settle(el);
-
-    expect(day(el, '2026-10-15').classList.contains('outside')).toBe(false);
-    expect($$(el, '.nav')[0]!.getAttribute('aria-label')).toBe('Previous month');
-  });
-
-  it('lets days outside min and max be reached but not chosen', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker locale="en-GB" value="2026-09-15" min="2026-09-10" max="2026-09-20"></kt-date-picker>',
-    );
-    await open(el);
-
-    expect(day(el, '2026-09-09').getAttribute('aria-disabled')).toBe('true');
-    expect(day(el, '2026-09-10').hasAttribute('aria-disabled')).toBe(false);
-
-    day(el, '2026-09-21').click();
-    await settle(el);
-    expect(el.value).toBe('2026-09-15');
-  });
-
-  it('chooses a period in two picks, in either order', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker range locale="en-GB"></kt-date-picker>',
-    );
-    const changed = vi.fn();
-    el.addEventListener('kt-change', changed);
-    el.value = '2026-09-01/2026-09-02';
-    await settle(el);
-    await open(el);
-
-    day(el, '2026-09-20').click();
-    await settle(el);
-    expect(changed).not.toHaveBeenCalled(); // still open for the second end
-
-    day(el, '2026-09-05').click();
-    await settle(el);
-
-    expect(el.value).toBe('2026-09-05/2026-09-20');
-    expect(changed).toHaveBeenCalledTimes(1);
-  });
-
-  it('marks the days of a period as one band', async () => {
-    const el = await fixture<KtDatePicker>(
-      '<kt-date-picker range locale="en-GB" value="2026-09-05/2026-09-08"></kt-date-picker>',
-    );
-    await open(el);
-
-    const band = ['2026-09-05', '2026-09-06', '2026-09-07', '2026-09-08'];
-    expect(band.every((iso) => day(el, iso).classList.contains('in-range'))).toBe(true);
-    expect(day(el, '2026-09-05').classList.contains('range-start')).toBe(true);
-    expect(day(el, '2026-09-08').classList.contains('range-end')).toBe(true);
-    expect(day(el, '2026-09-09').classList.contains('in-range')).toBe(false);
-  });
-
   it('shows a period as one formatted range', async () => {
     const el = await fixture<KtDatePicker>(
       '<kt-date-picker range locale="en-GB" value="2026-09-05/2026-09-08"></kt-date-picker>',
@@ -175,6 +50,57 @@ describe('kt-date-picker', () => {
       new Date('2026-09-08T12:00'),
     );
     expect($(el, '.value').textContent!.trim()).toBe(expected);
+  });
+
+  it('opens a calendar set up like itself', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="fr-FR" min="2026-01-01" max="2026-12-31" value="2026-09-05/2026-09-08"></kt-date-picker>',
+    );
+    expect(calendar(el)).toBeNull(); // rendered only while open
+
+    await open(el);
+
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('true');
+    expect(calendar(el)).toMatchObject({
+      value: '2026-09-05/2026-09-08',
+      range: true,
+      min: '2026-01-01',
+      max: '2026-12-31',
+      locale: 'fr-FR',
+    });
+  });
+
+  it('commits a day chosen in the calendar, closes, and reports it once', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
+    );
+    const changed = vi.fn();
+    el.addEventListener('kt-change', changed);
+    await open(el);
+    await settle(calendar(el));
+
+    await pick(el, day(el, '2026-09-10'));
+
+    expect(el.value).toBe('2026-09-10');
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('false');
+    // The calendar's own kt-change stops inside: one event, from the picker.
+    expect(changed).toHaveBeenCalledTimes(1);
+    expect((changed.mock.calls[0]![0] as CustomEvent).target).toBe(el);
+  });
+
+  it('commits a period once both ends are chosen', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB" value="2026-09-01/2026-09-02"></kt-date-picker>',
+    );
+    await open(el);
+    await settle(calendar(el));
+
+    await pick(el, day(el, '2026-09-20'));
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('true');
+
+    await pick(el, day(el, '2026-09-05'));
+    expect(el.value).toBe('2026-09-05/2026-09-20');
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('false');
   });
 
   it('clears to null with its clear button', async () => {
@@ -191,7 +117,7 @@ describe('kt-date-picker', () => {
     expect((changed.mock.calls[0]![0] as CustomEvent).detail).toEqual({ value: null });
   });
 
-  it('closes on Escape', async () => {
+  it('closes on Escape from the days', async () => {
     const el = await fixture<KtDatePicker>('<kt-date-picker locale="en-GB"></kt-date-picker>');
     await open(el);
 
@@ -199,6 +125,25 @@ describe('kt-date-picker', () => {
     await settle(el);
 
     expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('stays open when Escape only leaves the month view', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
+    );
+    await open(el);
+    await settle(calendar(el));
+    calendar(el).shadowRoot!.querySelector<HTMLElement>('.heading')!.click();
+    await settle(calendar(el));
+
+    calendar(el)
+      .shadowRoot!.querySelector('table')!
+      .dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true }),
+      );
+    await settle(el);
+
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('true');
   });
 });
 

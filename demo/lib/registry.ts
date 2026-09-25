@@ -503,6 +503,12 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-toggle disabled>Unavailable</kt-toggle>
     </div>`,
 
+  'kt-calendar': () =>
+    html`<div class="demo-row" style="align-items:flex-start;gap:32px">
+      <kt-calendar value="2026-09-25"></kt-calendar>
+      <kt-calendar range value="2026-09-07/2026-09-18"></kt-calendar>
+    </div>`,
+
   'kt-date-picker': () =>
     html`<div class="demo-stack" style="max-width:320px">
       <kt-date-picker label="Due date" value="2026-09-25"></kt-date-picker>

@@ -10,23 +10,9 @@ import {
   type UsableInternals,
 } from '#internal/form-control';
 import { strings } from '#internal/strings';
-import {
-  addDays,
-  addMonths,
-  compareDates,
-  firstDayOfWeek,
-  formatDate,
-  formatRange,
-  isBetween,
-  isSameDay,
-  monthGrid,
-  parseDate,
-  parseRange,
-  startOfWeek,
-  toLocalDate,
-  today,
-  type PlainDate,
-} from '#internal/date';
+import { compareDates, parseDate, parseRange, toLocalDate, type PlainDate } from '#internal/date';
+import '../kt-calendar/kt-calendar.js';
+import type { KtCalendar } from '../kt-calendar/kt-calendar.js';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtDatePickerSize = 'small' | 'medium' | 'large';
@@ -42,16 +28,15 @@ const PANEL_SPACE = 380;
  * the field shows is the same date formatted for the reader's language, and
  * the calendar starts its weeks on the day their region does.
  *
- * The calendar follows the WAI-ARIA date picker dialog pattern: a grid of
- * days with one tab stop, arrows by day and week, Page Up/Down by month (and
- * by year with Shift), Home/End to the week's ends, Enter to choose, Escape to
- * close. Dates outside `min`/`max` can be reached but not chosen.
+ * The popup is a `<kt-calendar>`, with its keyboard model and its month and
+ * year views: the WAI-ARIA date picker dialog pattern, where Escape closes the
+ * dialog and hands focus back to the field, and tabbing out closes it too.
  *
  * @element kt-date-picker
  *
  * @csspart trigger - The field.
  * @csspart panel - The calendar popup.
- * @csspart day - A day cell.
+ * @csspart calendar - The `<kt-calendar>` inside it.
  *
  * @fires kt-change - A date or a whole period was chosen, or the value cleared.
  *   `detail: { value }` — the ISO date or interval, or `null`.
@@ -198,108 +183,8 @@ export class KtDatePicker extends KtElement {
           transform var(--duration-fast) var(--easing-standard);
       }
 
-      .header {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items: center;
-        margin-bottom: var(--gap-element);
-      }
-      .title {
-        margin: 0;
-        color: var(--text-body);
-        font: var(--font-normal-medium);
-        text-align: center;
-        text-transform: capitalize;
-      }
-      .nav {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: var(--day-size);
-        height: var(--day-size);
-        padding: 0;
-        color: var(--text-muted);
-        background: none;
-        border: none;
-        border-radius: var(--radius-input);
-        cursor: pointer;
-      }
-      .nav:hover {
-        color: var(--text-body);
-        background: var(--color-dark-22);
-      }
-      .nav:focus-visible {
-        outline: var(--outline-width) solid var(--color-primary-base);
-      }
-
-      table {
-        border-collapse: separate;
-        border-spacing: 0 2px;
-      }
-      th {
-        width: var(--day-size);
-        padding-bottom: 4px;
-        color: var(--text-muted);
-        font: var(--font-normal-small);
-        font-weight: 600;
-      }
-      th abbr {
-        text-decoration: none;
-      }
-
-      .day {
-        width: var(--day-size);
-        height: var(--day-size);
-        padding: 0;
-        color: var(--text-body);
-        font: var(--font-normal-regular);
-        font-variant-numeric: tabular-nums;
-        text-align: center;
-        border-radius: var(--radius-input);
-        outline: none;
-        cursor: pointer;
-      }
-      .day:hover {
-        background: var(--color-dark-22);
-      }
-      .day:focus-visible {
-        box-shadow: inset 0 0 0 var(--outline-width) var(--color-primary-base);
-      }
-      .day.outside {
-        color: var(--text-muted);
-      }
-      .day.today {
-        font-weight: 700;
-        text-decoration: underline;
-        text-decoration-thickness: 2px;
-        text-underline-offset: 4px;
-      }
-
-      /* A period reads as one band: the days between are tinted and squared
-         off, and only its two ends are rounded. */
-      .day.in-range {
-        background: var(--color-primary-soft);
-        border-radius: 0;
-      }
-      .day.range-start {
-        border-radius: var(--radius-input) 0 0 var(--radius-input);
-      }
-      .day.range-end {
-        border-radius: 0 var(--radius-input) var(--radius-input) 0;
-      }
-      .day.range-start.range-end {
-        border-radius: var(--radius-input);
-      }
-      .day.selected {
-        color: var(--color-white);
-        background: var(--color-primary-base);
-      }
-
-      .day[aria-disabled='true'] {
-        color: var(--text-disabled);
-        background: none;
-        text-decoration: line-through;
-        cursor: not-allowed;
+      .panel kt-calendar {
+        display: block;
       }
     `,
   ];
@@ -307,20 +192,15 @@ export class KtDatePicker extends KtElement {
   @query('.trigger')
   private trigger?: HTMLButtonElement;
 
+  @query('kt-calendar')
+  private calendar?: KtCalendar;
+
   private internals: UsableInternals | null = null;
   private defaultValue: string | null = null;
   private readonly panelId = uniqueId('kt-date-picker-panel');
-  private readonly titleId = uniqueId('kt-date-picker-title');
-  private focusCell = false;
 
   @state() private open = false;
   @state() private placement: 'bottom' | 'top' = 'bottom';
-  /** First day of the month on show. */
-  @state() private view: PlainDate = { ...today(), day: 1 };
-  /** The day holding the grid's one tab stop. */
-  @state() private focused: PlainDate = today();
-  /** In a period: the first end chosen, while the second is pending. */
-  @state() private anchor: PlainDate | null = null;
 
   /** ISO date, or `start/end` interval with `range`. `null` when empty. */
   @property({ type: String, reflect: true })
@@ -405,14 +285,6 @@ export class KtDatePicker extends KtElement {
     }
   }
 
-  override updated(): void {
-    if (!this.focusCell) return;
-    this.focusCell = false;
-    this.shadowRoot
-      ?.querySelector<HTMLElement>(`[data-date="${formatDate(this.focused)}"]`)
-      ?.focus();
-  }
-
   formResetCallback(): void {
     this.value = this.defaultValue;
     this.close(false);
@@ -432,7 +304,6 @@ export class KtDatePicker extends KtElement {
     return this.locale || document.documentElement.lang || navigator.language || 'en';
   }
 
-  /** The chosen day, or the two ends of the chosen period. */
   private get selection(): { start: PlainDate | null; end: PlainDate | null } {
     return this.range
       ? parseRange(this.value)
@@ -441,15 +312,7 @@ export class KtDatePicker extends KtElement {
 
   private isComplete(): boolean {
     const { start, end } = this.selection;
-    return start !== null && end !== null;
-  }
-
-  private isOutOfBounds(date: PlainDate): boolean {
-    const min = parseDate(this.min);
-    const max = parseDate(this.max);
-    return (
-      (min !== null && compareDates(date, min) < 0) || (max !== null && compareDates(date, max) > 0)
-    );
+    return start !== null && end !== null && compareDates(start, end) <= 0;
   }
 
   private display(): string | null {
@@ -471,76 +334,48 @@ export class KtDatePicker extends KtElement {
     const next = event.relatedTarget as Node | null;
     if (!this.open || !next) return;
     if (this.contains(next) || this.shadowRoot?.contains(next)) return;
+    // Focus moving into the calendar's own shadow root is still inside.
+    if (event.composedPath().includes(next)) return;
+    if (this.calendar?.shadowRoot?.contains(next)) return;
     this.close(false);
   };
 
-  private show(): void {
+  private async show(): Promise<void> {
     if (this.disabled || this.open) return;
-    const { start } = this.selection;
-    let target = start ?? today();
-    const min = parseDate(this.min);
-    const max = parseDate(this.max);
-    if (min && compareDates(target, min) < 0) target = min;
-    if (max && compareDates(target, max) > 0) target = max;
-
     const rect = this.getBoundingClientRect();
     const below = window.innerHeight - rect.bottom;
     this.placement = below < PANEL_SPACE && rect.top > below ? 'top' : 'bottom';
-
-    this.anchor = null;
-    this.moveTo(target);
     this.open = true;
+
+    // The calendar is rendered fresh on each opening — on the chosen day,
+    // in its day view — and takes focus once it is there.
+    await this.updateComplete;
+    this.calendar?.focus();
   }
 
   private close(returnFocus: boolean): void {
     if (!this.open) return;
     this.open = false;
-    this.anchor = null;
     if (returnFocus) this.focus();
   }
 
   private toggle(): void {
     if (this.open) this.close(false);
-    else this.show();
+    else void this.show();
   }
 
   // --- Choosing ---
 
-  private moveTo(date: PlainDate): void {
-    this.focused = date;
-    if (date.year !== this.view.year || date.month !== this.view.month) {
-      this.view = { year: date.year, month: date.month, day: 1 };
-    }
-    this.focusCell = true;
-  }
-
-  private choose(date: PlainDate): void {
-    if (this.isOutOfBounds(date)) return;
-
-    if (!this.range) {
-      this.commit(formatDate(date));
-      return;
-    }
-    if (!this.anchor) {
-      // First end of the period: stay open for the second.
-      this.anchor = date;
-      this.focused = date;
-      return;
-    }
-    const [start, end] =
-      compareDates(this.anchor, date) <= 0 ? [this.anchor, date] : [date, this.anchor];
-    this.commit(formatRange(start, end));
-  }
-
-  private commit(value: string): void {
-    this.value = value;
+  private onCalendarChange(event: CustomEvent<{ value: string }>): void {
+    // The calendar's own event stops here; the picker reports its value.
+    event.stopPropagation();
+    this.value = event.detail.value;
     this.close(true);
-    emit(this, 'kt-change', { value });
+    emit(this, 'kt-change', { value: this.value });
   }
 
   private clear(): void {
     this.value = null;
-    this.anchor = null;
     emit(this, 'kt-change', { value: null });
     this.focus();
   }
@@ -550,11 +385,12 @@ export class KtDatePicker extends KtElement {
   private onTriggerKeyDown(event: KeyboardEvent): void {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
-      this.show();
+      void this.show();
     }
   }
 
   private onPanelKeyDown(event: KeyboardEvent): void {
+    // The calendar keeps Escape for itself while it shows months or years.
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
@@ -562,157 +398,7 @@ export class KtDatePicker extends KtElement {
     }
   }
 
-  private onGridKeyDown(event: KeyboardEvent): void {
-    const firstDay = firstDayOfWeek(this.resolvedLocale);
-    const from = this.focused;
-    let next: PlainDate;
-
-    switch (event.key) {
-      case 'ArrowLeft':
-        next = addDays(from, -1);
-        break;
-      case 'ArrowRight':
-        next = addDays(from, 1);
-        break;
-      case 'ArrowUp':
-        next = addDays(from, -7);
-        break;
-      case 'ArrowDown':
-        next = addDays(from, 7);
-        break;
-      case 'Home':
-        next = startOfWeek(from, firstDay);
-        break;
-      case 'End':
-        next = addDays(startOfWeek(from, firstDay), 6);
-        break;
-      case 'PageUp':
-        next = addMonths(from, event.shiftKey ? -12 : -1);
-        break;
-      case 'PageDown':
-        next = addMonths(from, event.shiftKey ? 12 : 1);
-        break;
-      case 'Enter':
-      case ' ':
-        event.preventDefault();
-        this.choose(from);
-        return;
-      default:
-        return;
-    }
-    event.preventDefault();
-    this.moveTo(next);
-  }
-
-  private stepMonth(months: number): void {
-    this.view = addMonths(this.view, months);
-    this.focused = addMonths(this.focused, months);
-  }
-
   // --- Rendering ---
-
-  private renderDay(date: PlainDate): TemplateResult {
-    const { start, end } = this.selection;
-    const pendingEnd = this.anchor ? this.focused : null;
-    const rangeStart = this.anchor ?? start;
-    const rangeEnd = this.anchor ? pendingEnd : end;
-
-    const [low, high] =
-      rangeStart && rangeEnd && compareDates(rangeStart, rangeEnd) > 0
-        ? [rangeEnd, rangeStart]
-        : [rangeStart, rangeEnd];
-
-    const selected = this.range
-      ? isSameDay(date, low) || isSameDay(date, high)
-      : isSameDay(date, start);
-    const inRange = this.range && low !== null && high !== null && isBetween(date, low, high);
-    const disabled = this.isOutOfBounds(date);
-    const iso = formatDate(date);
-
-    return html`<td
-      part="day"
-      role="gridcell"
-      class=${classMap({
-        day: true,
-        outside: date.month !== this.view.month,
-        today: isSameDay(date, today()),
-        selected,
-        'in-range': inRange,
-        'range-start': inRange && isSameDay(date, low),
-        'range-end': inRange && isSameDay(date, high),
-      })}
-      data-date=${iso}
-      tabindex=${isSameDay(date, this.focused) ? 0 : -1}
-      aria-selected=${selected ? 'true' : 'false'}
-      aria-disabled=${disabled ? 'true' : nothing}
-      aria-current=${isSameDay(date, today()) ? 'date' : nothing}
-      aria-label=${new Intl.DateTimeFormat(this.resolvedLocale, { dateStyle: 'full' }).format(
-        toLocalDate(date),
-      )}
-      @click=${() => {
-        this.focused = date;
-        this.choose(date);
-      }}
-      @pointerenter=${() => {
-        if (this.anchor) this.focused = date;
-      }}
-    >
-      ${date.day}
-    </td>`;
-  }
-
-  private renderCalendar(): TemplateResult {
-    const locale = this.resolvedLocale;
-    const firstDay = firstDayOfWeek(locale);
-    const weeks = monthGrid(this.view.year, this.view.month, firstDay);
-    const title = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
-      toLocalDate(this.view),
-    );
-    const short = new Intl.DateTimeFormat(locale, { weekday: 'short' });
-    const long = new Intl.DateTimeFormat(locale, { weekday: 'long' });
-
-    return html`<div class="header">
-        <button
-          type="button"
-          class="nav"
-          aria-label=${strings().previousMonth}
-          @click=${() => this.stepMonth(-1)}
-        >
-          <kt-icon name="chevron-left" size="18"></kt-icon>
-        </button>
-        <h2 id=${this.titleId} class="title" aria-live="polite">${title}</h2>
-        <button
-          type="button"
-          class="nav"
-          aria-label=${strings().nextMonth}
-          @click=${() => this.stepMonth(1)}
-        >
-          <kt-icon name="chevron-right" size="18"></kt-icon>
-        </button>
-      </div>
-      <table role="grid" aria-labelledby=${this.titleId} @keydown=${this.onGridKeyDown}>
-        <thead>
-          <tr>
-            ${weeks[0]!.map(
-              (day) =>
-                html`<th scope="col">
-                  <abbr title=${long.format(toLocalDate(day))}
-                    >${short.format(toLocalDate(day))}</abbr
-                  >
-                </th>`,
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          ${weeks.map(
-            (week) =>
-              html`<tr>
-                ${week.map((day) => this.renderDay(day))}
-              </tr>`,
-          )}
-        </tbody>
-      </table>`;
-  }
 
   override render(): TemplateResult {
     const shown = this.display();
@@ -775,7 +461,20 @@ export class KtDatePicker extends KtElement {
           aria-label=${this.range ? strings().selectPeriod : strings().selectDate}
           @keydown=${this.onPanelKeyDown}
         >
-          ${this.open ? this.renderCalendar() : nothing}
+          ${
+            this.open
+              ? html`<kt-calendar
+                  part="calendar"
+                  .value=${this.value}
+                  ?range=${this.range}
+                  min=${this.min}
+                  max=${this.max}
+                  locale=${this.locale}
+                  label=${this.label}
+                  @kt-change=${this.onCalendarChange}
+                ></kt-calendar>`
+              : nothing
+          }
         </div>
       </div>`;
   }

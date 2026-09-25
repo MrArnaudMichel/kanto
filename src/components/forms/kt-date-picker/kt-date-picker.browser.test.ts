@@ -67,7 +67,10 @@ describe('kt-date-picker, for real', () => {
     const el = await fixture<KtDatePicker>(
       '<kt-date-picker range locale="en-GB" value="2026-09-01/2026-09-02"></kt-date-picker>',
     );
-    const day = (iso: string) => el.shadowRoot!.querySelector(`[data-date="${iso}"]`)!;
+    const day = (iso: string) =>
+      el
+        .shadowRoot!.querySelector('kt-calendar')!
+        .shadowRoot!.querySelector(`[data-date="${iso}"]`)!;
 
     await userEvent.click(trigger(el));
     await settle(el);

@@ -137,6 +137,22 @@ const CASES: Record<string, Case> = {
   },
   'kt-textarea': { markup: '<kt-textarea label="Message"></kt-textarea>' },
   'kt-checkbox': { markup: '<kt-checkbox>Send me updates</kt-checkbox>' },
+  'kt-calendar': {
+    markup: '<kt-calendar locale="en-GB" value="2026-09-25" min="2026-09-10"></kt-calendar>',
+  },
+  'kt-calendar period': {
+    markup: '<kt-calendar range locale="en-GB" value="2026-09-05/2026-09-12"></kt-calendar>',
+  },
+  'kt-calendar months': {
+    markup: '<kt-calendar locale="en-GB" value="2026-09-25" min="2026-03-01"></kt-calendar>',
+    // Rendered by the time setup runs: switch to the view before the audit.
+    setup: (el) => el.shadowRoot!.querySelectorAll<HTMLElement>('.heading')[0]!.click(),
+  },
+  'kt-calendar years': {
+    markup: '<kt-calendar locale="en-GB" value="2026-09-25" max="2030-12-31"></kt-calendar>',
+    // Rendered by the time setup runs: switch to the view before the audit.
+    setup: (el) => el.shadowRoot!.querySelectorAll<HTMLElement>('.heading')[1]!.click(),
+  },
   'kt-date-picker': {
     markup: '<kt-date-picker label="Due date" locale="en-GB" value="2026-09-25"></kt-date-picker>',
   },

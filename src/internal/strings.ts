@@ -64,6 +64,13 @@ export interface KtStrings {
   selectPeriod: string;
   previousMonth: string;
   nextMonth: string;
+  previousYear: string;
+  nextYear: string;
+  previousYears: string;
+  nextYears: string;
+  /** The calendar header's month and year buttons, which open those views. */
+  chooseMonth: string;
+  chooseYear: string;
 
   // --- Validation messages, shown by the browser on submit ---
   required: string;
@@ -146,6 +153,12 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   selectPeriod: 'Select a period',
   previousMonth: 'Previous month',
   nextMonth: 'Next month',
+  previousYear: 'Previous year',
+  nextYear: 'Next year',
+  previousYears: 'Previous years',
+  nextYears: 'Next years',
+  chooseMonth: 'Choose month',
+  chooseYear: 'Choose year',
 
   required: 'This field is required.',
   selectOption: 'Select an option.',

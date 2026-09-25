@@ -29,6 +29,7 @@ import { KtCode as KtCodeElement } from '../components/core/kt-code/kt-code.js';
 import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
 import { KtKbd as KtKbdElement } from '../components/core/kt-kbd/kt-kbd.js';
 import { KtCheckbox as KtCheckboxElement } from '../components/forms/kt-checkbox/kt-checkbox.js';
+import { KtCalendar as KtCalendarElement } from '../components/forms/kt-calendar/kt-calendar.js';
 import { KtDatePicker as KtDatePickerElement } from '../components/forms/kt-date-picker/kt-date-picker.js';
 import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-drop/kt-drag-drop.js';
 import { KtForm as KtFormElement } from '../components/forms/kt-form/kt-form.js';
@@ -175,6 +176,13 @@ export const KtToggle = createComponent({
   elementClass: KtToggleElement,
   react: React,
   events: { onKtChange: 'kt-change' as Kt<{ checked: boolean }> },
+});
+
+export const KtCalendar = createComponent({
+  tagName: 'kt-calendar',
+  elementClass: KtCalendarElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ value: string }> },
 });
 
 export const KtDatePicker = createComponent({

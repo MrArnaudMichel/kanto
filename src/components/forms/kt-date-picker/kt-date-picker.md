@@ -31,23 +31,18 @@ band between it and the pointer — or the day in focus — previews the period;
 the second pick sets the other end, in whichever order they came.
 `kt-change` fires once, with the whole period.
 
-## Keyboard
+## The calendar
 
-The trigger opens the calendar with Enter, Space or `↓`. Inside, the WAI-ARIA
-date picker dialog pattern:
+The popup is a [`<kt-calendar>`](../kt-calendar/kt-calendar.md), with
+everything it does: the title's month and year open a grid of months and a
+grid of years, so a date years away is three clicks, and the full keyboard
+model — arrows by day and week, Page Up/Down by month and with Shift by year,
+Enter to choose.
 
-| Key                          | Does                            |
-| ---------------------------- | ------------------------------- |
-| `←` / `→`                    | Previous / next day             |
-| `↑` / `↓`                    | Same day, previous / next week  |
-| `Home` / `End`               | First / last day of the week    |
-| `Page Up` / `Page Down`      | Same day, previous / next month |
-| `Shift` + `Page Up` / `Down` | Same day, previous / next year  |
-| `Enter` / `Space`            | Choose the day in focus         |
-| `Escape`                     | Close, focus back on the field  |
-
-Tabbing out closes the calendar. Days outside `min`/`max` can be reached — so
-the keyboard never gets stuck at a boundary — but not chosen.
+The field opens it with Enter, Space or `↓`. `Escape` closes it and puts focus
+back on the field — except in the months or years, where it first goes back to
+the days. Tabbing out closes it too. Days outside `min`/`max` can be reached,
+so the keyboard never gets stuck at a boundary, but not chosen.
 
 ## In a form
 

@@ -153,6 +153,10 @@
       "types": "./dist/components/feedback/kt-tooltip/kt-tooltip.d.ts",
       "default": "./dist/components/feedback/kt-tooltip/kt-tooltip.js"
     },
+    "./components/forms/kt-calendar": {
+      "types": "./dist/components/forms/kt-calendar/kt-calendar.d.ts",
+      "default": "./dist/components/forms/kt-calendar/kt-calendar.js"
+    },
     "./components/forms/kt-checkbox": {
       "types": "./dist/components/forms/kt-checkbox/kt-checkbox.d.ts",
       "default": "./dist/components/forms/kt-checkbox/kt-checkbox.js"

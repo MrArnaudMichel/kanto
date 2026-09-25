@@ -33,6 +33,8 @@ export { KtKbd } from './components/core/kt-kbd/kt-kbd.js';
 // === FORMS ===
 export { KtCheckbox } from './components/forms/kt-checkbox/kt-checkbox.js';
 export type { KtCheckboxSize } from './components/forms/kt-checkbox/kt-checkbox.js';
+export { KtCalendar } from './components/forms/kt-calendar/kt-calendar.js';
+export type { KtCalendarView } from './components/forms/kt-calendar/kt-calendar.js';
 export { KtDatePicker } from './components/forms/kt-date-picker/kt-date-picker.js';
 export type { KtDatePickerSize } from './components/forms/kt-date-picker/kt-date-picker.js';
 export { KtDragDrop } from './components/forms/kt-drag-drop/kt-drag-drop.js';
