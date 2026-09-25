@@ -2,6 +2,7 @@ import { css, html, type PropertyValues, type TemplateResult } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import { KtToggleButton } from '../kt-toggle-button/kt-toggle-button.js';
 
 /**
@@ -167,7 +168,12 @@ export class KtToggleButtonGroup extends KtElement {
   };
 
   override render(): TemplateResult {
-    return html`<div part="base" class="group" role="group" aria-label=${this.label || 'Options'}>
+    return html`<div
+      part="base"
+      class="group"
+      role="group"
+      aria-label=${this.label || strings().options}
+    >
       <slot @slotchange=${this.syncButtons}></slot>
     </div>`;
   }

@@ -989,7 +989,7 @@ export class KtChart extends KtElement {
     return html`<div part="table" class="table" id=${this.tableId}>
       <table>
         <caption>
-          ${this.label || 'Chart data'}
+          ${this.label || strings().chartData}
         </caption>
         <thead>
           <tr>
@@ -1024,12 +1024,12 @@ export class KtChart extends KtElement {
     return html`<div part="table" class="table" id=${this.tableId}>
       <table>
         <caption>
-          ${this.label || 'Chart data'}
+          ${this.label || strings().chartData}
         </caption>
         <thead>
           <tr>
             <th scope="col">${strings().chartSlice}</th>
-            <th scope="col">${this.series[0]?.name ?? 'Value'}</th>
+            <th scope="col">${this.series[0]?.name ?? strings().chartValue}</th>
             <th scope="col">${strings().chartShare}</th>
           </tr>
         </thead>
@@ -1062,7 +1062,7 @@ export class KtChart extends KtElement {
     return html`<div part="table" class="table" id=${this.tableId}>
       <table>
         <caption>
-          ${this.label || 'Chart data'}
+          ${this.label || strings().chartData}
         </caption>
         <thead>
           <tr>

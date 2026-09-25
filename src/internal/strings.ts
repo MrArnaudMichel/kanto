@@ -76,6 +76,12 @@ export interface KtStrings {
   pageOf: (page: number, total: number) => string;
   moreActions: string;
 
+  // --- Groups and sections ---
+  /** A button or choice group with no label of its own. */
+  options: string;
+  /** A `kt-form` section with no heading. */
+  formSection: string;
+
   // --- Data ---
   selectRow: string;
   selectAll: string;
@@ -85,6 +91,10 @@ export interface KtStrings {
   chartPoint: string;
   chartSlice: string;
   chartShare: string;
+  /** Caption of a chart's data table when the chart has no label. */
+  chartData: string;
+  /** Value column of a single-series chart's data table when the series has no name. */
+  chartValue: string;
 
   // --- Overlays ---
   confirmHeading: string;
@@ -139,6 +149,9 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   pageOf: (page: number, total: number) => `Page ${page} / ${total}`,
   moreActions: 'More actions',
 
+  options: 'Options',
+  formSection: 'Form section',
+
   selectRow: 'Select row',
   selectAll: 'Select all',
   total: 'Total',
@@ -146,6 +159,8 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   chartPoint: 'Point',
   chartSlice: 'Slice',
   chartShare: 'Share',
+  chartData: 'Chart data',
+  chartValue: 'Value',
 
   confirmHeading: 'Are you sure?',
   confirm: 'Confirm',

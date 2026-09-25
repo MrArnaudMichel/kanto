@@ -2,6 +2,7 @@ import { css, html, nothing, type PropertyValues, type TemplateResult } from 'li
 import { property, queryAssignedElements, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { hasAssignedContent } from '#internal/slots';
+import { strings } from '#internal/strings';
 import '../../feedback/kt-skeleton/kt-skeleton.js';
 
 /** Anything the panel can switch off along with itself. */
@@ -202,7 +203,7 @@ export class KtForm extends KtElement {
 
     return html`<fieldset part="base" ?disabled=${this.disabled}>
       <legend class=${this.heading ? '' : 'visually-hidden'}>
-        <slot name="heading">${this.heading || 'Form section'}</slot>
+        <slot name="heading">${this.heading || strings().formSection}</slot>
       </legend>
 
       ${
