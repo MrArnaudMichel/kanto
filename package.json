@@ -157,6 +157,10 @@
       "types": "./dist/components/forms/kt-checkbox/kt-checkbox.d.ts",
       "default": "./dist/components/forms/kt-checkbox/kt-checkbox.js"
     },
+    "./components/forms/kt-date-picker": {
+      "types": "./dist/components/forms/kt-date-picker/kt-date-picker.d.ts",
+      "default": "./dist/components/forms/kt-date-picker/kt-date-picker.js"
+    },
     "./components/forms/kt-drag-drop": {
       "types": "./dist/components/forms/kt-drag-drop/kt-drag-drop.d.ts",
       "default": "./dist/components/forms/kt-drag-drop/kt-drag-drop.js"

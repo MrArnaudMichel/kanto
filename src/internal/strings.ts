@@ -59,6 +59,11 @@ export interface KtStrings {
   browseFiles: string;
   recommendedSize: (size: string) => string;
   selectedFiles: string;
+  /** `kt-date-picker` with nothing chosen, and its calendar's name. */
+  selectDate: string;
+  selectPeriod: string;
+  previousMonth: string;
+  nextMonth: string;
 
   // --- Validation messages, shown by the browser on submit ---
   required: string;
@@ -66,6 +71,7 @@ export interface KtStrings {
   selectFile: string;
   /** A required checkbox left unchecked. */
   checkRequired: string;
+  dateRequired: string;
 
   // --- Navigation ---
   openMenu: string;
@@ -136,11 +142,16 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   browseFiles: 'browse your files',
   recommendedSize: (size: string) => `Recommended image size: ${size}`,
   selectedFiles: 'Selected files',
+  selectDate: 'Select a date',
+  selectPeriod: 'Select a period',
+  previousMonth: 'Previous month',
+  nextMonth: 'Next month',
 
   required: 'This field is required.',
   selectOption: 'Select an option.',
   selectFile: 'Select a file.',
   checkRequired: 'Check this box to continue.',
+  dateRequired: 'Select a date.',
 
   openMenu: 'Open menu',
   closeMenu: 'Close menu',

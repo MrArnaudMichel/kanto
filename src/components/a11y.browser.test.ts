@@ -137,6 +137,19 @@ const CASES: Record<string, Case> = {
   },
   'kt-textarea': { markup: '<kt-textarea label="Message"></kt-textarea>' },
   'kt-checkbox': { markup: '<kt-checkbox>Send me updates</kt-checkbox>' },
+  'kt-date-picker': {
+    markup: '<kt-date-picker label="Due date" locale="en-GB" value="2026-09-25"></kt-date-picker>',
+  },
+  'kt-date-picker (open)': {
+    markup:
+      '<kt-date-picker label="Due date" locale="en-GB" value="2026-09-25" min="2026-09-10"></kt-date-picker>',
+    setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.trigger')!.click(),
+  },
+  'kt-date-picker (open period)': {
+    markup:
+      '<kt-date-picker range label="Period" locale="en-GB" value="2026-09-05/2026-09-12"></kt-date-picker>',
+    setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.trigger')!.click(),
+  },
   'kt-checkbox checked': { markup: '<kt-checkbox checked>Send me updates</kt-checkbox>' },
   'kt-checkbox indeterminate': { markup: '<kt-checkbox indeterminate>Select all</kt-checkbox>' },
   'kt-checkbox (label property)': { markup: '<kt-checkbox label="Select row"></kt-checkbox>' },

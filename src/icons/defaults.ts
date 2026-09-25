@@ -8,6 +8,7 @@
 import {
   ArrowDown,
   ArrowUp,
+  Calendar,
   Check,
   ChevronDown,
   ChevronLeft,
@@ -39,6 +40,7 @@ import { registerIcons } from './registry.js';
 export const defaultIcons = {
   ArrowDown,
   ArrowUp,
+  Calendar,
   Check,
   ChevronDown,
   ChevronLeft,
