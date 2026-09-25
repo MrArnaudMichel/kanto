@@ -7,14 +7,15 @@ import '../kt-icon/kt-icon.js';
 export type KtAvatarSize = 'small' | 'medium' | 'large';
 export type KtAvatarStatus = 'online' | 'away' | 'busy' | 'offline';
 
-/** Deterministic hue per name, so a person keeps their colour everywhere. */
-const HUES = [
-  'var(--color-primary-base)',
-  'var(--color-info-base)',
-  'var(--color-success-base)',
-  'var(--color-warning-base)',
-  'var(--color-danger-base)',
-];
+/**
+ * Deterministic hue per name, so a person keeps their colour everywhere.
+ *
+ * From the chart palette, not the semantic one: status colours are reserved,
+ * and a person filled with `--color-danger-base` reads as an error rather than
+ * as a person. These eight are the same slots a chart uses, in the same fixed
+ * order, so an avatar never impersonates a state.
+ */
+const HUES = Array.from({ length: 8 }, (_, i) => `var(--chart-series-${i + 1})`);
 
 /** "Benjamin Canac" → "BC", "emma.davis@example.com" → "ED". */
 export function initialsOf(name: string): string {
@@ -61,20 +62,38 @@ export class KtAvatar extends KtElement {
         --kt-avatar-size: 48px;
       }
 
+      /* The identity hue is worn the way every other tinted thing in Kanto
+         wears one — a hairline of the colour, a wash of it behind, the colour
+         itself as the ink. A saturated fill with white initials is a different
+         system's idea, and beside a chip or a badge it looks like one. */
       .avatar {
         position: relative;
         display: inline-flex;
         flex: none;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
         width: var(--kt-avatar-size);
         height: var(--kt-avatar-size);
         overflow: hidden;
-        color: var(--color-white);
-        font: 600 calc(var(--kt-avatar-size) * 0.38) / 1 var(--font-family-body);
-        background: var(--surface-raised);
+        color: var(--kt-avatar-hue, var(--text-muted));
+        font: 600 calc(var(--kt-avatar-size) * 0.36) / 1 var(--font-family-body);
+        background: color-mix(
+          in srgb,
+          var(--kt-avatar-hue, transparent) 18%,
+          var(--surface-raised)
+        );
+        border: var(--border-width) solid
+          color-mix(in srgb, var(--kt-avatar-hue, transparent) 55%, var(--border-subtle));
         border-radius: var(--radius-full);
         user-select: none;
+      }
+
+      /* A photograph fills the circle; the tint underneath would only show at
+         the edges as a ring nobody asked for. */
+      .avatar.has-image {
+        background: var(--surface-raised);
+        border-color: var(--border-subtle);
       }
 
       :host([square]) .avatar {
@@ -92,8 +111,8 @@ export class KtAvatar extends KtElement {
         position: absolute;
         right: 0;
         bottom: 0;
-        width: calc(var(--kt-avatar-size) * 0.3);
-        height: calc(var(--kt-avatar-size) * 0.3);
+        width: calc(var(--kt-avatar-size) * 0.28);
+        height: calc(var(--kt-avatar-size) * 0.28);
         border: 2px solid var(--surface-page);
         border-radius: var(--radius-full);
       }
@@ -159,8 +178,8 @@ export class KtAvatar extends KtElement {
 
     return html`<span
       part="base"
-      class="avatar"
-      style=${showImage ? '' : `background:${this.hue}`}
+      class=${classMap({ avatar: true, 'has-image': showImage })}
+      style=${showImage ? '' : `--kt-avatar-hue:${this.hue}`}
       role="img"
       aria-label=${this.name || 'Avatar'}
     >
