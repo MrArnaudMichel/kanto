@@ -50,11 +50,12 @@ const SHOWCASE = [
   {
     slug: 'console/home',
     label: 'Console',
-    description: 'A seven-screen admin product sharing one shell.',
+    description: 'An eleven-screen operations product sharing one shell.',
     notes: `## What it is
 
-An operations console: a dashboard, a mailbox, a customer table and four
-settings screens, all hanging off one shell.
+An operations console: a dashboard, a mailbox, a customer table, a file
+browser, an audit log, integrations and five settings screens, all hanging off
+one shell.
 
 ## What to try
 
@@ -401,7 +402,10 @@ function shell(): TemplateResult {
   return html`
     <kt-header sticky label="Kanto documentation">
       <a slot="brand" class="wordmark" href="#/guide/introduction">KANTO <span>DS</span></a>
-      <kt-chip variant="code" style="margin-left:8px">v1.0.0</kt-chip>
+      <!-- In the brand slot, not the default one: the header centres the
+           default slot as a group, and a version chip belongs beside the
+           wordmark rather than beside the sections. -->
+      <kt-chip slot="brand" variant="code">v1.0.0</kt-chip>
 
       <nav class="top-nav">
         ${SECTIONS.map(
