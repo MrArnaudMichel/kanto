@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../kt-pagination/kt-pagination.js';
 
 export type KtSortDirection = 'asc' | 'desc' | null;
@@ -242,10 +243,10 @@ export class KtTable extends KtElement {
   renderCell: KtCellRenderer | undefined;
 
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'No data to display';
+  emptyText: string | undefined = undefined;
 
   @property({ type: String, attribute: 'loading-text' })
-  loadingText = 'Loading…';
+  loadingText: string | undefined = undefined;
 
   /** Accessible name for the table. */
   @property({ type: String })
@@ -392,7 +393,7 @@ export class KtTable extends KtElement {
     if (rows.length === 0) {
       return html`<tr>
         <td colspan=${columnCount}>
-          <div class="placeholder">${this.emptyText}</div>
+          <div class="placeholder">${this.emptyText ?? strings().noData}</div>
         </td>
       </tr>`;
     }
@@ -413,7 +414,7 @@ export class KtTable extends KtElement {
                   type=${this.selectionMode === 'single' ? 'radio' : 'checkbox'}
                   name=${this.selectionMode === 'single' ? 'kt-table-selection' : nothing}
                   .checked=${selected}
-                  aria-label="Select row"
+                  aria-label=${strings().selectRow}
                   @click=${(event: Event) => event.stopPropagation()}
                   @change=${() => this.toggleSelection(row)}
                 />
@@ -433,7 +434,7 @@ export class KtTable extends KtElement {
   override render(): TemplateResult {
     if (this.loading) {
       return html`<div class="placeholder" role="status" aria-live="polite">
-        ${this.loadingText}
+        ${this.loadingText ?? strings().loading}
       </div>`;
     }
 
@@ -454,7 +455,7 @@ export class KtTable extends KtElement {
                               type="checkbox"
                               .checked=${allSelected}
                               .indeterminate=${someSelected && !allSelected}
-                              aria-label="Select all"
+                              aria-label=${strings().selectAll}
                               @change=${this.toggleAll}
                             />`
                           : nothing

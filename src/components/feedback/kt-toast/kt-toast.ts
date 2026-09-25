@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 import '../kt-progress-bar/kt-progress-bar.js';
 
@@ -261,7 +262,12 @@ export class KtToast extends KtElement {
 
       ${
         this.dismissible
-          ? html`<button part="close" class="close" aria-label="Close" @click=${this.close}>
+          ? html`<button
+              part="close"
+              class="close"
+              aria-label=${strings().close}
+              @click=${this.close}
+            >
               <kt-icon name="x" size="18"></kt-icon>
             </button>`
           : nothing
@@ -276,7 +282,7 @@ export class KtToast extends KtElement {
                 animated
                 .value=${this.remaining}
                 .max=${this.duration}
-                label="Time remaining"
+                label=${strings().timeRemaining}
               ></kt-progress-bar>
             </div>`
           : nothing

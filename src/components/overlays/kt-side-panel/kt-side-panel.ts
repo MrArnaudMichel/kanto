@@ -3,6 +3,7 @@ import { property, query } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import { closeDialog, isBackdropClick, openModal } from '#internal/dialog';
+import { strings } from '#internal/strings';
 import '../../core/kt-button/kt-button.js';
 
 /**
@@ -137,7 +138,7 @@ export class KtSidePanel extends KtElement {
 
   /** Small uppercase label above the heading — "Details", "Editing". */
   @property({ type: String })
-  eyebrow = 'Details';
+  eyebrow: string | undefined = undefined;
 
   @property({ type: String })
   heading = '';
@@ -182,14 +183,14 @@ export class KtSidePanel extends KtElement {
     >
       <div part="header" class="header">
         <div class="titles">
-          ${this.eyebrow ? html`<div class="eyebrow">${this.eyebrow}</div>` : nothing}
+          ${(this.eyebrow ?? strings().details) ? html`<div class="eyebrow">${this.eyebrow ?? strings().details}</div>` : nothing}
           <h2>${this.heading}</h2>
         </div>
         <kt-button
           variant="secondary"
           size="small"
           icon="x"
-          label="Close"
+          label=${strings().close}
           @click=${this.requestClose}
         ></kt-button>
       </div>

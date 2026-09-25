@@ -19,6 +19,7 @@ import {
   optionLabel,
   type KtOption,
 } from '#internal/listbox';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 
 /**
@@ -186,7 +187,7 @@ export class KtInputMenu extends KtElement {
   label = '';
 
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'No options available';
+  emptyText: string | undefined = undefined;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -201,7 +202,12 @@ export class KtInputMenu extends KtElement {
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
-    if (changed.has('value') || changed.has('required') || changed.has('error')) {
+    if (
+      changed.has('value') ||
+      changed.has('required') ||
+      changed.has('error') ||
+      this.stringsChanged(changed)
+    ) {
       // The option id is what is submitted, never the label the field shows:
       // the label is for people, the id is for the server.
       setFormValue(this.internals, this.value === null ? null : String(this.value));
@@ -210,7 +216,7 @@ export class KtInputMenu extends KtElement {
       setValidity(
         this.internals,
         { valueMissing: missing, customError: Boolean(this.error) },
-        this.error || (missing ? 'Select an option.' : ''),
+        this.error || (missing ? strings().selectOption : ''),
       );
     }
   }
@@ -364,7 +370,7 @@ export class KtInputMenu extends KtElement {
             ? html`<button
                 type="button"
                 class="icon-button clear"
-                aria-label="Clear"
+                aria-label=${strings().clear}
                 tabindex="-1"
                 @click=${this.clear}
               >
@@ -376,7 +382,7 @@ export class KtInputMenu extends KtElement {
         <button
           type="button"
           class="icon-button toggle"
-          aria-label=${this.open ? 'Close list' : 'Open list'}
+          aria-label=${this.open ? strings().closeList : strings().openList}
           tabindex="-1"
           @click=${(event: Event) => {
             event.stopPropagation();
@@ -397,7 +403,7 @@ export class KtInputMenu extends KtElement {
       >
         ${
           options.length === 0
-            ? html`<li class="empty">${this.emptyText}</li>`
+            ? html`<li class="empty">${this.emptyText ?? strings().noOptions}</li>`
             : options.map(
                 (option, index) =>
                   html`<li

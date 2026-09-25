@@ -1,4 +1,11 @@
-import { LitElement, css, type CSSResultGroup } from 'lit';
+import { LitElement, css, type CSSResultGroup, type PropertyValues } from 'lit';
+import { onStringsChange } from './strings.js';
+
+/**
+ * The key a `setStrings` call marks in `changedProperties`, so an element can
+ * recompute copy it caches outside `render()` — a validation message.
+ */
+const STRINGS_CHANGED = 'kt-strings';
 
 /**
  * Base class for every Kanto element.
@@ -35,6 +42,30 @@ export class KtElement extends LitElement {
       white-space: nowrap;
     }
   `;
+
+  private unsubscribeStrings: (() => void) | undefined;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Copy comes from the strings registry at render time; follow it when an
+    // application switches language.
+    // A fresh old value, because Lit skips a named update whose value did not
+    // change — and 'kt-strings' is not a property, so it is always undefined.
+    this.unsubscribeStrings = onStringsChange(() =>
+      this.requestUpdate(STRINGS_CHANGED, Symbol('previous strings')),
+    );
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.unsubscribeStrings?.();
+    this.unsubscribeStrings = undefined;
+  }
+
+  /** True when this update was triggered by `setStrings`. */
+  protected stringsChanged(changed: PropertyValues): boolean {
+    return changed.has(STRINGS_CHANGED);
+  }
 }
 
 /**

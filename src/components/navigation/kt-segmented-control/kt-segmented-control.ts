@@ -9,6 +9,7 @@ import {
   setValidity,
   type UsableInternals,
 } from '#internal/form-control';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtSegmentedSize = 'small' | 'medium' | 'large';
@@ -201,11 +202,11 @@ export class KtSegmentedControl extends KtElement {
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
-    if (changed.has('value') || changed.has('required')) {
+    if (changed.has('value') || changed.has('required') || this.stringsChanged(changed)) {
       setFormValue(this.internals, this.value === null ? null : String(this.value));
 
       const missing = this.required && this.value === null;
-      setValidity(this.internals, { valueMissing: missing }, missing ? 'Select an option.' : '');
+      setValidity(this.internals, { valueMissing: missing }, missing ? strings().selectOption : '');
     }
   }
 

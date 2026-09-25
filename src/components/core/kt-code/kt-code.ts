@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../kt-icon/kt-icon.js';
 
 /**
@@ -172,11 +173,11 @@ export class KtCode extends KtElement {
                   ? html`<button
                       type="button"
                       class=${this.copied ? 'copy copied' : 'copy'}
-                      aria-label=${this.copied ? 'Copied' : 'Copy code'}
+                      aria-label=${this.copied ? strings().copied : strings().copyCode}
                       @click=${this.copyToClipboard}
                     >
                       <kt-icon name=${this.copied ? 'check' : 'copy'} size="14"></kt-icon>
-                      ${this.copied ? 'Copied' : 'Copy'}
+                      ${this.copied ? strings().copied : strings().copy}
                     </button>`
                   : nothing
               }

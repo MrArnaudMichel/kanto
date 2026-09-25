@@ -3,6 +3,7 @@ import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit, uniqueId } from '#internal/events';
+import { strings } from '#internal/strings';
 import type { Format, KtChartType, KtMark, KtSeries } from './model.js';
 import {
   cartesianLayout,
@@ -481,11 +482,11 @@ export class KtChart extends KtElement {
 
   /** Names the total in the middle of a doughnut. */
   @property({ type: String, attribute: 'center-label' })
-  centerLabel = 'Total';
+  centerLabel: string | undefined = undefined;
 
   /** Names the sum in a stacked chart's tooltip and table. */
   @property({ type: String, attribute: 'total-label' })
-  totalLabel = 'Total';
+  totalLabel: string | undefined = undefined;
 
   /** Accessible name. Say what the chart shows. */
   @property({ type: String })
@@ -640,7 +641,7 @@ export class KtChart extends KtElement {
       active: this.active,
       noGrid: this.noGrid,
       noAxis: this.noAxis,
-      centerLabel: this.centerLabel,
+      centerLabel: this.centerLabel ?? strings().total,
       format: this.format,
       colorOf: this.colorOf,
       sliceColor: this.sliceColor,
@@ -947,7 +948,7 @@ export class KtChart extends KtElement {
       ${
         tooltip.total
           ? html`<span class="tooltip-total"
-              ><span>${this.totalLabel}</span><span>${tooltip.total}</span></span
+              ><span>${this.totalLabel ?? strings().total}</span><span>${tooltip.total}</span></span
             >`
           : nothing
       }
@@ -992,8 +993,8 @@ export class KtChart extends KtElement {
         </caption>
         <thead>
           <tr>
-            <th scope="col">Series</th>
-            <th scope="col">Point</th>
+            <th scope="col">${strings().chartSeries}</th>
+            <th scope="col">${strings().chartPoint}</th>
             <th scope="col">x</th>
             <th scope="col">y</th>
             ${bubble ? html`<th scope="col">r</th>` : nothing}
@@ -1027,9 +1028,9 @@ export class KtChart extends KtElement {
         </caption>
         <thead>
           <tr>
-            <th scope="col">Slice</th>
+            <th scope="col">${strings().chartSlice}</th>
             <th scope="col">${this.series[0]?.name ?? 'Value'}</th>
-            <th scope="col">Share</th>
+            <th scope="col">${strings().chartShare}</th>
           </tr>
         </thead>
         <tbody>
@@ -1065,9 +1066,9 @@ export class KtChart extends KtElement {
         </caption>
         <thead>
           <tr>
-            <th scope="col">Point</th>
+            <th scope="col">${strings().chartPoint}</th>
             ${this.series.map((series) => html`<th scope="col">${series.name}</th>`)}
-            ${withTotal ? html`<th scope="col">${this.totalLabel}</th>` : nothing}
+            ${withTotal ? html`<th scope="col">${this.totalLabel ?? strings().total}</th>` : nothing}
           </tr>
         </thead>
         <tbody>

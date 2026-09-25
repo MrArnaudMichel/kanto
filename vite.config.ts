@@ -25,6 +25,7 @@ function entries(): Record<string, string> {
   const files = [
     join(src, 'index.ts'),
     join(src, 'icons/index.ts'),
+    join(src, 'strings/index.ts'),
     join(src, 'react/index.ts'),
     join(src, 'react/jsx.ts'),
     join(src, 'vue/index.ts'),

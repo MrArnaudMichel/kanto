@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 import '../../core/kt-badge/kt-badge.js';
 
@@ -229,7 +230,7 @@ export class KtSubMenuNavigation extends KtElement {
   activeHref = '';
 
   @property({ type: String })
-  label = 'Secondary navigation';
+  label: string | undefined = undefined;
 
   /** Drops the card background, for a sidebar that owns its own surface. */
   @property({ type: Boolean, reflect: true })
@@ -341,7 +342,7 @@ export class KtSubMenuNavigation extends KtElement {
   }
 
   override render(): TemplateResult {
-    return html`<nav part="nav" aria-label=${this.label}>
+    return html`<nav part="nav" aria-label=${this.label ?? strings().secondaryNavigation}>
       ${this.sections.map(
         (section, index) =>
           html`<div part="section">

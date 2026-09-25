@@ -3,6 +3,7 @@ import { property, query } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import { closeDialog, isBackdropClick, openModal } from '#internal/dialog';
+import { strings } from '#internal/strings';
 import '../../core/kt-button/kt-button.js';
 
 export type KtConfirmVariant = 'danger' | 'primary';
@@ -132,16 +133,16 @@ export class KtConfirmDialog extends KtElement {
   open = false;
 
   @property({ type: String })
-  heading = 'Are you sure?';
+  heading: string | undefined = undefined;
 
   @property({ type: String })
   message = '';
 
   @property({ type: String, attribute: 'confirm-label' })
-  confirmLabel = 'Confirm';
+  confirmLabel: string | undefined = undefined;
 
   @property({ type: String, attribute: 'cancel-label' })
-  cancelLabel = 'Cancel';
+  cancelLabel: string | undefined = undefined;
 
   /** `danger` gives the confirm button the solid red treatment. */
   @property({ type: String, reflect: true })
@@ -183,21 +184,23 @@ export class KtConfirmDialog extends KtElement {
     return html`<dialog
       part="dialog"
       role="alertdialog"
-      aria-label=${this.heading}
+      aria-label=${this.heading ?? strings().confirmHeading}
       aria-describedby=${this.message ? 'kt-confirm-message' : nothing}
       @close=${this.onDialogClose}
       @click=${this.onDialogClick}
     >
-      <h2>${this.heading}</h2>
+      <h2>${this.heading ?? strings().confirmHeading}</h2>
       ${this.message ? html`<p id="kt-confirm-message">${this.message}</p>` : nothing}
       <slot></slot>
 
       <div part="actions" class="actions">
-        <kt-button data-cancel variant="dark" @click=${this.cancel}>${this.cancelLabel}</kt-button>
+        <kt-button data-cancel variant="dark" @click=${this.cancel}
+          >${this.cancelLabel ?? strings().cancel}</kt-button
+        >
         <kt-button
           variant=${this.variant === 'danger' ? 'delete' : 'primary'}
           @click=${this.confirm}
-          >${this.confirmLabel}</kt-button
+          >${this.confirmLabel ?? strings().confirm}</kt-button
         >
       </div>
     </dialog>`;

@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
+import { strings } from '#internal/strings';
 import '../kt-icon/kt-icon.js';
 
 export type KtAvatarSize = 'small' | 'medium' | 'large';
@@ -178,7 +179,7 @@ export class KtAvatar extends KtElement {
       class=${classMap({ avatar: true, 'has-image': showImage, anonymous: !this.name })}
       style=${showImage ? '' : `--kt-avatar-hue:${this.hue}`}
       role="img"
-      aria-label=${this.name || 'Avatar'}
+      aria-label=${this.name || strings().avatar}
     >
       ${
         showImage

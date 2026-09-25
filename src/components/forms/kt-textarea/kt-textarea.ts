@@ -10,6 +10,7 @@ import {
   setValidity,
   type UsableInternals,
 } from '#internal/form-control';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 
 /**
@@ -193,14 +194,19 @@ export class KtTextarea extends KtElement {
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
-    if (changed.has('value') || changed.has('required') || changed.has('error')) {
+    if (
+      changed.has('value') ||
+      changed.has('required') ||
+      changed.has('error') ||
+      this.stringsChanged(changed)
+    ) {
       setFormValue(this.internals, this.value);
 
       const missing = this.required && this.value.length === 0;
       setValidity(
         this.internals,
         { valueMissing: missing, customError: Boolean(this.error) },
-        this.error || (missing ? 'This field is required.' : ''),
+        this.error || (missing ? strings().required : ''),
       );
     }
   }

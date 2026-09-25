@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import { optionLabel, type KtOption } from '#internal/listbox';
+import { strings } from '#internal/strings';
 
 export type KtDropdownPlacement = 'bottom' | 'top';
 export type KtDropdownAlign = 'start' | 'end';
@@ -176,7 +177,7 @@ export class KtDropdown extends KtElement {
   disabled = false;
 
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'No results';
+  emptyText: string | undefined = undefined;
 
   /** Whether the panel is showing. */
   get isOpen(): boolean {
@@ -320,7 +321,7 @@ export class KtDropdown extends KtElement {
                 )}
               </ul>`
             : html`<slot name="panel">
-                <div class="empty">${this.emptyText}</div>
+                <div class="empty">${this.emptyText ?? strings().noResults}</div>
               </slot>`
         }
       </div>`;

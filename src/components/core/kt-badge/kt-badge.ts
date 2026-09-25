@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../kt-icon/kt-icon.js';
 
 export type KtBadgeVariant = 'tag' | 'code' | 'category' | 'count';
@@ -296,7 +297,7 @@ export class KtBadge extends KtElement {
               part="remove"
               type="button"
               class="remove"
-              aria-label=${`Remove ${this.display || 'this'}`}
+              aria-label=${strings().remove(this.display || this.textContent?.trim() || '')}
               @click=${this.onRemove}
             >
               <kt-icon name="x" size="12"></kt-icon>

@@ -2,6 +2,7 @@ import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../../core/kt-button/kt-button.js';
 
 /**
@@ -54,7 +55,7 @@ export class KtPagination extends KtElement {
   totalPages = 1;
 
   @property({ type: String })
-  label = 'Pagination';
+  label: string | undefined = undefined;
 
   private go(target: number): void {
     const next = Math.min(Math.max(target, 1), Math.max(this.totalPages, 1));
@@ -68,7 +69,7 @@ export class KtPagination extends KtElement {
     const first = this.page <= 1;
     const last = this.page >= this.totalPages;
 
-    return html`<nav aria-label=${this.label}>
+    return html`<nav aria-label=${this.label ?? strings().pagination}>
       <kt-button
         part="previous"
         variant="dark"
@@ -76,13 +77,13 @@ export class KtPagination extends KtElement {
         icon="chevron-left"
         ?disabled=${first}
         @click=${() => this.go(this.page - 1)}
-        >Previous</kt-button
+        >${strings().previous}</kt-button
       >
 
       <!-- polite, so a page change is announced without interrupting whatever
            the reader is already working through -->
       <span part="info" class="info" aria-live="polite">
-        Page ${this.page} / ${this.totalPages}
+        ${strings().pageOf(this.page, this.totalPages)}
       </span>
 
       <kt-button
@@ -93,7 +94,7 @@ export class KtPagination extends KtElement {
         icon-position="right"
         ?disabled=${last}
         @click=${() => this.go(this.page + 1)}
-        >Next</kt-button
+        >${strings().next}</kt-button
       >
     </nav>`;
   }

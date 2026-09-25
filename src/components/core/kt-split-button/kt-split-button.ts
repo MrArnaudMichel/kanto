@@ -10,6 +10,7 @@ import {
   optionLabel,
   type KtOption,
 } from '#internal/listbox';
+import { strings } from '#internal/strings';
 import type { KtButtonSize, KtButtonVariant } from '../kt-button/kt-button.js';
 import type { KtDropdown, KtDropdownPlacement } from '../../overlays/kt-dropdown/kt-dropdown.js';
 import '../kt-button/kt-button.js';
@@ -182,14 +183,14 @@ export class KtSplitButton extends KtElement {
 
   /** Accessible name of the caret, which has no text of its own. */
   @property({ type: String, attribute: 'menu-label' })
-  menuLabel = 'More actions';
+  menuLabel: string | undefined = undefined;
 
   /** Where to put the menu when there is room on both sides. */
   @property({ type: String, attribute: 'preferred-placement' })
   preferredPlacement: KtDropdownPlacement = 'bottom';
 
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'No actions';
+  emptyText: string | undefined = undefined;
 
   /** Whether the menu is showing. */
   get isOpen(): boolean {
@@ -337,7 +338,7 @@ export class KtSplitButton extends KtElement {
           variant=${this.variant}
           size=${this.size}
           icon="chevron-down"
-          label=${this.menuLabel}
+          label=${this.menuLabel ?? strings().moreActions}
           ?disabled=${this.disabled}
           @click=${this.onCaretClick}
         ></kt-button>
@@ -346,7 +347,7 @@ export class KtSplitButton extends KtElement {
           ${
             this.items.length > 0
               ? this.items.map((item, index) => this.renderItem(item, index))
-              : html`<div class="empty">${this.emptyText}</div>`
+              : html`<div class="empty">${this.emptyText ?? strings().noActions}</div>`
           }
         </div>
       </kt-dropdown>

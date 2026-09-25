@@ -4,6 +4,7 @@ import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import { hasAssignedContent } from '#internal/slots';
 import { closeDialog, isBackdropClick, openModal } from '#internal/dialog';
+import { strings } from '#internal/strings';
 import '../../core/kt-button/kt-button.js';
 
 export type KtModalSize = 'small' | 'medium' | 'large' | 'full';
@@ -238,7 +239,7 @@ export class KtModal extends KtElement {
                       variant="secondary-no-bg"
                       size="small"
                       icon="x"
-                      label="Close"
+                      label=${strings().close}
                       @click=${this.requestClose}
                     ></kt-button>`
               }

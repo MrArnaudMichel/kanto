@@ -11,7 +11,9 @@
     "dark-theme"
   ],
   "homepage": "https://kanto.arnaudmichel.fr",
-  "bugs": "https://github.com/MrArnaudMichel/kanto/issues",
+  "bugs": {
+    "url": "https://github.com/MrArnaudMichel/kanto/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrArnaudMichel/kanto.git"
@@ -50,6 +52,10 @@
     "./icons": {
       "types": "./dist/icons/index.d.ts",
       "default": "./dist/icons/index.js"
+    },
+    "./strings": {
+      "types": "./dist/strings/index.d.ts",
+      "default": "./dist/strings/index.js"
     },
     "./react": {
       "types": "./dist/react/index.d.ts",

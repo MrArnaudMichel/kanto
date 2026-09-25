@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 
 export interface KtBreadcrumbItem {
@@ -85,7 +86,7 @@ export class KtBreadcrumb extends KtElement {
 
   /** Accessible name for the navigation landmark. */
   @property({ type: String })
-  label = 'Breadcrumb';
+  label: string | undefined = undefined;
 
   private onSelect(event: MouseEvent, item: KtBreadcrumbItem, index: number): void {
     // Let modified clicks through: they open a new tab, which is the user
@@ -100,7 +101,7 @@ export class KtBreadcrumb extends KtElement {
   override render(): TemplateResult {
     const lastIndex = this.items.length - 1;
 
-    return html`<nav part="nav" aria-label=${this.label}>
+    return html`<nav part="nav" aria-label=${this.label ?? strings().breadcrumb}>
       ${this.items.map((item, index) =>
         index === lastIndex
           ? html`<span part="item" class="item current" aria-current="page">${item.label}</span>`

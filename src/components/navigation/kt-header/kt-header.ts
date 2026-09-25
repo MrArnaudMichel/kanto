@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../../core/kt-button/kt-button.js';
 
 /**
@@ -217,7 +218,7 @@ export class KtHeader extends KtElement {
           variant="secondary-no-bg"
           size="small"
           icon=${this.menuOpen ? 'x' : 'menu'}
-          label=${this.menuOpen ? 'Close menu' : 'Open menu'}
+          label=${this.menuOpen ? strings().closeMenu : strings().openMenu}
           aria-expanded=${this.menuOpen ? 'true' : 'false'}
           @click=${this.toggleMenu}
         ></kt-button>

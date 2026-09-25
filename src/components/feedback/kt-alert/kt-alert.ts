@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtAlertVariant = 'info' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -195,7 +196,7 @@ export class KtAlert extends KtElement {
           ? html`<button
               part="close"
               class="close"
-              aria-label="Dismiss"
+              aria-label=${strings().dismiss}
               @click=${() => emit(this, 'kt-close')}
             >
               <kt-icon name="x" size="16"></kt-icon>

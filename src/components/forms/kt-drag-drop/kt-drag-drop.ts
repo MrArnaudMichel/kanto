@@ -10,6 +10,7 @@ import {
   type UsableInternals,
 } from '#internal/form-control';
 import { formatFileSize } from '#internal/format';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 import '../../core/kt-button/kt-button.js';
 
@@ -181,11 +182,11 @@ export class KtDragDrop extends KtElement {
    * reusing it would put the prompt in a native tooltip on the whole zone.
    */
   @property({ type: String })
-  heading = 'Drag and drop or';
+  heading: string | undefined = undefined;
 
   /** The clickable-looking part of the prompt. */
   @property({ type: String, attribute: 'link-text' })
-  linkText = 'browse your files';
+  linkText: string | undefined = undefined;
 
   /** Optional hint, e.g. `800×400px`. */
   @property({ type: String, attribute: 'recommended-size' })
@@ -219,7 +220,12 @@ export class KtDragDrop extends KtElement {
 
   // Untyped: `files` is private state, which PropertyValues<this> cannot name.
   override willUpdate(changed: PropertyValues): void {
-    if (changed.has('files') || changed.has('name') || changed.has('required')) {
+    if (
+      changed.has('files') ||
+      changed.has('name') ||
+      changed.has('required') ||
+      this.stringsChanged(changed)
+    ) {
       this.syncFormValue();
     }
   }
@@ -235,7 +241,7 @@ export class KtDragDrop extends KtElement {
     setFormValue(this.internals, value);
 
     const missing = this.required && this.files.length === 0;
-    setValidity(this.internals, { valueMissing: missing }, missing ? 'Select a file.' : '');
+    setValidity(this.internals, { valueMissing: missing }, missing ? strings().selectFile : '');
   }
 
   formResetCallback(): void {
@@ -333,7 +339,7 @@ export class KtDragDrop extends KtElement {
       role="button"
       tabindex=${this.disabled ? -1 : 0}
       aria-disabled=${this.disabled ? 'true' : nothing}
-      aria-label=${`${this.heading} ${this.linkText}`}
+      aria-label=${`${this.heading ?? strings().dragAndDrop} ${this.linkText ?? strings().browseFiles}`}
       @click=${this.browse}
       @keydown=${this.onZoneKeyDown}
       @dragover=${this.onDragOver}
@@ -353,10 +359,12 @@ export class KtDragDrop extends KtElement {
       <div class="prompt">
         <span class="prompt-icon"><kt-icon name="file-up" size="24"></kt-icon></span>
         <div>
-          <p class="title">${this.heading} ${this.linkText}</p>
+          <p class="title">
+            ${this.heading ?? strings().dragAndDrop} ${this.linkText ?? strings().browseFiles}
+          </p>
           ${
             this.recommendedSize
-              ? html`<div class="hint">Recommended image size: ${this.recommendedSize}</div>`
+              ? html`<div class="hint">${strings().recommendedSize(this.recommendedSize)}</div>`
               : nothing
           }
         </div>
@@ -367,7 +375,7 @@ export class KtDragDrop extends KtElement {
           ? html`<ul
               part="list"
               class="list"
-              aria-label="Selected files"
+              aria-label=${strings().selectedFiles}
               @click=${(event: Event) => event.stopPropagation()}
             >
               ${this.files.map(
@@ -385,7 +393,7 @@ export class KtDragDrop extends KtElement {
                       variant="danger"
                       size="small"
                       icon="trash-2"
-                      label=${`Remove ${file.name}`}
+                      label=${strings().remove(file.name)}
                       @click=${() => this.removeAt(index)}
                     ></kt-button>
                   </li>`,

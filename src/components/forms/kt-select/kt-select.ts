@@ -17,6 +17,7 @@ import {
   optionLabel,
   type KtOption,
 } from '#internal/listbox';
+import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtSelectSize = 'small' | 'medium' | 'large';
@@ -185,7 +186,7 @@ export class KtSelect extends KtElement {
   value: string | number | null = null;
 
   @property({ type: String })
-  placeholder = 'Select';
+  placeholder: string | undefined = undefined;
 
   @property({ type: String })
   name = '';
@@ -213,7 +214,7 @@ export class KtSelect extends KtElement {
 
   /** Shown when `options` is empty. */
   @property({ type: String, attribute: 'empty-text' })
-  emptyText = 'No options available';
+  emptyText: string | undefined = undefined;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -228,14 +229,19 @@ export class KtSelect extends KtElement {
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
-    if (changed.has('value') || changed.has('required') || changed.has('error')) {
+    if (
+      changed.has('value') ||
+      changed.has('required') ||
+      changed.has('error') ||
+      this.stringsChanged(changed)
+    ) {
       setFormValue(this.internals, this.value === null ? null : String(this.value));
 
       const missing = this.required && this.value === null;
       setValidity(
         this.internals,
         { valueMissing: missing, customError: Boolean(this.error) },
-        this.error || (missing ? 'Select an option.' : ''),
+        this.error || (missing ? strings().selectOption : ''),
       );
     }
   }
@@ -364,7 +370,7 @@ export class KtSelect extends KtElement {
         @click=${this.toggleList}
       >
         <span class=${classMap({ value: true, placeholder: !selected })}>
-          ${selected ? optionLabel(selected) : this.placeholder}
+          ${selected ? optionLabel(selected) : (this.placeholder ?? strings().select)}
         </span>
         <span class="icons">
           ${
@@ -373,7 +379,7 @@ export class KtSelect extends KtElement {
                   class="clear"
                   role="button"
                   tabindex="-1"
-                  aria-label="Clear"
+                  aria-label=${strings().clear}
                   @click=${this.clear}
                 >
                   <kt-icon name="x" size="18"></kt-icon>
@@ -389,11 +395,11 @@ export class KtSelect extends KtElement {
         id=${this.listId}
         class=${classMap({ popup: true, open: this.open })}
         role="listbox"
-        aria-label=${this.label || this.placeholder}
+        aria-label=${this.label || (this.placeholder ?? strings().select)}
       >
         ${
           this.options.length === 0
-            ? html`<li class="empty">${this.emptyText}</li>`
+            ? html`<li class="empty">${this.emptyText ?? strings().noOptions}</li>`
             : this.options.map(
                 (option, index) =>
                   html`<li

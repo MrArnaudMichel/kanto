@@ -34,8 +34,10 @@ static HTML file, import `styles.css`, and load the elements from a bundle.
 - **Data goes in as properties, not attributes.** `options`, `data`, `columns`.
 - **Copy is English**, sentence case, no emoji. Keep it terse: "No data to
   display", not "There is currently no data available to display".
-- **Every default string is a property.** Override `placeholder`, `emptyText`,
-  `confirmLabel` and friends at the call site rather than forking a component.
+- **Translate with `setStrings`, not by forking.** Every string an element
+  writes comes from `kanto-ds/strings`; call `setStrings({...})` once for another
+  language. For one element that should say something different, set its
+  property (`placeholder`, `emptyText`, `confirmLabel`…), which wins.
 - **Elevation is a lighter surface, not a shadow.**
 - **One primary button per screen.** `delete` — the solid red — is for the
   irreversible only.

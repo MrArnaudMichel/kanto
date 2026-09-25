@@ -75,8 +75,26 @@ how an operation says it is still working when the number is not moving.
 section titles. No emoji in product UI — the one exception is the flag in the
 phone-input country picker, which is functional.
 
-Every default string is a property, so a screen can override any of them, and
-an application that needs another language sets them at the call site.
+Every string an element writes itself — empty states, button labels,
+validation messages, and the accessible names only a screen reader hears — comes
+from one registry. An application in another language replaces them once:
+
+```js
+import { setStrings } from 'kanto-ds/strings';
+
+setStrings({
+  clear: 'Effacer',
+  noData: 'Aucune donnée',
+  pageOf: (page, total) => `Page ${page} sur ${total}`,
+});
+```
+
+Anything left out stays in English, and switching at runtime re-renders every
+element. Strings that carry a value are functions, so a translation owns the
+word order. Where an element also takes a string as a property (`emptyText`,
+`placeholder`, `confirmLabel`…), setting it still wins for that one element.
+The full list is `KtStrings` in
+[src/internal/strings.ts](src/internal/strings.ts).
 
 Full details in **[src/tokens/README.md](src/tokens/README.md)**.
 

@@ -134,5 +134,14 @@ export type { KtCountry } from './internal/countries.js';
 export { getIcon, registerIcon, registerIcons, registeredIcons } from './icons/registry.js';
 export type { IconNode } from './icons/registry.js';
 
+// === STRINGS ===
+export {
+  defaultStrings,
+  resetStrings,
+  setStrings,
+  strings as getStrings,
+  type KtStrings,
+} from './internal/strings.js';
+
 // === INTERNALS worth exposing ===
 export { KtElement, defineElement } from './internal/kt-element.js';
