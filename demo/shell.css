@@ -358,22 +358,24 @@ main {
 
 /* The frame is laid out at desktop width and scaled down, so the preview shows
    the real layout at the size it was designed for rather than the responsive
-   fallback a 700px column would trigger. The wrapper's height is the scaled
-   height, since a transform does not affect layout. */
+   fallback a 700px column would trigger.
+
+   The iframe is sized as a *fraction* of the container rather than a fixed
+   1440px: scaled by 0.7 it lays out at 1/0.7 of whatever width the column
+   happens to be, and the scaled result fills that column exactly. A fixed
+   width leaves a gap on the right at every size but one. */
 .app-preview-viewport {
-  --preview-width: 1440;
-  --preview-height: 900;
-  --preview-scale: 0.5;
+  --preview-scale: 0.6;
 
   position: relative;
   width: 100%;
-  height: calc(var(--preview-height) * var(--preview-scale) * 1px);
+  aspect-ratio: 16 / 10;
   overflow: hidden;
 }
 
 .app-preview-frame {
-  width: calc(var(--preview-width) * 1px);
-  height: calc(var(--preview-height) * 1px);
+  width: calc(100% / var(--preview-scale));
+  height: calc(100% / var(--preview-scale));
   border: none;
   transform: scale(var(--preview-scale));
   transform-origin: top left;
@@ -381,13 +383,13 @@ main {
 
 @media (max-width: 1279px) {
   .app-preview-viewport {
-    --preview-scale: 0.38;
+    --preview-scale: 0.56;
   }
 }
 
 @media (max-width: 767px) {
   .app-preview-viewport {
-    --preview-scale: 0.26;
+    --preview-scale: 0.4;
   }
 }
 

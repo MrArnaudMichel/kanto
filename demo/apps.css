@@ -1568,10 +1568,8 @@
   }
 }
 
-/* Kanto fields are borderless fills. That works when they sit on a panel, and
-   not at all when they sit straight on the page — page and field are one ramp
-   step apart in dark and almost identical in light, so the field disappears.
-   Toolbars get a surface for exactly that reason. */
+/* A toolbar is a band of controls, not a panel of content: the card's own
+   padding is built for prose and leaves the row swimming. */
 .toolbar-card::part(base) {
   padding: 12px 14px;
 }
