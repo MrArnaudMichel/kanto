@@ -81,6 +81,29 @@ describe('kt-table', () => {
     expect(cellText(el)).toEqual(['Alpaca', 'Ångström', 'Ångström 10', 'Zeta']);
   });
 
+  it('sorts in the language of the page', async () => {
+    // Swedish files Å after Z; English files it with A.
+    document.documentElement.lang = 'sv';
+    try {
+      const swedish = await fixture<KtTable>(
+        '<kt-table sort-key="name" sort-direction="asc"></kt-table>',
+      );
+      swedish.columns = COLUMNS;
+      swedish.data = DATA;
+      await settle(swedish);
+      expect(cellText(swedish)).toEqual(['Alpaca', 'Zeta', 'Ångström', 'Ångström 10']);
+    } finally {
+      document.documentElement.lang = '';
+    }
+  });
+
+  it('sorts in its own locale when it has one', async () => {
+    el.locale = 'sv';
+    headerButtons(el)[0]!.click();
+    await settle(el);
+    expect(cellText(el)).toEqual(['Alpaca', 'Zeta', 'Ångström', 'Ångström 10']);
+  });
+
   it('sorts numbers numerically, not as strings', async () => {
     headerButtons(el)[1]!.click();
     await settle(el);

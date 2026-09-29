@@ -9,6 +9,7 @@ import {
   setValidity,
   type UsableInternals,
 } from '#internal/form-control';
+import { resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import { compareDates, parseDate, parseRange, toLocalDate, type PlainDate } from '#internal/date';
 import '../kt-calendar/kt-calendar.js';
@@ -327,7 +328,7 @@ export class KtDatePicker extends KtElement {
   // --- Reading the value ---
 
   private get resolvedLocale(): string {
-    return this.locale || document.documentElement.lang || navigator.language || 'en';
+    return resolveLocale(this.locale);
   }
 
   private get selection(): { start: PlainDate | null; end: PlainDate | null } {

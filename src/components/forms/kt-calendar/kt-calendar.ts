@@ -3,6 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit, uniqueId } from '#internal/events';
+import { resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import {
   addDays,
@@ -281,7 +282,7 @@ export class KtCalendar extends KtElement {
   // --- Reading the value ---
 
   private get resolvedLocale(): string {
-    return this.locale || document.documentElement.lang || navigator.language || 'en';
+    return resolveLocale(this.locale);
   }
 
   private get selection(): { start: PlainDate | null; end: PlainDate | null } {

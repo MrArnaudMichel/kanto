@@ -20,9 +20,10 @@ sort with a mouse is a table half the users cannot sort.
 Each press cycles: unsorted → ascending → descending → unsorted. The third press
 restoring the original order is what makes sorting undoable.
 
-Text sorts through `Intl.Collator('en', { numeric: true })`, so "Ångström"
-files next to "Angstrom" rather than after "Zeta", and "Entity 2" comes before
-"Entity 10". Empty values sort to the end whichever way the column points — a
+Text sorts through `Intl.Collator` with `numeric: true`, in the table's
+`locale`, else the page's `<html lang>`, else the browser's language. Each
+language files accents its own way — "Ångström" next to "Angstrom" in English,
+after "Zeta" in Swedish — and "Entity 2" comes before "Entity 10". Empty values sort to the end whichever way the column points — a
 descending sort should not open with a screen of blanks.
 
 `aria-sort` on the header reflects the state.
@@ -64,22 +65,23 @@ table.renderCell = (row, column) =>
 
 ## API
 
-| Property        | Attribute        | Type                       | Default                |
-| --------------- | ---------------- | -------------------------- | ---------------------- |
-| `columns`       | —                | `KtTableColumn[]`          | `[]`                   |
-| `data`          | —                | `KtTableRow[]`             | `[]`                   |
-| `selectable`    | `selectable`     | `boolean`                  | `false`                |
-| `selectionMode` | `selection-mode` | `'single' \| 'multiple'`   | `'multiple'`           |
-| `selected`      | —                | `unknown[]`                | `[]`                   |
-| `pageSize`      | `page-size`      | `number` (0 = no paging)   | `0`                    |
-| `loading`       | `loading`        | `boolean`                  | `false`                |
-| `compact`       | `compact`        | `boolean`                  | `false`                |
-| `sortKey`       | `sort-key`       | `string \| null`           | `null`                 |
-| `sortDirection` | `sort-direction` | `'asc' \| 'desc' \| null`  | `null`                 |
-| `renderCell`    | —                | `(row, column) => unknown` | —                      |
-| `emptyText`     | `empty-text`     | `string`                   | `'No data to display'` |
-| `loadingText`   | `loading-text`   | `string`                   | `'Loading…'`           |
-| `label`         | `label`          | `string`                   | `''`                   |
+| Property        | Attribute        | Type                       | Default                   |
+| --------------- | ---------------- | -------------------------- | ------------------------- |
+| `columns`       | —                | `KtTableColumn[]`          | `[]`                      |
+| `data`          | —                | `KtTableRow[]`             | `[]`                      |
+| `selectable`    | `selectable`     | `boolean`                  | `false`                   |
+| `selectionMode` | `selection-mode` | `'single' \| 'multiple'`   | `'multiple'`              |
+| `selected`      | —                | `unknown[]`                | `[]`                      |
+| `pageSize`      | `page-size`      | `number` (0 = no paging)   | `0`                       |
+| `loading`       | `loading`        | `boolean`                  | `false`                   |
+| `compact`       | `compact`        | `boolean`                  | `false`                   |
+| `sortKey`       | `sort-key`       | `string \| null`           | `null`                    |
+| `sortDirection` | `sort-direction` | `'asc' \| 'desc' \| null`  | `null`                    |
+| `renderCell`    | —                | `(row, column) => unknown` | —                         |
+| `emptyText`     | `empty-text`     | `string`                   | `'No data to display'`    |
+| `loadingText`   | `loading-text`   | `string`                   | `'Loading…'`              |
+| `label`         | `label`          | `string`                   | `''`                      |
+| `locale`        | `locale`         | `string` (BCP 47)          | `''` (page, then browser) |
 
 ```ts
 interface KtTableColumn {

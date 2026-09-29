@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import '../kt-pagination/kt-pagination.js';
 
@@ -29,12 +30,22 @@ export interface KtSortState {
 /** Renders a cell. Return `undefined` to fall back to the raw value. */
 export type KtCellRenderer = (row: KtTableRow, column: KtTableColumn) => unknown;
 
+const collators = new Map<string, Intl.Collator>();
+
 /**
- * Sorts with a locale-aware collator, so "Ångström" files next to "Angstrom"
- * instead of after "Zeta". `numeric` also makes "Entity 2" precede
+ * A collator for `locale`, made once. Locale-aware, so each language files
+ * accented letters its own way — "Ångström" next to "Angstrom" in English,
+ * after "Zeta" in Swedish. `numeric` also makes "Entity 2" precede
  * "Entity 10".
  */
-const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
+function collatorFor(locale: string): Intl.Collator {
+  let collator = collators.get(locale);
+  if (!collator) {
+    collator = new Intl.Collator(locale, { numeric: true, sensitivity: 'base' });
+    collators.set(locale, collator);
+  }
+  return collator;
+}
 
 /**
  * A sortable string for any cell value.
@@ -252,12 +263,20 @@ export class KtTable extends KtElement {
   @property({ type: String })
   label = '';
 
+  /**
+   * BCP 47 locale text is sorted in. Empty means the page's `<html lang>`,
+   * then the browser's language.
+   */
+  @property({ type: String })
+  locale = '';
+
   /** The last sort, and what it was computed from. */
   private sortCache:
     | {
         data: readonly KtTableRow[];
         key: string | null;
         direction: KtSortDirection;
+        locale: string;
         rows: readonly KtTableRow[];
       }
     | undefined;
@@ -265,32 +284,35 @@ export class KtTable extends KtElement {
   /**
    * The rows after sorting, before paging.
    *
-   * Sorted once per change of `data`, `sortKey` or `sortDirection`, not on
+   * Sorted once per change of `data`, `sortKey`, `sortDirection` or locale, not on
    * every render: hovering a row or ticking a box re-renders the table, and
    * re-sorting a few thousand rows each time is what made that lag. Assign a
    * new array to `data` rather than changing it in place.
    */
   get sortedRows(): readonly KtTableRow[] {
     const cache = this.sortCache;
+    const locale = resolveLocale(this.locale);
     if (
       cache?.data === this.data &&
       cache.key === this.sortKey &&
-      cache.direction === this.sortDirection
+      cache.direction === this.sortDirection &&
+      cache.locale === locale
     ) {
       return cache.rows;
     }
 
-    const rows = this.sort();
+    const rows = this.sort(collatorFor(locale));
     this.sortCache = {
       data: this.data,
       key: this.sortKey,
       direction: this.sortDirection,
+      locale,
       rows,
     };
     return rows;
   }
 
-  private sort(): readonly KtTableRow[] {
+  private sort(collator: Intl.Collator): readonly KtTableRow[] {
     if (!this.sortKey || !this.sortDirection) return this.data;
 
     const key = this.sortKey;
