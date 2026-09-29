@@ -343,6 +343,13 @@
   gap: 0;
 }
 
+/* The card already pads the tile. kt-stat's own padding, meant for a stat
+   standing alone, would add a second inset and push the figure right of the
+   icon above it. */
+.tile kt-stat::part(base) {
+  padding: 0;
+}
+
 /* Four across, a currency value and its delta on one line. kt-stat wraps the
    delta under a long value rather than pushing it off, which is right — but a
    single wrapped tile makes all four taller, and the extra height reads as a
