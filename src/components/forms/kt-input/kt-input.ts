@@ -26,6 +26,9 @@ export type KtInputSize = 'small' | 'medium' | 'large';
 /** Icon size inside a field, at every field size. */
 const ICON_SIZE = 18;
 
+/** A phone-mode restore state, `fr:612345678`: see `formState`. */
+const PHONE_STATE = /^([a-z]{2}):(\d*)$/;
+
 /**
  * A single-line text field.
  *
@@ -369,7 +372,7 @@ export class KtInput extends KtElement {
     document.addEventListener('pointerdown', this.closeCountryPanel);
     this.internals ??= attachFormInternals(this);
     this.defaultValue = this.value;
-    setFormValue(this.internals, this.formValue);
+    setFormValue(this.internals, this.formValue, this.formState);
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
@@ -380,7 +383,7 @@ export class KtInput extends KtElement {
       changed.has('country') ||
       this.stringsChanged(changed)
     ) {
-      setFormValue(this.internals, this.value);
+      setFormValue(this.internals, this.formValue, this.formState);
       this.refreshValidity();
     }
   }
@@ -408,7 +411,13 @@ export class KtInput extends KtElement {
 
   /** Called by the platform when the browser restores a session. */
   formStateRestoreCallback(state: string): void {
-    this.value = state;
+    const phone = PHONE_STATE.exec(state);
+    if (this.isPhone && phone) {
+      this.country = phone[1]!;
+      this.value = phone[2]!;
+    } else {
+      this.value = state;
+    }
   }
 
   override focus(options?: FocusOptions): void {
@@ -441,6 +450,15 @@ export class KtInput extends KtElement {
   private get formValue(): string {
     if (!this.isPhone || !this.value) return this.value;
     return `+${this.selectedCountry?.dialCode ?? ''}${this.value}`;
+  }
+
+  /**
+   * What the browser saves for a restore. The international number cannot be
+   * split back into country and digits — `+1` is both the US and Canada — so
+   * phone mode saves the two apart.
+   */
+  private get formState(): string | undefined {
+    return this.isPhone ? `${this.country}:${this.value}` : undefined;
   }
 
   private get displayValue(): string {

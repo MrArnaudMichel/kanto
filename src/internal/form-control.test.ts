@@ -38,6 +38,12 @@ describe('setFormValue', () => {
     expect(internals.setFormValue).toHaveBeenCalledWith('kanto');
   });
 
+  it('forwards the state the browser restores, when there is one', () => {
+    const internals = { setFormValue: vi.fn() } as unknown as ElementInternals;
+    setFormValue(internals, '+33612345678', 'fr:612345678');
+    expect(internals.setFormValue).toHaveBeenCalledWith('+33612345678', 'fr:612345678');
+  });
+
   it('is a no-op without internals', () => {
     expect(() => setFormValue(null, 'kanto')).not.toThrow();
   });

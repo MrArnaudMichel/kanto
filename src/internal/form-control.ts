@@ -31,12 +31,18 @@ export function attachFormInternals(host: HTMLElement): UsableInternals | null {
  *
  * A `FormData` submits each of its entries as they are named in it — which is
  * how one control contributes several files under one name.
+ *
+ * `state` is what `formStateRestoreCallback` receives back when the browser
+ * restores the page, for a control whose submitted value alone cannot rebuild
+ * it. Without one, the browser hands back `value`.
  */
 export function setFormValue(
   internals: UsableInternals | null,
   value: string | FormData | null,
+  state?: string,
 ): void {
-  internals?.setFormValue(value);
+  if (state === undefined) internals?.setFormValue(value);
+  else internals?.setFormValue(value, state);
 }
 
 /**

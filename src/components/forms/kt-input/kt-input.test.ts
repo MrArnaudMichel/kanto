@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fixture, settle } from '#test/fixture';
+import { fixture, formFixture, settle } from '#test/fixture';
 import './kt-input.js';
 import type { KtInput } from 'kanto-ds';
 
@@ -169,6 +169,40 @@ describe('kt-input in phone mode', () => {
 
     expect(el.value).toBe('061234');
     expect(control(el).value).toBe('0 61 23 4');
+  });
+
+  it('submits the full international number as the user types', async () => {
+    const { element, internals } = await formFixture<KtInput>(
+      '<kt-input type="tel" country="fr" value="612345678"></kt-input>',
+    );
+    expect(internals.setFormValue.mock.lastCall?.[0]).toBe('+33612345678');
+
+    await type(element, '6 99 99 99 99');
+    expect(internals.setFormValue.mock.lastCall?.[0]).toBe('+33699999999');
+  });
+
+  it('submits the new dialling code when the country changes', async () => {
+    const { element, internals } = await formFixture<KtInput>(
+      '<kt-input type="tel" country="fr" value="612345678"></kt-input>',
+    );
+    element.country = 'be';
+    await settle(element);
+
+    expect(internals.setFormValue.mock.lastCall?.[0]).toBe('+32612345678');
+  });
+
+  it('restores the digits and the country the browser saved', async () => {
+    const { internals } = await formFixture<KtInput>(
+      '<kt-input type="tel" country="fr" value="612345678"></kt-input>',
+    );
+    const saved = internals.setFormValue.mock.lastCall?.[1] as string;
+
+    const restored = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
+    restored.formStateRestoreCallback(saved);
+    await settle(restored);
+
+    expect(restored.value).toBe('612345678');
+    expect(restored.country).toBe('fr');
   });
 
   it('falls back to the country format as placeholder', async () => {
