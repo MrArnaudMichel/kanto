@@ -27,3 +27,18 @@ export function uniqueId(prefix: string): string {
   counter += 1;
   return `${prefix}-${counter}`;
 }
+
+/**
+ * Adds a listener when `on`, removes it otherwise — for the document-wide
+ * listeners an open popup needs and a closed one should not pay for.
+ */
+export function toggleListener(
+  on: boolean,
+  target: EventTarget,
+  type: string,
+  listener: EventListener,
+  options?: AddEventListenerOptions,
+): void {
+  if (on) target.addEventListener(type, listener, options);
+  else target.removeEventListener(type, listener, options);
+}

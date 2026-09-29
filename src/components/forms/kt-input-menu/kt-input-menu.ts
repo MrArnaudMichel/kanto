@@ -3,7 +3,7 @@ import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
 import { KtElement, defineElement } from '#internal/kt-element';
-import { emit, uniqueId } from '#internal/events';
+import { emit, toggleListener, uniqueId } from '#internal/events';
 import {
   attachFormInternals,
   setFormValue,
@@ -202,12 +202,21 @@ export class KtInputMenu extends KtElement {
     super.connectedCallback();
     this.internals ??= attachFormInternals(this);
     this.defaultValue = this.value;
-    document.addEventListener('pointerdown', this.onDocumentPointerDown);
+    // Back on the document if it was reconnected while open.
+    toggleListener(this.open, document, 'pointerdown', this.onDocumentPointerDown);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     document.removeEventListener('pointerdown', this.onDocumentPointerDown);
+  }
+
+  // Untyped: `open` is private, so not among the keys PropertyValues<this> knows.
+  override updated(changed: PropertyValues): void {
+    // Only an open list closes on an outside click, so only an open one listens.
+    if (changed.has('open')) {
+      toggleListener(this.open, document, 'pointerdown', this.onDocumentPointerDown);
+    }
   }
 
   override willUpdate(changed: PropertyValues<this>): void {

@@ -1,8 +1,8 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
-import { emit } from '#internal/events';
+import { emit, toggleListener } from '#internal/events';
 import { optionLabel, type KtOption } from '#internal/listbox';
 import { strings } from '#internal/strings';
 
@@ -186,16 +186,24 @@ export class KtDropdown extends KtElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    document.addEventListener('pointerdown', this.onDocumentPointerDown);
-    document.addEventListener('keydown', this.onDocumentKeyDown);
-    window.addEventListener('resize', this.reposition);
+    // Back on the document if it was reconnected while open.
+    this.listen(this.open);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    document.removeEventListener('pointerdown', this.onDocumentPointerDown);
-    document.removeEventListener('keydown', this.onDocumentKeyDown);
-    window.removeEventListener('resize', this.reposition);
+    this.listen(false);
+  }
+
+  /**
+   * The outside click, Escape and resize a panel reacts to — only while it is
+   * open. A page of closed menus should not run a handler per menu on every
+   * click and keystroke.
+   */
+  private listen(on: boolean): void {
+    toggleListener(on, document, 'pointerdown', this.onDocumentPointerDown);
+    toggleListener(on, document, 'keydown', this.onDocumentKeyDown as EventListener);
+    toggleListener(on, window, 'resize', this.reposition);
   }
 
   /**
@@ -227,8 +235,10 @@ export class KtDropdown extends KtElement {
     if (event.key === 'Escape') this.hide();
   };
 
-  override updated(): void {
+  // Untyped: `open` is private, so not among the keys PropertyValues<this> knows.
+  override updated(changed: PropertyValues): void {
     this.syncTrigger();
+    if (changed.has('open')) this.listen(this.open);
   }
 
   /**

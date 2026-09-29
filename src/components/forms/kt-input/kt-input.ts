@@ -3,7 +3,7 @@ import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
 import { KtElement, defineElement } from '#internal/kt-element';
-import { emit } from '#internal/events';
+import { emit, toggleListener } from '#internal/events';
 import {
   attachFormInternals,
   setFormValue,
@@ -386,10 +386,19 @@ export class KtInput extends KtElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    document.addEventListener('pointerdown', this.closeCountryPanel);
+    // Back on the document if it was reconnected while open.
+    toggleListener(this.countryOpen, document, 'pointerdown', this.closeCountryPanel);
     this.internals ??= attachFormInternals(this);
     this.defaultValue = this.value;
     setFormValue(this.internals, this.formValue, this.formState);
+  }
+
+  // Untyped: `countryOpen` is private, so not among the keys PropertyValues<this> knows.
+  override updated(changed: PropertyValues): void {
+    // Only an open panel closes on an outside click, so only an open one listens.
+    if (changed.has('countryOpen')) {
+      toggleListener(this.countryOpen, document, 'pointerdown', this.closeCountryPanel);
+    }
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
