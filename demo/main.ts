@@ -9,7 +9,7 @@ import './apps.css';
 
 import { COMPONENTS } from './lib/registry.js';
 import { REPO_URL, VERSION_TAG } from './lib/project.js';
-import { activeSection, railPosition, readingStops } from './lib/progress.js';
+import { visibleSections, visibleSpan } from './lib/progress.js';
 import { setRenderer } from './lib/render.js';
 import { consoleHome } from './apps/console/home.js';
 import { consoleInbox } from './apps/console/inbox.js';
@@ -244,6 +244,8 @@ type Theme = 'dark' | 'light';
 
 let filter = '';
 let activeHeading = '';
+/** The headings whose sections are on screen, lit on the contents rail. */
+let visibleHeadings: readonly string[] = [];
 
 function readTheme(): Theme {
   try {
@@ -369,7 +371,7 @@ function tableOfContents(page: DocPage): TemplateResult {
             (heading) =>
               html`<li class=${`level-${heading.level}`}>
                 <a
-                  class=${classMap({ active: heading.id === activeHeading })}
+                  class=${classMap({ active: visibleHeadings.includes(heading.id) })}
                   href=${headingHref(heading.id)}
                   @click=${(event: Event) => jumpToHeading(event, heading.id)}
                   >${heading.text}</a
@@ -498,23 +500,15 @@ function update(): void {
   trackReading();
 }
 
-/** How far below the top of the viewport a heading counts as being read. */
-const READING_LINE = 120;
-
 /**
- * Follows the reader down the page: lights the contents entry for the section
- * being read, and moves the rail's marker.
+ * Follows the reader down the page: the rail's marker covers the entries whose
+ * sections are on screen, and those entries light up.
  *
- * Both come from one set of stops (see `lib/progress.ts`), measured in scroll
- * positions — a section arrives at the scroll offset that brings its heading
- * to the reading line. Computing them once for both is what keeps the fill
- * and the lit entry from ever disagreeing, which they did as soon as the fill
- * was a percentage of the page and the highlight a heading test.
- *
- * The marker goes straight to a custom property rather than through a
+ * The screen starts under the sticky header, which hides what scrolls beneath
+ * it. The marker goes straight to custom properties rather than through a
  * re-render: this runs on every scroll frame, and re-rendering the page at
- * that rate to move a 2px bar is not a trade worth making. Only a change of
- * section re-renders.
+ * that rate to move a 2px bar is not a trade worth making. Only a change in
+ * which sections are visible re-renders.
  */
 function trackReading(): void {
   const nav = document.querySelector<HTMLElement>('.toc nav');
@@ -530,34 +524,35 @@ function trackReading(): void {
     return [
       {
         id,
-        section: heading.getBoundingClientRect().top + window.scrollY - READING_LINE,
-        centre: box.top - navTop + box.height / 2,
+        section: heading.getBoundingClientRect().top + window.scrollY,
+        rail: { top: box.top - navTop, height: box.height },
       },
     ];
   });
   if (entries.length === 0) return;
 
-  const stops = readingStops(
-    entries.map((entry) => entry.section),
-    document.documentElement.scrollHeight - window.innerHeight,
-  );
+  const header = document.querySelector('kt-header')?.getBoundingClientRect().bottom ?? 0;
+  const from = window.scrollY + Math.max(header, 0);
+  const to = window.scrollY + window.innerHeight;
+  const sections = entries.map((entry) => entry.section);
+  const end = document.documentElement.scrollHeight;
 
-  // The marker is one entry tall and centred on its position, kept inside the rail.
-  const size = nav.querySelector('a')?.getBoundingClientRect().height ?? 0;
-  const centre = railPosition(
-    window.scrollY,
-    stops,
-    entries.map((entry) => entry.centre),
+  const { top, size } = visibleSpan(
+    from,
+    to,
+    sections,
+    end,
+    entries.map((entry) => entry.rail),
   );
-  const top = Math.min(Math.max(centre - size / 2, 0), nav.offsetHeight - size);
   nav.style.setProperty('--toc-marker-top', `${top}px`);
   nav.style.setProperty('--toc-marker-size', `${size}px`);
 
-  // Before the first section arrives, the first entry is still the one to show.
-  const index = activeSection(window.scrollY, stops);
-  const current = entries[Math.max(index, 0)]!.id;
-  if (current !== activeHeading) {
+  const visible = visibleSections(from, to, sections, end).map((index) => entries[index]!.id);
+  // Above the first section, the first entry is still the one to show.
+  const current = visible[0] ?? entries[0]!.id;
+  if (current !== activeHeading || visible.join() !== visibleHeadings.join()) {
     activeHeading = current;
+    visibleHeadings = visible;
     update();
   }
 }
@@ -568,6 +563,7 @@ applyTheme(readTheme());
 window.addEventListener('hashchange', () => {
   filter = '';
   activeHeading = '';
+  visibleHeadings = [];
   window.scrollTo({ top: 0 });
   update();
   document.querySelector('kt-header')?.closeMenu();

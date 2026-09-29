@@ -1,62 +1,60 @@
 import { describe, expect, it } from 'vitest';
-import { activeSection, railPosition, readingStops } from './progress.js';
+import { railOffset, visibleSections, visibleSpan } from './progress.js';
 
-describe('readingStops', () => {
-  it('leaves sections that can reach the reading line where they are', () => {
-    expect(readingStops([100, 300, 1300], 1500)).toEqual([100, 300, 1300]);
+// Three sections: 100–300, 300–1300 and 1300 to the end of the page at 1500,
+// each with a 20px entry on the rail.
+const sections = [100, 300, 1300];
+const end = 1500;
+const entries = [
+  { top: 0, height: 20 },
+  { top: 20, height: 20 },
+  { top: 40, height: 20 },
+];
+
+describe('railOffset', () => {
+  it('maps the start of each section to the top of its entry', () => {
+    expect(railOffset(100, sections, end, entries)).toBe(0);
+    expect(railOffset(300, sections, end, entries)).toBe(20);
+    expect(railOffset(1300, sections, end, entries)).toBe(40);
   });
 
-  it('spreads the sections the page is too short to reach over the last stretch of scroll', () => {
-    // 1600 and 1800 are beyond the furthest the page scrolls, so without this
-    // they would both arrive at once, on the last pixel.
-    expect(readingStops([100, 1600, 1800], 1500)).toEqual([100, 800, 1500]);
+  it('moves through an entry at the rate its section is read, however long it is', () => {
+    expect(railOffset(200, sections, end, entries)).toBe(10);
+    expect(railOffset(800, sections, end, entries)).toBe(30);
   });
 
-  it('spreads from the top when not even the first section is reachable', () => {
-    expect(readingStops([2000, 2100], 1000)).toEqual([500, 1000]);
+  it('stays at the first entry above the first section, and ends at the last', () => {
+    expect(railOffset(0, sections, end, entries)).toBe(0);
+    expect(railOffset(1500, sections, end, entries)).toBe(60);
+    expect(railOffset(9000, sections, end, entries)).toBe(60);
+  });
+
+  it('does not divide by zero for a section with no length', () => {
+    expect(railOffset(300, [100, 300, 300], end, entries)).toBe(40);
   });
 });
 
-describe('activeSection', () => {
-  const stops = readingStops([100, 1600, 1800], 1500);
-
-  it('is none before the first section arrives', () => {
-    expect(activeSection(50, stops)).toBe(-1);
+describe('visibleSpan', () => {
+  it('covers the part of the rail whose sections are on screen', () => {
+    expect(visibleSpan(200, 800, sections, end, entries)).toEqual({ top: 10, size: 20 });
   });
 
-  it('is the last section to have arrived', () => {
-    expect(activeSection(100, stops)).toBe(0);
-    expect(activeSection(900, stops)).toBe(1);
-  });
-
-  it('reaches the last section at the bottom of a page too short for it', () => {
-    expect(activeSection(1500, stops)).toBe(2);
+  it('covers every entry when the whole page fits on screen', () => {
+    expect(visibleSpan(0, 1500, sections, end, entries)).toEqual({ top: 0, size: 60 });
   });
 });
 
-describe('railPosition', () => {
-  // Sections arrive at scroll 100, 300 and 1300; their entries are centred at
-  // 10, 30 and 50 on the rail.
-  const stops = [100, 300, 1300];
-  const centres = [10, 30, 50];
-
-  it('sits on an entry exactly when its section arrives', () => {
-    expect(railPosition(100, stops, centres)).toBe(10);
-    expect(railPosition(300, stops, centres)).toBe(30);
-    expect(railPosition(1300, stops, centres)).toBe(50);
+describe('visibleSections', () => {
+  it('lists every section with some of it on screen', () => {
+    expect(visibleSections(200, 1400, sections, end)).toEqual([0, 1, 2]);
+    expect(visibleSections(400, 900, sections, end)).toEqual([1]);
   });
 
-  it('slides between two entries at a steady rate, however long the section', () => {
-    expect(railPosition(200, stops, centres)).toBe(20);
-    expect(railPosition(800, stops, centres)).toBe(40);
+  it('leaves out a section that ends exactly where the screen starts', () => {
+    expect(visibleSections(300, 800, sections, end)).toEqual([1]);
   });
 
-  it('rests on the first entry before anything arrives, and on the last after', () => {
-    expect(railPosition(0, stops, centres)).toBe(10);
-    expect(railPosition(5000, stops, centres)).toBe(50);
-  });
-
-  it('does not divide by zero when two sections arrive together', () => {
-    expect(railPosition(300, [100, 300, 300], centres)).toBe(50);
+  it('is empty above the first section', () => {
+    expect(visibleSections(0, 50, sections, end)).toEqual([]);
   });
 });

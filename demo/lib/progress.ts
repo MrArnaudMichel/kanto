@@ -1,70 +1,69 @@
 /**
- * Where the marker on the contents rail sits.
+ * The contents rail: which part of the page is on screen, drawn against the
+ * entries that stand for it.
  *
- * Neither of the obvious answers works. Snapping to the active entry jumps
- * from row to row. A percentage of the page moves smoothly but lies: one long
- * section — a release's notes — holds the marker by the third entry while the
- * fifth is the one lit up.
- *
- * So the rail is mapped piece by piece. While the page scrolls from one
- * section's arrival to the next, the marker slides from that section's entry
- * to the next one at a steady rate. It never jumps, and it lands on an entry
- * exactly as that entry lights up. Before the first section it rests on the
- * first entry, and after the last on the last — there is nowhere further for
- * it to go.
- *
- * `stops` are the scroll offsets at which sections arrive (see
- * `readingStops`); `centres` the matching entries' centres on the rail, in px.
+ * Each section runs from its heading to the next one, the last to the end of
+ * the page; `sections` are those headings' offsets in the document, and `end`
+ * the page's height. Each section owns one entry on the rail. A position in
+ * the document maps to the rail through its section: a third of the way down
+ * a section is a third of the way down its entry. One long section — a
+ * release's notes — then moves the marker slowly through its entry instead of
+ * holding it on one row while the reader scrolls a whole screen.
  */
-export function railPosition(
-  scroll: number,
-  stops: readonly number[],
-  centres: readonly number[],
+
+export interface RailEntry {
+  /** From the top of the rail, in px. */
+  readonly top: number;
+  readonly height: number;
+}
+
+/** Where the document offset `y` lands on the rail, in px. */
+export function railOffset(
+  y: number,
+  sections: readonly number[],
+  end: number,
+  entries: readonly RailEntry[],
 ): number {
-  if (centres.length === 0) return 0;
-  if (scroll <= stops[0]!) return centres[0]!;
+  if (entries.length === 0) return 0;
+  if (y <= sections[0]!) return entries[0]!.top;
 
-  for (let index = 0; index < centres.length - 1; index += 1) {
-    const from = stops[index]!;
-    const to = stops[index + 1]!;
-    if (scroll >= to) continue;
+  for (let index = 0; index < entries.length; index += 1) {
+    const start = sections[index]!;
+    const stop = sections[index + 1] ?? end;
+    if (y >= stop) continue;
 
-    const progress = (scroll - from) / (to - from);
-    return centres[index]! + progress * (centres[index + 1]! - centres[index]!);
+    const entry = entries[index]!;
+    return entry.top + ((y - start) / (stop - start)) * entry.height;
   }
 
-  return centres[centres.length - 1]!;
+  const last = entries[entries.length - 1]!;
+  return last.top + last.height;
 }
 
 /**
- * The scroll offset at which each section counts as arrived.
- *
- * A section arrives when its heading reaches the reading line — except that
- * the last few on a short page never can, because the page runs out of scroll
- * first. Left alone they would all arrive together on the final pixel: the
- * fill would leap to the bottom and the last entry would never light up, the
- * way most documentation sites' contents never highlight their last section.
- * Those sections are spread evenly over whatever scroll is left instead.
+ * The stretch of rail standing for the screen, from `from` to `to` in the
+ * document: as many entries as there are sections in view, parts included.
  */
-export function readingStops(sections: readonly number[], end: number): number[] {
-  const reachable = sections.filter((offset) => offset <= end).length;
-  const base = reachable > 0 ? Math.max(sections[reachable - 1]!, 0) : 0;
-  const unreachable = sections.length - reachable;
-
-  let previous = 0;
-  return sections.map((offset, index) => {
-    const stop =
-      index < reachable ? offset : base + ((end - base) * (index - reachable + 1)) / unreachable;
-    previous = Math.max(stop, previous);
-    return previous;
-  });
+export function visibleSpan(
+  from: number,
+  to: number,
+  sections: readonly number[],
+  end: number,
+  entries: readonly RailEntry[],
+): { top: number; size: number } {
+  const top = railOffset(from, sections, end, entries);
+  return { top, size: railOffset(to, sections, end, entries) - top };
 }
 
-/** The index of the last section to have arrived by `scroll`, or -1 for none yet. */
-export function activeSection(scroll: number, stops: readonly number[]): number {
-  let active = -1;
-  stops.forEach((stop, index) => {
-    if (stop <= scroll) active = index;
+/** The sections with some of their length between `from` and `to`. */
+export function visibleSections(
+  from: number,
+  to: number,
+  sections: readonly number[],
+  end: number,
+): number[] {
+  return sections.flatMap((start, index) => {
+    const stop = sections[index + 1] ?? end;
+    return start < to && stop > from ? [index] : [];
   });
-  return active;
 }
