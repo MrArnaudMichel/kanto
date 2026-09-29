@@ -1,5 +1,5 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
@@ -8,6 +8,7 @@ import { resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 import '../kt-pagination/kt-pagination.js';
+import { rowWindow } from './window.js';
 
 export type KtSortDirection = 'asc' | 'desc' | null;
 export type KtTableRow = Record<string, unknown>;
@@ -30,6 +31,9 @@ export interface KtSortState {
 
 /** Renders a cell. Return `undefined` to fall back to the raw value. */
 export type KtCellRenderer = (row: KtTableRow, column: KtTableColumn) => unknown;
+
+/** Rows rendered above and below the viewport of a virtual table. */
+const OVERSCAN = 8;
 
 const collators = new Map<string, Intl.Collator>();
 
@@ -185,6 +189,34 @@ export class KtTable extends KtElement {
       :host([compact]) td {
         padding: 8px 12px;
       }
+
+      /* === VIRTUAL ===
+         The table scrolls inside its own box, whose height the page sets,
+         and the header stays on top of the rows passing under it. */
+      :host([virtual]) {
+        display: flex;
+        flex-direction: column;
+      }
+      :host([virtual]) .scroller {
+        flex: 1;
+        min-height: 0;
+      }
+      :host([virtual]) thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: var(--surface-card);
+      }
+
+      /* Stand-ins for the rows above and below the window: height only. */
+      tbody tr.spacer,
+      tbody tr.spacer:hover {
+        background: none;
+      }
+      tr.spacer td {
+        padding: 0;
+        border: none;
+      }
       :host([compact]) th {
         padding: 10px 12px;
       }
@@ -231,6 +263,33 @@ export class KtTable extends KtElement {
    */
   @property({ type: Boolean, reflect: true })
   manual = false;
+
+  /**
+   * Renders only the rows in view, for thousands of rows without paging. The
+   * table scrolls inside its own box: give it a height (`kt-table { height:
+   * 480px }`). Every row must be the same height — the first one rendered is
+   * measured. A page size takes precedence.
+   */
+  @property({ type: Boolean, reflect: true })
+  virtual = false;
+
+  /** How far the scroller is scrolled. Not `scrollTop`, which the host already has. */
+  @state()
+  private scrollOffset = 0;
+
+  /** The scroller's height, and the header's inside it, in px. */
+  @state()
+  private viewportHeight = 0;
+
+  @state()
+  private headerHeight = 0;
+
+  /** A body row's height, in px; 0 until one has been measured. */
+  @state()
+  private rowHeight = 0;
+
+  private resizeObserver: ResizeObserver | undefined;
+  private observed: Element | undefined;
 
   /** In manual mode, how many rows the server holds — what the pager counts. */
   @property({ type: Number, attribute: 'total-rows' })
@@ -430,6 +489,53 @@ export class KtTable extends KtElement {
     return this.data.filter((row) => this.selected.includes(rowKey(row)));
   }
 
+  /** Virtual rendering, unless a page size pages the rows instead. */
+  private get isVirtual(): boolean {
+    return this.virtual && this.pageSize <= 0;
+  }
+
+  private onScroll = (event: Event): void => {
+    this.scrollOffset = (event.currentTarget as HTMLElement).scrollTop;
+  };
+
+  // Untyped: the measurements are private, so not among PropertyValues<this>.
+  override updated(changed: PropertyValues): void {
+    if (changed.has('compact')) this.rowHeight = 0;
+    if (!this.isVirtual) {
+      this.observe(undefined);
+      return;
+    }
+
+    const scroller = this.shadowRoot?.querySelector<HTMLElement>('.scroller') ?? undefined;
+    this.observe(scroller);
+
+    // Measured from what was just rendered; each assignment is a no-op once
+    // the numbers settle, so this converges in one extra render.
+    const row = this.shadowRoot?.querySelector<HTMLElement>('tbody tr[part="row"]');
+    if (row && this.rowHeight === 0) this.rowHeight = row.getBoundingClientRect().height;
+    const header = this.shadowRoot?.querySelector('thead');
+    if (header) this.headerHeight = header.getBoundingClientRect().height;
+    if (scroller) this.viewportHeight = scroller.clientHeight;
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.observe(undefined);
+  }
+
+  /** Follows the scroller's height, which the page can change at any time. */
+  private observe(scroller: HTMLElement | undefined): void {
+    if (scroller === this.observed) return;
+    this.resizeObserver?.disconnect();
+    this.observed = scroller;
+    if (!scroller || typeof ResizeObserver === 'undefined') return;
+
+    this.resizeObserver ??= new ResizeObserver(([entry]) => {
+      if (entry) this.viewportHeight = (entry.target as HTMLElement).clientHeight;
+    });
+    this.resizeObserver.observe(scroller);
+  }
+
   private onPageChange(event: Event): void {
     event.stopPropagation();
     this.page = (event as CustomEvent<{ page: number }>).detail.page;
@@ -489,37 +595,61 @@ export class KtTable extends KtElement {
       </tr>`;
     }
 
-    return html`${rows.map((row, index) => {
-      const selected = this.isSelected(row);
+    if (!this.isVirtual) {
+      return html`${rows.map((row, index) => this.renderRow(row, index))}`;
+    }
 
-      return html`<tr
-        part="row"
-        class=${classMap({ selected })}
-        aria-selected=${this.selectable ? String(selected) : nothing}
-        @click=${() => emit(this, 'kt-row-click', { row, index })}
-      >
-        ${
-          this.selectable
-            ? html`<td class="select-cell">
-                <input
-                  type=${this.selectionMode === 'single' ? 'radio' : 'checkbox'}
-                  name=${this.selectionMode === 'single' ? 'kt-table-selection' : nothing}
-                  .checked=${selected}
-                  aria-label=${strings().selectRow}
-                  @click=${(event: Event) => event.stopPropagation()}
-                  @change=${() => this.toggleSelection(row)}
-                />
-              </td>`
-            : nothing
-        }
-        ${this.columns.map((column) => {
-          const rendered = this.renderCell?.(row, column);
-          return html`<td part="cell" style=${styleMap({ textAlign: column.align ?? 'left' })}>
-            ${rendered === undefined ? row[column.key] : rendered}
-          </td>`;
-        })}
-      </tr>`;
-    })}`;
+    const { start, end } = rowWindow({
+      rowCount: rows.length,
+      rowHeight: this.rowHeight,
+      viewportHeight: Math.max(0, this.viewportHeight - this.headerHeight),
+      scrollTop: Math.max(0, this.scrollOffset - this.headerHeight),
+      overscan: OVERSCAN,
+    });
+    const spacer = (count: number) =>
+      count > 0 && this.rowHeight > 0
+        ? html`<tr class="spacer" aria-hidden="true">
+            <td colspan=${columnCount} style=${`height: ${count * this.rowHeight}px`}></td>
+          </tr>`
+        : nothing;
+
+    return html`${spacer(start)}${rows
+      .slice(start, end)
+      .map((row, offset) => this.renderRow(row, start + offset))}${spacer(rows.length - end)}`;
+  }
+
+  /** `index` counts from the first row of the data, not of the rows rendered. */
+  private renderRow(row: KtTableRow, index: number): TemplateResult {
+    const selected = this.isSelected(row);
+
+    return html`<tr
+      part="row"
+      class=${classMap({ selected })}
+      aria-selected=${this.selectable ? String(selected) : nothing}
+      aria-rowindex=${this.isVirtual ? index + 2 : nothing}
+      @click=${() => emit(this, 'kt-row-click', { row, index })}
+    >
+      ${
+        this.selectable
+          ? html`<td class="select-cell">
+              <input
+                type=${this.selectionMode === 'single' ? 'radio' : 'checkbox'}
+                name=${this.selectionMode === 'single' ? 'kt-table-selection' : nothing}
+                .checked=${selected}
+                aria-label=${strings().selectRow}
+                @click=${(event: Event) => event.stopPropagation()}
+                @change=${() => this.toggleSelection(row)}
+              />
+            </td>`
+          : nothing
+      }
+      ${this.columns.map((column) => {
+        const rendered = this.renderCell?.(row, column);
+        return html`<td part="cell" style=${styleMap({ textAlign: column.align ?? 'left' })}>
+          ${rendered === undefined ? row[column.key] : rendered}
+        </td>`;
+      })}
+    </tr>`;
   }
 
   override render(): TemplateResult {
@@ -536,14 +666,17 @@ export class KtTable extends KtElement {
     const allSelected = rows.length > 0 && rows.every((row) => this.isSelected(row));
     const someSelected = rows.some((row) => this.isSelected(row));
 
-    return html`<div class="scroller">
+    const virtual = this.isVirtual;
+
+    return html`<div class="scroller" @scroll=${virtual ? this.onScroll : nothing}>
         <table
           part="table"
           aria-label=${this.label || nothing}
           aria-busy=${reloading ? 'true' : nothing}
+          aria-rowcount=${virtual ? rows.length + 1 : nothing}
         >
           <thead>
-            <tr>
+            <tr aria-rowindex=${virtual ? 1 : nothing}>
               ${
                 this.selectable
                   ? html`<th class="select-cell" scope="col">

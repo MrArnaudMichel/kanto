@@ -17,7 +17,7 @@
   "./components/data/kt-meter": 2900,
   "./components/data/kt-pagination": 5000,
   "./components/data/kt-stat": 6100,
-  "./components/data/kt-table": 7400,
+  "./components/data/kt-table": 8800,
   "./components/data/kt-timeline": 4500,
   "./components/feedback/kt-alert": 4000,
   "./components/feedback/kt-empty-state": 3400,

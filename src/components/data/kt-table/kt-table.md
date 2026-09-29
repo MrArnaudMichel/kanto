@@ -73,6 +73,26 @@ Selection is kept by row identity, so it survives paging. `selectedRows` can
 only return the selected rows of the page on screen: keep the rows themselves
 on your side if you need them across pages.
 
+## Thousands of rows
+
+`virtual` renders only the rows in view — a few dozen, whatever the length of
+`data` — so five thousand rows scroll as smoothly as fifty, without paging. The
+table then scrolls inside its own box, under a header that stays on top: give
+it a height.
+
+```html
+<kt-table virtual style="height: 480px"></kt-table>
+```
+
+Every row must be the same height. The first one rendered is measured, so
+`compact` and your own padding are followed, but a custom cell taller than the
+rest would put the scroll position out of step with the rows.
+
+Sorting and selection work on the data, not on what is rendered: the header box
+selects every row, not only those on screen. `aria-rowcount` and
+`aria-rowindex` let a screen reader announce "row 1,204 of 5,000" with thirty
+rows in the page. A `page-size` takes precedence over `virtual`.
+
 ## Selection
 
 ```html
@@ -116,6 +136,7 @@ table.renderCell = (row, column) =>
 | `page`          | `page`           | `number`, from 1           | `1`                       |
 | `manual`        | `manual`         | `boolean`                  | `false`                   |
 | `totalRows`     | `total-rows`     | `number` (manual mode)     | `0`                       |
+| `virtual`       | `virtual`        | `boolean`                  | `false`                   |
 | `loading`       | `loading`        | `boolean`                  | `false`                   |
 | `compact`       | `compact`        | `boolean`                  | `false`                   |
 | `sortKey`       | `sort-key`       | `string \| null`           | `null`                    |

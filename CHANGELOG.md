@@ -38,6 +38,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - `page` is a public property in both modes.
 - `locale` sorts text in a given language; by default the page's `lang`, then
   the browser's.
+- `virtual` renders only the rows in view, so thousands of rows scroll without
+  paging, under a sticky header. Rows must share one height; `aria-rowcount`
+  and `aria-rowindex` keep screen readers counting the whole table.
 
 **`kt-input` phone numbers.**
 
