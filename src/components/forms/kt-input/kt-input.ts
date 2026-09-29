@@ -251,6 +251,9 @@ export class KtInput extends KtElement {
       }
 
       .country-search {
+        /* Never shrunk by the list below it, which would otherwise take the
+           search box's height whenever there are more results than room. */
+        flex: none;
         width: 100%;
         height: var(--button-height-small);
         padding: 0 12px;
@@ -640,6 +643,22 @@ export class KtInput extends KtElement {
     this.focus();
   }
 
+  /** Both buttons are out of the tab order, so their tooltips are for the pointer. */
+  private renderPasswordToggle(): TemplateResult {
+    const label = this.passwordVisible ? strings().hidePassword : strings().showPassword;
+    return html`<kt-tooltip text=${label}>
+      <button
+        type="button"
+        class="icon-button"
+        tabindex="-1"
+        aria-label=${label}
+        @click=${this.togglePassword}
+      >
+        <kt-icon name=${this.passwordVisible ? 'eye-off' : 'eye'} size=${ICON_SIZE}></kt-icon>
+      </button>
+    </kt-tooltip>`;
+  }
+
   override render(): TemplateResult {
     const error = this.shownError;
     const hasActions =
@@ -669,7 +688,7 @@ export class KtInput extends KtElement {
         type=${this.resolvedType}
         name=${this.name || nothing}
         .value=${live(this.displayValue)}
-        placeholder=${this.placeholder || this.selectedCountry?.format || nothing}
+        placeholder=${this.placeholder || (this.isPhone && this.selectedCountry?.format) || nothing}
         autocomplete=${this.autocomplete || nothing}
         inputmode=${this.isPhone ? 'tel' : nothing}
         maxlength=${this.maxlength ?? nothing}
@@ -686,22 +705,7 @@ export class KtInput extends KtElement {
       ${
         hasActions
           ? html`<div part="actions" class="actions">
-              ${
-                this.type === 'password'
-                  ? html`<button
-                      type="button"
-                      class="icon-button"
-                      tabindex="-1"
-                      aria-label=${this.passwordVisible ? strings().hidePassword : strings().showPassword}
-                      @click=${this.togglePassword}
-                    >
-                      <kt-icon
-                        name=${this.passwordVisible ? 'eye-off' : 'eye'}
-                        size=${ICON_SIZE}
-                      ></kt-icon>
-                    </button>`
-                  : nothing
-              }
+              ${this.type === 'password' ? this.renderPasswordToggle() : nothing}
               ${
                 this.icon
                   ? html`<span class="adornment">
@@ -720,15 +724,17 @@ export class KtInput extends KtElement {
               }
               ${
                 this.showClear
-                  ? html`<button
-                      type="button"
-                      class="icon-button clear"
-                      tabindex="-1"
-                      aria-label=${strings().clear}
-                      @click=${this.clear}
-                    >
-                      <kt-icon name="x" size=${ICON_SIZE}></kt-icon>
-                    </button>`
+                  ? html`<kt-tooltip text=${strings().clear}>
+                      <button
+                        type="button"
+                        class="icon-button clear"
+                        tabindex="-1"
+                        aria-label=${strings().clear}
+                        @click=${this.clear}
+                      >
+                        <kt-icon name="x" size=${ICON_SIZE}></kt-icon>
+                      </button>
+                    </kt-tooltip>`
                   : nothing
               }
             </div>`

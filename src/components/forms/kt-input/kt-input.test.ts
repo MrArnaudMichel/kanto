@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fixture, formFixture, settle } from '#test/fixture';
 import './kt-input.js';
-import type { KtInput } from 'kanto-ds';
+import type { KtInput, KtTooltip } from 'kanto-ds';
 
 const field = (el: KtInput) => el.shadowRoot!.querySelector('.field')!;
 const control = (el: KtInput) => el.shadowRoot!.querySelector('input')!;
@@ -98,7 +98,7 @@ describe('kt-input', () => {
   it('shows the error message in a tooltip on the alert icon', async () => {
     const el = await fixture<KtInput>('<kt-input error="Invalid address"></kt-input>');
 
-    const tooltip = el.shadowRoot!.querySelector('kt-tooltip')!;
+    const tooltip = el.shadowRoot!.querySelector<KtTooltip>('kt-tooltip.error-icon')!;
     expect(tooltip.text).toBe('Invalid address');
     expect(tooltip.querySelector('kt-icon[name="circle-alert"]')).not.toBeNull();
   });
@@ -135,6 +135,23 @@ describe('kt-input', () => {
 
     expect(el.value).toBe('initial');
     expect(control(el).value).toBe('initial');
+  });
+
+  it('has no placeholder of its own outside phone mode', async () => {
+    const el = await fixture<KtInput>('<kt-input type="email"></kt-input>');
+    expect(control(el).hasAttribute('placeholder')).toBe(false);
+  });
+
+  it('names the password toggle and the clear button in a tooltip', async () => {
+    const el = await fixture<KtInput>('<kt-input type="password" value="secret"></kt-input>');
+    const tooltipOf = (label: string) => button(el, label)?.closest('kt-tooltip')?.text;
+
+    expect(tooltipOf('Show password')).toBe('Show password');
+    expect(tooltipOf('Clear')).toBe('Clear');
+
+    button(el, 'Show password')!.click();
+    await settle(el);
+    expect(tooltipOf('Hide password')).toBe('Hide password');
   });
 
   it('applies the size class', async () => {
@@ -223,7 +240,7 @@ describe('kt-input in phone mode', () => {
     expect(el.shadowRoot!.getElementById(id)!.textContent).toBe(
       'Enter the number without the leading 0.',
     );
-    expect(el.shadowRoot!.querySelector('kt-tooltip')!.text).toBe(
+    expect(el.shadowRoot!.querySelector<KtTooltip>('kt-tooltip.error-icon')!.text).toBe(
       'Enter the number without the leading 0.',
     );
   });
@@ -244,7 +261,7 @@ describe('kt-input in phone mode', () => {
     await type(el, '612');
 
     expect(field(el).classList.contains('error')).toBe(false);
-    expect(el.shadowRoot!.querySelector('kt-tooltip')).toBeNull();
+    expect(el.shadowRoot!.querySelector<KtTooltip>('kt-tooltip.error-icon')).toBeNull();
   });
 
   it('accepts a leading 0 where it belongs to the number', async () => {
@@ -258,7 +275,9 @@ describe('kt-input in phone mode', () => {
     const el = await fixture<KtInput>(
       '<kt-input type="tel" country="fr" value="0612" error="Number already in use"></kt-input>',
     );
-    expect(el.shadowRoot!.querySelector('kt-tooltip')!.text).toBe('Number already in use');
+    expect(el.shadowRoot!.querySelector<KtTooltip>('kt-tooltip.error-icon')!.text).toBe(
+      'Number already in use',
+    );
   });
 
   it('falls back to the country format as placeholder', async () => {
