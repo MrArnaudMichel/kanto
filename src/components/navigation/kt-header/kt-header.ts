@@ -103,6 +103,18 @@ export class KtHeader extends KtElement {
         gap: var(--gap-button);
         color: var(--text-body);
         font: var(--font-title-h6);
+        line-height: 1;
+      }
+
+      /* A wordmark is capitals, and capitals use none of a font's descent — so
+         centring the *line box* parks the letters half a descent high, which is
+         about 1.5px at 18px in Gilroy and reads as a misalignment rather than
+         as a font. Trimming the box to the cap height and the baseline centres
+         what the eye actually sees. */
+      @supports (text-box: trim-both cap alphabetic) {
+        .brand ::slotted(*) {
+          text-box: trim-both cap alphabetic;
+        }
       }
 
       .nav {
