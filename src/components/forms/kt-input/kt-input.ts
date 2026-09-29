@@ -326,6 +326,15 @@ export class KtInput extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   @property({ type: Boolean, reflect: true })
   readonly = false;
 
@@ -409,6 +418,14 @@ export class KtInput extends KtElement {
     this.passwordVisible = false;
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   /** Called by the platform when the browser restores a session. */
   formStateRestoreCallback(state: string): void {
     const phone = PHONE_STATE.exec(state);
@@ -466,7 +483,7 @@ export class KtInput extends KtElement {
   }
 
   private get showClear(): boolean {
-    return this.clearable && this.value.length > 0 && !this.readonly && !this.disabled;
+    return this.clearable && this.value.length > 0 && !this.readonly && !this.inactive;
   }
 
   private get resolvedType(): string {
@@ -519,7 +536,7 @@ export class KtInput extends KtElement {
         aria-haspopup="listbox"
         aria-expanded=${this.countryOpen ? 'true' : 'false'}
         aria-label=${strings().countryCode(selected?.name)}
-        ?disabled=${this.disabled || this.readonly}
+        ?disabled=${this.inactive || this.readonly}
         @click=${this.toggleCountryPanel}
       >
         <span aria-hidden="true">${flagEmoji(this.country)}</span>
@@ -601,7 +618,7 @@ export class KtInput extends KtElement {
         field: true,
         [this.size]: true,
         error: Boolean(this.error),
-        disabled: this.disabled,
+        disabled: this.inactive,
       })}
       @pointerdown=${this.onFieldPointerDown}
       @keydown=${this.onCountryKeyDown}
@@ -628,7 +645,7 @@ export class KtInput extends KtElement {
         aria-label=${this.label || nothing}
         aria-invalid=${this.error ? 'true' : nothing}
         aria-describedby=${this.error ? 'error-message' : nothing}
-        ?disabled=${this.disabled}
+        ?disabled=${this.inactive}
         ?readonly=${this.readonly}
         ?required=${this.required}
         @input=${this.onInput}

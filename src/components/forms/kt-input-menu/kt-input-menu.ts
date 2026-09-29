@@ -100,7 +100,7 @@ export class KtInputMenu extends KtElement {
         outline: var(--outline-width) solid var(--color-danger-base);
       }
 
-      :host([disabled]) {
+      :host(:disabled) {
         pointer-events: none;
         opacity: 0.6;
       }
@@ -177,6 +177,15 @@ export class KtInputMenu extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   @property({ type: Boolean, reflect: true })
   required = false;
 
@@ -226,6 +235,14 @@ export class KtInputMenu extends KtElement {
     this.close();
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   formStateRestoreCallback(state: string): void {
     this.value = state;
   }
@@ -260,7 +277,7 @@ export class KtInputMenu extends KtElement {
   };
 
   private openList(): void {
-    if (this.disabled || this.open) return;
+    if (this.inactive || this.open) return;
     this.open = true;
     this.activeIndex = firstEnabledIndex(this.visibleOptions);
   }
@@ -340,7 +357,7 @@ export class KtInputMenu extends KtElement {
 
   override render(): TemplateResult {
     const options = this.visibleOptions;
-    const showClear = this.selectedOption !== undefined && !this.disabled;
+    const showClear = this.selectedOption !== undefined && !this.inactive;
 
     return html`<div
       class=${classMap({ open: this.open, error: Boolean(this.error) })}
@@ -360,7 +377,7 @@ export class KtInputMenu extends KtElement {
           aria-invalid=${this.error ? 'true' : nothing}
           placeholder=${this.placeholder || nothing}
           .value=${live(this.displayValue)}
-          ?disabled=${this.disabled}
+          ?disabled=${this.inactive}
           @focus=${this.openList}
           @input=${this.onInput}
         />

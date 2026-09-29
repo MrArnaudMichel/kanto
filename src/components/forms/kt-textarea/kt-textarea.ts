@@ -1,5 +1,5 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
 import { KtElement, defineElement } from '#internal/kt-element';
@@ -161,6 +161,15 @@ export class KtTextarea extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   @property({ type: Boolean, reflect: true })
   readonly = false;
 
@@ -215,6 +224,14 @@ export class KtTextarea extends KtElement {
     this.value = this.defaultValue;
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   formStateRestoreCallback(state: string): void {
     this.value = state;
   }
@@ -246,7 +263,7 @@ export class KtTextarea extends KtElement {
       class=${classMap({
         field: true,
         error: Boolean(this.error),
-        disabled: this.disabled,
+        disabled: this.inactive,
       })}
     >
       ${
@@ -264,7 +281,7 @@ export class KtTextarea extends KtElement {
         aria-invalid=${this.error ? 'true' : nothing}
         aria-describedby=${this.error ? 'error-message' : nothing}
         .value=${live(this.value)}
-        ?disabled=${this.disabled}
+        ?disabled=${this.inactive}
         ?readonly=${this.readonly}
         ?required=${this.required}
         @input=${this.onInput}

@@ -118,10 +118,10 @@ export class KtSelect extends KtElement {
         outline: var(--outline-width) solid var(--color-danger-base);
       }
 
-      :host([disabled]) {
+      :host(:disabled) {
         pointer-events: none;
       }
-      :host([disabled]) .trigger {
+      :host(:disabled) .trigger {
         color: var(--text-disabled);
         background-color: var(--color-dark-14);
       }
@@ -197,6 +197,15 @@ export class KtSelect extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   @property({ type: Boolean, reflect: true })
   required = false;
 
@@ -251,6 +260,14 @@ export class KtSelect extends KtElement {
     this.open = false;
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   formStateRestoreCallback(state: string): void {
     this.value = state;
   }
@@ -270,7 +287,7 @@ export class KtSelect extends KtElement {
   };
 
   private openList(): void {
-    if (this.disabled) return;
+    if (this.inactive) return;
     this.open = true;
     const selected = this.options.findIndex((option) => option.id === this.value);
     this.activeIndex = selected >= 0 ? selected : firstEnabledIndex(this.options);
@@ -347,7 +364,7 @@ export class KtSelect extends KtElement {
 
   override render(): TemplateResult {
     const selected = this.selectedOption;
-    const showClear = this.clearable && selected !== undefined && !this.disabled;
+    const showClear = this.clearable && selected !== undefined && !this.inactive;
 
     return html`<div
       class=${classMap({ open: this.open, error: Boolean(this.error) })}
@@ -366,7 +383,7 @@ export class KtSelect extends KtElement {
         }
         aria-label=${this.label || nothing}
         aria-invalid=${this.error ? 'true' : nothing}
-        ?disabled=${this.disabled}
+        ?disabled=${this.inactive}
         @click=${this.toggleList}
       >
         <span class=${classMap({ value: true, placeholder: !selected })}>

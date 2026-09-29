@@ -1,5 +1,5 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
-import { property, queryAssignedElements } from 'lit/decorators.js';
+import { property, queryAssignedElements, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import {
@@ -223,6 +223,15 @@ export class KtRadioGroup extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   @property({ type: Boolean, reflect: true })
   required = false;
 
@@ -274,6 +283,14 @@ export class KtRadioGroup extends KtElement {
     this.value = this.defaultValue;
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   formStateRestoreCallback(state: string | null): void {
     this.value = state;
   }
@@ -283,7 +300,7 @@ export class KtRadioGroup extends KtElement {
   }
 
   private enabled(): KtRadio[] {
-    return this.disabled ? [] : this.radios.filter((radio) => !radio.disabled);
+    return this.inactive ? [] : this.radios.filter((radio) => !radio.disabled);
   }
 
   /**
@@ -299,7 +316,7 @@ export class KtRadioGroup extends KtElement {
       radio.checked = radio.value === this.value;
       radio.tabbable = radio === tabStop;
       radio.invalid = Boolean(this.error);
-      radio.groupDisabled = this.disabled;
+      radio.groupDisabled = this.inactive;
     }
   };
 
@@ -355,7 +372,7 @@ export class KtRadioGroup extends KtElement {
         aria-orientation=${this.orientation}
         aria-required=${this.required ? 'true' : nothing}
         aria-invalid=${this.error ? 'true' : nothing}
-        aria-disabled=${this.disabled ? 'true' : nothing}
+        aria-disabled=${this.inactive ? 'true' : nothing}
         aria-describedby=${this.error ? 'error-message' : nothing}
       >
         <slot @slotchange=${this.syncRadios}></slot>

@@ -102,7 +102,7 @@ export class KtDatePicker extends KtElement {
       .error .trigger:hover {
         outline: var(--outline-width) solid var(--color-danger-base);
       }
-      :host([disabled]) .trigger {
+      :host(:disabled) .trigger {
         color: var(--text-disabled);
         background-color: var(--color-dark-14);
         cursor: not-allowed;
@@ -242,6 +242,15 @@ export class KtDatePicker extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   @property({ type: Boolean, reflect: true })
   required = false;
 
@@ -288,6 +297,14 @@ export class KtDatePicker extends KtElement {
   formResetCallback(): void {
     this.value = this.defaultValue;
     this.close(false);
+  }
+
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
   }
 
   formStateRestoreCallback(state: string | null): void {
@@ -341,7 +358,7 @@ export class KtDatePicker extends KtElement {
   };
 
   private async show(): Promise<void> {
-    if (this.disabled || this.open) return;
+    if (this.inactive || this.open) return;
     const rect = this.getBoundingClientRect();
     const below = window.innerHeight - rect.bottom;
     this.placement = below < PANEL_SPACE && rect.top > below ? 'top' : 'bottom';
@@ -404,7 +421,7 @@ export class KtDatePicker extends KtElement {
     const shown = this.display();
     const placeholder =
       this.placeholder ?? (this.range ? strings().selectPeriod : strings().selectDate);
-    const showClear = this.clearable && this.value !== null && !this.disabled;
+    const showClear = this.clearable && this.value !== null && !this.inactive;
 
     return html`${
         this.error
@@ -430,7 +447,7 @@ export class KtDatePicker extends KtElement {
           aria-label=${this.label ? `${this.label}${shown ? `, ${shown}` : ''}` : nothing}
           aria-invalid=${this.error ? 'true' : nothing}
           aria-describedby=${this.error ? 'error-message' : nothing}
-          ?disabled=${this.disabled}
+          ?disabled=${this.inactive}
           @click=${this.toggle}
           @keydown=${this.onTriggerKeyDown}
         >

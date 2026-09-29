@@ -1,5 +1,5 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import { attachFormInternals, setFormValue, type UsableInternals } from '#internal/form-control';
@@ -103,10 +103,10 @@ export class KtToggle extends KtElement {
         left: calc(100% - var(--switch-inset) - var(--thumb-size));
       }
 
-      :host([disabled]) .track {
+      :host(:disabled) .track {
         background-color: var(--color-dark-22);
       }
-      :host([disabled]) .thumb {
+      :host(:disabled) .thumb {
         background-color: var(--color-text-500);
       }
 
@@ -116,7 +116,7 @@ export class KtToggle extends KtElement {
         cursor: pointer;
       }
 
-      :host([disabled]) .label {
+      :host(:disabled) .label {
         color: var(--text-disabled);
         cursor: not-allowed;
       }
@@ -131,6 +131,15 @@ export class KtToggle extends KtElement {
 
   @property({ type: Boolean, reflect: true })
   disabled = false;
+
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
 
   @property({ type: String, reflect: true })
   size: KtToggleSize = 'medium';
@@ -167,6 +176,14 @@ export class KtToggle extends KtElement {
     this.checked = this.defaultChecked;
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   formStateRestoreCallback(state: string): void {
     this.checked = state === this.value;
   }
@@ -176,7 +193,7 @@ export class KtToggle extends KtElement {
   }
 
   private toggle(): void {
-    if (this.disabled) return;
+    if (this.inactive) return;
     this.checked = !this.checked;
     emit(this, 'kt-change', { checked: this.checked });
   }
@@ -189,7 +206,7 @@ export class KtToggle extends KtElement {
         aria-checked=${this.checked ? 'true' : 'false'}
         aria-label=${this.label || nothing}
         aria-labelledby=${this.label ? nothing : 'label'}
-        ?disabled=${this.disabled}
+        ?disabled=${this.inactive}
         @click=${this.toggle}
       >
         <span part="track" class="track">

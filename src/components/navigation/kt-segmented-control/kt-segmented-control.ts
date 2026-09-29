@@ -1,5 +1,5 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
-import { property, queryAll } from 'lit/decorators.js';
+import { property, queryAll, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
@@ -83,7 +83,7 @@ export class KtSegmentedControl extends KtElement {
         width: fit-content;
       }
 
-      :host([disabled]) .track {
+      :host(:disabled) .track {
         opacity: 0.5;
         pointer-events: none;
       }
@@ -185,6 +185,15 @@ export class KtSegmentedControl extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   /** Accessible name for the group. */
   @property({ type: String })
   label = '';
@@ -214,6 +223,14 @@ export class KtSegmentedControl extends KtElement {
     this.value = this.defaultValue;
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   formStateRestoreCallback(state: string): void {
     // The form stores a string; hand back the option's own value, which may be
     // a number.
@@ -225,7 +242,7 @@ export class KtSegmentedControl extends KtElement {
   }
 
   private choose(option: KtSegmentedOption): void {
-    if (this.disabled || option.disabled || this.value === option.value) return;
+    if (this.inactive || option.disabled || this.value === option.value) return;
     this.value = option.value;
     emit(this, 'kt-change', { value: option.value, option });
   }
@@ -285,7 +302,7 @@ export class KtSegmentedControl extends KtElement {
       role="radiogroup"
       aria-label=${this.label || nothing}
       aria-orientation=${this.orientation}
-      aria-disabled=${this.disabled ? 'true' : nothing}
+      aria-disabled=${this.inactive ? 'true' : nothing}
       @keydown=${this.onKeyDown}
     >
       ${this.options.map((option, index) => {
@@ -306,7 +323,7 @@ export class KtSegmentedControl extends KtElement {
           aria-checked=${selected ? 'true' : 'false'}
           aria-label=${iconOnly ? (option.icon ?? '') : nothing}
           tabindex=${index === tabStop ? 0 : -1}
-          ?disabled=${this.disabled || option.disabled}
+          ?disabled=${this.inactive || option.disabled}
           @click=${() => this.choose(option)}
         >
           ${

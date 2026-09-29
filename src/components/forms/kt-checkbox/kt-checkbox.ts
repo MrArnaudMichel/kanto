@@ -1,5 +1,5 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
@@ -123,11 +123,11 @@ export class KtCheckbox extends KtElement {
         border-color: var(--color-danger-base);
       }
 
-      :host([disabled]) label {
+      :host(:disabled) label {
         color: var(--text-disabled);
         cursor: not-allowed;
       }
-      :host([disabled]) .box {
+      :host(:disabled) .box {
         background-color: var(--color-dark-22);
         border-color: var(--color-dark-24);
         color: var(--text-disabled);
@@ -153,6 +153,15 @@ export class KtCheckbox extends KtElement {
 
   @property({ type: Boolean, reflect: true })
   disabled = false;
+
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
 
   @property({ type: Boolean, reflect: true })
   required = false;
@@ -206,6 +215,14 @@ export class KtCheckbox extends KtElement {
     this.indeterminate = false;
   }
 
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
   formStateRestoreCallback(state: string | null): void {
     this.checked = state === this.value;
   }
@@ -237,7 +254,7 @@ export class KtCheckbox extends KtElement {
             type="checkbox"
             .checked=${live(this.checked)}
             .indeterminate=${this.indeterminate}
-            ?disabled=${this.disabled}
+            ?disabled=${this.inactive}
             ?required=${this.required}
             aria-label=${this.label || nothing}
             aria-invalid=${this.error ? 'true' : nothing}

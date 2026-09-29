@@ -206,6 +206,15 @@ export class KtDragDrop extends KtElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /** Disabled by an enclosing `<fieldset>`, which leaves `disabled` alone. */
+  @state()
+  private formDisabled = false;
+
+  /** Whether the control is off, by its own `disabled` or by its form. */
+  private get inactive(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   /** The files are submitted under this name, as by `<input type="file">`. */
   @property({ type: String })
   name = '';
@@ -247,6 +256,14 @@ export class KtDragDrop extends KtElement {
   formResetCallback(): void {
     this.files = [];
     this.dragging = false;
+  }
+
+  /**
+   * Called by the platform when the control's disabled state changes — its
+   * own `disabled`, or an ancestor `<fieldset disabled>` it cannot see.
+   */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
   }
 
   formStateRestoreCallback(state: string | File | FormData | null): void {
@@ -309,7 +326,7 @@ export class KtDragDrop extends KtElement {
   }
 
   private browse(): void {
-    if (this.disabled) return;
+    if (this.inactive) return;
     this.fileInput?.click();
   }
 
@@ -320,13 +337,13 @@ export class KtDragDrop extends KtElement {
   }
 
   private onDragOver(event: DragEvent): void {
-    if (this.disabled) return;
+    if (this.inactive) return;
     event.preventDefault();
     this.dragging = true;
   }
 
   private onDrop(event: DragEvent): void {
-    if (this.disabled) return;
+    if (this.inactive) return;
     event.preventDefault();
     this.dragging = false;
     this.addFiles(event.dataTransfer?.files ?? null);
@@ -337,8 +354,8 @@ export class KtDragDrop extends KtElement {
       part="base"
       class=${classMap({ zone: true, dragover: this.dragging })}
       role="button"
-      tabindex=${this.disabled ? -1 : 0}
-      aria-disabled=${this.disabled ? 'true' : nothing}
+      tabindex=${this.inactive ? -1 : 0}
+      aria-disabled=${this.inactive ? 'true' : nothing}
       aria-label=${`${this.heading ?? strings().dragAndDrop} ${this.linkText ?? strings().browseFiles}`}
       @click=${this.browse}
       @keydown=${this.onZoneKeyDown}
