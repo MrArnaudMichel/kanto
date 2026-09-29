@@ -75,6 +75,21 @@ describe('kt-table', () => {
     expect(cellText(el)).toEqual(['Zeta', 'Ångström', 'Alpaca', 'Ångström 10']);
   });
 
+  it('marks the sorted column with a Lucide arrow, and the others with nothing', async () => {
+    const indicator = (index: number) => headers(el)[index]!.querySelector('.indicator')!;
+    expect(indicator(0).querySelector('kt-icon')).toBeNull();
+
+    headerButtons(el)[0]!.click();
+    await settle(el);
+    expect(indicator(0).querySelector('kt-icon')!.getAttribute('name')).toBe('arrow-up');
+    expect(indicator(1).querySelector('kt-icon')).toBeNull();
+
+    headerButtons(el)[0]!.click();
+    await settle(el);
+    expect(indicator(0).querySelector('kt-icon')!.getAttribute('name')).toBe('arrow-down');
+    expect(indicator(0).textContent!.trim()).toBe('');
+  });
+
   it('sorts text with a French collator, so accents file naturally', async () => {
     headerButtons(el)[0]!.click();
     await settle(el);

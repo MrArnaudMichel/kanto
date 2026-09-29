@@ -6,6 +6,7 @@ import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import { resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
+import '../../core/kt-icon/kt-icon.js';
 import '../kt-pagination/kt-pagination.js';
 
 export type KtSortDirection = 'asc' | 'desc' | null;
@@ -154,8 +155,8 @@ export class KtTable extends KtElement {
       }
 
       .indicator {
+        display: inline-flex;
         color: var(--color-primary-text);
-        font-size: 10px;
       }
 
       tbody tr {
@@ -436,9 +437,16 @@ export class KtTable extends KtElement {
         column.sortable
           ? html`<button type="button" @click=${() => this.toggleSort(column)}>
               <span>${title}</span>
-              <span class="indicator" aria-hidden="true"
-                >${active ? (this.sortDirection === 'asc' ? '▲' : '▼') : ''}</span
-              >
+              <span class="indicator" aria-hidden="true">
+                ${
+                  active
+                    ? html`<kt-icon
+                        name=${this.sortDirection === 'asc' ? 'arrow-up' : 'arrow-down'}
+                        size="14"
+                      ></kt-icon>`
+                    : nothing
+                }
+              </span>
             </button>`
           : html`<span>${title}</span>`
       }
