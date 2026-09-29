@@ -190,14 +190,6 @@ export class KtInput extends KtElement {
         color: var(--color-danger-text);
       }
 
-      /* The icon sits at the field's right end: a bubble centred on it would
-         hang half past the field, so it grows leftwards instead. */
-      .error-icon::part(bubble) {
-        right: 0;
-        left: auto;
-        transform: none;
-      }
-
       /* === PHONE MODE === */
       .country {
         display: inline-flex;

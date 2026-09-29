@@ -27,6 +27,17 @@ that does not exist. That keeps it out of the rendered output while leaving it
 referenceable: an explicit `aria-describedby` target is read even when it is not
 displayed.
 
+## Where the bubble goes
+
+The bubble is a popover in the top layer, placed from the trigger in viewport
+coordinates. No ancestor's `overflow: hidden` can clip it, and it takes no room
+in the page.
+
+`placement` is a preference. When that side has no room — `top` on an icon at
+the top of the page — the bubble takes the opposite side, and it slides along
+its side to stay inside the screen. Scrolling or resizing hides it, since a
+bubble fixed to the viewport would drift away from its trigger.
+
 ## Dismissal
 
 Escape hides the tooltip while the trigger keeps focus, as WCAG 1.4.13 requires

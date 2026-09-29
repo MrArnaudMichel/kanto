@@ -1,8 +1,9 @@
 import { css, html, type PropertyValues, type TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { uniqueId } from '#internal/events';
+import { placeFloating } from '#internal/position';
 
 export type KtTooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
@@ -41,37 +42,47 @@ export class KtTooltip extends KtElement {
         justify-content: center;
       }
 
+      /* A popover in the top layer, placed in viewport coordinates from
+         the trigger: no ancestor's overflow can clip it, and it takes no
+         room in the page — a bubble by the right edge used to widen the
+         document. */
       .bubble {
-        position: absolute;
+        position: fixed;
+        inset: auto;
         z-index: var(--z-tooltip);
         max-width: 260px;
+        margin: 0;
         padding: var(--padding-chip);
+        overflow: visible;
         /* Inverted against the page, so the bubble reads as floating in
            both themes — the raw ramp step this used to name is pure white
            under data-theme="light". */
         color: var(--text-inverted);
         font: var(--font-code-regular);
         /* As wide as a short label, and wrapped at max-width for a sentence:
-           an absolutely positioned box beside a small trigger would otherwise
-           shrink to one word per line. */
+           a positioned box beside a small trigger would otherwise shrink to
+           one word per line. */
         width: max-content;
         overflow-wrap: anywhere;
         background: var(--surface-inverted);
+        border: none;
         border-radius: var(--radius-input);
-        /* Out of the layout while hidden, not just transparent: an invisible
-           bubble still has a box, and one by the right edge of the page —
-           a header's last icon — widened the document and scrolled it
-           sideways. The discrete display transition keeps the fade-out. */
         display: none;
         opacity: 0;
         pointer-events: none;
+        /* The discrete display and overlay transitions keep the fade-out
+           once the popover closes. */
         transition:
           opacity 150ms var(--easing-standard),
-          display 150ms allow-discrete;
+          display 150ms allow-discrete,
+          overlay 150ms allow-discrete;
+      }
+
+      .bubble:popover-open {
+        display: block;
       }
 
       .bubble.visible {
-        display: block;
         opacity: 1;
       }
 
@@ -79,27 +90,6 @@ export class KtTooltip extends KtElement {
         .bubble.visible {
           opacity: 0;
         }
-      }
-
-      .top {
-        bottom: calc(100% + 6px);
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .bottom {
-        top: calc(100% + 6px);
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .left {
-        top: 50%;
-        right: calc(100% + 6px);
-        transform: translateY(-50%);
-      }
-      .right {
-        top: 50%;
-        left: calc(100% + 6px);
-        transform: translateY(-50%);
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -116,9 +106,16 @@ export class KtTooltip extends KtElement {
   @state()
   private visible = false;
 
+  @query('.bubble')
+  private bubble!: HTMLElement;
+
   @property({ type: String })
   text = '';
 
+  /**
+   * The side the bubble prefers. It takes the opposite one when this one has
+   * no room — "top" on a trigger at the top of the page shows below it.
+   */
   @property({ type: String, reflect: true })
   placement: KtTooltipPlacement = 'top';
 
@@ -143,10 +140,51 @@ export class KtTooltip extends KtElement {
     this.removeEventListener('focusout', this.hide);
     this.removeEventListener('keydown', this.onKeyDown);
     this.description?.remove();
+    this.visible = false;
+    this.close();
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
     if (changed.has('text')) this.syncDescription();
+  }
+
+  // Untyped: `visible` is private, so not among the keys PropertyValues<this> knows.
+  override updated(changed: PropertyValues): void {
+    if (!changed.has('visible')) return;
+    if (this.visible) this.open();
+    else this.close();
+  }
+
+  /**
+   * Opens the bubble in the top layer, then places it: it has to be open to be
+   * measured. Where popovers are missing — a test DOM — it stays in place.
+   */
+  private open(): void {
+    const bubble = this.bubble;
+    if (typeof bubble.showPopover !== 'function') return;
+    if (!bubble.matches(':popover-open')) bubble.showPopover();
+
+    const anchor = this.getBoundingClientRect();
+    const { x, y } = placeFloating(
+      anchor,
+      bubble.getBoundingClientRect(),
+      { width: window.innerWidth, height: window.innerHeight },
+      this.placement,
+    );
+    bubble.style.left = `${x}px`;
+    bubble.style.top = `${y}px`;
+    // Fixed to the viewport, the bubble would drift from its trigger.
+    window.addEventListener('scroll', this.hide, { capture: true, passive: true });
+    window.addEventListener('resize', this.hide);
+  }
+
+  private close(): void {
+    window.removeEventListener('scroll', this.hide, { capture: true });
+    window.removeEventListener('resize', this.hide);
+    const bubble = this.bubble;
+    if (typeof bubble?.hidePopover === 'function' && bubble.matches(':popover-open')) {
+      bubble.hidePopover();
+    }
   }
 
   /**
@@ -199,7 +237,8 @@ export class KtTooltip extends KtElement {
     return html`<slot @slotchange=${this.syncDescription}></slot>
       <span
         part="bubble"
-        class=${classMap({ bubble: true, [this.placement]: true, visible: this.visible })}
+        popover="manual"
+        class=${classMap({ bubble: true, visible: this.visible })}
         role="tooltip"
         aria-hidden=${this.visible ? 'false' : 'true'}
         >${this.text}</span

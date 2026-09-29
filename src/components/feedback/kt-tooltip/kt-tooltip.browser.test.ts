@@ -46,4 +46,28 @@ describe('kt-tooltip, laid out', () => {
 
     expect(document.documentElement.scrollWidth).toBe(window.innerWidth);
   });
+
+  it('drops below its trigger at the top of the page, where "top" has no room', async () => {
+    const el = await fixture<KtTooltip>(
+      '<kt-tooltip text="Notifications" style="position: fixed; top: 0; left: 200px"><button>x</button></kt-tooltip>',
+    );
+    await show(el);
+
+    const box = bubble(el).getBoundingClientRect();
+    expect(box.top).toBeGreaterThanOrEqual(el.getBoundingClientRect().bottom);
+  });
+
+  it('floats above a container that clips its overflow', async () => {
+    const box = await fixture<HTMLDivElement>(
+      '<div style="overflow: hidden; height: 40px; margin-top: 100px"><kt-tooltip text="Star"><button>x</button></kt-tooltip></div>',
+    );
+    const el = box.querySelector('kt-tooltip')!;
+    await show(el);
+
+    // In the top layer, which no ancestor's overflow can clip.
+    expect(bubble(el).matches(':popover-open')).toBe(true);
+    expect(bubble(el).getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      box.getBoundingClientRect().top,
+    );
+  });
 });
