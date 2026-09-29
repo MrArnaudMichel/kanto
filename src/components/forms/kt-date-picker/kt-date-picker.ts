@@ -9,7 +9,7 @@ import {
   setValidity,
   type UsableInternals,
 } from '#internal/form-control';
-import { resolveLocale } from '#internal/locale';
+import { dateFormat, resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import { compareDates, parseDate, parseRange, toLocalDate, type PlainDate } from '#internal/date';
 import '../kt-calendar/kt-calendar.js';
@@ -345,7 +345,7 @@ export class KtDatePicker extends KtElement {
   private display(): string | null {
     const { start, end } = this.selection;
     if (!start || !end) return null;
-    const format = new Intl.DateTimeFormat(this.resolvedLocale, { dateStyle: 'medium' });
+    const format = dateFormat(this.resolvedLocale, { dateStyle: 'medium' });
     if (!this.range) return format.format(toLocalDate(start));
     return format.formatRange(toLocalDate(start), toLocalDate(end));
   }

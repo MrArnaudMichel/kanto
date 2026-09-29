@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit, uniqueId } from '#internal/events';
-import { resolveLocale } from '#internal/locale';
+import { dateFormat, resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import {
   addDays,
@@ -319,7 +319,7 @@ export class KtCalendar extends KtElement {
   }
 
   private format(options: Intl.DateTimeFormatOptions, date: PlainDate): string {
-    return new Intl.DateTimeFormat(this.resolvedLocale, options).format(toLocalDate(date));
+    return dateFormat(this.resolvedLocale, options).format(toLocalDate(date));
   }
 
   // --- Moving ---

@@ -78,6 +78,19 @@ describe('kt-calendar: days', () => {
     expect(el.value).toBe('2027-09-05');
   });
 
+  it('makes its date formats once, not once per day per render', async () => {
+    const el = await mount('<kt-calendar value="2026-09-14" locale="fr"></kt-calendar>');
+    const made = vi.spyOn(Intl, 'DateTimeFormat');
+    try {
+      // Moving through the month re-renders all forty-two days.
+      await key(el, 'ArrowRight');
+      await key(el, 'ArrowDown');
+      expect(made).not.toHaveBeenCalled();
+    } finally {
+      made.mockRestore();
+    }
+  });
+
   it('pages months with the arrows beside the title', async () => {
     const el = await mount('<kt-calendar locale="en-GB" value="2026-09-25"></kt-calendar>');
 
