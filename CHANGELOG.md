@@ -5,6 +5,88 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] — 2026-09-30
+
+### Added
+
+**`kt-date-picker`** — a day or a period, in a field that opens a calendar.
+
+- The value is ISO 8601 text: `2026-09-25`, or `2026-09-01/2026-09-25` with
+  `range`. The field shows it formatted for the reader through `Intl`.
+- The WAI-ARIA date picker dialog pattern: one tab stop in the grid, arrows by
+  day and week, Page Up/Down by month (with Shift, by year), Enter to choose,
+  Escape to close with focus back on the field. A period takes two picks, in
+  either order, and fires `kt-change` once.
+- A form control: ISO value, nothing for an incomplete period, `required`,
+  `error`, `form.reset()`. `min` and `max` days can be reached but not chosen.
+
+**`kt-calendar`** — the calendar on its own, for when it is the interface.
+
+- The title's month and year are buttons that open a grid of months or of
+  twelve years, so a date decades away is three or four clicks.
+- Month and weekday names, and the first day of the week, follow the locale:
+  `locale`, else the page's `lang`, else the browser's.
+
+**`kt-table` for data sorted and paged on a server.**
+
+- `manual`: `data` is the page the server sent, shown as it is, and
+  `total-rows` is what the pager counts from. Headers and the pager still fire
+  `kt-sort-change` and `kt-page-change`; the application loads what they ask
+  for. A new sort sends the table back to page 1 with a single event.
+- While `loading`, a manual table keeps the page on screen, dimmed and
+  `aria-busy`, so the pager keeps its place and its focus.
+- `page` is a public property in both modes.
+- `locale` sorts text in a given language; by default the page's `lang`, then
+  the browser's.
+
+**`kt-input` phone numbers.**
+
+- A number typed with the country's trunk prefix — `06 12 34 56 78` after +33 —
+  puts the field in its error state and reports a `patternMismatch` to the form.
+  `KtCountry` gains an optional `trunkPrefix`, and `KtStrings` a
+  `phoneTrunkPrefix` message.
+- About 95 countries ship by default, sorted by name, up from six. Search
+  ignores accents and matches dial codes from their start.
+- The error message, the password toggle and the clear button each show a
+  tooltip.
+
+- A `--duration-slow` token (0.4s, zero under reduced motion).
+
+### Changed
+
+- **`kt-tooltip` draws its bubble in the top layer**, as a popover placed from
+  the trigger. No ancestor's `overflow` clips it any more, and it takes no room
+  in the page. `placement` is now a preference: the bubble takes the opposite
+  side when that one has no room, and stays inside the screen. Scrolling or
+  resizing hides it. Long text wraps at 260px instead of running past it.
+- `kt-input` groups a phone number the way its country's `format` does, so
+  what is typed matches the placeholder — a German number reads `1234 567890`
+  rather than in threes. The US placeholder is `201-555-0123`.
+- `kt-table` sorts once per change of `data`, order or locale rather than on
+  every render. Replace `data` with a new array; changing it in place is not
+  seen. Its sort indicator is the Lucide `arrow-up` or `arrow-down` icon.
+- `kt-select`, `kt-input-menu`, `kt-date-picker`, `kt-dropdown` and
+  `kt-input`'s country panel listen on the document only while they are open.
+- `kt-calendar` makes each date format once instead of on every render.
+
+### Fixed
+
+- `kt-input` in phone mode submitted the national digits alone (`612345678`)
+  instead of the international number (`+33612345678`), and a restored page
+  lost the country.
+- A `<fieldset disabled>` disabled none of the form controls inside it. All ten
+  now follow it, and re-enabling the fieldset leaves a control its author
+  disabled as it was.
+- `kt-input` showed the US phone format as the placeholder of any field without
+  one, an email field included.
+- The search box of `kt-input`'s country panel shrank while the list below it
+  overflowed.
+- A hidden `kt-tooltip` by the right edge of the page widened the document and
+  scrolled it sideways.
+- `kt-toast`, `kt-progress-bar`, `kt-table` and `kt-tooltip` used literal
+  colours or durations: the toasts' tints did not follow the theme, and the row
+  hover and tooltip fade ignored reduced motion.
+
 ## [1.4.0] — 2026-09-25
 
 ### Added
