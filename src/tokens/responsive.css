@@ -104,5 +104,6 @@
     --duration-instant: 0s;
     --duration-fast: 0s;
     --duration-normal: 0s;
+    --duration-slow: 0s;
   }
 }

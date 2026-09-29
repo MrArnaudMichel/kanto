@@ -56,7 +56,7 @@ export class KtToast extends KtElement {
         overflow: hidden;
         color: var(--text-body);
         background: var(--surface-card);
-        border: var(--border-width) solid rgba(255, 255, 255, 0.1);
+        border: var(--border-width) solid color-mix(in srgb, var(--color-white) 10%, transparent);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-toast);
         backdrop-filter: blur(10px);
@@ -67,22 +67,38 @@ export class KtToast extends KtElement {
          contrast. */
       :host([variant='success']) .toast {
         background:
-          linear-gradient(135deg, rgba(53, 221, 131, 0.25), rgba(53, 221, 131, 0.15)),
+          linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-success-base) 25%, transparent),
+            color-mix(in srgb, var(--color-success-base) 15%, transparent)
+          ),
           var(--surface-card);
       }
       :host([variant='information']) .toast {
         background:
-          linear-gradient(135deg, rgba(53, 175, 243, 0.25), rgba(53, 175, 243, 0.15)),
+          linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-info-base) 25%, transparent),
+            color-mix(in srgb, var(--color-info-base) 15%, transparent)
+          ),
           var(--surface-card);
       }
       :host([variant='warning']) .toast {
         background:
-          linear-gradient(135deg, rgba(245, 171, 61, 0.25), rgba(245, 171, 61, 0.15)),
+          linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-warning-base) 25%, transparent),
+            color-mix(in srgb, var(--color-warning-base) 15%, transparent)
+          ),
           var(--surface-card);
       }
       :host([variant='error']) .toast {
         background:
-          linear-gradient(135deg, rgba(245, 61, 92, 0.25), rgba(245, 61, 92, 0.15)),
+          linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-danger-base) 25%, transparent),
+            color-mix(in srgb, var(--color-danger-base) 15%, transparent)
+          ),
           var(--surface-card);
       }
 

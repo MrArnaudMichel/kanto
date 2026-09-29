@@ -148,7 +148,7 @@ export class KtTable extends KtElement {
       }
 
       tbody tr {
-        transition: background-color 120ms linear;
+        transition: background-color var(--duration-instant) linear;
       }
 
       tbody tr:hover {

@@ -73,9 +73,9 @@ export class KtTooltip extends KtElement {
         /* The discrete display and overlay transitions keep the fade-out
            once the popover closes. */
         transition:
-          opacity 150ms var(--easing-standard),
-          display 150ms allow-discrete,
-          overlay 150ms allow-discrete;
+          opacity var(--duration-fast) var(--easing-standard),
+          display var(--duration-fast) allow-discrete,
+          overlay var(--duration-fast) allow-discrete;
       }
 
       .bubble:popover-open {

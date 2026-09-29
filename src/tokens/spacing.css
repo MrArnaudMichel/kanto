@@ -50,6 +50,7 @@
   --duration-instant: 0.1s;
   --duration-fast: 0.16s;
   --duration-normal: 0.2s;
+  --duration-slow: 0.4s; /* a bar filling to its new value */
   --easing-standard: ease;
 
   /* === ELEVATION ===

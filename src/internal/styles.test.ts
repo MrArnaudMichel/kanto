@@ -1,39 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import type { CSSResultGroup } from 'lit';
 
-import { KtButton } from 'kanto-ds';
-import { KtCard } from 'kanto-ds';
-import { KtBadge } from 'kanto-ds';
-import { KtCode } from 'kanto-ds';
-import { KtInput } from 'kanto-ds';
-import { KtInputMenu } from 'kanto-ds';
-import { KtSelect } from 'kanto-ds';
-import { KtTextarea } from 'kanto-ds';
-import { KtToggle } from 'kanto-ds';
-import { KtDragDrop } from 'kanto-ds';
-import { KtTabs } from 'kanto-ds';
-import { KtSegmentedControl } from 'kanto-ds';
-import { KtToggleButton } from 'kanto-ds';
-import { KtTable } from 'kanto-ds';
-import { KtDropdown } from 'kanto-ds';
+import * as kanto from 'kanto-ds';
 
-const ELEMENTS: readonly [string, { styles: CSSResultGroup }][] = [
-  ['kt-button', KtButton],
-  ['kt-card', KtCard],
-  ['kt-badge', KtBadge],
-  ['kt-code', KtCode],
-  ['kt-input', KtInput],
-  ['kt-input-menu', KtInputMenu],
-  ['kt-select', KtSelect],
-  ['kt-textarea', KtTextarea],
-  ['kt-toggle', KtToggle],
-  ['kt-drag-drop', KtDragDrop],
-  ['kt-tabs', KtTabs],
-  ['kt-segmented-control', KtSegmentedControl],
-  ['kt-toggle-button', KtToggleButton],
-  ['kt-table', KtTable],
-  ['kt-dropdown', KtDropdown],
-];
+/**
+ * Every element the package exports, found rather than listed: a hand-kept
+ * list covered 15 of them, and the literals these rules exist to catch sat in
+ * the ones it left out.
+ */
+const ELEMENTS: readonly [string, { styles: CSSResultGroup }][] = Object.entries(kanto).flatMap(
+  ([name, value]) =>
+    typeof value === 'function' &&
+    value.prototype instanceof HTMLElement &&
+    'styles' in value &&
+    value.styles
+      ? [[name, value as unknown as { styles: CSSResultGroup }] as const]
+      : [],
+);
 
 function cssTextOf(styles: CSSResultGroup): string {
   const flatten = (group: CSSResultGroup): string =>
@@ -131,6 +114,42 @@ describe('component stylesheets', () => {
     }
 
     expect(offenders).toEqual([]);
+  });
+
+  it('checks every exported element, not a hand-picked few', () => {
+    expect(ELEMENTS.map(([name]) => name)).toEqual(
+      expect.arrayContaining(['KtButton', 'KtChart', 'KtProgressBar', 'KtToast', 'KtTooltip']),
+    );
+  });
+
+  /**
+   * Tokens, not values: a literal colour does not follow the theme, and a
+   * literal duration does not follow prefers-reduced-motion, which zeroes the
+   * --duration-* tokens. A value inside var() is a fallback and is allowed.
+   *
+   * Two exceptions. A zero duration is a switch, not a timing. And a looping
+   * animation's period is its own rhythm: each element that loops turns the
+   * loop off itself under prefers-reduced-motion.
+   */
+  it('uses no literal colour or duration', () => {
+    const offenders: string[] = [];
+
+    for (const [name, element] of ELEMENTS) {
+      for (const { selector, body } of ruleBlocks(cssTextOf(element.styles))) {
+        for (const declaration of body.split(';')) {
+          const value = declaration.slice(declaration.indexOf(':') + 1);
+          if (/\binfinite\b/.test(value)) continue;
+          const bare = value
+            .replace(/(^|[\s,(])0m?s\b/g, '$1')
+            .replace(/var\([^()]*(\([^()]*\)[^()]*)*\)/g, '');
+          if (/#[0-9a-f]{3,8}\b|\b(rgba?|hsla?)\(|(^|[\s,(])\d*\.?\d+m?s\b/i.test(bare)) {
+            offenders.push(`${name} — ${selector} — ${declaration.trim()}`);
+          }
+        }
+      }
+    }
+
+    expect(offenders.join('\n')).toBe('');
   });
 
   /**

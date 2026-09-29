@@ -92,7 +92,7 @@ export class KtProgressBar extends KtElement {
         width: 0;
         height: 100%;
         background: var(--color-primary-base);
-        transition: width 0.4s var(--easing-standard);
+        transition: width var(--duration-slow) var(--easing-standard);
       }
 
       :host([variant='info']) .fill {
@@ -121,11 +121,11 @@ export class KtProgressBar extends KtElement {
       .fill.striped {
         background-image: linear-gradient(
           45deg,
-          rgba(255, 255, 255, 0.07) 25%,
+          color-mix(in srgb, var(--color-white) 7%, transparent) 25%,
           transparent 25%,
           transparent 50%,
-          rgba(255, 255, 255, 0.07) 50%,
-          rgba(255, 255, 255, 0.07) 75%,
+          color-mix(in srgb, var(--color-white) 7%, transparent) 50%,
+          color-mix(in srgb, var(--color-white) 7%, transparent) 75%,
           transparent 75%,
           transparent
         );
