@@ -252,8 +252,45 @@ export class KtTable extends KtElement {
   @property({ type: String })
   label = '';
 
-  /** The rows after sorting, before paging. */
+  /** The last sort, and what it was computed from. */
+  private sortCache:
+    | {
+        data: readonly KtTableRow[];
+        key: string | null;
+        direction: KtSortDirection;
+        rows: readonly KtTableRow[];
+      }
+    | undefined;
+
+  /**
+   * The rows after sorting, before paging.
+   *
+   * Sorted once per change of `data`, `sortKey` or `sortDirection`, not on
+   * every render: hovering a row or ticking a box re-renders the table, and
+   * re-sorting a few thousand rows each time is what made that lag. Assign a
+   * new array to `data` rather than changing it in place.
+   */
   get sortedRows(): readonly KtTableRow[] {
+    const cache = this.sortCache;
+    if (
+      cache?.data === this.data &&
+      cache.key === this.sortKey &&
+      cache.direction === this.sortDirection
+    ) {
+      return cache.rows;
+    }
+
+    const rows = this.sort();
+    this.sortCache = {
+      data: this.data,
+      key: this.sortKey,
+      direction: this.sortDirection,
+      rows,
+    };
+    return rows;
+  }
+
+  private sort(): readonly KtTableRow[] {
     if (!this.sortKey || !this.sortDirection) return this.data;
 
     const key = this.sortKey;

@@ -87,6 +87,25 @@ describe('kt-table', () => {
     expect(cellText(el, 1)).toEqual(['10', '20', '30', '']);
   });
 
+  it('sorts once per change of data or order, not on every render', async () => {
+    headerButtons(el)[0]!.click();
+    await settle(el);
+    const sorted = el.sortedRows;
+
+    // A re-render that changes neither the rows nor the order.
+    el.loadingText = 'Fetching';
+    await settle(el);
+    expect(el.sortedRows).toBe(sorted);
+
+    headerButtons(el)[0]!.click();
+    await settle(el);
+    expect(el.sortedRows).not.toBe(sorted);
+
+    const reversed = el.sortedRows;
+    el.data = [...DATA];
+    expect(el.sortedRows).not.toBe(reversed);
+  });
+
   it('sends empty values to the end whichever way the column points', async () => {
     headerButtons(el)[1]!.click();
     await settle(el);

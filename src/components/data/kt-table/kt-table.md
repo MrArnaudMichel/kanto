@@ -27,6 +27,11 @@ descending sort should not open with a screen of blanks.
 
 `aria-sort` on the header reflects the state.
 
+The rows are sorted once per change of `data` or of the order, not on every
+render, so hovering and selecting stay quick on a few thousand rows. That relies
+on `data` being replaced, not edited: assign a new array
+(`table.data = [...rows, added]`) rather than pushing into the old one.
+
 ## Selection
 
 ```html
