@@ -51,7 +51,11 @@ export class KtTooltip extends KtElement {
            under data-theme="light". */
         color: var(--text-inverted);
         font: var(--font-code-regular);
-        white-space: nowrap;
+        /* As wide as a short label, and wrapped at max-width for a sentence:
+           an absolutely positioned box beside a small trigger would otherwise
+           shrink to one word per line. */
+        width: max-content;
+        overflow-wrap: anywhere;
         background: var(--surface-inverted);
         border-radius: var(--radius-input);
         opacity: 0;
