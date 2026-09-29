@@ -79,6 +79,8 @@ export interface KtStrings {
   /** A required checkbox left unchecked. */
   checkRequired: string;
   dateRequired: string;
+  /** A phone number typed with the prefix only dialled from inside the country. */
+  phoneTrunkPrefix: (prefix: string) => string;
 
   // --- Navigation ---
   openMenu: string;
@@ -165,6 +167,7 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   selectFile: 'Select a file.',
   checkRequired: 'Check this box to continue.',
   dateRequired: 'Select a date.',
+  phoneTrunkPrefix: (prefix: string) => `Enter the number without the leading ${prefix}.`,
 
   openMenu: 'Open menu',
   closeMenu: 'Close menu',

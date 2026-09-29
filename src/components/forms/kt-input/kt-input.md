@@ -59,15 +59,26 @@ them in the tab order would double the number of stops in a form.
 ```
 
 `value` holds the **national digits only** — `612345678` — and the field
-displays them grouped (`6 12 34 56 78`, pairs after the first digit for France,
-threes elsewhere). What the _form_ receives is the full international number,
-`+33612345678`: submitting national digits without the country would throw away
-the thing the user just picked.
+displays them grouped the way the country's `format` groups them
+(`1 23 45 67 89` for France gives `6 12 34 56 78`). What the _form_ receives is
+the full international number, `+33612345678`: submitting national digits
+without the country would throw away the thing the user just picked.
 
-Six countries ship by default. Pass your own list for a wider audience:
+A number typed with the country's trunk prefix — `06 12 34 56 78` after +33 —
+puts the field in its error state: `+330612345678` does not exist. The message
+shows in a tooltip on the alert icon, is read out through the control's
+description, and the form sees a `patternMismatch`. Countries where a leading 0
+belongs to the number, like Italy, have no `trunkPrefix` and are never flagged.
+An `error` set by the application wins over this check.
+
+About 95 countries ship by default, sorted by name. Pass your own list to
+narrow or widen it:
 
 ```js
-input.countries = [{ id: 'ca', name: 'Canada', dialCode: '1', format: '123-456-7890' }, ...];
+input.countries = [
+  { id: 'fr', name: 'France', dialCode: '33', format: '1 23 45 67 89', trunkPrefix: '0' },
+  { id: 'it', name: 'Italy', dialCode: '39', format: '312 345 6789' },
+];
 ```
 
 Phone mode is reached **only** through `type="tel"`. Sniffing the placeholder,

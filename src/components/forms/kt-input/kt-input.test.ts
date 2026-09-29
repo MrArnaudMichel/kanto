@@ -95,6 +95,14 @@ describe('kt-input', () => {
     expect(el.shadowRoot!.querySelector('kt-icon[name="circle-alert"]')).not.toBeNull();
   });
 
+  it('shows the error message in a tooltip on the alert icon', async () => {
+    const el = await fixture<KtInput>('<kt-input error="Invalid address"></kt-input>');
+
+    const tooltip = el.shadowRoot!.querySelector('kt-tooltip')!;
+    expect(tooltip.text).toBe('Invalid address');
+    expect(tooltip.querySelector('kt-icon[name="circle-alert"]')).not.toBeNull();
+  });
+
   it('describes the control with its error message', async () => {
     const el = await fixture<KtInput>('<kt-input error="Enter an email."></kt-input>');
 
@@ -205,9 +213,57 @@ describe('kt-input in phone mode', () => {
     expect(restored.country).toBe('fr');
   });
 
+  it('flags a number typed with the trunk prefix', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel" country="fr"></kt-input>');
+    await type(el, '06 12 34 56 78');
+
+    expect(field(el).classList.contains('error')).toBe(true);
+    expect(control(el).getAttribute('aria-invalid')).toBe('true');
+    const id = control(el).getAttribute('aria-describedby')!;
+    expect(el.shadowRoot!.getElementById(id)!.textContent).toBe(
+      'Enter the number without the leading 0.',
+    );
+    expect(el.shadowRoot!.querySelector('kt-tooltip')!.text).toBe(
+      'Enter the number without the leading 0.',
+    );
+  });
+
+  it('reports the trunk prefix to the form as a pattern mismatch', async () => {
+    const { internals } = await formFixture<KtInput>(
+      '<kt-input type="tel" country="fr" value="0612345678"></kt-input>',
+    );
+    expect(internals.setValidity).toHaveBeenLastCalledWith(
+      expect.objectContaining({ patternMismatch: true }),
+      'Enter the number without the leading 0.',
+      undefined,
+    );
+  });
+
+  it('clears the error once the prefix is gone', async () => {
+    const el = await fixture<KtInput>('<kt-input type="tel" country="fr" value="0612"></kt-input>');
+    await type(el, '612');
+
+    expect(field(el).classList.contains('error')).toBe(false);
+    expect(el.shadowRoot!.querySelector('kt-tooltip')).toBeNull();
+  });
+
+  it('accepts a leading 0 where it belongs to the number', async () => {
+    const el = await fixture<KtInput>(
+      '<kt-input type="tel" country="it" value="0612345678"></kt-input>',
+    );
+    expect(field(el).classList.contains('error')).toBe(false);
+  });
+
+  it("lets the application's own error win over the prefix check", async () => {
+    const el = await fixture<KtInput>(
+      '<kt-input type="tel" country="fr" value="0612" error="Number already in use"></kt-input>',
+    );
+    expect(el.shadowRoot!.querySelector('kt-tooltip')!.text).toBe('Number already in use');
+  });
+
   it('falls back to the country format as placeholder', async () => {
     const el = await fixture<KtInput>('<kt-input type="tel"></kt-input>');
-    expect(control(el).getAttribute('placeholder')).toBe('123-456-7890');
+    expect(control(el).getAttribute('placeholder')).toBe('201-555-0123');
   });
 
   it('opens, searches and picks a country', async () => {

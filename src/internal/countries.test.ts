@@ -4,11 +4,35 @@ import {
   digitsOnly,
   flagEmoji,
   formatNationalNumber,
+  leadingTrunkPrefix,
   searchCountries,
 } from './countries.js';
 
 const france = DEFAULT_COUNTRIES.find((c) => c.id === 'fr');
 const usa = DEFAULT_COUNTRIES.find((c) => c.id === 'us');
+const country = (id: string) => DEFAULT_COUNTRIES.find((c) => c.id === id);
+
+describe('DEFAULT_COUNTRIES', () => {
+  it('covers most of the planet, once each', () => {
+    const ids = DEFAULT_COUNTRIES.map((c) => c.id);
+    expect(ids.length).toBeGreaterThanOrEqual(90);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('lists them by name, so the panel can be scanned', () => {
+    const names = DEFAULT_COUNTRIES.map((c) => c.name);
+    expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b, 'en')));
+  });
+
+  it('gives every country a code, a dial code and a digits-only format', () => {
+    for (const c of DEFAULT_COUNTRIES) {
+      expect(c.id).toMatch(/^[a-z]{2}$/);
+      expect(c.dialCode).toMatch(/^\d{1,4}$/);
+      expect(c.format).toMatch(/^\d+([ -]\d+)*$/);
+      if (c.trunkPrefix !== undefined) expect(c.format.startsWith(c.trunkPrefix)).toBe(false);
+    }
+  });
+});
 
 describe('flagEmoji', () => {
   it('builds the flag from regional indicator symbols', () => {
@@ -38,9 +62,17 @@ describe('formatNationalNumber', () => {
     expect(formatNationalNumber('1234567890', usa)).toBe('123 456 7890');
   });
 
-  it('groups everything else in threes', () => {
-    const germany = DEFAULT_COUNTRIES.find((c) => c.id === 'de');
-    expect(formatNationalNumber('1234567890', germany)).toBe('123 456 789 0');
+  it('groups every other country the way its format does', () => {
+    expect(formatNationalNumber('1234567890', country('de'))).toBe('1234 567890');
+    expect(formatNationalNumber('9012345678', country('jp'))).toBe('90 1234 5678');
+  });
+
+  it('keeps digits beyond the format in a last group', () => {
+    expect(formatNationalNumber('612345678901', france)).toBe('6 12 34 56 78 901');
+  });
+
+  it('groups in threes for a country it knows nothing about', () => {
+    expect(formatNationalNumber('1234567', undefined)).toBe('123 456 7');
   });
 
   it('formats a partial number as it is typed', () => {
@@ -63,6 +95,15 @@ describe('searchCountries', () => {
     expect(searchCountries(DEFAULT_COUNTRIES, 'belg').map((c) => c.id)).toEqual(['be']);
   });
 
+  it('matches a dial code from its start, not anywhere in it', () => {
+    // "44" is inside Angola's 244: a dial code is read left to right.
+    expect(searchCountries(DEFAULT_COUNTRIES, '+44').map((c) => c.id)).toEqual(['gb']);
+  });
+
+  it('ignores accents in names', () => {
+    expect(searchCountries(DEFAULT_COUNTRIES, 'cote').map((c) => c.id)).toEqual(['ci']);
+  });
+
   it('matches on dial code, with or without the plus', () => {
     expect(searchCountries(DEFAULT_COUNTRIES, '+41').map((c) => c.id)).toEqual(['ch']);
     expect(searchCountries(DEFAULT_COUNTRIES, '49').map((c) => c.id)).toEqual(['de']);
@@ -70,5 +111,24 @@ describe('searchCountries', () => {
 
   it('matches on the country code exactly', () => {
     expect(searchCountries(DEFAULT_COUNTRIES, 'gb').map((c) => c.id)).toEqual(['gb']);
+  });
+});
+
+describe('leadingTrunkPrefix', () => {
+  it('returns the national prefix a number was typed with', () => {
+    expect(leadingTrunkPrefix('0612345678', france)).toBe('0');
+    expect(leadingTrunkPrefix('14155552671', usa)).toBe('1');
+    expect(leadingTrunkPrefix('06201234567', country('hu'))).toBe('06');
+  });
+
+  it('accepts a number typed without it', () => {
+    expect(leadingTrunkPrefix('612345678', france)).toBeUndefined();
+    expect(leadingTrunkPrefix('', france)).toBeUndefined();
+  });
+
+  it('leaves alone countries where a leading 0 belongs to the number', () => {
+    // An Italian landline keeps its 0 after +39.
+    expect(leadingTrunkPrefix('0612345678', country('it'))).toBeUndefined();
+    expect(leadingTrunkPrefix('0612345678', undefined)).toBeUndefined();
   });
 });

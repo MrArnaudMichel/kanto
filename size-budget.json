@@ -31,7 +31,7 @@
   "./components/forms/kt-date-picker": 10000,
   "./components/forms/kt-drag-drop": 6700,
   "./components/forms/kt-form": 3700,
-  "./components/forms/kt-input": 7400,
+  "./components/forms/kt-input": 10400,
   "./components/forms/kt-input-menu": 6300,
   "./components/forms/kt-label-input": 2100,
   "./components/forms/kt-radio-group": 3800,

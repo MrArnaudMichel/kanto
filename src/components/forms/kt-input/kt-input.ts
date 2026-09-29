@@ -15,11 +15,13 @@ import {
   digitsOnly,
   flagEmoji,
   formatNationalNumber,
+  leadingTrunkPrefix,
   searchCountries,
   type KtCountry,
 } from '#internal/countries';
 import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
+import '../../feedback/kt-tooltip/kt-tooltip.js';
 
 export type KtInputSize = 'small' | 'medium' | 'large';
 
@@ -188,6 +190,14 @@ export class KtInput extends KtElement {
         color: var(--color-danger-text);
       }
 
+      /* The icon sits at the field's right end: a bubble centred on it would
+         hang half past the field, so it grows leftwards instead. */
+      .error-icon::part(bubble) {
+        right: 0;
+        left: auto;
+        transform: none;
+      }
+
       /* === PHONE MODE === */
       .country {
         display: inline-flex;
@@ -345,7 +355,10 @@ export class KtInput extends KtElement {
   @property({ type: String })
   icon = '';
 
-  /** Error message. A non-empty value puts the field in its error state. */
+  /**
+   * Error message. A non-empty value puts the field in its error state, and
+   * wins over the field's own checks.
+   */
   @property({ type: String, reflect: true })
   error = '';
 
@@ -390,6 +403,8 @@ export class KtInput extends KtElement {
       changed.has('required') ||
       changed.has('error') ||
       changed.has('country') ||
+      changed.has('countries') ||
+      changed.has('type') ||
       this.stringsChanged(changed)
     ) {
       setFormValue(this.internals, this.formValue, this.formState);
@@ -399,10 +414,15 @@ export class KtInput extends KtElement {
 
   private refreshValidity(): void {
     const missing = this.required && this.value.length === 0;
-    const message = this.error || (missing ? strings().required : '');
+    const phoneError = this.phoneError;
+    const message = this.error || phoneError || (missing ? strings().required : '');
     setValidity(
       this.internals,
-      { valueMissing: missing, customError: Boolean(this.error) },
+      {
+        valueMissing: missing,
+        patternMismatch: Boolean(phoneError),
+        customError: Boolean(this.error),
+      },
       message,
     );
   }
@@ -476,6 +496,18 @@ export class KtInput extends KtElement {
    */
   private get formState(): string | undefined {
     return this.isPhone ? `${this.country}:${this.value}` : undefined;
+  }
+
+  /** Phone mode: a number typed with the prefix only dialled at home. */
+  private get phoneError(): string {
+    if (!this.isPhone) return '';
+    const prefix = leadingTrunkPrefix(this.value, this.selectedCountry);
+    return prefix ? strings().phoneTrunkPrefix(prefix) : '';
+  }
+
+  /** The message on show: the application's first, then the field's own. */
+  private get shownError(): string {
+    return this.error || this.phoneError;
   }
 
   private get displayValue(): string {
@@ -609,15 +641,16 @@ export class KtInput extends KtElement {
   }
 
   override render(): TemplateResult {
+    const error = this.shownError;
     const hasActions =
-      this.type === 'password' || Boolean(this.icon) || Boolean(this.error) || this.showClear;
+      this.type === 'password' || Boolean(this.icon) || Boolean(error) || this.showClear;
 
     return html`<div
       part="base"
       class=${classMap({
         field: true,
         [this.size]: true,
-        error: Boolean(this.error),
+        error: Boolean(error),
         disabled: this.inactive,
       })}
       @pointerdown=${this.onFieldPointerDown}
@@ -627,9 +660,7 @@ export class KtInput extends KtElement {
         // The icon only shows that something is wrong; this is what gets read
         // out. aria-describedby rather than aria-errormessage, which most
         // screen readers still ignore.
-        this.error
-          ? html`<span id="error-message" class="visually-hidden">${this.error}</span>`
-          : nothing
+        error ? html`<span id="error-message" class="visually-hidden">${error}</span>` : nothing
       }
       ${this.isPhone ? this.renderCountryPicker() : nothing}
 
@@ -643,8 +674,8 @@ export class KtInput extends KtElement {
         inputmode=${this.isPhone ? 'tel' : nothing}
         maxlength=${this.maxlength ?? nothing}
         aria-label=${this.label || nothing}
-        aria-invalid=${this.error ? 'true' : nothing}
-        aria-describedby=${this.error ? 'error-message' : nothing}
+        aria-invalid=${error ? 'true' : nothing}
+        aria-describedby=${error ? 'error-message' : nothing}
         ?disabled=${this.inactive}
         ?readonly=${this.readonly}
         ?required=${this.required}
@@ -679,10 +710,12 @@ export class KtInput extends KtElement {
                   : nothing
               }
               ${
-                this.error
-                  ? html`<span class="adornment error-icon" title=${this.error}>
-                      <kt-icon name="circle-alert" size=${ICON_SIZE} label=${this.error}></kt-icon>
-                    </span>`
+                // The message on hover, for whoever can see the icon; the
+                // control's aria-describedby is what a screen reader reads.
+                error
+                  ? html`<kt-tooltip class="adornment error-icon" text=${error}>
+                      <kt-icon name="circle-alert" size=${ICON_SIZE}></kt-icon>
+                    </kt-tooltip>`
                   : nothing
               }
               ${

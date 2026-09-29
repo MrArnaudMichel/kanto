@@ -92,7 +92,7 @@ describe('elements and the strings registry', () => {
   it('re-reports its validation message in the new language', async () => {
     const { element, internals } = await formFixture<KtInput>('<kt-input required></kt-input>');
     expect(internals.setValidity).toHaveBeenLastCalledWith(
-      { valueMissing: true, customError: false },
+      { valueMissing: true, patternMismatch: false, customError: false },
       'This field is required.',
       undefined,
     );
@@ -101,7 +101,7 @@ describe('elements and the strings registry', () => {
     await settle(element);
 
     expect(internals.setValidity).toHaveBeenLastCalledWith(
-      { valueMissing: true, customError: false },
+      { valueMissing: true, patternMismatch: false, customError: false },
       'Ce champ est obligatoire.',
       undefined,
     );
