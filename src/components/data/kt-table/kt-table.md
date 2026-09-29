@@ -33,6 +33,46 @@ render, so hovering and selecting stay quick on a few thousand rows. That relies
 on `data` being replaced, not edited: assign a new array
 (`table.data = [...rows, added]`) rather than pushing into the old one.
 
+## Server-side data
+
+With `manual`, the table sorts and pages nothing itself: `data` is the page the
+server sent, shown as it is, and `total-rows` is how many rows the server holds,
+which the pager counts from. Headers and the pager still update `sortKey`,
+`sortDirection` and `page` and fire their events; the application loads what
+they ask for.
+
+```js
+table.manual = true;
+table.pageSize = 25;
+
+async function load() {
+  table.loading = true;
+  const { rows, total } = await api.customers({
+    page: table.page,
+    size: table.pageSize,
+    sort: table.sortKey,
+    direction: table.sortDirection,
+  });
+  table.data = rows;
+  table.totalRows = total;
+  table.loading = false;
+}
+
+table.addEventListener('kt-sort-change', load);
+table.addEventListener('kt-page-change', load);
+load();
+```
+
+A new sort sends `page` back to 1 and fires only `kt-sort-change` — one event,
+one reload. While `loading`, a table that already shows a page keeps it on
+screen, dimmed and `aria-busy`, so the pager that asked for the next one keeps
+its place and its focus; the loading message only replaces the table before
+anything has loaded.
+
+Selection is kept by row identity, so it survives paging. `selectedRows` can
+only return the selected rows of the page on screen: keep the rows themselves
+on your side if you need them across pages.
+
 ## Selection
 
 ```html
@@ -73,6 +113,9 @@ table.renderCell = (row, column) =>
 | `selectionMode` | `selection-mode` | `'single' \| 'multiple'`   | `'multiple'`              |
 | `selected`      | —                | `unknown[]`                | `[]`                      |
 | `pageSize`      | `page-size`      | `number` (0 = no paging)   | `0`                       |
+| `page`          | `page`           | `number`, from 1           | `1`                       |
+| `manual`        | `manual`         | `boolean`                  | `false`                   |
+| `totalRows`     | `total-rows`     | `number` (manual mode)     | `0`                       |
 | `loading`       | `loading`        | `boolean`                  | `false`                   |
 | `compact`       | `compact`        | `boolean`                  | `false`                   |
 | `sortKey`       | `sort-key`       | `string \| null`           | `null`                    |

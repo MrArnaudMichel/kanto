@@ -262,6 +262,12 @@ describe('kt-table', () => {
       expect(listener.mock.calls[0]![0].detail.page).toBe(2);
     });
 
+    it('opens on the page it is given, and reports the page it is on', async () => {
+      el.page = 2;
+      await settle(el);
+      expect(cellText(el)).toEqual(['Alpaca', 'Ångström 10']);
+    });
+
     it('hides the footer with no page size', async () => {
       el.pageSize = 0;
       await settle(el);
@@ -278,5 +284,67 @@ describe('kt-table', () => {
 
     expect(bodyRows(el)[0]!.querySelector('strong')!.textContent).toBe('ACTIVE');
     expect(cellText(el, 0)).toEqual(['Zeta', 'Ångström', 'Alpaca', 'Ångström 10']);
+  });
+
+  describe('in manual mode, for data sorted and paged on a server', () => {
+    const pagination = () => el.shadowRoot!.querySelector('kt-pagination')!;
+
+    beforeEach(async () => {
+      el.manual = true;
+      el.pageSize = 2;
+      el.totalRows = 10;
+      await settle(el);
+    });
+
+    it('shows the rows it is given as they are, unsorted and unsliced', async () => {
+      el.sortKey = 'name';
+      el.sortDirection = 'asc';
+      await settle(el);
+
+      expect(cellText(el)).toEqual(['Zeta', 'Ångström', 'Alpaca', 'Ångström 10']);
+    });
+
+    it('counts its pages from total-rows', () => {
+      expect(el.totalPages).toBe(5);
+      expect(pagination().totalPages).toBe(5);
+    });
+
+    it('goes back to the first page on a new sort, without a page event', async () => {
+      el.page = 3;
+      await settle(el);
+      const sorted = vi.fn();
+      const paged = vi.fn();
+      el.addEventListener('kt-sort-change', sorted);
+      el.addEventListener('kt-page-change', paged);
+
+      headerButtons(el)[0]!.click();
+      await settle(el);
+
+      expect(el.page).toBe(1);
+      expect(sorted.mock.calls[0]![0].detail).toEqual({ key: 'name', direction: 'asc' });
+      expect(paged).not.toHaveBeenCalled();
+    });
+
+    it('keeps the rows and the pager on screen while the next page loads', async () => {
+      el.loading = true;
+      await settle(el);
+
+      expect(bodyRows(el)).toHaveLength(4);
+      expect(el.shadowRoot!.querySelector('table')!.getAttribute('aria-busy')).toBe('true');
+      expect(pagination()).not.toBeNull();
+
+      el.loading = false;
+      await settle(el);
+      expect(el.shadowRoot!.querySelector('table')!.hasAttribute('aria-busy')).toBe(false);
+    });
+
+    it('shows the loading state while nothing has loaded yet', async () => {
+      el.data = [];
+      el.loading = true;
+      await settle(el);
+
+      expect(el.shadowRoot!.querySelector('table')).toBeNull();
+      expect(el.shadowRoot!.querySelector('.placeholder')!.textContent).toContain('Loading');
+    });
   });
 });

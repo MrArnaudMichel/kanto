@@ -1,5 +1,5 @@
 import { css, html, nothing, type TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
@@ -163,6 +163,11 @@ export class KtTable extends KtElement {
         transition: background-color var(--duration-instant) linear;
       }
 
+      table[aria-busy='true'] tbody {
+        opacity: 0.5;
+        transition: opacity var(--duration-fast) var(--easing-standard);
+      }
+
       tbody tr:hover {
         background: var(--color-dark-14);
       }
@@ -215,8 +220,21 @@ export class KtTable extends KtElement {
     `,
   ];
 
-  @state()
-  private page = 1;
+  /** The page on screen, from 1. Set it to open on another page. */
+  @property({ type: Number })
+  page = 1;
+
+  /**
+   * For data sorted and paged on a server: `data` is the current page, shown
+   * as given. Headers and the pager still update the state and fire their
+   * events, and the application loads what they ask for.
+   */
+  @property({ type: Boolean, reflect: true })
+  manual = false;
+
+  /** In manual mode, how many rows the server holds — what the pager counts. */
+  @property({ type: Number, attribute: 'total-rows' })
+  totalRows = 0;
 
   @property({ attribute: false })
   columns: readonly KtTableColumn[] = [];
@@ -291,6 +309,8 @@ export class KtTable extends KtElement {
    * new array to `data` rather than changing it in place.
    */
   get sortedRows(): readonly KtTableRow[] {
+    if (this.manual) return this.data;
+
     const cache = this.sortCache;
     const locale = resolveLocale(this.locale);
     if (
@@ -338,13 +358,14 @@ export class KtTable extends KtElement {
 
   get totalPages(): number {
     if (this.pageSize <= 0) return 1;
-    return Math.max(1, Math.ceil(this.data.length / this.pageSize));
+    const rows = this.manual ? this.totalRows || this.data.length : this.data.length;
+    return Math.max(1, Math.ceil(rows / this.pageSize));
   }
 
   /** The rows actually on screen. */
   get visibleRows(): readonly KtTableRow[] {
     const rows = this.sortedRows;
-    if (this.pageSize <= 0) return rows;
+    if (this.pageSize <= 0 || this.manual) return rows;
 
     const page = Math.min(this.page, this.totalPages);
     return rows.slice((page - 1) * this.pageSize, page * this.pageSize);
@@ -366,6 +387,9 @@ export class KtTable extends KtElement {
       this.sortKey = null;
       this.sortDirection = null;
     }
+    // A new order starts from its first page. No kt-page-change: the sort
+    // event is the one reload the application needs.
+    if (this.manual) this.page = 1;
 
     emit(this, 'kt-sort-change', { key: this.sortKey, direction: this.sortDirection });
   }
@@ -499,7 +523,10 @@ export class KtTable extends KtElement {
   }
 
   override render(): TemplateResult {
-    if (this.loading) {
+    // A manual table reloading a page keeps the one on screen, dimmed, so the
+    // pager that asked for it — and the focus on it — stay where they are.
+    const reloading = this.loading && this.manual && this.data.length > 0;
+    if (this.loading && !reloading) {
       return html`<div class="placeholder" role="status" aria-live="polite">
         ${this.loadingText ?? strings().loading}
       </div>`;
@@ -510,7 +537,11 @@ export class KtTable extends KtElement {
     const someSelected = rows.some((row) => this.isSelected(row));
 
     return html`<div class="scroller">
-        <table part="table" aria-label=${this.label || nothing}>
+        <table
+          part="table"
+          aria-label=${this.label || nothing}
+          aria-busy=${reloading ? 'true' : nothing}
+        >
           <thead>
             <tr>
               ${
