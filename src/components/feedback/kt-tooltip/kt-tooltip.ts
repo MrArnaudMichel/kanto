@@ -58,13 +58,27 @@ export class KtTooltip extends KtElement {
         overflow-wrap: anywhere;
         background: var(--surface-inverted);
         border-radius: var(--radius-input);
+        /* Out of the layout while hidden, not just transparent: an invisible
+           bubble still has a box, and one by the right edge of the page —
+           a header's last icon — widened the document and scrolled it
+           sideways. The discrete display transition keeps the fade-out. */
+        display: none;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 150ms var(--easing-standard);
+        transition:
+          opacity 150ms var(--easing-standard),
+          display 150ms allow-discrete;
       }
 
       .bubble.visible {
+        display: block;
         opacity: 1;
+      }
+
+      @starting-style {
+        .bubble.visible {
+          opacity: 0;
+        }
       }
 
       .top {

@@ -25,7 +25,7 @@
   "./components/feedback/kt-skeleton": 2300,
   "./components/feedback/kt-toast": 5800,
   "./components/feedback/kt-toast-container": 6500,
-  "./components/feedback/kt-tooltip": 2800,
+  "./components/feedback/kt-tooltip": 3200,
   "./components/forms/kt-calendar": 7500,
   "./components/forms/kt-checkbox": 4400,
   "./components/forms/kt-date-picker": 10000,
