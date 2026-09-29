@@ -72,7 +72,7 @@ export function renderDoc(source: string): RenderedDoc {
     breaks: false,
     renderer: {
       heading({ depth, tokens }: Tokens.Heading) {
-        const plain = this.parser.parseInline(tokens).replace(/<[^>]+>/g, '');
+        const plain = plainTextOf(this.parser.parseInline(tokens));
         let id = slugify(plain);
 
         // Two sections called "Usage" would otherwise fight over the anchor.
@@ -123,6 +123,26 @@ export function renderDoc(source: string): RenderedDoc {
 
   const html = marked.parse(body, { async: false });
   return { title, summary, html, headings };
+}
+
+/**
+ * The reader's text for a heading: markup out, entities back to characters.
+ *
+ * Stripping the tags is not enough. A heading like `<form>` renders as
+ * `<code>&lt;form&gt;</code>`, and dropping the tags leaves the entities
+ * behind — which the table of contents then prints literally, because it
+ * sets this as text rather than as HTML. Decode &amp; last, or `&amp;lt;`
+ * turns into a real `<` on the way through.
+ */
+export function plainTextOf(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&');
 }
 
 function escapeHtml(text: string): string {
