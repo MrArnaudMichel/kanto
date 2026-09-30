@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+  Metadata,
+  getCountryCallingCode,
+  isPossiblePhoneNumber,
+  type CountryCode,
+} from 'libphonenumber-js';
+import {
   DEFAULT_COUNTRIES,
   digitsOnly,
   flagEmoji,
@@ -32,6 +38,41 @@ describe('DEFAULT_COUNTRIES', () => {
       if (c.trunkPrefix !== undefined) expect(c.format.startsWith(c.trunkPrefix)).toBe(false);
     }
   });
+});
+
+/**
+ * Checked against libphonenumber's metadata, the reference for phone number
+ * formats, which is a dev dependency only: the shipped list stays a small
+ * hand-written table.
+ */
+describe('DEFAULT_COUNTRIES against libphonenumber', () => {
+  /**
+   * Countries whose national prefix can also begin a number, so a leading
+   * digit proves nothing and the field must not flag it.
+   */
+  const PREFIX_ALSO_STARTS_NUMBERS: Record<string, string> = {
+    ru: '8 is the trunk prefix, and Saint Petersburg is 812',
+    kz: '8 is the trunk prefix, and toll-free numbers are 800',
+  };
+
+  const plan = new Metadata();
+  const nationalPrefix = (id: string): string | undefined => {
+    plan.selectNumberingPlan(id.toUpperCase() as CountryCode);
+    // At runtime the plan has nationalPrefix(); the published types leave it out.
+    const numbering = plan.numberingPlan as unknown as { nationalPrefix(): string | undefined };
+    return numbering.nationalPrefix() || undefined;
+  };
+
+  for (const country of DEFAULT_COUNTRIES) {
+    it(`${country.name}: dial code, trunk prefix and format`, () => {
+      const code = country.id.toUpperCase() as CountryCode;
+      expect(country.dialCode).toBe(getCountryCallingCode(code));
+      expect(country.trunkPrefix).toBe(
+        country.id in PREFIX_ALSO_STARTS_NUMBERS ? undefined : nationalPrefix(country.id),
+      );
+      expect(isPossiblePhoneNumber(country.format.replace(/\D/g, ''), code)).toBe(true);
+    });
+  }
 });
 
 describe('flagEmoji', () => {
