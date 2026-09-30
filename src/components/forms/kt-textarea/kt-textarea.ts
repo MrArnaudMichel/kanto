@@ -98,11 +98,11 @@ export class KtTextarea extends KtElement {
         background: transparent;
         border: none;
         outline: none;
-        resize: vertical;
+        resize: none;
       }
 
-      :host([resize='none']) textarea {
-        resize: none;
+      :host([resize='vertical']) textarea {
+        resize: vertical;
       }
 
       textarea::placeholder {
@@ -174,9 +174,16 @@ export class KtTextarea extends KtElement {
   @property({ type: String })
   label = '';
 
-  /** Whether the user may drag the field taller. */
+  /**
+   * Whether the reader may drag the field taller.
+   *
+   * Off by default, as in the rest of Kanto: the grip is drawn by the operating
+   * system, lands on the field's rounded corner and belongs to no design
+   * system — and a field the layout sized is not usually the reader's to
+   * resize. Turn it on where the content genuinely varies.
+   */
   @property({ type: String, reflect: true })
-  resize: 'vertical' | 'none' = 'vertical';
+  resize: 'vertical' | 'none' = 'none';
 
   override connectedCallback(): void {
     super.connectedCallback();
