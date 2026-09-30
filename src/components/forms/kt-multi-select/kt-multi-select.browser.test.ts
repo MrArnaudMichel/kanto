@@ -81,4 +81,37 @@ describe('kt-multi-select, laid out', () => {
       expect(chip.getBoundingClientRect().right).toBeLessThanOrEqual(box.right);
     }
   });
+
+  it('settles once chips are chosen, rather than measuring itself over and over', async () => {
+    // Firefox froze on the docs preview, a 460px field holding the regions.
+    // The room was read from the chip row, whose width depends on the chips
+    // and on the "+N": each measure undid the last, in a microtask loop that
+    // never let the page paint again.
+    const el = await fixture<KtMultiSelect>(
+      '<kt-multi-select label="Regions" style="width: 460px"></kt-multi-select>',
+    );
+    const proto = Object.getPrototypeOf(el) as { fitChips: () => void };
+    const fit = proto.fitChips;
+    let calls = 0;
+    proto.fitChips = function (this: KtMultiSelect) {
+      calls += 1;
+      // A loop would never let the test go on: stop it, and let the count tell.
+      if (calls <= 50) fit.call(this);
+    };
+    try {
+      el.options = [
+        { id: 'ne', label: 'North East' },
+        { id: 'sw', label: 'South West' },
+        { id: 'nw', label: 'North West' },
+      ];
+      el.value = ['ne', 'sw'];
+      await frame(el);
+      el.value = ['ne', 'sw', 'nw'];
+      await frame(el);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect(calls).toBeLessThan(20);
+    } finally {
+      proto.fitChips = fit;
+    }
+  });
 });

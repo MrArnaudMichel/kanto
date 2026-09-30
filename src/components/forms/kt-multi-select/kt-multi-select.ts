@@ -30,6 +30,9 @@ export type KtMultiSelectValue = readonly (string | number)[];
 /** Kept clear for the text you type, whatever the chips take. */
 const INPUT_MIN_WIDTH = 64;
 
+/** The "+N" before it is drawn and can be measured. */
+const MORE_WIDTH_GUESS = 40;
+
 /**
  * Several choices from a list: type to narrow it, pick as many as you need.
  *
@@ -299,9 +302,13 @@ export class KtMultiSelect extends KtElement {
     this.fitChips();
     // The chips are elements of their own, drawn a moment after this one:
     // measured now, a new chip has no width yet and seems to fit. Measure
-    // again once they are all drawn — a no-op when nothing moved.
+    // again once they are all drawn — a no-op when nothing moved. On the next
+    // frame rather than in a microtask: should a layout ever make the measure
+    // swing, that costs a pass per frame, never a page that stops painting.
     const chips = [...(this.shadowRoot?.querySelectorAll<KtElement>('.chip') ?? [])];
-    void Promise.all(chips.map((chip) => chip.updateComplete)).then(() => this.fitChips());
+    void Promise.all(chips.map((chip) => chip.updateComplete)).then(() =>
+      requestAnimationFrame(() => this.fitChips()),
+    );
   }
 
   formResetCallback(): void {
@@ -452,22 +459,28 @@ export class KtMultiSelect extends KtElement {
    * Hides the chips that do not fit on the field's one line, and counts them
    * in "+N".
    *
-   * Every chip is shown to be measured, then the leading ones that fit are
-   * kept. The room is taken with the "+N" put back in, so showing or hiding
-   * it cannot change the answer — measured without it, each pass would
-   * reserve its width again and lose one more chip.
+   * The room comes from what never moves: the field's inner width, less the
+   * input's minimum, the toggle and the gaps between them. It used to be read
+   * from the chip row itself, whose width depends on the chips shown and on
+   * the "+N" — so in Firefox each pass undid the last, and the loop between
+   * this and the render it triggered froze the page.
    */
   private fitChips(): void {
+    const control = this.shadowRoot?.querySelector<HTMLElement>('.control');
     const row = this.shadowRoot?.querySelector<HTMLElement>('.chips');
-    if (!row) return;
+    if (!control || !row) return;
     const chips = [...row.querySelectorAll<HTMLElement>('.chip')];
     for (const chip of chips) chip.hidden = false;
 
-    const more = this.shadowRoot?.querySelector<HTMLElement>('.more');
-    const moreWidth = more ? more.getBoundingClientRect().width : 0;
-    const room = row.clientWidth + (moreWidth > 0 ? moreWidth + this.gap(row) : 0);
+    const style = getComputedStyle(control);
+    const gap = parseFloat(style.columnGap) || 0;
+    const toggle = control.querySelector('.toggle')?.getBoundingClientRect().width ?? 0;
+    const inner =
+      control.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    // Between the chips and the input, and between the input and the toggle.
+    const room = inner - INPUT_MIN_WIDTH - toggle - 2 * gap;
     // No layout — a test DOM, or a field not on screen — so nothing to fit.
-    if (room === 0) return;
+    if (control.clientWidth === 0 || room <= 0) return;
 
     const left = row.getBoundingClientRect().left;
     const fitting = (limit: number) =>
@@ -475,8 +488,9 @@ export class KtMultiSelect extends KtElement {
 
     let shown = fitting(room);
     if (shown < chips.length) {
-      // Room for the "+N" itself: as wide as it is, or a guess before it exists.
-      shown = fitting(room - (moreWidth || 40) - this.gap(row));
+      // Room for the "+N" and its gap: as wide as it is, or a guess before it exists.
+      const more = this.shadowRoot?.querySelector('.more')?.getBoundingClientRect().width;
+      shown = fitting(room - (more || MORE_WIDTH_GUESS) - gap);
     }
 
     chips.forEach((chip, index) => {
@@ -484,10 +498,6 @@ export class KtMultiSelect extends KtElement {
     });
     const hidden = chips.length - shown;
     if (hidden !== this.overflowCount) this.overflowCount = hidden;
-  }
-
-  private gap(row: HTMLElement): number {
-    return parseFloat(getComputedStyle(row).columnGap) || 0;
   }
 
   private optionId(index: number): string {
