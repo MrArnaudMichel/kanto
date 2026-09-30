@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mergeReleases, parseChangelog, summarize } from './releases.js';
+import { mergeReleases, newComponents, parseChangelog, summarize } from './releases.js';
 import type { Release } from './github.js';
 
 const CHANGELOG = `# Changelog
@@ -140,5 +140,51 @@ describe('mergeReleases', () => {
     const [entry] = mergeReleases([], [github('v2.0.0-beta.1', { prerelease: true })]);
 
     expect(entry!.prerelease).toBe(true);
+  });
+});
+
+describe('newComponents', () => {
+  const CHANGELOG = `# Changelog
+
+## [1.5.0] — 2026-09-30
+
+### Added
+
+**\`kt-date-picker\`** — a day or a period.
+
+- Works next to \`kt-input\`, which is only mentioned.
+
+### Changed
+
+**\`kt-tooltip\`** draws its bubble in the top layer.
+
+## [1.4.0] — 2026-08-10
+
+### Added
+
+**\`kt-checkbox\`** — a choice.
+`;
+  const entries = parseChangelog(CHANGELOG);
+  const on = (date: string) => newComponents(entries, new Date(`${date}T12:00:00Z`));
+
+  it('lists the elements a release added, for two months after it', () => {
+    expect([...on('2026-10-01')].sort()).toEqual(['kt-checkbox', 'kt-date-picker']);
+    expect(on('2026-11-29').has('kt-date-picker')).toBe(true);
+  });
+
+  it('stops calling one new two calendar months after its release', () => {
+    expect(on('2026-10-09').has('kt-checkbox')).toBe(true);
+    expect(on('2026-10-10').has('kt-checkbox')).toBe(false);
+    expect(on('2026-11-30').has('kt-date-picker')).toBe(false);
+  });
+
+  it('counts only the elements introduced in bold under Added', () => {
+    const fresh = on('2026-10-01');
+    expect(fresh.has('kt-input')).toBe(false);
+    expect(fresh.has('kt-tooltip')).toBe(false);
+  });
+
+  it('calls nothing new before its release date', () => {
+    expect(on('2026-09-29').has('kt-date-picker')).toBe(false);
   });
 });

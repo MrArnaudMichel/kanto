@@ -10,6 +10,7 @@ import './apps.css';
 import { COMPONENTS } from './lib/registry.js';
 import { REPO_URL, VERSION_TAG } from './lib/project.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
+import { newComponents, parseChangelog } from './lib/releases.js';
 import { setRenderer } from './lib/render.js';
 import { consoleHome } from './apps/console/home.js';
 import { consoleInbox } from './apps/console/inbox.js';
@@ -188,6 +189,13 @@ const APP_ROUTES: Route[] = SHOWCASE.map((entry) => ({
 
 const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...APP_ROUTES, ...RELEASE];
 
+/**
+ * Components flagged "New" in the navigation: introduced under Added in a
+ * release of the last two months. Read from the changelog, so writing a new
+ * element's entry is what flags it, and time is what clears it.
+ */
+const NEW_COMPONENTS = newComponents(parseChangelog(changelogDoc), new Date());
+
 const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
@@ -327,7 +335,14 @@ function sidebar(route: Route, page?: DocPage): TemplateResult {
                               class=${classMap({ active: candidate.slug === route.slug })}
                               href=${href(candidate)}
                               aria-current=${candidate.slug === route.slug ? 'page' : undefined}
-                              >${candidate.label}</a
+                              >${candidate.label}${
+                                candidate.section === 'components' &&
+                                NEW_COMPONENTS.has(candidate.slug)
+                                  ? html`<kt-badge class="new" tone="primary" size="small"
+                                      >New</kt-badge
+                                    >`
+                                  : ''
+                              }</a
                             >
                           </li>`,
                       )}

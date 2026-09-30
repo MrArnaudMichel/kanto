@@ -67,6 +67,42 @@ export function parseChangelog(markdown: string): ChangelogEntry[] {
   return entries;
 }
 
+/** How long an element is flagged new in the navigation after its release. */
+export const NEW_FOR_MONTHS = 2;
+
+/** An element introduced as a release's own entry: `**\`kt-date-picker\`**`. */
+const INTRODUCED = /\*\*`(kt-[a-z-]+)`\*\*/g;
+
+/**
+ * The elements to flag as new on `today`: those a release introduced under
+ * "Added", for `months` calendar months after its date.
+ *
+ * The changelog is the only record of when an element arrived, so the flag is
+ * read from it rather than kept beside each component: writing the Added entry
+ * — which a new element gets anyway — is what turns it on, and the calendar
+ * turns it off. An element merely mentioned, or listed under "Changed", is not
+ * new.
+ */
+export function newComponents(
+  entries: readonly ChangelogEntry[],
+  today: Date,
+  months = NEW_FOR_MONTHS,
+): Set<string> {
+  const fresh = new Set<string>();
+
+  for (const entry of entries) {
+    const [year, month, day] = entry.date.split('-').map(Number);
+    if (!year || !month || !day) continue;
+    const released = Date.UTC(year, month - 1, day);
+    const until = Date.UTC(year, month - 1 + months, day);
+    if (today.getTime() < released || today.getTime() >= until) continue;
+
+    const added = /^### Added\s*$([\s\S]*?)(?=^### |(?![\s\S]))/m.exec(entry.notes)?.[1] ?? '';
+    for (const [, tag] of added.matchAll(INTRODUCED)) fresh.add(tag!);
+  }
+  return fresh;
+}
+
 /**
  * The first thing the notes say, as one plain line: the opening paragraph if
  * there is one, otherwise the first bullet. Headings are skipped — "Added"

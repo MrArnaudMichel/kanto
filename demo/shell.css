@@ -153,6 +153,21 @@ main {
   text-decoration: none;
 }
 
+/* "New" sits at the end of the row, off the label, so a long name never
+   runs into it. */
+.sidebar-group a:has(.new) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* The badge is taller than a line of text: without this, flagged rows stand
+   a few pixels taller than their neighbours and break the list's rhythm. */
+.sidebar-group a .new {
+  margin-block: -4px;
+}
+
 .sidebar-group a:hover {
   color: var(--text-body);
   background: var(--color-dark-14);
