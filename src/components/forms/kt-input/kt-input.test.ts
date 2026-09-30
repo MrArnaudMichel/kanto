@@ -103,6 +103,30 @@ describe('kt-input', () => {
     expect(tooltip.querySelector('kt-icon[name="circle-alert"]')).not.toBeNull();
   });
 
+  it('shows the error tooltip while the field has focus, for keyboard users', async () => {
+    const el = await fixture<KtInput>('<kt-input error="Enter an email."></kt-input>');
+    const tooltip = () => el.shadowRoot!.querySelector<KtTooltip>('kt-tooltip.error-icon')!;
+    expect(tooltip().open).toBe(false);
+
+    control(el).dispatchEvent(new FocusEvent('focus'));
+    await settle(el);
+    expect(tooltip().open).toBe(true);
+
+    // Dismissible from the keyboard, until the field is focused again.
+    control(el).dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await settle(el);
+    expect(tooltip().open).toBe(false);
+
+    control(el).dispatchEvent(new FocusEvent('blur'));
+    control(el).dispatchEvent(new FocusEvent('focus'));
+    await settle(el);
+    expect(tooltip().open).toBe(true);
+
+    control(el).dispatchEvent(new FocusEvent('blur'));
+    await settle(el);
+    expect(tooltip().open).toBe(false);
+  });
+
   it('describes the control with its error message', async () => {
     const el = await fixture<KtInput>('<kt-input error="Enter an email."></kt-input>');
 

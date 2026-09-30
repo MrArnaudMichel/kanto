@@ -119,6 +119,14 @@ export class KtTooltip extends KtElement {
   @property({ type: String, reflect: true })
   placement: KtTooltipPlacement = 'top';
 
+  /**
+   * Shows the bubble whatever the pointer and focus do — for a trigger that
+   * cannot take focus itself, like an icon beside a field, whose owner shows
+   * it while the field is focused.
+   */
+  @property({ type: Boolean, reflect: true })
+  open = false;
+
   /** Suppresses the tooltip without removing it from the markup. */
   @property({ type: Boolean, reflect: true })
   disabled = false;
@@ -141,25 +149,30 @@ export class KtTooltip extends KtElement {
     this.removeEventListener('keydown', this.onKeyDown);
     this.description?.remove();
     this.visible = false;
-    this.close();
+    this.closeBubble();
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
     if (changed.has('text')) this.syncDescription();
   }
 
+  /** Hovered, focused or held open — and something to say. */
+  private get shown(): boolean {
+    return (this.visible || this.open) && !this.disabled && Boolean(this.text);
+  }
+
   // Untyped: `visible` is private, so not among the keys PropertyValues<this> knows.
   override updated(changed: PropertyValues): void {
-    if (!changed.has('visible')) return;
-    if (this.visible) this.open();
-    else this.close();
+    if (!['visible', 'open', 'text', 'disabled'].some((key) => changed.has(key))) return;
+    if (this.shown) this.openBubble();
+    else this.closeBubble();
   }
 
   /**
    * Opens the bubble in the top layer, then places it: it has to be open to be
    * measured. Where popovers are missing — a test DOM — it stays in place.
    */
-  private open(): void {
+  private openBubble(): void {
     const bubble = this.bubble;
     if (typeof bubble.showPopover !== 'function') return;
     if (!bubble.matches(':popover-open')) bubble.showPopover();
@@ -178,7 +191,7 @@ export class KtTooltip extends KtElement {
     window.addEventListener('resize', this.hide);
   }
 
-  private close(): void {
+  private closeBubble(): void {
     window.removeEventListener('scroll', this.hide, { capture: true });
     window.removeEventListener('resize', this.hide);
     const bubble = this.bubble;
@@ -238,9 +251,9 @@ export class KtTooltip extends KtElement {
       <span
         part="bubble"
         popover="manual"
-        class=${classMap({ bubble: true, visible: this.visible })}
+        class=${classMap({ bubble: true, visible: this.shown })}
         role="tooltip"
-        aria-hidden=${this.visible ? 'false' : 'true'}
+        aria-hidden=${this.shown ? 'false' : 'true'}
         >${this.text}</span
       >`;
   }

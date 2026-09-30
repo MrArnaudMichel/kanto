@@ -38,6 +38,13 @@ the top of the page — the bubble takes the opposite side, and it slides along
 its side to stay inside the screen. Scrolling or resizing hides it, since a
 bubble fixed to the viewport would drift away from its trigger.
 
+## Holding it open
+
+`open` shows the bubble whatever the pointer does. It is for a trigger that
+cannot take focus itself: `<kt-input>` holds its error icon's tooltip open while
+the field has focus, so a keyboard user sees the message a mouse user gets on
+hover.
+
 ## Dismissal
 
 Escape hides the tooltip while the trigger keeps focus, as WCAG 1.4.13 requires
@@ -50,6 +57,7 @@ of any content shown on hover or focus.
 | `text`      | `text`      | `string`                                 | `''`    |
 | `placement` | `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` |
 | `disabled`  | `disabled`  | `boolean`                                | `false` |
+| `open`      | `open`      | `boolean`                                | `false` |
 
 | Slot      | Description |
 | --------- | ----------- |

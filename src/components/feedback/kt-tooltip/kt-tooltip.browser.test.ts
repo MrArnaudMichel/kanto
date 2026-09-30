@@ -70,4 +70,14 @@ describe('kt-tooltip, laid out', () => {
       box.getBoundingClientRect().top,
     );
   });
+
+  it('shows in the top layer while held open, with no pointer over it', async () => {
+    const el = await fixture<KtTooltip>(
+      '<kt-tooltip text="Enter an email." open><span>!</span></kt-tooltip>',
+    );
+    await settle(el);
+
+    expect(bubble(el).matches(':popover-open')).toBe(true);
+    expect(bubble(el).getBoundingClientRect().height).toBeGreaterThan(0);
+  });
 });

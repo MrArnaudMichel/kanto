@@ -66,8 +66,9 @@ without the country would throw away the thing the user just picked.
 
 A number typed with the country's trunk prefix — `06 12 34 56 78` after +33 —
 puts the field in its error state: `+330612345678` does not exist. The message
-shows in a tooltip on the alert icon, is read out through the control's
-description, and the form sees a `patternMismatch`. Countries where a leading 0
+shows in a tooltip on the alert icon — on hover, and while the field has focus
+so it reaches keyboard users too, until Escape puts it away — is read out
+through the control's description, and the form sees a `patternMismatch`. Countries where a leading 0
 belongs to the number, like Italy, have no `trunkPrefix` and are never flagged.
 An `error` set by the application wins over this check.
 

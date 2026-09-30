@@ -56,6 +56,19 @@ describe('kt-tooltip', () => {
     expect(description.getAttribute('slot')).toBe('kt-tooltip-description');
   });
 
+  it('shows while open is set, whatever the pointer does', async () => {
+    const el = await mount('text="Refresh" open');
+    expect(bubble(el).classList.contains('visible')).toBe(true);
+
+    el.dispatchEvent(new PointerEvent('pointerleave'));
+    await settle(el);
+    expect(bubble(el).classList.contains('visible')).toBe(true);
+
+    el.open = false;
+    await settle(el);
+    expect(bubble(el).classList.contains('visible')).toBe(false);
+  });
+
   it('stays silent when disabled or empty', async () => {
     const off = await mount('text="Refresh" disabled');
     off.dispatchEvent(new Event('pointerenter'));

@@ -309,6 +309,14 @@ export class KtInput extends KtElement {
   @state()
   private countryQuery = '';
 
+  /** The field has focus: the error tooltip shows for keyboard users too. */
+  @state()
+  private focused = false;
+
+  /** Escape put the error tooltip away until the field is focused again. */
+  @state()
+  private errorDismissed = false;
+
   private floating = new FloatingController(this, {
     panel: () => this.shadowRoot?.querySelector<HTMLElement>('.country-panel'),
     anchor: () => this.shadowRoot?.querySelector('.field'),
@@ -626,6 +634,26 @@ export class KtInput extends KtElement {
       }`;
   }
 
+  private onFocus(): void {
+    this.focused = true;
+    this.errorDismissed = false;
+  }
+
+  private onBlur(): void {
+    this.focused = false;
+  }
+
+  /** WCAG 1.4.13: content shown on focus can be dismissed without moving it. */
+  private onControlKeyDown(event: KeyboardEvent): void {
+    if (event.key !== 'Escape' || !this.errorTooltipOpen) return;
+    event.stopPropagation();
+    this.errorDismissed = true;
+  }
+
+  private get errorTooltipOpen(): boolean {
+    return this.focused && !this.errorDismissed && Boolean(this.shownError);
+  }
+
   private onChange(event: Event): void {
     // The native change event does not cross the shadow boundary; re-emit it
     // under a name consumers can actually listen for.
@@ -710,6 +738,9 @@ export class KtInput extends KtElement {
         ?required=${this.required}
         @input=${this.onInput}
         @change=${this.onChange}
+        @focus=${this.onFocus}
+        @blur=${this.onBlur}
+        @keydown=${this.onControlKeyDown}
       />
 
       ${
@@ -724,10 +755,14 @@ export class KtInput extends KtElement {
                   : nothing
               }
               ${
-                // The message on hover, for whoever can see the icon; the
-                // control's aria-describedby is what a screen reader reads.
+                // The message on hover, and while the field has focus for whoever
+                // uses a keyboard; aria-describedby is what a screen reader reads.
                 error
-                  ? html`<kt-tooltip class="adornment error-icon" text=${error}>
+                  ? html`<kt-tooltip
+                      class="adornment error-icon"
+                      text=${error}
+                      ?open=${this.errorTooltipOpen}
+                    >
                       <kt-icon name="circle-alert" size=${ICON_SIZE}></kt-icon>
                     </kt-tooltip>`
                   : nothing

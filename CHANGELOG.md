@@ -51,7 +51,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - About 95 countries ship by default, sorted by name, up from six. Search
   ignores accents and matches dial codes from their start.
 - The error message, the password toggle and the clear button each show a
-  tooltip.
+  tooltip. The error's also shows while the field has focus, for keyboard
+  users, until Escape puts it away.
 
 - A `--duration-slow` token (0.4s, zero under reduced motion).
 
@@ -61,7 +62,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   the trigger. No ancestor's `overflow` clips it any more, and it takes no room
   in the page. `placement` is now a preference: the bubble takes the opposite
   side when that one has no room, and stays inside the screen. Scrolling or
-  resizing hides it. Long text wraps at 260px instead of running past it.
+  resizing hides it. Long text wraps at 260px instead of running past it. A new
+  `open` property holds the bubble open, for a trigger that cannot take focus.
 - `kt-input` groups a phone number the way its country's `format` does, so
   what is typed matches the placeholder — a German number reads `1234 567890`
   rather than in threes. The US placeholder is `201-555-0123`.
