@@ -304,7 +304,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
   'kt-sub-menu-navigation': () =>
     html`<kt-sub-menu-navigation
       style="max-width:280px"
-      active-href="#nav-roles"
+      active-href="#nav-general"
       .sections=${[
         {
           title: 'Workspace',
@@ -324,6 +324,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
                 { label: 'General', href: '#nav-general' },
                 {
                   label: 'Members',
+                  open: true,
                   children: [
                     { label: 'People', href: '#nav-people' },
                     { label: 'Roles', href: '#nav-roles' },
