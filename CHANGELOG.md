@@ -5,6 +5,16 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.1] — 2026-09-30
+
+### Fixed
+
+- The development toolchain resolved `brace-expansion` 5.0.9, flagged for
+  denial of service by crafted brace patterns (GHSA-q2hr-2g5m-vwhr,
+  GHSA-qhr7-859c-m2p7, GHSA-6j4f-fj2g-mc7p). It is now 5.0.12. It only reached
+  the repository through ESLint, so the published package was never exposed
+  and its contents are unchanged.
+
 ## [1.5.0] — 2026-09-30
 
 ### Added
