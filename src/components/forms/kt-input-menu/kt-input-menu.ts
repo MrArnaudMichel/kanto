@@ -19,6 +19,8 @@ import {
   optionLabel,
   type KtOption,
 } from '#internal/listbox';
+import { FloatingController, floatingStyles } from '#internal/floating';
+import type { Side } from '#internal/position';
 import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 
@@ -43,6 +45,7 @@ export class KtInputMenu extends KtElement {
 
   static override styles = [
     KtElement.styles,
+    floatingStyles,
     listboxStyles,
     css`
       :host {
@@ -156,6 +159,19 @@ export class KtInputMenu extends KtElement {
   @state()
   private open = false;
 
+  /** The side the list opened on, for the direction of its entrance. */
+  @state()
+  private placement: Side = 'bottom';
+
+  private floating = new FloatingController(this, {
+    panel: () => this.shadowRoot?.querySelector<HTMLElement>('.popup'),
+    anchor: () => this.shadowRoot?.querySelector('.control'),
+    matchWidth: true,
+    onPlace: (side) => {
+      this.placement = side;
+    },
+  });
+
   @state()
   private query = '';
 
@@ -217,6 +233,7 @@ export class KtInputMenu extends KtElement {
     if (changed.has('open')) {
       toggleListener(this.open, document, 'pointerdown', this.onDocumentPointerDown);
     }
+    this.floating.sync(this.open);
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
@@ -423,7 +440,8 @@ export class KtInputMenu extends KtElement {
       <ul
         part="popup"
         id=${this.listId}
-        class=${classMap({ popup: true, open: this.open })}
+        popover="manual"
+        class=${classMap({ popup: true, floating: true, open: this.open, top: this.placement === 'top' })}
         role="listbox"
         aria-label=${this.label || this.placeholder}
       >

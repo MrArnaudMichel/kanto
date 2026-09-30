@@ -46,4 +46,24 @@ describe('placeFloating', () => {
     expect(placeFloating(anchor(0, 100), bubble, viewport, 'top').x).toBe(8);
     expect(placeFloating(anchor(100, 590), bubble, viewport, 'right').y).toBe(568);
   });
+
+  it('lines a menu up with the start of its trigger when asked to', () => {
+    // A 120px menu under a 200px button: centred it would start at 140.
+    const button = { left: 100, top: 100, width: 200, height: 40 };
+    const menu = { width: 120, height: 150 };
+    expect(placeFloating(button, menu, viewport, 'bottom', 'start')).toEqual({
+      x: 100,
+      y: 146,
+      placement: 'bottom',
+    });
+    // Still kept inside the screen.
+    expect(placeFloating({ ...button, left: 700 }, menu, viewport, 'bottom', 'start').x).toBe(672);
+  });
+
+  it('lines a menu up with the end of its trigger when asked to', () => {
+    // A 120px menu under a 200px button ending at 300: it starts at 180.
+    const button = { left: 100, top: 100, width: 200, height: 40 };
+    const menu = { width: 120, height: 150 };
+    expect(placeFloating(button, menu, viewport, 'bottom', 'end').x).toBe(180);
+  });
 });

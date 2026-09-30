@@ -19,6 +19,7 @@ import {
   searchCountries,
   type KtCountry,
 } from '#internal/countries';
+import { FloatingController, floatingStyles } from '#internal/floating';
 import { strings } from '#internal/strings';
 import '../../core/kt-icon/kt-icon.js';
 import '../../feedback/kt-tooltip/kt-tooltip.js';
@@ -63,6 +64,7 @@ export class KtInput extends KtElement {
 
   static override styles = [
     KtElement.styles,
+    floatingStyles,
     css`
       :host {
         display: block;
@@ -227,11 +229,8 @@ export class KtInput extends KtElement {
         color: var(--text-muted);
       }
 
+      /* Placed from the field by FloatingController. */
       .country-panel {
-        position: absolute;
-        top: calc(100% + 6px);
-        left: 0;
-        z-index: var(--z-dropdown);
         display: flex;
         flex-direction: column;
         gap: var(--gap-element);
@@ -309,6 +308,11 @@ export class KtInput extends KtElement {
 
   @state()
   private countryQuery = '';
+
+  private floating = new FloatingController(this, {
+    panel: () => this.shadowRoot?.querySelector<HTMLElement>('.country-panel'),
+    anchor: () => this.shadowRoot?.querySelector('.field'),
+  });
 
   /** The field's value. The `value` attribute seeds it and acts as the reset value. */
   @property({ type: String })
@@ -399,6 +403,7 @@ export class KtInput extends KtElement {
     if (changed.has('countryOpen')) {
       toggleListener(this.countryOpen, document, 'pointerdown', this.closeCountryPanel);
     }
+    this.floating.sync(this.countryOpen);
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
@@ -583,7 +588,11 @@ export class KtInput extends KtElement {
       </button>
       ${
         this.countryOpen
-          ? html`<div class="country-panel" @pointerdown=${(e: Event) => e.stopPropagation()}>
+          ? html`<div
+              class="country-panel floating"
+              popover="manual"
+              @pointerdown=${(e: Event) => e.stopPropagation()}
+            >
               <input
                 class="country-search"
                 placeholder=${strings().searchCountry}

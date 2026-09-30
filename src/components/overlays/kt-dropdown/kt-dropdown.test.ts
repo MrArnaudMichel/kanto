@@ -133,27 +133,6 @@ describe('kt-dropdown', () => {
     expect(el.isOpen).toBe(false);
   });
 
-  it('flips above the trigger when there is no room below', async () => {
-    const anchor = trigger(el);
-    vi.spyOn(anchor, 'getBoundingClientRect').mockReturnValue({
-      top: 700,
-      bottom: 740,
-      left: 0,
-      right: 100,
-      width: 100,
-      height: 40,
-      x: 0,
-      y: 700,
-      toJSON: () => ({}),
-    });
-    Object.defineProperty(window, 'innerHeight', { value: 768, configurable: true });
-
-    el.show();
-    await settle(el);
-
-    expect(panel(el).classList.contains('top')).toBe(true);
-  });
-
   it('falls back to a slot when there are no options', async () => {
     const custom = await fixture<KtDropdown>(
       '<kt-dropdown><button slot="trigger">Filtres</button><div slot="panel">Content</div></kt-dropdown>',

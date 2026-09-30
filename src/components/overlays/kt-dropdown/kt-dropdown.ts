@@ -4,13 +4,11 @@ import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit, toggleListener } from '#internal/events';
 import { optionLabel, type KtOption } from '#internal/listbox';
+import { FloatingController, floatingStyles } from '#internal/floating';
 import { strings } from '#internal/strings';
 
 export type KtDropdownPlacement = 'bottom' | 'top';
 export type KtDropdownAlign = 'start' | 'end';
-
-/** Panel height plus the 6px offset, used to decide whether it fits below. */
-const PANEL_SPACE = 224 + 6;
 
 /**
  * A panel anchored to a trigger.
@@ -36,6 +34,7 @@ const PANEL_SPACE = 224 + 6;
 export class KtDropdown extends KtElement {
   static override styles = [
     KtElement.styles,
+    floatingStyles,
     css`
       :host {
         position: relative;
@@ -52,11 +51,8 @@ export class KtDropdown extends KtElement {
         opacity: 0.6;
       }
 
+      /* Placed from the trigger by FloatingController. */
       .panel {
-        position: absolute;
-        top: calc(100% + 6px);
-        left: 0;
-        z-index: var(--z-dropdown);
         box-sizing: border-box;
         width: 224px;
         max-height: 224px;
@@ -74,8 +70,6 @@ export class KtDropdown extends KtElement {
       }
 
       .panel.top {
-        top: auto;
-        bottom: calc(100% + 6px);
         transform: translateY(6px);
         transform-origin: bottom left;
       }
@@ -83,8 +77,6 @@ export class KtDropdown extends KtElement {
       /* Hangs the panel off the trigger's right edge, for a trigger that sits
          at the right of what it belongs to — the caret of a split button. */
       .panel.end {
-        right: 0;
-        left: auto;
         transform-origin: top right;
       }
 
@@ -157,6 +149,16 @@ export class KtDropdown extends KtElement {
   @state()
   private placement: KtDropdownPlacement = 'bottom';
 
+  private floating = new FloatingController(this, {
+    panel: () => this.shadowRoot?.querySelector<HTMLElement>('.panel'),
+    anchor: () => this.triggerWrapper,
+    side: () => this.preferredPlacement,
+    align: () => this.align,
+    onPlace: (side) => {
+      this.placement = side === 'top' ? 'top' : 'bottom';
+    },
+  });
+
   /** Menu rows. Leave empty and slot into `panel` for custom content. */
   @property({ attribute: false })
   options: readonly KtOption[] = [];
@@ -196,35 +198,14 @@ export class KtDropdown extends KtElement {
   }
 
   /**
-   * The outside click, Escape and resize a panel reacts to — only while it is
+   * The outside click and Escape a panel reacts to — only while it is
    * open. A page of closed menus should not run a handler per menu on every
    * click and keystroke.
    */
   private listen(on: boolean): void {
     toggleListener(on, document, 'pointerdown', this.onDocumentPointerDown);
     toggleListener(on, document, 'keydown', this.onDocumentKeyDown as EventListener);
-    toggleListener(on, window, 'resize', this.reposition);
   }
-
-  /**
-   * Flips the panel above the trigger when there is not enough room below,
-   * preferring whichever side has more space if neither fits.
-   */
-  private reposition = (): void => {
-    const anchor = this.triggerWrapper ?? this;
-    const rect = anchor.getBoundingClientRect();
-    const below = window.innerHeight - rect.bottom;
-    const above = rect.top;
-
-    this.placement =
-      this.preferredPlacement === 'top'
-        ? above >= PANEL_SPACE || above >= below
-          ? 'top'
-          : 'bottom'
-        : below >= PANEL_SPACE || below >= above
-          ? 'bottom'
-          : 'top';
-  };
 
   private onDocumentPointerDown = (event: Event): void => {
     if (event.composedPath().includes(this)) return;
@@ -239,6 +220,7 @@ export class KtDropdown extends KtElement {
   override updated(changed: PropertyValues): void {
     this.syncTrigger();
     if (changed.has('open')) this.listen(this.open);
+    this.floating.sync(this.open);
   }
 
   /**
@@ -269,7 +251,6 @@ export class KtDropdown extends KtElement {
   /** Opens the panel. */
   show(): void {
     if (this.disabled || this.open) return;
-    this.reposition();
     this.open = true;
     emit(this, 'kt-open');
   }
@@ -301,8 +282,10 @@ export class KtDropdown extends KtElement {
 
       <div
         part="panel"
+        popover="manual"
         class=${classMap({
           panel: true,
+          floating: true,
           open: this.open,
           top: this.placement === 'top',
           end: this.align === 'end',

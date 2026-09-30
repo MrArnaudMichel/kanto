@@ -68,16 +68,12 @@ export function lastEnabledIndex(options: readonly KtOption[]): number {
  * animate at all.
  */
 export const listboxStyles = css`
+  /* Placed from the field by FloatingController, which also sets its width. */
   .popup {
-    position: absolute;
-    top: calc(var(--field-height, var(--button-height)) + 6px);
-    left: 0;
-    z-index: var(--z-dropdown);
     display: flex;
     flex-direction: column;
     gap: var(--gap-element);
     box-sizing: border-box;
-    width: 100%;
     max-height: 300px;
     margin: 0;
     padding: var(--padding-expand);
@@ -102,6 +98,14 @@ export const listboxStyles = css`
     opacity: 1;
     transform: translateY(0) scaleY(1);
     pointer-events: auto;
+  }
+
+  /* Opened above the field, for want of room below: it grows upwards. */
+  .popup.top {
+    transform-origin: bottom left;
+  }
+  .popup.top:not(.open) {
+    transform: translateY(6px) scaleY(0.98);
   }
 
   .option {

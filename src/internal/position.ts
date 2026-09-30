@@ -6,6 +6,16 @@
 
 export type Side = 'top' | 'bottom' | 'left' | 'right';
 
+/** Along its side: centred on the anchor, or flush with its start or end — a menu. */
+export type Align = 'center' | 'start' | 'end';
+
+/** Where a box of `size` begins along an anchor edge from `start` of `length`. */
+function alignAlong(align: Align, start: number, length: number, size: number): number {
+  if (align === 'start') return start;
+  if (align === 'end') return start + length - size;
+  return start + length / 2 - size / 2;
+}
+
 export interface Box {
   readonly width: number;
   readonly height: number;
@@ -28,13 +38,15 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 /**
  * Where to draw `box` on the `side` asked for, or on the opposite side when
  * the one asked for would run off the screen and the other would not. Along
- * its side, the box is centred on the anchor and slid back inside the screen.
+ * its side, the box is centred on the anchor or flush with its start or end, then
+ * slid back inside the screen.
  */
 export function placeFloating(
   anchor: Anchor,
   box: Box,
   viewport: Box,
   side: Side,
+  align: Align = 'center',
 ): { x: number; y: number; placement: Side } {
   const offset = (on: Side): number => {
     switch (on) {
@@ -58,17 +70,17 @@ export function placeFloating(
   const placement = !fits(side) && fits(OPPOSITE[side]) ? OPPOSITE[side] : side;
 
   if (placement === 'top' || placement === 'bottom') {
-    const centred = anchor.left + anchor.width / 2 - box.width / 2;
+    const along = alignAlong(align, anchor.left, anchor.width, box.width);
     return {
-      x: clamp(centred, MARGIN, viewport.width - MARGIN - box.width),
+      x: clamp(along, MARGIN, viewport.width - MARGIN - box.width),
       y: offset(placement),
       placement,
     };
   }
-  const centred = anchor.top + anchor.height / 2 - box.height / 2;
+  const along = alignAlong(align, anchor.top, anchor.height, box.height);
   return {
     x: offset(placement),
-    y: clamp(centred, MARGIN, viewport.height - MARGIN - box.height),
+    y: clamp(along, MARGIN, viewport.height - MARGIN - box.height),
     placement,
   };
 }

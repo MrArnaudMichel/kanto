@@ -68,6 +68,11 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - `kt-table` sorts once per change of `data`, order or locale rather than on
   every render. Replace `data` with a new array; changing it in place is not
   seen. Its sort indicator is the Lucide `arrow-up` or `arrow-down` icon.
+- **The panels of `kt-select`, `kt-input-menu`, `kt-date-picker`,
+  `kt-dropdown` and `kt-input`'s country picker open in the top layer**, like
+  `kt-tooltip`'s bubble. A container with `overflow: hidden` — a table cell, a
+  side panel — no longer cuts them off. Each opens below its trigger, or above
+  it when there is no room below, and follows the trigger as the page scrolls.
 - `kt-select`, `kt-input-menu`, `kt-date-picker`, `kt-dropdown` and
   `kt-input`'s country panel listen on the document only while they are open.
 - `kt-calendar` makes each date format once instead of on every render.

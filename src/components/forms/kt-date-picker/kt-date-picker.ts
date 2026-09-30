@@ -9,6 +9,7 @@ import {
   setValidity,
   type UsableInternals,
 } from '#internal/form-control';
+import { FloatingController, floatingStyles } from '#internal/floating';
 import { dateFormat, resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import { compareDates, parseDate, parseRange, toLocalDate, type PlainDate } from '#internal/date';
@@ -17,9 +18,6 @@ import type { KtCalendar } from '../kt-calendar/kt-calendar.js';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtDatePickerSize = 'small' | 'medium' | 'large';
-
-/** Room the calendar needs below the field before it opens upwards instead. */
-const PANEL_SPACE = 380;
 
 /**
  * A date field with a calendar, for one day or a period.
@@ -53,6 +51,7 @@ export class KtDatePicker extends KtElement {
 
   static override styles = [
     KtElement.styles,
+    floatingStyles,
     css`
       :host {
         position: relative;
@@ -151,11 +150,8 @@ export class KtDatePicker extends KtElement {
         outline: var(--outline-width) solid var(--color-primary-base);
       }
 
+      /* Placed from the field by FloatingController. */
       .panel {
-        position: absolute;
-        top: calc(var(--field-height) + 6px);
-        left: 0;
-        z-index: var(--z-dropdown);
         box-sizing: border-box;
         padding: var(--padding-expand);
         background: var(--color-dark-20);
@@ -170,9 +166,8 @@ export class KtDatePicker extends KtElement {
           transform var(--duration-fast) var(--easing-standard),
           visibility 0s linear var(--duration-fast);
       }
-      .panel.top {
-        top: auto;
-        bottom: calc(var(--field-height) + 6px);
+      .panel.top:not(.open) {
+        transform: translateY(6px);
       }
       .panel.open {
         visibility: visible;
@@ -202,6 +197,14 @@ export class KtDatePicker extends KtElement {
 
   @state() private open = false;
   @state() private placement: 'bottom' | 'top' = 'bottom';
+
+  private floating = new FloatingController(this, {
+    panel: () => this.shadowRoot?.querySelector<HTMLElement>('.panel'),
+    anchor: () => this.shadowRoot?.querySelector('.trigger'),
+    onPlace: (side) => {
+      this.placement = side === 'top' ? 'top' : 'bottom';
+    },
+  });
 
   /** ISO date, or `start/end` interval with `range`. `null` when empty. */
   @property({ type: String, reflect: true })
@@ -282,6 +285,7 @@ export class KtDatePicker extends KtElement {
     if (changed.has('open')) {
       toggleListener(this.open, document, 'pointerdown', this.onDocumentPointerDown);
     }
+    this.floating.sync(this.open);
   }
 
   override willUpdate(changed: PropertyValues<this>): void {
@@ -369,9 +373,6 @@ export class KtDatePicker extends KtElement {
 
   private async show(): Promise<void> {
     if (this.inactive || this.open) return;
-    const rect = this.getBoundingClientRect();
-    const below = window.innerHeight - rect.bottom;
-    this.placement = below < PANEL_SPACE && rect.top > below ? 'top' : 'bottom';
     this.open = true;
 
     // The calendar is rendered fresh on each opening — on the chosen day,
@@ -482,7 +483,13 @@ export class KtDatePicker extends KtElement {
         <div
           part="panel"
           id=${this.panelId}
-          class=${classMap({ panel: true, open: this.open, top: this.placement === 'top' })}
+          popover="manual"
+          class=${classMap({
+            panel: true,
+            floating: true,
+            open: this.open,
+            top: this.placement === 'top',
+          })}
           role="dialog"
           aria-modal="false"
           aria-label=${this.range ? strings().selectPeriod : strings().selectDate}
