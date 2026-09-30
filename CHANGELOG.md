@@ -5,6 +5,14 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.2] — 2026-09-30
+
+### Added
+
+- The documentation site flags components added in the last two months as
+  "New" in its navigation, read from this changelog's Added entries. The package
+  itself is unchanged from 1.5.1.
+
 ## [1.5.1] — 2026-09-30
 
 1.5.0 was tagged but never reached npm: a browser test failed on CI and the
