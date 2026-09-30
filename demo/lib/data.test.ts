@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildEntities, workEmail } from './data.js';
+import { buildEntities, serverPage, workEmail } from './data.js';
 
 describe('workEmail', () => {
   it('collapses a run of punctuation into one dot', () => {
@@ -27,5 +27,38 @@ describe('workEmail', () => {
     const names = [...new Set(buildEntities(40, 8080).map((row) => String(row.owner)))];
     expect(names.length).toBeGreaterThan(1);
     expect(new Set(names.map((name) => workEmail(name))).size).toBe(names.length);
+  });
+});
+
+describe('serverPage', () => {
+  const rows = buildEntities(240);
+
+  it('returns the page asked for, and how many rows there are in all', () => {
+    const { rows: page, total } = serverPage(rows, {
+      page: 2,
+      size: 10,
+      sort: null,
+      direction: null,
+    });
+    expect(total).toBe(240);
+    expect(page.map((row) => row.id)).toEqual([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+  });
+
+  it('sorts the whole set before cutting the page, as a database would', () => {
+    const { rows: first } = serverPage(rows, {
+      page: 1,
+      size: 5,
+      sort: 'amount',
+      direction: 'desc',
+    });
+    const highest = Math.max(...rows.map((row) => row.amount));
+    expect(first[0]!.amount).toBe(highest);
+    expect(first.map((row) => row.amount)).toEqual(
+      [...first.map((row) => row.amount)].sort((a, b) => b - a),
+    );
+  });
+
+  it('returns an empty page past the end', () => {
+    expect(serverPage(rows, { page: 99, size: 10, sort: null, direction: null }).rows).toEqual([]);
   });
 });

@@ -73,6 +73,35 @@ export function buildEntities(count = 87, seed = 20260731): Entity[] {
   });
 }
 
+export interface ServerQuery {
+  readonly page: number;
+  readonly size: number;
+  readonly sort: string | null;
+  readonly direction: 'asc' | 'desc' | null;
+}
+
+/**
+ * What a paginated API would answer: the whole set sorted, then one page cut
+ * from it, with the total the pager counts. The kt-table server-mode preview
+ * calls it behind a delay, standing in for a network.
+ */
+export function serverPage(
+  rows: readonly Entity[],
+  { page, size, sort, direction }: ServerQuery,
+): { rows: Entity[]; total: number } {
+  const sorted = [...rows];
+  if (sort && direction) {
+    const sign = direction === 'asc' ? 1 : -1;
+    sorted.sort((a, b) => {
+      const left = a[sort];
+      const right = b[sort];
+      if (typeof left === 'number' && typeof right === 'number') return (left - right) * sign;
+      return String(left).localeCompare(String(right), 'en', { numeric: true }) * sign;
+    });
+  }
+  return { rows: sorted.slice((page - 1) * size, page * size), total: rows.length };
+}
+
 /**
  * A work address from a display name.
  *

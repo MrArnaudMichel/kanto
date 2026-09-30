@@ -1,5 +1,7 @@
 import { html, type TemplateResult } from 'lit';
-import { MONTHS, monthlyRevenue } from './data.js';
+import { ref } from 'lit/directives/ref.js';
+import type { KtSegmentedControl, KtTable } from 'kanto-ds';
+import { MONTHS, buildEntities, monthlyRevenue, serverPage } from './data.js';
 
 /**
  * The component catalogue behind the documentation site.
@@ -34,6 +36,98 @@ const docs: Record<string, string> = import.meta.glob('../../src/components/*/kt
   query: '?raw',
   import: 'default',
 });
+
+const TABLE_COLUMNS = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'region', label: 'Region', sortable: true },
+  { key: 'amount', label: 'Amount', sortable: true, align: 'right' as const },
+];
+const BROWSER_ROWS = buildEntities(24);
+const SERVER_ROWS = buildEntities(240);
+const VIRTUAL_ROWS = buildEntities(5000);
+
+/** The server-mode table's first load, once per table however often the page renders. */
+const loaded = new WeakSet<KtTable>();
+
+/** Asks the stand-in server for the page the table shows, after a network's worth of wait. */
+async function loadFromServer(table: KtTable): Promise<void> {
+  table.loading = true;
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  const { rows, total } = serverPage(SERVER_ROWS, {
+    page: table.page,
+    size: table.pageSize,
+    sort: table.sortKey,
+    direction: table.sortDirection,
+  });
+  table.data = rows;
+  table.totalRows = total;
+  table.loading = false;
+}
+
+/**
+ * kt-table three ways: paged in the browser, paged and sorted by a server,
+ * and five thousand rows rendered virtually. One control switches between
+ * them, since each is the same element with a different source of rows.
+ */
+function tablePreview(): TemplateResult {
+  return html`<div class="demo-table-modes">
+    <kt-segmented-control
+      label="Where the rows come from"
+      value="browser"
+      .options=${[
+        { value: 'browser', label: 'In the browser' },
+        { value: 'server', label: 'From a server' },
+        { value: 'virtual', label: '5,000 rows' },
+      ]}
+      @kt-change=${(event: Event) => {
+        const control = event.currentTarget as KtSegmentedControl;
+        const root = control.closest('.demo-table-modes')!;
+        for (const table of root.querySelectorAll<KtTable>('kt-table')) {
+          table.hidden = table.dataset['mode'] !== control.value;
+        }
+      }}
+    ></kt-segmented-control>
+
+    <kt-table
+      data-mode="browser"
+      label="Entities"
+      compact
+      page-size="6"
+      .columns=${TABLE_COLUMNS}
+      .data=${BROWSER_ROWS}
+    ></kt-table>
+
+    <kt-table
+      data-mode="server"
+      label="Entities, from a server"
+      compact
+      manual
+      hidden
+      page-size="6"
+      .columns=${TABLE_COLUMNS}
+      @kt-sort-change=${(event: Event) => void loadFromServer(event.currentTarget as KtTable)}
+      @kt-page-change=${(event: Event) => void loadFromServer(event.currentTarget as KtTable)}
+      ${ref((element) => {
+        const table = element as KtTable | undefined;
+        if (!table || loaded.has(table)) return;
+        loaded.add(table);
+        void loadFromServer(table);
+      })}
+    ></kt-table>
+
+    <kt-table
+      data-mode="virtual"
+      class="demo-virtual-table"
+      label="Five thousand entities"
+      compact
+      virtual
+      selectable
+      hidden
+      .columns=${TABLE_COLUMNS}
+      .data=${VIRTUAL_ROWS}
+    ></kt-table>
+  </div>`;
+}
 
 /** Live previews, keyed by tag name. */
 const EXAMPLES: Record<string, () => TemplateResult> = {
@@ -765,21 +859,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-confirm-dialog>
     </div>`,
 
-  'kt-table': () =>
-    html`<kt-table
-      label="Entities"
-      compact
-      .columns=${[
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'region', label: 'Region', sortable: true },
-        { key: 'amount', label: 'Amount', sortable: true, align: 'right' },
-      ]}
-      .data=${[
-        { id: 1, name: 'Entity 4812', region: 'North East', amount: 1240 },
-        { id: 2, name: 'Entity 4811', region: 'South West', amount: 320 },
-        { id: 3, name: 'Entity 4810', region: 'Midlands', amount: 2980 },
-      ]}
-    ></kt-table>`,
+  'kt-table': tablePreview,
 
   'kt-pagination': () => html`<kt-pagination page="2" total-pages="7"></kt-pagination>`,
 };
