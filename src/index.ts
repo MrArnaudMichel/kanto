@@ -42,6 +42,10 @@ export { KtForm } from './components/forms/kt-form/kt-form.js';
 export { KtInput } from './components/forms/kt-input/kt-input.js';
 export type { KtInputSize } from './components/forms/kt-input/kt-input.js';
 export { KtInputMenu } from './components/forms/kt-input-menu/kt-input-menu.js';
+export {
+  KtMultiSelect,
+  type KtMultiSelectValue,
+} from './components/forms/kt-multi-select/kt-multi-select.js';
 export { KtLabelInput } from './components/forms/kt-label-input/kt-label-input.js';
 export { KtRadio, KtRadioGroup } from './components/forms/kt-radio-group/kt-radio-group.js';
 export type { KtRadioGroupOrientation } from './components/forms/kt-radio-group/kt-radio-group.js';

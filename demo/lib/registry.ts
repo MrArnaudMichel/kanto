@@ -590,6 +590,16 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
   'kt-input-menu': () =>
     html`<kt-input-menu placeholder="Search a region" .options=${REGIONS}></kt-input-menu>`,
 
+  'kt-multi-select': () =>
+    html`<div class="demo-stack">
+      <kt-multi-select
+        label="Regions"
+        placeholder="Any region"
+        .options=${REGIONS}
+        .value=${['ne', 'sw']}
+      ></kt-multi-select>
+    </div>`,
+
   'kt-toggle': () =>
     html`<div class="demo-stack">
       <kt-toggle checked>Notifications</kt-toggle>

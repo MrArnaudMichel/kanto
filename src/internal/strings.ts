@@ -55,6 +55,8 @@ export interface KtStrings {
   searchCountry: string;
   noCountry: string;
   countryCode: (country: string | undefined) => string;
+  /** How many values a multi-select holds, for a screen reader. */
+  selectedCount: (count: number) => string;
   dragAndDrop: string;
   browseFiles: string;
   recommendedSize: (size: string) => string;
@@ -147,6 +149,7 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   searchCountry: 'Search country or dial code',
   noCountry: 'No country found',
   countryCode: (country: string | undefined) => `Country code: ${country ?? 'none'}`,
+  selectedCount: (count: number) => `${count} selected`,
   dragAndDrop: 'Drag and drop or',
   browseFiles: 'browse your files',
   recommendedSize: (size: string) => `Recommended image size: ${size}`,

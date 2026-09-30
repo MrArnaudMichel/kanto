@@ -5,6 +5,26 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.0] — 2026-09-30
+
+### Added
+
+**`kt-multi-select`** — several choices from a list, typed to narrow it.
+
+- Each choice shows in the field as a removable chip. The field keeps to one
+  line: the chips that do not fit collapse into a "+N", so it sits in a row of
+  filters without changing its height, and grows back as the field widens.
+- The list stays open while options are ticked and unticked; Enter toggles the
+  active one, Backspace in an empty field removes the last chip, and
+  `kt-filter` reports the query for server-side lists.
+- A form control, submitted like `<select multiple>`: one entry per chosen id
+  under `name`. `required`, `error`, `form.reset()` and a disabled fieldset.
+- An ARIA combobox over an `aria-multiselectable` listbox; the field's
+  description says how many are chosen, since the chips may not all show.
+  `selectedCount` joins `KtStrings`.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ## [1.5.2] — 2026-09-30
 
 ### Added

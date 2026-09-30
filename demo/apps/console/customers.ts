@@ -74,23 +74,18 @@ export function consoleCustomers(): TemplateResult {
             rerender();
           }}
         ></kt-select>
-        <kt-toggle-button-group
-          multiple
+        <kt-multi-select
+          style="width:260px"
           label="Region"
+          placeholder="Any region"
+          .options=${REGIONS.map((region) => ({ id: region, label: region }))}
           .value=${state.regions}
           @kt-change=${(e: CustomEvent<{ value: string[] }>) => {
             state.regions = e.detail.value;
             state.page = 1;
             rerender();
           }}
-        >
-          ${REGIONS.map(
-            (region) =>
-              html`<kt-toggle-button variant="outline" size="small" value=${region}
-                >${region}</kt-toggle-button
-              >`,
-          )}
-        </kt-toggle-button-group>
+        ></kt-multi-select>
 
         <span style="flex:1"></span>
         ${

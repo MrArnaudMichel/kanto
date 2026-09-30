@@ -17,6 +17,7 @@ import type {
   KtChart,
   KtDropdown,
   KtInputMenu,
+  KtMultiSelect,
   KtMeter,
   KtSegmentedControl,
   KtSelect,
@@ -123,6 +124,13 @@ const CASES: Record<string, Case> = {
     markup: '<kt-input-menu label="Country" placeholder="Search"></kt-input-menu>',
     setup: (el) => {
       (el as KtInputMenu).options = OPTIONS;
+    },
+  },
+  'kt-multi-select': {
+    markup: '<kt-multi-select label="Countries" placeholder="Search"></kt-multi-select>',
+    setup: (el) => {
+      (el as KtMultiSelect).options = OPTIONS;
+      (el as KtMultiSelect).value = ['fr'];
     },
   },
   'kt-label-input': {

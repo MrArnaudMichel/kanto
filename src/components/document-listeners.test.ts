@@ -12,6 +12,7 @@ import type { KtDropdown } from 'kanto-ds';
 const CLOSED = {
   'kt-select': '<kt-select label="Country"></kt-select>',
   'kt-input-menu': '<kt-input-menu label="Owner"></kt-input-menu>',
+  'kt-multi-select': '<kt-multi-select label="Owners"></kt-multi-select>',
   'kt-date-picker': '<kt-date-picker label="Due"></kt-date-picker>',
   'kt-dropdown': '<kt-dropdown><button slot="trigger">Menu</button></kt-dropdown>',
   'kt-input type="tel"': '<kt-input type="tel" label="Phone"></kt-input>',

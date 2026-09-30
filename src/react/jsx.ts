@@ -40,6 +40,8 @@ import type {
   KtRadioGroup,
   KtRadio,
   KtInputMenu,
+  KtMultiSelect,
+  KtOption,
   KtDragDrop,
   KtBreadcrumb,
   KtSubMenuNavigation,
@@ -127,6 +129,13 @@ declare module 'react' {
       'kt-input-menu': KtProps<
         KtInputMenu,
         { 'kt-change': { value: string | number | null }; 'kt-filter': { query: string } }
+      >;
+      'kt-multi-select': KtProps<
+        KtMultiSelect,
+        {
+          'kt-change': { value: (string | number)[]; options: KtOption[] };
+          'kt-filter': { query: string };
+        }
       >;
       'kt-drag-drop': KtProps<
         KtDragDrop,

@@ -46,6 +46,7 @@ import type { KtDragDrop } from 'kanto-ds';
 import type { KtForm } from 'kanto-ds';
 import type { KtInput } from 'kanto-ds';
 import type { KtInputMenu } from 'kanto-ds';
+import type { KtMultiSelect } from 'kanto-ds';
 import type { KtLabelInput } from 'kanto-ds';
 import type { KtSelect } from 'kanto-ds';
 import type { KtCheckbox } from 'kanto-ds';
@@ -116,6 +117,7 @@ declare module 'vue' {
     'kt-form': KtProps<KtForm>;
     'kt-input': KtProps<KtInput>;
     'kt-input-menu': KtProps<KtInputMenu>;
+    'kt-multi-select': KtProps<KtMultiSelect>;
     'kt-label-input': KtProps<KtLabelInput>;
     'kt-select': KtProps<KtSelect>;
     'kt-checkbox': KtProps<KtCheckbox>;

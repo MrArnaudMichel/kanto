@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
-import type { KtDropdown, KtSelect } from 'kanto-ds';
+import type { KtDropdown, KtMultiSelect, KtSelect } from 'kanto-ds';
 
 const OPTIONS = [
   { id: 'fr', label: 'France' },
@@ -42,6 +42,14 @@ const POPUPS: Record<string, Case> = {
     markup: '<kt-input-menu label="Country"></kt-input-menu>',
     setup: (el) => {
       (el as KtSelect).options = OPTIONS;
+    },
+    open: (el) => shadow(el, '.toggle').click(),
+    panel: '.popup',
+  },
+  'kt-multi-select': {
+    markup: '<kt-multi-select label="Countries"></kt-multi-select>',
+    setup: (el) => {
+      (el as KtMultiSelect).options = OPTIONS;
     },
     open: (el) => shadow(el, '.toggle').click(),
     panel: '.popup',

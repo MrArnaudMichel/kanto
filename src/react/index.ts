@@ -19,6 +19,7 @@
  */
 import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';
+import type { KtOption } from '../internal/listbox.js';
 
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
 import { KtBadge as KtBadgeElement } from '../components/core/kt-badge/kt-badge.js';
@@ -35,6 +36,7 @@ import { KtDragDrop as KtDragDropElement } from '../components/forms/kt-drag-dro
 import { KtForm as KtFormElement } from '../components/forms/kt-form/kt-form.js';
 import { KtInput as KtInputElement } from '../components/forms/kt-input/kt-input.js';
 import { KtInputMenu as KtInputMenuElement } from '../components/forms/kt-input-menu/kt-input-menu.js';
+import { KtMultiSelect as KtMultiSelectElement } from '../components/forms/kt-multi-select/kt-multi-select.js';
 import { KtLabelInput as KtLabelInputElement } from '../components/forms/kt-label-input/kt-label-input.js';
 import {
   KtRadio as KtRadioElement,
@@ -225,6 +227,16 @@ export const KtInputMenu = createComponent({
   react: React,
   events: {
     onKtChange: 'kt-change' as Kt<{ value: string | number | null }>,
+    onKtFilter: 'kt-filter' as Kt<{ query: string }>,
+  },
+});
+
+export const KtMultiSelect = createComponent({
+  tagName: 'kt-multi-select',
+  elementClass: KtMultiSelectElement,
+  react: React,
+  events: {
+    onKtChange: 'kt-change' as Kt<{ value: (string | number)[]; options: KtOption[] }>,
     onKtFilter: 'kt-filter' as Kt<{ query: string }>,
   },
 });

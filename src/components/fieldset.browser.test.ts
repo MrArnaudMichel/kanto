@@ -29,6 +29,7 @@ const CONTROLS: Record<string, Case> = {
     },
   },
   'kt-input-menu': { markup: '<kt-input-menu label="Owner"></kt-input-menu>' },
+  'kt-multi-select': { markup: '<kt-multi-select label="Owners"></kt-multi-select>' },
   'kt-date-picker': { markup: '<kt-date-picker label="Due"></kt-date-picker>' },
   'kt-checkbox': { markup: '<kt-checkbox>Send me updates</kt-checkbox>' },
   'kt-toggle': { markup: '<kt-toggle>Notifications</kt-toggle>' },
