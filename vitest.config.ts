@@ -24,6 +24,10 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'happy-dom',
+          /* The docs site renders its app previews in iframes. From happy-dom's
+             default origin, localhost:3000, they loaded whatever else was
+             running on that port. From about:blank there is nothing to load. */
+          environmentOptions: { happyDOM: { url: 'about:blank' } },
           include: ['src/**/*.test.ts', 'demo/**/*.test.ts', 'scripts/**/*.test.ts'],
           exclude: ['**/*.browser.test.ts'],
         },
