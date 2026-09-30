@@ -99,6 +99,10 @@ export class KtSegmentedControl extends KtElement {
         padding: 0 12px;
         color: var(--text-muted);
         font: var(--font-normal-regular);
+        /* Segments share the width equally from a basis of zero, so in a
+           container that shrinks to fit they would split a label over two
+           lines of a fixed-height button. */
+        white-space: nowrap;
         background-color: transparent;
         border: none;
         border-radius: calc(var(--border-radius) - 4px);

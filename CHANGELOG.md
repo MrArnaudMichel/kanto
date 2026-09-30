@@ -93,6 +93,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   overflowed.
 - A hidden `kt-tooltip` by the right edge of the page widened the document and
   scrolled it sideways.
+- `kt-segmented-control` split a label over two lines of its fixed-height
+  segment when its container shrank to fit.
 - `kt-toast`, `kt-progress-bar`, `kt-table` and `kt-tooltip` used literal
   colours or durations: the toasts' tints did not follow the theme, and the row
   hover and tooltip fade ignored reduced motion.
