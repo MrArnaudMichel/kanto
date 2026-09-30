@@ -8,12 +8,22 @@ import '../../../styles.css';
 import './kt-segmented-control.js';
 import type { KtSegmentedControl } from 'kanto-ds';
 
-/** How many lines a segment's label runs to. */
+/**
+ * How many lines a segment's label runs to: one line box per fragment of its
+ * text. Only the label's own text counts — the whitespace a template leaves
+ * around it gets boxes of its own, which sit at slightly different heights
+ * depending on the font that loaded, and read as extra lines on CI.
+ */
 function lines(option: HTMLElement): number {
-  const range = document.createRange();
-  range.selectNodeContents(option);
-  const tops = new Set([...range.getClientRects()].map((rect) => Math.round(rect.top)));
-  return tops.size;
+  const walker = document.createTreeWalker(option, NodeFilter.SHOW_TEXT);
+  let count = 0;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (!node.textContent?.trim()) continue;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    count += range.getClientRects().length;
+  }
+  return count;
 }
 
 describe('kt-segmented-control, laid out', () => {

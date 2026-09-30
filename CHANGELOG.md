@@ -7,6 +7,10 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [1.5.1] — 2026-09-30
 
+1.5.0 was tagged but never reached npm: a browser test failed on CI and the
+publish stopped before uploading. 1.5.1 is the first release on npm with
+everything listed under 1.5.0.
+
 ### Fixed
 
 - The development toolchain resolved `brace-expansion` 5.0.9, flagged for
@@ -14,6 +18,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   GHSA-qhr7-859c-m2p7, GHSA-6j4f-fj2g-mc7p). It is now 5.0.12. It only reached
   the repository through ESLint, so the published package was never exposed
   and its contents are unchanged.
+- The browser test of `kt-segmented-control`'s labels counted the boxes of the
+  whitespace around a label as lines, which read as a wrapped label on CI's
+  fonts. It now counts the label's own text only.
 
 ## [1.5.0] — 2026-09-30
 
