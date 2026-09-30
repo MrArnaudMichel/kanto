@@ -425,6 +425,21 @@ describe('scatter and bubble', () => {
     expect(radii[0]! / radii[1]!).toBeCloseTo(2);
   });
 
+  it("gives a bubble's size in its tooltip, titled by its series when unnamed", async () => {
+    const el = await sized('<kt-chart type="bubble"></kt-chart>');
+    el.series = [{ name: 'Markets', points: [{ x: 3, y: 7, r: 42 }] }];
+    await settle(el);
+
+    el.shadowRoot!.querySelector('svg')!.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowRight' }),
+    );
+    await settle(el);
+
+    const tooltip = el.shadowRoot!.querySelector('.tooltip')!;
+    expect(tooltip.textContent).toContain('Markets');
+    expect(tooltip.textContent).toContain('42');
+  });
+
   it('walks a series point by point in x order, and moves between series', async () => {
     const el = await sized('<kt-chart type="scatter"></kt-chart>');
     el.series = [
@@ -524,6 +539,27 @@ describe('radial charts', () => {
     expect(el.shadowRoot!.querySelectorAll('path.radar')).toHaveLength(2);
     expect(el.shadowRoot!.querySelectorAll('.axis-label')).toHaveLength(5);
     expect(el.shadowRoot!.querySelectorAll('.legend-item')).toHaveLength(2);
+  });
+
+  it("titles a radar's tooltip by its spoke, with every visible series' value", async () => {
+    const el = await sized('<kt-chart type="radar"></kt-chart>');
+    el.labels = ['Speed', 'Comfort', 'Safety'];
+    el.series = [
+      { name: 'Model A', values: [65, 90, 81] },
+      { name: 'Model B', values: [28, 40, 19] },
+    ];
+    await settle(el);
+
+    el.shadowRoot!.querySelector('svg')!.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowRight' }),
+    );
+    await settle(el);
+
+    const tooltip = el.shadowRoot!.querySelector('.tooltip')!.textContent!;
+    expect(tooltip).toContain('Speed');
+    expect(tooltip).toContain('Model A');
+    expect(tooltip).toContain('65');
+    expect(tooltip).toContain('28');
   });
 
   it('walks the slices with the keyboard, with the share in the tooltip', async () => {

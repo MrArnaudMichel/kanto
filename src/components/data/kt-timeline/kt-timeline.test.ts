@@ -64,6 +64,14 @@ describe('kt-timeline-item', () => {
     expect(el.shadowRoot!.querySelector('.body')).not.toBeNull();
   });
 
+  it('keeps the heading row for a time on its own', async () => {
+    const el = await fixture<KtTimelineItem>(
+      '<kt-timeline-item time="09:41">Deployed.</kt-timeline-item>',
+    );
+    expect(el.shadowRoot!.querySelector('.top .time')!.textContent).toBe('09:41');
+    expect(el.shadowRoot!.querySelector('.heading')).toBeNull();
+  });
+
   it('reflects the variant onto the marker', async () => {
     const el = await fixture<KtTimelineItem>(
       '<kt-timeline-item heading="A" variant="danger"></kt-timeline-item>',

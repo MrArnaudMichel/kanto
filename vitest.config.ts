@@ -59,10 +59,10 @@ export default defineConfig({
          so a change that guts coverage fails CI while an honest refactor that
          moves it a point does not. */
       thresholds: {
-        statements: 90,
-        branches: 80,
-        functions: 90,
-        lines: 92,
+        statements: 93,
+        branches: 86,
+        functions: 95,
+        lines: 95,
       },
     },
   },
