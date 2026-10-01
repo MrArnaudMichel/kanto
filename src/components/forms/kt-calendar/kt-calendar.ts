@@ -146,12 +146,17 @@ export class KtCalendar extends KtElement {
         width: var(--day-size);
       }
       /* The month and year as one control: it is one place in time. */
+      /* A faint veil of the text colour at rest, so the title reads as a
+         button that opens something rather than as a heading — the same
+         lightness of touch on white and on the dark ramp. */
       .title {
         gap: 4px;
-        padding: 0 6px 0 8px;
+        padding: 0 6px 0 10px;
         color: var(--text-body);
         font: var(--font-normal-medium);
         text-transform: capitalize;
+        background: color-mix(in srgb, var(--text-body) 6%, transparent);
+        transition: background-color var(--duration-instant);
       }
       .title kt-icon {
         color: var(--text-muted);
@@ -160,10 +165,13 @@ export class KtCalendar extends KtElement {
       .title[aria-expanded='true'] kt-icon {
         transform: scaleY(-1);
       }
-      .nav:hover,
-      .title:hover {
+      .nav:hover {
         color: var(--text-body);
         background: var(--color-dark-22);
+      }
+      .title:hover,
+      .title[aria-expanded='true'] {
+        background: color-mix(in srgb, var(--text-body) 11%, transparent);
       }
       .nav:focus-visible,
       .title:focus-visible {

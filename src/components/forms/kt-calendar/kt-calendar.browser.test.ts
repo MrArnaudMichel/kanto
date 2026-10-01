@@ -71,4 +71,19 @@ describe('kt-calendar, for real', () => {
     await settle(el);
     expect((deepActive() as HTMLElement).dataset.date).toBe('2026-08-25');
   });
+
+  it('shows its title as a button before it is hovered', async () => {
+    // A bare "September 2026" read as a heading: nothing said it opens a panel.
+    const el = await fixture<KtCalendar>(
+      '<kt-calendar locale="en-GB" value="2026-09-25"></kt-calendar>',
+    );
+    const title = $(el, '.title');
+    const transparent = /rgba\(0, 0, 0, 0\)|transparent/;
+
+    const resting = getComputedStyle(title).backgroundColor;
+    expect(resting).not.toMatch(transparent);
+
+    await userEvent.hover(title);
+    expect(getComputedStyle(title).backgroundColor).not.toBe(resting);
+  });
 });
