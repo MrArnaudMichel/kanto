@@ -28,6 +28,7 @@ import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
 import { INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
+import { accentChooser, applyAccent, readAccent, type AccentChoice } from './lib/accent.js';
 
 import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
@@ -467,6 +468,17 @@ function shell(): TemplateResult {
       </nav>
 
       <div slot="actions" class="header-actions">
+        <kt-dropdown align="end" class="accent-menu">
+          <button slot="trigger" type="button" class="accent-trigger" aria-label="Accent colour">
+            <span class="accent-dot"></span>
+          </button>
+          <div slot="panel">
+            ${accentChooser(readAccent(), (choice: AccentChoice) => {
+              applyAccent(choice);
+              update();
+            })}
+          </div>
+        </kt-dropdown>
         <kt-segmented-control
           size="small"
           label="Theme"
@@ -574,6 +586,7 @@ function trackReading(): void {
 
 setRenderer(update);
 applyTheme(readTheme());
+applyAccent(readAccent());
 
 window.addEventListener('hashchange', () => {
   filter = '';

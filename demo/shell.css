@@ -56,6 +56,93 @@ body {
   gap: var(--gap-button);
 }
 
+/* The accent chooser: a dot in the top bar, swatches in its panel. */
+.accent-menu::part(panel) {
+  /* The dropdown's 224px is a menu's width; seven swatches need their own. */
+  width: max-content;
+  max-height: none;
+}
+.accent-trigger {
+  display: inline-grid;
+  place-items: center;
+  width: var(--button-height-small);
+  height: var(--button-height-small);
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-input);
+  cursor: pointer;
+}
+.accent-trigger:hover {
+  background: var(--surface-hover);
+}
+.accent-trigger:focus-visible,
+.accent-swatch:focus-visible {
+  outline: var(--outline-width) solid var(--color-primary-base);
+  outline-offset: 2px;
+}
+.accent-dot {
+  width: 14px;
+  height: 14px;
+  background: var(--color-primary-base);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px var(--surface-page),
+    0 0 0 3px var(--border-field);
+}
+.accent-panel {
+  display: grid;
+  gap: 12px;
+  padding: 4px;
+}
+.accent-swatches {
+  display: grid;
+  grid-template-columns: repeat(7, 24px);
+  gap: 8px;
+}
+.accent-swatch {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: var(--swatch);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.accent-swatch[aria-checked='true'] {
+  box-shadow:
+    0 0 0 2px var(--surface-popover),
+    0 0 0 4px var(--text-body);
+}
+.accent-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+  cursor: pointer;
+}
+.accent-custom input {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.accent-custom input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+/* Separate rules: a browser drops a whole rule over a pseudo-element it does not know. */
+.accent-custom input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+.accent-custom input::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
 .menu-nav {
   display: flex;
   flex-direction: column;

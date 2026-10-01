@@ -1,0 +1,108 @@
+/**
+ * The docs site's accent chooser: the seven presets and a custom colour,
+ * kept in localStorage like the theme. The library does the colour work;
+ * this file only stores, applies and draws the choice.
+ */
+import { html, type TemplateResult } from 'lit';
+import { KT_ACCENTS, parseColor, setAccent } from 'kanto-ds';
+
+export type AccentChoice = { kind: 'preset'; id: string } | { kind: 'custom'; color: string };
+
+const KEY = 'kanto-docs-accent';
+const DEFAULT: AccentChoice = { kind: 'preset', id: 'violet' };
+
+function isChoice(value: unknown): value is AccentChoice {
+  if (typeof value !== 'object' || value === null) return false;
+  const choice = value as Record<string, unknown>;
+  if (choice['kind'] === 'preset') return KT_ACCENTS.some((a) => a.id === choice['id']);
+  if (choice['kind'] !== 'custom' || typeof choice['color'] !== 'string') return false;
+  try {
+    parseColor(choice['color']);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** The stored choice, or violet when there is none, it is unreadable, or storage is blocked. */
+export function readAccent(): AccentChoice {
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(KEY) ?? 'null');
+    return isChoice(stored) ? stored : DEFAULT;
+  } catch {
+    return DEFAULT;
+  }
+}
+
+/** Applies a choice to the page and remembers it. */
+export function applyAccent(
+  choice: AccentChoice,
+  root: HTMLElement = document.documentElement,
+): void {
+  if (choice.kind === 'preset') {
+    setAccent(null, root);
+    root.dataset['accent'] = choice.id;
+  } else {
+    setAccent(choice.color, root);
+  }
+  try {
+    localStorage.setItem(KEY, JSON.stringify(choice));
+  } catch {
+    /* the page still shows the choice */
+  }
+}
+
+/** The colour a choice shows as, for the dot on the top-bar button. */
+export function accentSwatch(choice: AccentChoice): string {
+  if (choice.kind === 'custom') return choice.color;
+  return KT_ACCENTS.find((a) => a.id === choice.id)?.color ?? KT_ACCENTS[0]!.color;
+}
+
+/** The panel: a radio group of presets, then a colour input. */
+export function accentChooser(
+  current: AccentChoice,
+  onPick: (choice: AccentChoice) => void,
+): TemplateResult {
+  const checked = current.kind === 'preset' ? current.id : null;
+  const focusable = checked ?? KT_ACCENTS[0]!.id;
+  const onKeyDown = (event: KeyboardEvent, index: number) => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+    if (step === undefined) return;
+    event.preventDefault();
+    const next = KT_ACCENTS[(index + step + KT_ACCENTS.length) % KT_ACCENTS.length]!;
+    onPick({ kind: 'preset', id: next.id });
+    const group = (event.currentTarget as HTMLElement).parentElement;
+    queueMicrotask(() =>
+      group?.querySelector<HTMLElement>(`[data-accent-id="${next.id}"]`)?.focus(),
+    );
+  };
+
+  return html`<div class="accent-panel">
+    <div class="accent-swatches" role="radiogroup" aria-label="Accent colour">
+      ${KT_ACCENTS.map(
+        (accent, index) =>
+          html`<button
+            type="button"
+            class="accent-swatch"
+            role="radio"
+            data-accent-id=${accent.id}
+            aria-label=${accent.label}
+            aria-checked=${accent.id === checked ? 'true' : 'false'}
+            tabindex=${accent.id === focusable ? 0 : -1}
+            style=${`--swatch: ${accent.color}`}
+            @click=${() => onPick({ kind: 'preset', id: accent.id })}
+            @keydown=${(event: KeyboardEvent) => onKeyDown(event, index)}
+          ></button>`,
+      )}
+    </div>
+    <label class="accent-custom">
+      <input
+        type="color"
+        .value=${current.kind === 'custom' ? current.color : accentSwatch(current)}
+        @input=${(event: Event) =>
+          onPick({ kind: 'custom', color: (event.target as HTMLInputElement).value })}
+      />
+      <span>Custom${current.kind === 'custom' ? html` · <code>${current.color}</code>` : ''}</span>
+    </label>
+  </div>`;
+}
