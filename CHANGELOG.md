@@ -25,6 +25,19 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 With React wrappers, React 19 JSX and Vue typings.
 
+### Changed
+
+- **`kt-calendar`'s title opens one panel of years and months**, instead of a
+  month grid and a separate grid of twelve years paged twelve at a time. The
+  years scroll beside the months of the one chosen, bounded by `min` and `max`;
+  typing four digits jumps to a year, Page Up and Down move by ten. Reaching a
+  birth year is two clicks, or the year typed and one click. The header reads
+  "September 2026" as one control with the arrows grouped beside it, the days
+  are 32px, and today is a dot under its number. `KtCalendarView` is now
+  `'day' | 'month'`.
+- `kt-radio`'s dot is centred on whole pixels in every browser; it sat off
+  centre in Firefox.
+
 ## [1.5.2] — 2026-09-30
 
 ### Added

@@ -151,15 +151,11 @@ const CASES: Record<string, Case> = {
   'kt-calendar period': {
     markup: '<kt-calendar range locale="en-GB" value="2026-09-05/2026-09-12"></kt-calendar>',
   },
-  'kt-calendar months': {
-    markup: '<kt-calendar locale="en-GB" value="2026-09-25" min="2026-03-01"></kt-calendar>',
-    // Rendered by the time setup runs: switch to the view before the audit.
-    setup: (el) => el.shadowRoot!.querySelectorAll<HTMLElement>('.heading')[0]!.click(),
-  },
-  'kt-calendar years': {
-    markup: '<kt-calendar locale="en-GB" value="2026-09-25" max="2030-12-31"></kt-calendar>',
-    // Rendered by the time setup runs: switch to the view before the audit.
-    setup: (el) => el.shadowRoot!.querySelectorAll<HTMLElement>('.heading')[1]!.click(),
+  'kt-calendar month and year': {
+    markup:
+      '<kt-calendar locale="en-GB" value="2026-09-25" min="1990-03-01" max="2030-12-31"></kt-calendar>',
+    // Rendered by the time setup runs: open the panel before the audit.
+    setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.title')!.click(),
   },
   'kt-date-picker': {
     markup: '<kt-date-picker label="Due date" locale="en-GB" value="2026-09-25"></kt-date-picker>',

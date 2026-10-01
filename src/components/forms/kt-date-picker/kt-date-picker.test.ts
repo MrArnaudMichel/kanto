@@ -127,13 +127,13 @@ describe('kt-date-picker', () => {
     expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('stays open when Escape only leaves the month view', async () => {
+  it('stays open when Escape only leaves the month and year panel', async () => {
     const el = await fixture<KtDatePicker>(
       '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
     );
     await open(el);
     await settle(calendar(el));
-    calendar(el).shadowRoot!.querySelector<HTMLElement>('.heading')!.click();
+    calendar(el).shadowRoot!.querySelector<HTMLElement>('.title')!.click();
     await settle(calendar(el));
 
     calendar(el)

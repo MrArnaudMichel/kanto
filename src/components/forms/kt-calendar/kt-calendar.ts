@@ -25,10 +25,15 @@ import {
 } from '#internal/date';
 import '../../core/kt-icon/kt-icon.js';
 
-export type KtCalendarView = 'day' | 'month' | 'year';
+/** The grid of days, or the panel of years and months the title opens. */
+export type KtCalendarView = 'day' | 'month';
 
-/** Years per page of the year view: four rows of three. */
-const YEARS_PER_PAGE = 12;
+/** How far the year list reaches without a min or max: birthdays to plans. */
+const YEARS_BACK = 120;
+const YEARS_AHEAD = 50;
+
+/** Digits typed into the year list within this long make one year. */
+const TYPING_PAUSE = 1000;
 
 /**
  * A month calendar to pick a day or a period from, shown in the page.
@@ -37,14 +42,15 @@ const YEARS_PER_PAGE = 12;
  * calendar is the interface rather than a way to fill a field: a booking
  * page, a dashboard's date filter, a planning view.
  *
- * The header's month and year are buttons. The month opens a grid of the
- * twelve months, the year a grid of twelve years, so reaching a date years
- * away takes three clicks rather than paging month by month.
+ * The title — "September 2026" — opens one panel: a scrolling list of years
+ * beside the twelve months of the one chosen. A year is a click or four typed
+ * digits away, then its month a second click, whatever the distance.
  *
  * Keyboard, in the day grid (the WAI-ARIA date grid pattern): arrows by day
  * and week, Home/End to the week's ends, Page Up/Down by month and with Shift
- * by year, Enter to choose. In the month and year grids: arrows, Page Up/Down
- * by year or by twelve years, Enter to choose, Escape back to the days.
+ * by year, Enter to choose. In the year list: arrows, Page Up/Down by ten,
+ * Home/End, or type the year; Enter or Tab on to the months. In the months:
+ * arrows, Enter to choose. Escape returns to the days.
  *
  * @element kt-calendar
  *
@@ -65,7 +71,7 @@ export class KtCalendar extends KtElement {
     css`
       :host {
         display: inline-block;
-        --day-size: 36px;
+        --day-size: 32px;
       }
 
       .calendar {
@@ -76,25 +82,24 @@ export class KtCalendar extends KtElement {
       }
 
       .header {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items: center;
-      }
-      .title {
         display: flex;
-        justify-content: center;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--gap-element);
+      }
+      .navs {
+        display: flex;
         gap: 2px;
       }
 
       .nav,
-      .heading {
+      .title {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         height: var(--day-size);
         padding: 0;
         color: var(--text-muted);
-        font: var(--font-normal-medium);
         background: none;
         border: none;
         border-radius: var(--radius-input);
@@ -103,25 +108,28 @@ export class KtCalendar extends KtElement {
       .nav {
         width: var(--day-size);
       }
-      .heading {
-        padding: 0 8px;
+      /* The month and year as one control: it is one place in time. */
+      .title {
+        gap: 4px;
+        padding: 0 6px 0 8px;
         color: var(--text-body);
+        font: var(--font-normal-medium);
         text-transform: capitalize;
       }
-      .heading kt-icon {
-        margin-left: 2px;
+      .title kt-icon {
         color: var(--text-muted);
+        transition: transform var(--duration-fast) var(--easing-standard);
       }
-      .heading.static {
-        cursor: default;
+      .title[aria-expanded='true'] kt-icon {
+        transform: scaleY(-1);
       }
       .nav:hover,
-      .heading:not(.static):hover {
+      .title:hover {
         color: var(--text-body);
         background: var(--color-dark-22);
       }
       .nav:focus-visible,
-      .heading:focus-visible {
+      .title:focus-visible {
         outline: var(--outline-width) solid var(--color-primary-base);
       }
 
@@ -136,8 +144,11 @@ export class KtCalendar extends KtElement {
         border-collapse: separate;
         border-spacing: 0 2px;
       }
+      /* The months keep a cell's height and sit at the top, beside the
+         years, rather than stretching into tall blocks. */
       table.wide {
-        height: 100%;
+        align-self: start;
+        border-spacing: 2px;
       }
       th {
         padding-bottom: 4px;
@@ -150,6 +161,7 @@ export class KtCalendar extends KtElement {
       }
 
       .cell {
+        position: relative;
         height: var(--day-size);
         padding: 0;
         color: var(--text-body);
@@ -168,17 +180,23 @@ export class KtCalendar extends KtElement {
       }
       /* Months and years sit three to a row, sharing the height the days use. */
       .wide .cell {
-        height: auto;
+        height: 40px;
         text-transform: capitalize;
       }
       .cell.outside {
         color: var(--text-muted);
       }
-      .cell.current {
-        font-weight: 700;
-        text-decoration: underline;
-        text-decoration-thickness: 2px;
-        text-underline-offset: 4px;
+      /* Today: a dot under the number, which a selection's fill keeps. */
+      .cell.current::after {
+        content: '';
+        position: absolute;
+        bottom: 3px;
+        left: 50%;
+        width: 4px;
+        height: 4px;
+        margin-left: -2px;
+        background: currentColor;
+        border-radius: var(--radius-full);
       }
 
       /* A period reads as one band: the days between are tinted and squared
@@ -201,6 +219,50 @@ export class KtCalendar extends KtElement {
         background: var(--color-primary-base);
       }
 
+      /* The month and year panel: the years scroll beside the months. */
+      .month-year {
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        gap: var(--gap-element);
+        height: 100%;
+      }
+      .years {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding-right: 6px;
+        overflow-y: auto;
+        border-right: var(--border-width) solid var(--border-subtle);
+        outline: none;
+        scrollbar-width: thin;
+      }
+      .year {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: var(--day-size);
+        color: var(--text-body);
+        font: var(--font-normal-regular);
+        font-variant-numeric: tabular-nums;
+        border-radius: var(--radius-input);
+        outline: none;
+        cursor: pointer;
+      }
+      .year:hover {
+        background: var(--color-dark-22);
+      }
+      .year:focus-visible {
+        box-shadow: inset 0 0 0 var(--outline-width) var(--color-primary-base);
+      }
+      /* Where the list is, not what is chosen: tinted, so the one solid
+         fill in the panel stays the chosen month. */
+      .year[aria-selected='true'] {
+        color: var(--color-primary-text);
+        font-weight: 600;
+        background: var(--color-primary-soft);
+      }
+
       .cell[aria-disabled='true'] {
         color: var(--text-disabled);
         background: none;
@@ -212,6 +274,11 @@ export class KtCalendar extends KtElement {
 
   private readonly liveId = uniqueId('kt-calendar-live');
   private focusCell = false;
+  /** Set when the year list should scroll its year into view, and focus it. */
+  private focusYear = false;
+  /** Digits typed into the year list, and when the last one came. */
+  private typed = '';
+  private typedAt = 0;
   /** Set while the calendar writes its own value, which should not move it. */
   private committing = false;
 
@@ -268,9 +335,32 @@ export class KtCalendar extends KtElement {
   }
 
   override updated(): void {
+    if (this.view === 'month') this.revealYear(this.focusYear);
+    this.focusYear = false;
     if (!this.focusCell) return;
     this.focusCell = false;
     this.shadowRoot?.querySelector<HTMLElement>('.cell[tabindex="0"]')?.focus();
+  }
+
+  /**
+   * Keeps the chosen year in sight in its list — centred when the panel
+   * opens — and focuses it when asked. The list scrolls itself; the page
+   * never does.
+   */
+  private revealYear(focus: boolean): void {
+    const list = this.shadowRoot?.querySelector<HTMLElement>('.years');
+    const option = list?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!list || !option) return;
+
+    const top = option.offsetTop - list.offsetTop;
+    if (focus) {
+      list.scrollTop = top - (list.clientHeight - option.offsetHeight) / 2;
+      option.focus({ preventScroll: true });
+    } else if (top < list.scrollTop) {
+      list.scrollTop = top;
+    } else if (top + option.offsetHeight > list.scrollTop + list.clientHeight) {
+      list.scrollTop = top + option.offsetHeight - list.clientHeight;
+    }
   }
 
   /** Focuses the grid's current cell — the chosen day, or today. */
@@ -335,7 +425,20 @@ export class KtCalendar extends KtElement {
 
   private setView(view: KtCalendarView): void {
     this.view = view;
-    this.focusCell = true;
+    if (view === 'month') {
+      // Open on the month on screen, and on its year in the list.
+      this.focused = { ...this.month, day: this.focused.day };
+      this.focusYear = true;
+    } else {
+      this.focusCell = true;
+    }
+  }
+
+  /** The years the list offers: the bounds, or a span around today. */
+  private get yearRange(): { first: number; last: number } {
+    const { min, max } = this.bounds;
+    const now = today().year;
+    return { first: min?.year ?? now - YEARS_BACK, last: max?.year ?? now + YEARS_AHEAD };
   }
 
   // --- Choosing ---
@@ -370,10 +473,66 @@ export class KtCalendar extends KtElement {
     this.setView('day');
   }
 
-  private chooseYear(year: number): void {
-    const day = Math.min(this.focused.day, daysInMonth(year, this.focused.month));
-    this.focused = { year, month: this.focused.month, day };
-    this.setView('month');
+  /** Shows a year's months, staying in the panel. */
+  private chooseYear(year: number, focus = true): void {
+    const { first, last } = this.yearRange;
+    const target = Math.min(Math.max(year, first), last);
+    const day = Math.min(this.focused.day, daysInMonth(target, this.focused.month));
+    this.focused = { year: target, month: this.focused.month, day };
+    this.focusYear = focus;
+  }
+
+  private onYearKeyDown(event: KeyboardEvent): void {
+    const { year } = this.focused;
+    const { first, last } = this.yearRange;
+
+    if (/^\d$/.test(event.key)) {
+      // Four digits in a row make a year: type 1987, land on 1987.
+      const now = Date.now();
+      this.typed = now - this.typedAt > TYPING_PAUSE ? event.key : this.typed + event.key;
+      this.typedAt = now;
+      if (this.typed.length === 4) {
+        this.chooseYear(Number(this.typed));
+        this.typed = '';
+      }
+      event.preventDefault();
+      return;
+    }
+
+    switch (event.key) {
+      case 'ArrowUp':
+        this.chooseYear(year - 1);
+        break;
+      case 'ArrowDown':
+        this.chooseYear(year + 1);
+        break;
+      case 'PageUp':
+        this.chooseYear(year - 10);
+        break;
+      case 'PageDown':
+        this.chooseYear(year + 10);
+        break;
+      case 'Home':
+        this.chooseYear(first);
+        break;
+      case 'End':
+        this.chooseYear(last);
+        break;
+      case 'Enter':
+      case ' ':
+        // On to the months of the year.
+        this.focusCell = true;
+        this.requestUpdate();
+        break;
+      case 'Escape':
+        // Back to the days, not out of whatever holds the calendar.
+        event.stopPropagation();
+        this.setView('day');
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
   }
 
   // --- Keyboard ---
@@ -420,11 +579,9 @@ export class KtCalendar extends KtElement {
     this.jumpTo(next);
   }
 
-  /** Months and years share one model: a list of cells, three to a row. */
+  /** The months, three to a row; crossing a year end moves the year list too. */
   private onPickerKeyDown(event: KeyboardEvent): void {
-    const inMonths = this.view === 'month';
-    const step = (by: number) =>
-      inMonths ? addMonths(this.focused, by) : addMonths(this.focused, by * 12);
+    const step = (by: number) => addMonths(this.focused, by);
 
     let next: PlainDate;
     switch (event.key) {
@@ -441,16 +598,15 @@ export class KtCalendar extends KtElement {
         next = step(3);
         break;
       case 'PageUp':
-        next = step(inMonths ? -12 : -YEARS_PER_PAGE);
+        next = step(-12);
         break;
       case 'PageDown':
-        next = step(inMonths ? 12 : YEARS_PER_PAGE);
+        next = step(12);
         break;
       case 'Enter':
       case ' ':
         event.preventDefault();
-        if (inMonths) this.chooseMonth(this.focused.month);
-        else this.chooseYear(this.focused.year);
+        this.chooseMonth(this.focused.month);
         return;
       case 'Escape':
         // Back to the days, not out of whatever holds the calendar.
@@ -469,90 +625,42 @@ export class KtCalendar extends KtElement {
   // --- Rendering ---
 
   private renderHeader(): TemplateResult {
-    const { year } = this.focused;
     const s = strings();
-
-    if (this.view === 'day') {
-      return html`<div class="header">
-        <button
-          type="button"
-          class="nav"
-          aria-label=${s.previousMonth}
-          @click=${() => this.jumpTo(addMonths(this.focused, -1), false)}
-        >
-          <kt-icon name="chevron-left" size="18"></kt-icon>
-        </button>
-        <div class="title">
-          <button
-            type="button"
-            class="heading"
-            aria-label=${`${s.chooseMonth}, ${this.format({ month: 'long' }, this.month)}`}
-            @click=${() => this.setView('month')}
-          >
-            ${this.format({ month: 'long' }, this.month)}
-          </button>
-          <button
-            type="button"
-            class="heading"
-            aria-label=${`${s.chooseYear}, ${this.month.year}`}
-            @click=${() => this.setView('year')}
-          >
-            ${this.format({ year: 'numeric' }, this.month)}
-            <kt-icon name="chevron-down" size="14"></kt-icon>
-          </button>
-        </div>
-        <button
-          type="button"
-          class="nav"
-          aria-label=${s.nextMonth}
-          @click=${() => this.jumpTo(addMonths(this.focused, 1), false)}
-        >
-          <kt-icon name="chevron-right" size="18"></kt-icon>
-        </button>
-      </div>`;
-    }
-
-    const inMonths = this.view === 'month';
-    const pageStart = year - (((year % YEARS_PER_PAGE) + YEARS_PER_PAGE) % YEARS_PER_PAGE);
-    const by = inMonths ? 12 : YEARS_PER_PAGE * 12;
+    const open = this.view === 'month';
+    const shown = open ? this.focused : this.month;
 
     return html`<div class="header">
       <button
         type="button"
-        class="nav"
-        aria-label=${inMonths ? s.previousYear : s.previousYears}
-        @click=${() => {
-          this.focused = addMonths(this.focused, -by);
-        }}
+        class="title"
+        aria-expanded=${open ? 'true' : 'false'}
+        @click=${() => this.setView(open ? 'day' : 'month')}
       >
-        <kt-icon name="chevron-left" size="18"></kt-icon>
+        ${this.format({ month: 'long', year: 'numeric' }, shown)}
+        <kt-icon name="chevron-down" size="16"></kt-icon>
       </button>
-      <div class="title">
-        ${
-          inMonths
-            ? html`<button
+      ${
+        open
+          ? nothing
+          : html`<div class="navs">
+              <button
                 type="button"
-                class="heading"
-                aria-label=${`${s.chooseYear}, ${year}`}
-                @click=${() => this.setView('year')}
+                class="nav"
+                aria-label=${s.previousMonth}
+                @click=${() => this.jumpTo(addMonths(this.focused, -1), false)}
               >
-                ${year}
-              </button>`
-            : html`<span class="heading static"
-                >${pageStart} – ${pageStart + YEARS_PER_PAGE - 1}</span
-              >`
-        }
-      </div>
-      <button
-        type="button"
-        class="nav"
-        aria-label=${inMonths ? s.nextYear : s.nextYears}
-        @click=${() => {
-          this.focused = addMonths(this.focused, by);
-        }}
-      >
-        <kt-icon name="chevron-right" size="18"></kt-icon>
-      </button>
+                <kt-icon name="chevron-left" size="18"></kt-icon>
+              </button>
+              <button
+                type="button"
+                class="nav"
+                aria-label=${s.nextMonth}
+                @click=${() => this.jumpTo(addMonths(this.focused, 1), false)}
+              >
+                <kt-icon name="chevron-right" size="18"></kt-icon>
+              </button>
+            </div>`
+      }
     </div>`;
   }
 
@@ -624,81 +732,80 @@ export class KtCalendar extends KtElement {
     </table>`;
   }
 
-  /** The month or year grid: twelve cells, three to a row. */
+  /** The panel the title opens: the years, and the twelve months of one. */
   private renderPicker(): TemplateResult {
-    const inMonths = this.view === 'month';
+    const s = strings();
     const { year } = this.focused;
     const now = today();
-    const pageStart = year - (((year % YEARS_PER_PAGE) + YEARS_PER_PAGE) % YEARS_PER_PAGE);
+    const { first, last } = this.yearRange;
+    const years = Array.from({ length: last - first + 1 }, (_, index) => first + index);
 
-    const cells = Array.from({ length: 12 }, (_, index) => {
-      if (inMonths) {
-        const month = index + 1;
-        const first = { year, month, day: 1 };
-        return {
-          key: `${year}-${month}`,
-          label: this.format({ month: 'short' }, first),
-          fullLabel: this.format({ month: 'long', year: 'numeric' }, first),
-          focused: month === this.focused.month,
-          selected: month === this.month.month && year === this.month.year,
-          current: month === now.month && year === now.year,
-          disabled: this.isSpanOutOfBounds(first, { year, month, day: daysInMonth(year, month) }),
-          choose: () => this.chooseMonth(month),
-        };
-      }
-      const candidate = pageStart + index;
+    const months = Array.from({ length: 12 }, (_, index) => {
+      const month = index + 1;
+      const firstDay = { year, month, day: 1 };
       return {
-        key: String(candidate),
-        label: String(candidate),
-        fullLabel: String(candidate),
-        focused: candidate === year,
-        selected: candidate === this.month.year,
-        current: candidate === now.year,
-        disabled: this.isSpanOutOfBounds(
-          { year: candidate, month: 1, day: 1 },
-          { year: candidate, month: 12, day: 31 },
-        ),
-        choose: () => this.chooseYear(candidate),
+        month,
+        label: this.format({ month: 'short' }, firstDay),
+        fullLabel: this.format({ month: 'long', year: 'numeric' }, firstDay),
+        selected: month === this.month.month && year === this.month.year,
+        current: month === now.month && year === now.year,
+        disabled: this.isSpanOutOfBounds(firstDay, {
+          year,
+          month,
+          day: daysInMonth(year, month),
+        }),
       };
     });
+    const rows = [0, 3, 6, 9].map((start) => months.slice(start, start + 3));
 
-    const rows = [0, 3, 6, 9].map((start) => cells.slice(start, start + 3));
-
-    return html`<table
-      role="grid"
-      class="wide"
-      aria-labelledby=${this.liveId}
-      @keydown=${this.onPickerKeyDown}
-    >
-      <tbody>
-        ${rows.map(
-          (row) =>
-            html`<tr>
-              ${row.map(
-                (cell) =>
-                  html`<td
-                    role="gridcell"
-                    class=${classMap({
-                      cell: true,
-                      selected: cell.selected,
-                      current: cell.current,
-                    })}
-                    data-key=${cell.key}
-                    tabindex=${cell.focused ? 0 : -1}
-                    aria-selected=${cell.selected ? 'true' : 'false'}
-                    aria-disabled=${cell.disabled ? 'true' : nothing}
-                    aria-label=${cell.fullLabel}
-                    @click=${() => {
-                      if (!cell.disabled) cell.choose();
-                    }}
-                  >
-                    ${cell.label}
-                  </td>`,
-              )}
-            </tr>`,
+    return html`<div class="month-year">
+      <div class="years" role="listbox" aria-label=${s.chooseYear} @keydown=${this.onYearKeyDown}>
+        ${years.map(
+          (candidate) =>
+            html`<div
+              class="year"
+              role="option"
+              data-year=${candidate}
+              aria-selected=${candidate === year ? 'true' : 'false'}
+              tabindex=${candidate === year ? 0 : -1}
+              @click=${() => this.chooseYear(candidate)}
+            >
+              ${candidate}
+            </div>`,
         )}
-      </tbody>
-    </table>`;
+      </div>
+
+      <table role="grid" class="wide" aria-label=${s.chooseMonth} @keydown=${this.onPickerKeyDown}>
+        <tbody>
+          ${rows.map(
+            (row) =>
+              html`<tr>
+                ${row.map(
+                  (cell) =>
+                    html`<td
+                      role="gridcell"
+                      class=${classMap({
+                        cell: true,
+                        selected: cell.selected,
+                        current: cell.current,
+                      })}
+                      data-key=${`${year}-${cell.month}`}
+                      tabindex=${cell.month === this.focused.month ? 0 : -1}
+                      aria-selected=${cell.selected ? 'true' : 'false'}
+                      aria-disabled=${cell.disabled ? 'true' : nothing}
+                      aria-label=${cell.fullLabel}
+                      @click=${() => {
+                        if (!cell.disabled) this.chooseMonth(cell.month);
+                      }}
+                    >
+                      ${cell.label}
+                    </td>`,
+                )}
+              </tr>`,
+          )}
+        </tbody>
+      </table>
+    </div>`;
   }
 
   override render(): TemplateResult {
@@ -706,9 +813,7 @@ export class KtCalendar extends KtElement {
     const announced =
       this.view === 'day'
         ? this.format({ month: 'long', year: 'numeric' }, this.month)
-        : this.view === 'month'
-          ? String(this.focused.year)
-          : s.chooseYear;
+        : String(this.focused.year);
 
     return html`<div
       part="base"
