@@ -55,6 +55,13 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**Accent colour.** The primary colour is now a choice: seven presets set with
+`data-accent="blue"` on the page or a container, or any colour through
+`setAccent('#e11d48')`. Contrast is solved for each colour in OKLCH — white on
+a primary fill and the accent as text both hold 4.5:1 in both themes — and the
+neutral surfaces take a trace of its hue. `accentPalette()` returns the values
+without applying them. The docs site has a chooser in its top bar.
+
 ### Changed
 
 - **`kt-calendar`'s title opens one panel of years and months**, instead of a

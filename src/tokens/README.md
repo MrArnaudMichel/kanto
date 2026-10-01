@@ -45,6 +45,43 @@ Dark is the canonical theme and is what `:root` carries.
 </html>
 ```
 
+## Accent colour
+
+Kanto ships violet. Seven presets are a data attribute away, on the page or on
+any container:
+
+```html
+<html data-accent="blue"></html>
+```
+
+`violet` · `blue` · `teal` · `green` · `orange` · `pink` · `slate`
+
+Any other colour goes through `setAccent`, which solves the variants for it:
+
+```js
+import { setAccent } from 'kanto-ds';
+
+setAccent('#e11d48'); // the page
+setAccent('#e11d48', panel); // one container
+setAccent(null); // back to the preset or the default
+```
+
+Whatever the colour, white text reads on a primary fill at 4.5:1 or more, and
+the accent as text reads at 4.5:1 or more on the surfaces and on its own tint,
+in both themes. A bright colour — a yellow, a light orange — is darkened for
+it, as Kanto's own violet is. The neutral surfaces take a trace of the accent's
+hue; a grey accent gives plain greys.
+
+`accentPalette(color)` returns the values without applying them — to write
+them into a stylesheet at build time, for instance. The inputs it sets are
+`--accent-base`, `--accent-hover`, `--accent-text-dark`, `--accent-text-light`,
+`--accent-wash`, `--neutral-hue` and `--neutral-chroma`; components never read
+them, only the tokens do.
+
+A red or a green accent sits close to the danger and success colours; Kanto
+does not stop you, but a primary button and a destructive one will look
+alike.
+
 ## Conventions
 
 - **Surfaces are a ramp, not a shadow scale.** Elevation means a lighter
