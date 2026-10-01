@@ -8,7 +8,8 @@ import { ref } from 'lit/directives/ref.js';
 import { toaster } from 'kanto-ds';
 import { playground } from '../lib/playground.js';
 import type { DocsAppearance } from '../lib/appearance.js';
-import { REPO_URL } from '../lib/project.js';
+import { REPO_URL, VERSION } from '../lib/project.js';
+import { openInStackBlitz, stackblitzProject } from '../lib/stackblitz.js';
 
 const INSTALL = 'npm install kanto-ds';
 const IMPORTS = "import 'kanto-ds';\nimport 'kanto-ds/styles.css';";
@@ -118,6 +119,12 @@ export function homePage({
           <code>${INSTALL}</code><kt-icon name="copy" size="16"></kt-icon>
           <span class="visually-hidden">Copy the install command</span>
         </button>
+        <kt-button
+          variant="secondary"
+          icon="external-link"
+          @click=${() => openInStackBlitz(stackblitzProject(appearance, VERSION))}
+          >Try it in StackBlitz</kt-button
+        >
         <a class="home-link" href=${REPO_URL} target="_blank" rel="noopener">GitHub</a>
       </div>
     </section>

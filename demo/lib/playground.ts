@@ -9,6 +9,8 @@ import { ref } from 'lit/directives/ref.js';
 import { KT_DENSITIES, KT_RADII, KT_TEXT_SIZES, setAppearance, toaster } from 'kanto-ds';
 import { accentChooser, fontChooser, segmented, type DocsAppearance } from './appearance.js';
 import { htmlSnippet, jsSnippet } from './snippet.js';
+import { openInStackBlitz, stackblitzProject } from './stackblitz.js';
+import { VERSION } from './project.js';
 
 const THEMES = [
   { id: 'dark', label: 'Dark' },
@@ -120,6 +122,13 @@ export function playground({
           >
           <kt-button class="playground-use" variant="secondary" @click=${() => onUse(shown)}
             >Use on this site</kt-button
+          >
+          <kt-button
+            class="playground-stackblitz"
+            variant="secondary-no-bg"
+            icon="external-link"
+            @click=${() => openInStackBlitz(stackblitzProject(shown, VERSION))}
+            >Open in StackBlitz</kt-button
           >
         </div>
       </div>

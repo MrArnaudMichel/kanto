@@ -21,13 +21,22 @@ const changed = (appearance: Appearance) =>
 
 const isPreset = (accent: string) => KT_ACCENTS.some((preset) => preset.id === accent);
 
-/** The settings as attributes on <html>; a custom colour, which no attribute holds, as a note. */
-export function htmlSnippet(appearance: Appearance): string {
-  const attributes = changed(appearance)
+/** The settings that attributes can hold, as ` data-…="…"` pairs. */
+export function htmlAttributes(appearance: Appearance): string {
+  return changed(appearance)
     .filter(([key]) => key !== 'accent' || isPreset(appearance.accent))
     .map(([key, attribute]) => ` ${attribute}="${appearance[key]}"`)
     .join('');
-  const tag = `<html${attributes}>`;
+}
+
+/** A colour no preset names, which only setAccent can apply; null for a preset. */
+export function customAccent(appearance: Appearance): string | null {
+  return isPreset(appearance.accent) ? null : appearance.accent;
+}
+
+/** The settings as attributes on <html>; a custom colour, which no attribute holds, as a note. */
+export function htmlSnippet(appearance: Appearance): string {
+  const tag = `<html${htmlAttributes(appearance)}>`;
   return isPreset(appearance.accent)
     ? tag
     : `${tag}\n<!-- and in a script: setAccent('${appearance.accent}') -->`;

@@ -81,4 +81,19 @@ describe('the playground', () => {
     host.querySelector<HTMLElement>('.playground-use')!.click();
     expect(onUse).toHaveBeenCalledWith(expect.objectContaining({ theme: 'light', accent: 'teal' }));
   });
+
+  it('opens the chosen appearance as a project on StackBlitz', () => {
+    let html = '';
+    vi.spyOn(HTMLFormElement.prototype, 'submit').mockImplementation(function (
+      this: HTMLFormElement,
+    ) {
+      html = this.querySelector<HTMLInputElement>(
+        'input[name="project[files][index.html]"]',
+      )!.value;
+    });
+    const { host } = mount();
+    host.querySelector<HTMLElement>('[data-accent-id="teal"]')!.click();
+    host.querySelector<HTMLElement>('.playground-stackblitz')!.click();
+    expect(html).toContain('data-accent="teal"');
+  });
 });
