@@ -17,17 +17,23 @@
  * them their colour.
  */
 
-:root {
+/* The accent and the tint of the neutrals are inputs: set them on any
+   element — directly, through a data-accent preset (accents.css) or with
+   setAccent() — and the tokens below follow. Each falls back to Kanto's
+   violet. An element carrying data-accent re-declares the tokens, so an
+   accent set on a container themes that container. */
+:root,
+[data-accent] {
   color-scheme: dark;
 
   /* === BRAND === */
   --color-white: rgba(244, 244, 245, 1);
   /* Dark enough to carry white text at 4.5:1 in both themes — hover steps
      darker, not lighter, for the same reason. */
-  --color-primary-base: rgba(95, 93, 234, 1);
-  --color-primary-hover: rgba(88, 86, 224, 1);
-  --color-primary-soft: rgba(95, 93, 234, 0.12);
-  --color-secondary-hover: rgba(111, 116, 246, 0.16);
+  --color-primary-base: var(--accent-base, rgba(95, 93, 234, 1));
+  --color-primary-hover: var(--accent-hover, rgba(88, 86, 224, 1));
+  --color-primary-soft: color-mix(in srgb, var(--color-primary-base) 12%, transparent);
+  --color-secondary-hover: var(--accent-wash, rgba(111, 116, 246, 0.16));
 
   /* === SEMANTIC === */
   --color-danger-base: rgba(245, 61, 92, 1);
@@ -50,34 +56,73 @@
   --color-success-soft: rgba(53, 221, 131, 0.12);
 
   /* === TEXT STEPS OF THE BRAND AND SEMANTIC COLOURS === */
-  --color-primary-text: #8e97ff;
+  --color-primary-text: var(--accent-text-dark, #8e97ff);
   --color-danger-text: #ff727f;
   --color-info-text: #06b0fc;
   --color-warning-text: #fca80d;
   --color-success-text: #01df7e;
 
-  /* === TEXT (100 = highest contrast) === */
-  --color-text-100: rgba(244, 244, 245, 1);
+  /* === TEXT (100 = highest contrast) ===
+     Neutral, tinted by the accent: each step keeps its lightness and chroma
+     and sits at a fixed offset from --neutral-hue, so the default reproduces
+     the ramp Kanto shipped to within a tenth of an sRGB unit. */
+  --color-text-100: oklch(
+    0.9674 calc(0.0013 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 8.4)
+  );
   /* 4.5:1 on every surface up to --color-dark-24, and on the tinted alerts. */
-  --color-text-400: rgba(169, 169, 181, 1);
-  --color-text-500: rgba(101, 101, 114, 1);
-  --color-text-600: rgba(75, 75, 88, 1);
-  --color-text-700: rgba(66, 66, 77, 1);
-  --color-text-800: rgba(58, 58, 68, 1);
-  --color-text-900: rgba(39, 39, 42, 1);
+  --color-text-400: oklch(
+    0.7386 calc(0.0171 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 8)
+  );
+  --color-text-500: oklch(
+    0.5113 calc(0.0204 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 7.7)
+  );
+  --color-text-600: oklch(
+    0.4178 calc(0.0215 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 7.4)
+  );
+  --color-text-700: oklch(
+    0.3833 calc(0.0186 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 7.5)
+  );
+  --color-text-800: oklch(
+    0.3524 calc(0.0172 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 7.5)
+  );
+  --color-text-900: oklch(
+    0.2739 calc(0.0055 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 8)
+  );
 
   /* === SURFACES (low → high elevation) === */
-  --color-dark-8: rgba(19, 18, 22, 1);
-  --color-dark-12: rgba(29, 28, 34, 1);
-  --color-dark-14: rgba(34, 33, 39, 1);
-  --color-dark-15: rgba(36, 35, 41, 1);
-  --color-dark-16: rgba(38, 37, 44, 1);
-  --color-dark-18: rgba(43, 42, 50, 1);
-  --color-dark-19: rgba(45, 44, 53, 1);
-  --color-dark-20: rgba(48, 46, 56, 1);
-  --color-dark-22: rgba(53, 51, 61, 1);
-  --color-dark-23: rgba(55, 53, 64, 1);
-  --color-dark-24: rgba(58, 56, 67, 1);
+  --color-dark-8: oklch(
+    0.1852 calc(0.0082 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 19)
+  );
+  --color-dark-12: oklch(
+    0.2302 calc(0.0115 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 15.1)
+  );
+  --color-dark-14: oklch(
+    0.2514 calc(0.0113 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 15.2)
+  );
+  --color-dark-15: oklch(
+    0.2597 calc(0.0112 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 15.3)
+  );
+  --color-dark-16: oklch(
+    0.2685 calc(0.0129 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 14.1)
+  );
+  --color-dark-18: oklch(
+    0.2894 calc(0.0145 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 13.2)
+  );
+  --color-dark-19: oklch(
+    0.2979 calc(0.0162 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 12.5)
+  );
+  --color-dark-20: oklch(
+    0.3074 calc(0.018 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 16.5)
+  );
+  --color-dark-22: oklch(
+    0.3271 calc(0.0177 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 16.6)
+  );
+  --color-dark-23: oklch(
+    0.3354 calc(0.0193 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 15.7)
+  );
+  --color-dark-24: oklch(
+    0.3471 calc(0.0191 * var(--neutral-chroma, 1)) calc(var(--neutral-hue, 278) + 15.7)
+  );
 
   /* === NAVIGATION === */
   --color-navigation-top-icon: #f4f4f5;
