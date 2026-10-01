@@ -193,3 +193,29 @@ describe('popup panels', () => {
     }
   });
 });
+
+describe('a closed panel', () => {
+  it('adds no scroll to the page, even beside its right edge', async () => {
+    // Never opened, a panel sat where the page flow put it. Inside a blurred
+    // header — a backdrop-filter makes it the box fixed children are placed
+    // in — a wide one beside the right edge pushed the whole page sideways.
+    await page.viewport(800, 600);
+    const row = await fixture<HTMLDivElement>(
+      `<div style="display: flex; justify-content: flex-end; backdrop-filter: blur(1px)">
+        <kt-dropdown align="end">
+          <button slot="trigger">Menu</button>
+          <div slot="panel" style="width: 400px">Settings</div>
+        </kt-dropdown>
+      </div>`,
+    );
+    const dropdown = row.querySelector<KtDropdown>('kt-dropdown')!;
+    await settle(dropdown);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+
+    dropdown.show();
+    await settle(dropdown);
+    dropdown.hide();
+    await settle(dropdown);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  });
+});

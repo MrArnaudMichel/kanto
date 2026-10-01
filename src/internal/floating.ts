@@ -32,11 +32,15 @@ export interface FloatingOptions {
  * animatable state its element gives it, so it can fade out after it leaves
  * the top layer: `display` here only undoes the popover's `display: none`, and
  * a panel's own `display` still wins.
+ *
+ * Until it is first placed it sits top left. With auto insets a closed panel
+ * sat where the flow put it — beside a right-hand trigger, past the edge of
+ * the page, which then scrolled sideways.
  */
 export const floatingStyles = css`
   .floating {
     position: fixed;
-    inset: auto;
+    inset: 0 auto auto 0;
     display: block;
     /* As wide as what it holds, wherever it is placed: a box sized from its
        position would change size when moved, and be moved again. */
