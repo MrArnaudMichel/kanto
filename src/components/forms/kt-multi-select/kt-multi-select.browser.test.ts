@@ -56,6 +56,11 @@ describe('kt-multi-select, laid out', () => {
       expect(chip.getBoundingClientRect().right).toBeLessThanOrEqual(box.right);
     }
     expect(box.height).toBeLessThan(60);
+    // Hidden means gone, not merely counted: a chip's own display must not
+    // override the hidden attribute and leave it drawn, half cut off.
+    for (const chip of el.shadowRoot!.querySelectorAll<HTMLElement>('.chip[hidden]')) {
+      expect(chip.getBoundingClientRect().width).toBe(0);
+    }
   });
 
   it('shows more chips once the field grows', async () => {
@@ -113,5 +118,12 @@ describe('kt-multi-select, laid out', () => {
     } finally {
       proto.fitChips = fit;
     }
+  });
+
+  it('says how many are chosen when not one chip fits, rather than a bare "+N"', async () => {
+    const el = await mount(150, 3);
+
+    expect(shownChips(el)).toHaveLength(0);
+    expect(more(el)!.textContent!.trim()).toBe('3 selected');
   });
 });

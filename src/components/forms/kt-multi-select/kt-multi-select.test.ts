@@ -16,6 +16,7 @@ const options = (el: KtMultiSelect) => [
   ...el.shadowRoot!.querySelectorAll<HTMLElement>('[role="option"]'),
 ];
 const chips = (el: KtMultiSelect) => [...el.shadowRoot!.querySelectorAll<HTMLElement>('.chip')];
+const removeButton = (chip: HTMLElement) => chip.querySelector<HTMLButtonElement>('button.remove');
 
 async function mount(value: (string | number)[] = []): Promise<KtMultiSelect> {
   const el = await fixture<KtMultiSelect>('<kt-multi-select label="Regions"></kt-multi-select>');
@@ -42,7 +43,10 @@ describe('kt-multi-select', () => {
     const el = await mount(['nw', 'ne']);
 
     expect(chips(el).map((chip) => chip.textContent!.trim())).toEqual(['North West', 'North East']);
-    expect(chips(el).every((chip) => chip.hasAttribute('removable'))).toBe(true);
+    expect(chips(el).map((chip) => removeButton(chip)?.getAttribute('aria-label'))).toEqual([
+      'Remove North West',
+      'Remove North East',
+    ]);
   });
 
   it('toggles an option from the list, and stays open for the next one', async () => {
@@ -97,7 +101,7 @@ describe('kt-multi-select', () => {
     const changed = vi.fn();
     el.addEventListener('kt-change', changed);
 
-    chips(el)[0]!.dispatchEvent(new CustomEvent('kt-remove', { bubbles: true, composed: true }));
+    removeButton(chips(el)[0]!)!.click();
     await settle(el);
 
     expect(el.value).toEqual(['sw']);
@@ -208,6 +212,6 @@ describe('kt-multi-select', () => {
 
     await key(el, 'Backspace');
     expect(el.value).toEqual(['ne']);
-    expect(chips(el)[0]!.hasAttribute('removable')).toBe(false);
+    expect(removeButton(chips(el)[0]!)).toBeNull();
   });
 });

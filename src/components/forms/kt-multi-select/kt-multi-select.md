@@ -26,9 +26,12 @@ one value, `<kt-input-menu>` or `<kt-select>`.
 
 ## One line, whatever is chosen
 
-Each choice shows in the field as a chip with its own remove button. The field
-keeps to one line: the chips that do not fit collapse into a **+N** beside the
-ones that do, so the field sits in a row of filters without changing its height.
+Each choice shows in the field as a chip: a fill set into the field, the same
+distance from its top, bottom and left edge, with its own remove button — the
+family of a chosen option, not an outlined tag. The field keeps to one line:
+the chips that do not fit collapse into a quiet **+N** beside the ones that do,
+or into "3 selected" when not one fits, so the field sits in a row of filters
+without changing its height.
 The open list shows every option, the chosen ones ticked — which is where the
 hidden ones can be seen and taken out. Widen the field and more chips come
 back.

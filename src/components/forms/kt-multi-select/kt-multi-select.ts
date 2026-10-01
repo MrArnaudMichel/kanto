@@ -22,13 +22,12 @@ import {
 import { FloatingController, floatingStyles } from '#internal/floating';
 import type { Side } from '#internal/position';
 import { strings } from '#internal/strings';
-import '../../core/kt-badge/kt-badge.js';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtMultiSelectValue = readonly (string | number)[];
 
-/** Kept clear for the text you type, whatever the chips take. */
-const INPUT_MIN_WIDTH = 64;
+/** Kept clear for the text you type — a few letters of a search — whatever the chips take. */
+const INPUT_MIN_WIDTH = 48;
 
 /** The "+N" before it is drawn and can be measured. */
 const MORE_WIDTH_GUESS = 40;
@@ -71,6 +70,7 @@ export class KtMultiSelect extends KtElement {
         position: relative;
         display: block;
         --field-height: var(--button-height);
+        --chip-height: calc(var(--field-height) - 16px);
       }
 
       .control {
@@ -123,9 +123,66 @@ export class KtMultiSelect extends KtElement {
         overflow: hidden;
       }
 
+      /* Chips sit inset in the field, the same distance from its top, bottom
+         and left edge — a fill inside a fill, in the family of a chosen
+         segment or option, never an outlined pill. */
+      .has-chips {
+        padding-left: calc((var(--field-height) - var(--chip-height)) / 2);
+      }
+
       .chip,
       .more {
+        display: inline-flex;
         flex: none;
+        align-items: center;
+        gap: 2px;
+        height: var(--chip-height);
+        padding: 0 8px;
+        color: var(--text-body);
+        font: var(--font-normal-small);
+        white-space: nowrap;
+        background: var(--color-dark-23);
+        border-radius: calc(var(--radius-input) - 2px);
+      }
+
+      .chip.removable {
+        padding-right: 4px;
+      }
+
+      /* The chips that do not fit are hidden by fitChips; their own display
+         would otherwise win over the attribute and leave them drawn. */
+      .chip[hidden] {
+        display: none;
+      }
+
+      /* A count, not a choice: same shape, quieter. */
+      .more {
+        color: var(--text-muted);
+      }
+
+      .remove {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        color: var(--text-muted);
+        background: transparent;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition:
+          background-color var(--duration-instant),
+          color var(--duration-instant);
+      }
+      .remove:hover {
+        color: var(--text-body);
+        background: var(--color-dark-24);
+      }
+      .remove:focus-visible {
+        outline: var(--outline-width) solid var(--color-primary-base);
+        outline-offset: 1px;
       }
 
       input {
@@ -300,15 +357,6 @@ export class KtMultiSelect extends KtElement {
     this.floating.sync(this.open);
     this.observeWidth();
     this.fitChips();
-    // The chips are elements of their own, drawn a moment after this one:
-    // measured now, a new chip has no width yet and seems to fit. Measure
-    // again once they are all drawn — a no-op when nothing moved. On the next
-    // frame rather than in a microtask: should a layout ever make the measure
-    // swing, that costs a pass per frame, never a page that stops painting.
-    const chips = [...(this.shadowRoot?.querySelectorAll<KtElement>('.chip') ?? [])];
-    void Promise.all(chips.map((chip) => chip.updateComplete)).then(() =>
-      requestAnimationFrame(() => this.fitChips()),
-    );
   }
 
   formResetCallback(): void {
@@ -516,26 +564,47 @@ export class KtMultiSelect extends KtElement {
         ${chosen.length > 0 ? strings().selectedCount(chosen.length) : ''}
       </span>
 
-      <div part="control" class="control" @click=${this.openList}>
+      <div
+        part="control"
+        class=${classMap({ control: true, 'has-chips': chosen.length > 0 })}
+        @click=${this.openList}
+      >
         <div part="chips" class="chips">
           ${chosen.map(
             (option) =>
-              html`<kt-badge
-                class="chip"
-                size="small"
-                ?removable=${!this.inactive}
-                @kt-remove=${(event: Event) => {
-                  event.stopPropagation();
-                  this.removeValue(option.id);
-                }}
-                >${optionLabel(option)}</kt-badge
-              >`,
+              html`<span class=${classMap({ chip: true, removable: !this.inactive })}>
+                ${optionLabel(option)}
+                ${
+                  this.inactive
+                    ? nothing
+                    : html`<button
+                        type="button"
+                        class="remove"
+                        tabindex="-1"
+                        aria-label=${strings().remove(optionLabel(option))}
+                        @click=${(event: Event) => {
+                          // Removing a chip is not a request to open the list.
+                          event.stopPropagation();
+                          this.removeValue(option.id);
+                        }}
+                      >
+                        <kt-icon name="x" size="12"></kt-icon>
+                      </button>`
+                }
+              </span>`,
           )}
         </div>
         ${
           this.overflowCount > 0
-            ? html`<kt-badge class="more" size="small" tone="primary"
-                >+${this.overflowCount}</kt-badge
+            ? html`<span class="more"
+                >${
+                  // With not one chip left to count on from, "+3" says less
+                  // than how many are chosen. The wider label only ever hides
+                  // more chips, never fewer, so the fit cannot swing on it.
+                  this.overflowCount === chosen.length
+                    ? strings().selectedCount(chosen.length)
+                    : `+${this.overflowCount}`
+                }</span
               >`
             : nothing
         }
