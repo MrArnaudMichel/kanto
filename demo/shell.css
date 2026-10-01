@@ -56,6 +56,61 @@ body {
   gap: var(--gap-button);
 }
 
+/* Below 600px the bar has room for the icon only; the label stays for
+   screen readers. */
+@media (max-width: 599px) {
+  .customise-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* The first-visit invitation, under the Customise button. */
+.header-actions {
+  position: relative;
+}
+.customise-invite {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: var(--z-dropdown);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 12px;
+  color: var(--text-body);
+  font: var(--font-normal-small);
+  white-space: nowrap;
+  background: var(--surface-popover);
+  border: var(--border-width) solid var(--border-popover);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow-popover);
+  animation: customise-invite var(--duration-normal) var(--easing-standard);
+}
+/* A small notch pointing at the button. */
+.customise-invite::before {
+  position: absolute;
+  top: -5px;
+  left: 18px;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  border-top: inherit;
+  border-left: inherit;
+  transform: rotate(45deg);
+  content: '';
+}
+@keyframes customise-invite {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
 /* The Customise menu: theme, accent, font, corners, density, text size. */
 .customise-menu::part(panel) {
   /* The dropdown's 224px is a menu's width; this panel holds a form. */

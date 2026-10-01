@@ -78,6 +78,19 @@ describe('the Customise menu', () => {
     expect(trigger.getAttribute('label')).toBe('Customise');
   });
 
+  it('shows its label beside the icon', () => {
+    const trigger = mount().host.querySelector('kt-dropdown > kt-button[slot="trigger"]')!;
+    expect(trigger.textContent).toContain('Customise');
+  });
+
+  it('says when it opens', () => {
+    const onOpen = vi.fn();
+    const host = document.body.appendChild(document.createElement('div'));
+    render(customiseMenu(KT_DEFAULT_APPEARANCE, vi.fn(), onOpen), host);
+    host.querySelector('kt-dropdown')!.dispatchEvent(new CustomEvent('kt-open'));
+    expect(onOpen).toHaveBeenCalledOnce();
+  });
+
   it('has a section for each setting', () => {
     const headings = [...mount().host.querySelectorAll('.customise-heading')].map((h) =>
       h.textContent!.trim(),

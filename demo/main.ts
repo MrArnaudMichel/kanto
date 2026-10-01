@@ -1,4 +1,4 @@
-import { html, render, type TemplateResult } from 'lit';
+import { html, nothing, render, type TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import * as lucide from 'lucide';
 import { registerIcons } from 'kanto-ds';
@@ -34,6 +34,7 @@ import {
   readDocsAppearance,
   type DocsAppearance,
 } from './lib/appearance.js';
+import { markInviteSeen, readInviteSeen, shouldInvite } from './lib/invite.js';
 
 import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
@@ -262,6 +263,18 @@ const href = (route: Route) => `#/${route.section}/${route.slug}`;
 
 /** The appearance on screen; storage may be blocked, so it is kept here too. */
 let appearance: DocsAppearance = readDocsAppearance();
+/** Whether the first-visit invitation beside Customise is showing. */
+let inviting = false;
+
+function dismissInvite(): void {
+  if (!inviting) {
+    markInviteSeen();
+    return;
+  }
+  inviting = false;
+  markInviteSeen();
+  update();
+}
 let filter = '';
 let activeHeading = '';
 /** The headings whose sections are on screen, lit on the contents rail. */
@@ -461,11 +474,29 @@ function shell(): TemplateResult {
       </nav>
 
       <div slot="actions" class="header-actions">
-        ${customiseMenu(appearance, (next) => {
-          appearance = next;
-          applyDocsAppearance(next);
-          update();
-        })}
+        ${customiseMenu(
+          appearance,
+          (next) => {
+            appearance = next;
+            applyDocsAppearance(next);
+            update();
+          },
+          dismissInvite,
+        )}
+        ${
+          inviting
+            ? html`<div class="customise-invite" role="status">
+                Try Kanto in your colours
+                <kt-button
+                  size="small"
+                  variant="secondary-no-bg"
+                  icon="x"
+                  label="Dismiss"
+                  @click=${dismissInvite}
+                ></kt-button>
+              </div>`
+            : nothing
+        }
         <kt-button
           size="small"
           variant="secondary-no-bg"
@@ -562,6 +593,8 @@ setRenderer(update);
 applyDocsAppearance(appearance);
 
 window.addEventListener('hashchange', () => {
+  // Inside an app the invitation would cover what the visitor came to see.
+  if (location.hash.startsWith('#/app/')) inviting = false;
   filter = '';
   activeHeading = '';
   visibleHeadings = [];
@@ -606,3 +639,13 @@ window.addEventListener(
 );
 
 update();
+
+// The invitation waits for the page to settle, then shows once.
+setTimeout(() => {
+  inviting = shouldInvite({
+    hash: location.hash,
+    width: window.innerWidth,
+    seen: readInviteSeen(),
+  });
+  if (inviting) update();
+}, 1000);

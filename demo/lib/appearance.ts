@@ -118,7 +118,7 @@ function arrows<T extends string>(
 }
 
 /** The accent: the presets as swatches, then any colour. */
-function accentChooser(accent: string, onPick: (accent: string) => void): TemplateResult {
+export function accentChooser(accent: string, onPick: (accent: string) => void): TemplateResult {
   const preset = KT_ACCENTS.find((choice) => choice.id === accent);
   const custom = preset ? null : accent;
   const focusable = preset?.id ?? KT_ACCENTS[0]!.id;
@@ -167,7 +167,7 @@ function accentChooser(accent: string, onPick: (accent: string) => void): Templa
 }
 
 /** The fonts, each name set in its own face. */
-function fontChooser(font: KtFont, onPick: (font: KtFont) => void): TemplateResult {
+export function fontChooser(font: KtFont, onPick: (font: KtFont) => void): TemplateResult {
   const onKeyDown = arrows(
     KT_FONTS.map((choice) => choice.id),
     'data-font-id',
@@ -195,7 +195,7 @@ function fontChooser(font: KtFont, onPick: (font: KtFont) => void): TemplateResu
 }
 
 /** A setting with a few short choices, as a segmented control. */
-function segmented<T extends string>(
+export function segmented<T extends string>(
   label: string,
   list: readonly { id: T; label: string }[],
   value: T,
@@ -213,6 +213,7 @@ function segmented<T extends string>(
 export function customiseMenu(
   current: DocsAppearance,
   onChange: (next: DocsAppearance) => void,
+  onOpen?: () => void,
 ): TemplateResult {
   const set = (patch: Partial<DocsAppearance>) => onChange({ ...current, ...patch });
   const section = (heading: string, body: TemplateResult) =>
@@ -221,14 +222,15 @@ export function customiseMenu(
       ${body}
     </div>`;
 
-  return html`<kt-dropdown align="end" class="customise-menu">
+  return html`<kt-dropdown align="end" class="customise-menu" @kt-open=${() => onOpen?.()}>
     <kt-button
       slot="trigger"
       size="small"
       variant="secondary-no-bg"
       icon="sliders-horizontal"
       label="Customise"
-    ></kt-button>
+      ><span class="customise-text">Customise</span></kt-button
+    >
     <div slot="panel" class="customise-panel">
       ${section(
         'Theme',
