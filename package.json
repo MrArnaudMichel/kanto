@@ -205,6 +205,10 @@
       "types": "./dist/components/forms/kt-textarea/kt-textarea.d.ts",
       "default": "./dist/components/forms/kt-textarea/kt-textarea.js"
     },
+    "./components/forms/kt-time-input": {
+      "types": "./dist/components/forms/kt-time-input/kt-time-input.d.ts",
+      "default": "./dist/components/forms/kt-time-input/kt-time-input.js"
+    },
     "./components/forms/kt-toggle": {
       "types": "./dist/components/forms/kt-toggle/kt-toggle.d.ts",
       "default": "./dist/components/forms/kt-toggle/kt-toggle.js"

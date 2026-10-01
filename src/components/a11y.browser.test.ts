@@ -168,6 +168,13 @@ const CASES: Record<string, Case> = {
       '<kt-date-input calendar label="Due date" locale="en-GB" value="2026-09-25"></kt-date-input>',
     setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.trigger')!.click(),
   },
+  'kt-time-input': {
+    markup: '<kt-time-input label="Starts at" locale="en-GB" value="14:30"></kt-time-input>',
+  },
+  'kt-time-input 12-hour with seconds': {
+    markup:
+      '<kt-time-input label="Starts at" locale="en-US" seconds value="14:30:05"></kt-time-input>',
+  },
   'kt-date-picker': {
     markup: '<kt-date-picker label="Due date" locale="en-GB" value="2026-09-25"></kt-date-picker>',
   },

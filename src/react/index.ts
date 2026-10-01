@@ -45,6 +45,7 @@ import {
 } from '../components/forms/kt-radio-group/kt-radio-group.js';
 import { KtSelect as KtSelectElement } from '../components/forms/kt-select/kt-select.js';
 import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea/kt-textarea.js';
+import { KtTimeInput as KtTimeInputElement } from '../components/forms/kt-time-input/kt-time-input.js';
 import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle/kt-toggle.js';
 import { KtBreadcrumb as KtBreadcrumbElement } from '../components/navigation/kt-breadcrumb/kt-breadcrumb.js';
 import { KtPageHeader as KtPageHeaderElement } from '../components/navigation/kt-page-header/kt-page-header.js';
@@ -191,6 +192,13 @@ export const KtCalendar = createComponent({
 export const KtDateInput = createComponent({
   tagName: 'kt-date-input',
   elementClass: KtDateInputElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | null }> },
+});
+
+export const KtTimeInput = createComponent({
+  tagName: 'kt-time-input',
+  elementClass: KtTimeInputElement,
   react: React,
   events: { onKtChange: 'kt-change' as Kt<{ value: string | null }> },
 });

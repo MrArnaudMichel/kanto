@@ -52,5 +52,6 @@
   "./components/overlays/kt-dropdown": 4900,
   "./components/overlays/kt-modal": 6200,
   "./components/overlays/kt-side-panel": 5700,
-  "./components/forms/kt-date-input": 16300
+  "./components/forms/kt-date-input": 16300,
+  "./components/forms/kt-time-input": 6700
 }

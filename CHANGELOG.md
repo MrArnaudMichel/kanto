@@ -41,6 +41,20 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-time-input`** — a time of day typed into its parts, hours and minutes.
+
+- The reader's clock — `14:30` in London, `02:30 PM` in New York, `14.30` in
+  Copenhagen — or the one `hour-cycle` names; on a 12-hour clock `a` or `p`
+  sets the period. The value is always the 24-hour `HH:MM` that
+  `<input type="time">` uses.
+- `seconds` adds a segment and puts seconds in the value; `step` sets how many
+  minutes the arrows move by; a time outside `min`/`max` shows the field's
+  error tooltip.
+- The same keyboard, form behaviour and spinbutton segments as
+  `kt-date-input`, from a base the two share.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - **`kt-calendar`'s title opens one panel of years and months**, instead of a
