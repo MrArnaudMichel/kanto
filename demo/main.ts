@@ -1,11 +1,12 @@
 import { html, nothing, render, type TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import * as lucide from 'lucide';
-import { registerIcons } from 'kanto-ds';
+import { registerIcons, toaster } from 'kanto-ds';
 import 'kanto-ds';
 import 'kanto-ds/styles.css';
 import './shell.css';
 import './apps.css';
+import './home.css';
 
 import { COMPONENTS } from './lib/registry.js';
 import { REPO_URL, VERSION_TAG } from './lib/project.js';
@@ -28,6 +29,7 @@ import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
 import { APPEARANCE, INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
+import { homePage } from './pages/home.js';
 import {
   applyDocsAppearance,
   customiseMenu,
@@ -46,7 +48,7 @@ registerIcons(lucide);
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'guide' | 'components' | 'apps' | 'release';
+type Section = 'home' | 'guide' | 'components' | 'apps' | 'release';
 
 interface Route {
   readonly section: Section;
@@ -201,7 +203,16 @@ const APP_ROUTES: Route[] = SHOWCASE.map((entry) => ({
   page: () => appPage(entry),
 }));
 
-const ROUTES: Route[] = [...GUIDE, ...COMPONENT_ROUTES, ...APP_ROUTES, ...RELEASE];
+/** The front door: rendered full width, without the sidebar or contents. */
+const HOME: Route = {
+  section: 'home',
+  slug: '',
+  label: 'Home',
+  group: '',
+  page: () => html``,
+};
+
+const ROUTES: Route[] = [HOME, ...GUIDE, ...COMPONENT_ROUTES, ...APP_ROUTES, ...RELEASE];
 
 /**
  * Components flagged "New" in the navigation: introduced under Added in a
@@ -250,6 +261,7 @@ function currentApp(): (() => TemplateResult) | null {
 
 function currentRoute(): Route {
   const [section, slug] = location.hash.replace(/^#\/?/, '').split('/');
+  if (!section || section === 'home') return HOME;
   return (
     ROUTES.find((route) => route.section === section && route.slug === slug) ??
     ROUTES.find((route) => route.section === section) ??
@@ -265,6 +277,15 @@ const href = (route: Route) => `#/${route.section}/${route.slug}`;
 let appearance: DocsAppearance = readDocsAppearance();
 /** Whether the first-visit invitation beside Customise is showing. */
 let inviting = false;
+
+/** "Use on this site": the playground's appearance becomes the site's, as Customise would set it. */
+function useAppearance(next: DocsAppearance): void {
+  appearance = next;
+  applyDocsAppearance(next);
+  dismissInvite();
+  update();
+  toaster.success('Applied to the site');
+}
 
 function dismissInvite(): void {
   if (!inviting) {
@@ -456,7 +477,7 @@ function shell(): TemplateResult {
 
   return html`
     <kt-header sticky label="Kanto documentation">
-      <a slot="brand" class="wordmark" href="#/guide/introduction">KANTO <span>DS</span></a>
+      <a slot="brand" class="wordmark" href="#/">KANTO <span>DS</span></a>
       <!-- In the brand slot, not the default one: the header centres the
            default slot as a group, and a version chip belongs beside the
            wordmark rather than beside the sections. -->
@@ -511,15 +532,21 @@ function shell(): TemplateResult {
       </nav>
     </kt-header>
 
-    <div class="layout">
-      ${
-        isDoc
-          ? docLayout(route, result)
-          : html`${sidebar(route)}
-              <main><article class="doc">${result}</article></main>
-              <aside class="toc"></aside>`
-      }
-    </div>
+    ${
+      route.section === 'home'
+        ? html`<main class="home-main">
+            ${homePage({ appearance, onUse: useAppearance, rerender: update })}
+          </main>`
+        : html`<div class="layout">
+            ${
+              isDoc
+                ? docLayout(route, result)
+                : html`${sidebar(route)}
+                    <main><article class="doc">${result}</article></main>
+                    <aside class="toc"></aside>`
+            }
+          </div>`
+    }
   `;
 }
 

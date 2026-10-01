@@ -39,7 +39,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'browser',
-          include: ['src/**/*.browser.test.ts'],
+          include: ['src/**/*.browser.test.ts', 'demo/**/*.browser.test.ts'],
           browser: {
             enabled: true,
             provider: playwright(),

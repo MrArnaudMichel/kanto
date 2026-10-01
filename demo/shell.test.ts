@@ -87,4 +87,17 @@ describe('the documentation shell', () => {
       expect(app.querySelector(`#${CSS.escape(id)}`), id).not.toBeNull();
     }
   });
+
+  it('opens on the home page, full width, for an empty hash, #/ and #/home', async () => {
+    for (const hash of ['', '#/', '#/home']) {
+      location.hash = hash;
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(app.querySelector('.home'), hash || 'empty').not.toBeNull();
+      expect(app.querySelector('.sidebar'), hash || 'empty').toBeNull();
+    }
+  });
+
+  it('takes the wordmark home', () => {
+    expect(app.querySelector('.wordmark')!.getAttribute('href')).toBe('#/');
+  });
 });
