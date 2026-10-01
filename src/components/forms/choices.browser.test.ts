@@ -40,6 +40,22 @@ describe('kt-checkbox, for real', () => {
   });
 });
 
+describe('kt-radio, drawn', () => {
+  it('centres its dot in its circle, on whole pixels', async () => {
+    // Placed by percentage, the dot came out 8.97px wide and 3.52px in, and
+    // each browser rounded the halves its own way: off-centre in Firefox.
+    const radio = await fixture<KtRadio>('<kt-radio value="a" checked>Yearly</kt-radio>');
+    await settle(radio);
+    const circle = radio.shadowRoot!.querySelector('.circle')!.getBoundingClientRect();
+    const dot = radio.shadowRoot!.querySelector('.dot')!.getBoundingClientRect();
+
+    expect(dot.left - circle.left).toBe(circle.right - dot.right);
+    expect(dot.top - circle.top).toBe(circle.bottom - dot.bottom);
+    expect(Number.isInteger(dot.width)).toBe(true);
+    expect(Number.isInteger(dot.left - circle.left)).toBe(true);
+  });
+});
+
 describe('kt-radio-group, for real', () => {
   const MARKUP = `<kt-radio-group label="Billing" value="yearly">
     <kt-radio value="monthly">Monthly</kt-radio>

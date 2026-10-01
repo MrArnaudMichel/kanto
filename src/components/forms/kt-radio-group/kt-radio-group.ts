@@ -32,7 +32,11 @@ export class KtRadio extends KtElement {
     css`
       :host {
         display: block;
-        --radio-size: calc(var(--button-height) * 0.45);
+        /* Whole, even pixels: an even circle around an even dot leaves the
+           same whole number of pixels on each side, so no browser has a half
+           to round its own way. */
+        --radio-size: round(nearest, calc(var(--button-height) * 0.45), 2px);
+        --radio-dot: 8px;
       }
 
       .radio {
@@ -46,7 +50,8 @@ export class KtRadio extends KtElement {
       }
 
       .circle {
-        position: relative;
+        display: grid;
+        place-items: center;
         flex: none;
         width: var(--radio-size);
         height: var(--radio-size);
@@ -57,11 +62,11 @@ export class KtRadio extends KtElement {
         transition: border-color var(--duration-instant);
       }
 
-      /* The dot: a fill inset by a third of the circle. */
-      .circle::after {
-        content: '';
-        position: absolute;
-        inset: 22%;
+      /* The dot, centred by the circle's grid rather than inset by a
+         percentage, which landed it on fractions of a pixel. */
+      .dot {
+        width: var(--radio-dot);
+        height: var(--radio-dot);
         border-radius: var(--radius-full);
         background-color: var(--color-primary-base);
         transform: scale(0);
@@ -80,7 +85,7 @@ export class KtRadio extends KtElement {
       .radio[aria-checked='true'] .circle {
         border-color: var(--color-primary-base);
       }
-      .radio[aria-checked='true'] .circle::after {
+      .radio[aria-checked='true'] .dot {
         transform: scale(1);
       }
 
@@ -98,8 +103,8 @@ export class KtRadio extends KtElement {
         background-color: var(--color-dark-22);
         border-color: var(--color-dark-24);
       }
-      :host([disabled]) .circle::after,
-      :host([group-disabled]) .circle::after {
+      :host([disabled]) .dot,
+      :host([group-disabled]) .dot {
         background-color: var(--text-disabled);
       }
     `,
@@ -145,7 +150,7 @@ export class KtRadio extends KtElement {
       aria-disabled=${this.inactive ? 'true' : nothing}
       tabindex=${this.tabbable && !this.inactive ? 0 : -1}
     >
-      <span part="circle" class="circle"></span>
+      <span part="circle" class="circle"><span class="dot"></span></span>
       <span class="text"><slot></slot></span>
     </div>`;
   }
