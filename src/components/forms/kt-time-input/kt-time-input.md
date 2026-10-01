@@ -4,7 +4,7 @@ A time of day typed into its parts — hours, minutes and, if asked, seconds.
 
 ```html
 <kt-time-input label="Starts at" name="start" step="15" min="08:00" max="20:00"></kt-time-input>
-<kt-time-input label="Lap" seconds value="00:04:31"></kt-time-input>
+<kt-time-input label="Logged at" seconds value="09:15:30"></kt-time-input>
 ```
 
 It shares its keyboard with [`<kt-date-input>`](../kt-date-input/kt-date-input.md):

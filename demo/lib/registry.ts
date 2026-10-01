@@ -621,9 +621,9 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
 
   'kt-time-input': () =>
     html`<div class="demo-row">
-      <kt-time-input label="Starts at" value="14:30" step="15"></kt-time-input>
-      <kt-time-input label="Starts at" hour-cycle="h12" value="14:30"></kt-time-input>
-      <kt-time-input label="Lap" seconds value="00:04:31"></kt-time-input>
+      <kt-time-input label="Starts at" hour-cycle="h23" value="14:30" step="15"></kt-time-input>
+      <kt-time-input label="Starts at" hour-cycle="h12" value="14:30" step="15"></kt-time-input>
+      <kt-time-input label="Logged at" hour-cycle="h23" seconds value="09:15:30"></kt-time-input>
     </div>`,
 
   'kt-date-picker': () =>
