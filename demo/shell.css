@@ -56,23 +56,66 @@ body {
   gap: var(--gap-button);
 }
 
-/* The accent chooser: a palette button in the top bar, swatches in its panel. */
-.accent-menu::part(panel) {
-  /* The dropdown's 224px is a menu's width; seven swatches need their own. */
-  width: max-content;
-  max-height: none;
+/* The Customise menu: theme, accent, font, corners, density, text size. */
+.customise-menu::part(panel) {
+  /* The dropdown's 224px is a menu's width; this panel holds a form. */
+  width: 288px;
+  max-height: min(80vh, 640px);
+  overflow: auto;
 }
+.customise-panel {
+  display: grid;
+  gap: 16px;
+  padding: 4px;
+  text-align: start;
+}
+.customise-section {
+  display: grid;
+  gap: 8px;
+}
+.customise-heading {
+  margin: 0;
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+}
+.font-choices {
+  display: grid;
+  gap: 2px;
+}
+.font-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  color: var(--text-body);
+  font-size: 14px;
+  text-align: start;
+  background: none;
+  border: none;
+  border-radius: var(--radius-input);
+  cursor: pointer;
+}
+.font-choice:hover {
+  background: var(--surface-hover);
+}
+.font-choice[aria-checked='true'] {
+  color: var(--color-primary-text);
+  background: var(--color-primary-soft);
+}
+.font-choice:focus-visible {
+  outline: var(--outline-width) solid var(--color-primary-base);
+  outline-offset: -2px;
+}
+.customise-reset {
+  justify-self: start;
+}
+
 .accent-panel {
   display: grid;
   gap: 10px;
   padding: 2px;
   /* The top bar's actions align right; the panel is read left to right. */
   text-align: start;
-}
-.accent-heading {
-  margin: 0;
-  color: var(--text-muted);
-  font: var(--font-normal-small);
 }
 .accent-swatches {
   display: grid;

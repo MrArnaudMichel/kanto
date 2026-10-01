@@ -28,7 +28,12 @@ import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
 import { ACCENT, INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
-import { accentMenu, applyAccent, readAccent, type AccentChoice } from './lib/accent.js';
+import {
+  applyDocsAppearance,
+  customiseMenu,
+  readDocsAppearance,
+  type DocsAppearance,
+} from './lib/appearance.js';
 
 import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
@@ -255,32 +260,12 @@ const href = (route: Route) => `#/${route.section}/${route.slug}`;
 
 /* ------------------------------------------------------------------- state */
 
-const THEME_KEY = 'kanto-docs-theme';
-type Theme = 'dark' | 'light';
-
-/** The accent on screen; storage may be blocked, so it is kept here too. */
-let accent: AccentChoice = readAccent();
+/** The appearance on screen; storage may be blocked, so it is kept here too. */
+let appearance: DocsAppearance = readDocsAppearance();
 let filter = '';
 let activeHeading = '';
 /** The headings whose sections are on screen, lit on the contents rail. */
 let visibleHeadings: readonly string[] = [];
-
-function readTheme(): Theme {
-  try {
-    return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark';
-  } catch {
-    return 'dark'; // private window, or storage blocked; dark is the default anyway
-  }
-}
-
-function applyTheme(theme: Theme): void {
-  document.documentElement.dataset['theme'] = theme;
-  try {
-    localStorage.setItem(THEME_KEY, theme);
-  } catch {
-    /* the page still renders in the chosen theme */
-  }
-}
 
 /* ------------------------------------------------------------------ layout */
 
@@ -455,7 +440,6 @@ function shell(): TemplateResult {
   const route = currentRoute();
   const result = route.page();
   const isDoc = typeof result === 'object' && 'headings' in result;
-  const theme = readTheme();
 
   return html`
     <kt-header sticky label="Kanto documentation">
@@ -477,24 +461,11 @@ function shell(): TemplateResult {
       </nav>
 
       <div slot="actions" class="header-actions">
-        ${accentMenu(accent, (choice: AccentChoice) => {
-          accent = choice;
-          applyAccent(choice);
+        ${customiseMenu(appearance, (next) => {
+          appearance = next;
+          applyDocsAppearance(next);
           update();
         })}
-        <kt-segmented-control
-          size="small"
-          label="Theme"
-          .value=${theme}
-          .options=${[
-            { value: 'dark', icon: 'moon', label: '' },
-            { value: 'light', icon: 'sun', label: '' },
-          ]}
-          @kt-change=${(event: CustomEvent<{ value: Theme }>) => {
-            applyTheme(event.detail.value);
-            update();
-          }}
-        ></kt-segmented-control>
         <kt-button
           size="small"
           variant="secondary-no-bg"
@@ -588,8 +559,7 @@ function trackReading(): void {
 }
 
 setRenderer(update);
-applyTheme(readTheme());
-applyAccent(accent);
+applyDocsAppearance(appearance);
 
 window.addEventListener('hashchange', () => {
   filter = '';
