@@ -43,6 +43,8 @@ export function applyAccent(
     setAccent(null, root);
     root.dataset['accent'] = choice.id;
   } else {
+    // A custom colour replaces the preset rather than sitting over it.
+    delete root.dataset['accent'];
     setAccent(choice.color, root);
   }
   try {

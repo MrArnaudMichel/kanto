@@ -111,7 +111,7 @@ setAccent(null); // back to the preset or the default
 \`\`\`
 
 Whatever the colour, white text reads on a primary fill at 4.5:1 or more, and
-the accent as text reads at 4.5:1 or more on the surfaces and on its own tint,
+the accent as text reads at 4.5:1 or more on the surfaces, on its own tint and on the hover wash of a secondary button,
 in both themes. A bright colour — a yellow, a light orange — is darkened for
 it, as Kanto's own violet is. The neutral surfaces take a trace of the accent's
 hue; a grey accent gives plain greys.

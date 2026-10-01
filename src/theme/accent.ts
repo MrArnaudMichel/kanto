@@ -88,14 +88,18 @@ export function parseColor(input: string): KtRgb {
     const digits = match[1]!.length === 3 ? [...match[1]!].map((d) => d + d).join('') : match[1]!;
     return [0, 2, 4].map((i) => parseInt(digits.slice(i, i + 2), 16)) as unknown as KtRgb;
   }
-  match = /^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:\s*[,/]\s*[\d.]+%?)?\s*\)$/.exec(text);
+  match =
+    /^rgba?\(\s*(\d*\.?\d+)[\s,]+(\d*\.?\d+)[\s,]+(\d*\.?\d+)(?:\s*[,/]\s*\d*\.?\d+%?)?\s*\)$/.exec(
+      text,
+    );
   if (match) {
     const rgb = match.slice(1, 4).map(Number) as unknown as KtRgb;
     if (rgb.every((c) => c <= 255)) return rgb;
   }
-  match = /^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/\s*[\d.]+%?\s*)?\)$/.exec(
-    text,
-  );
+  match =
+    /^oklch\(\s*(\d*\.?\d+)(%?)\s+(\d*\.?\d+)\s+(\d*\.?\d+)(?:deg)?\s*(?:\/\s*\d*\.?\d+%?\s*)?\)$/.exec(
+      text,
+    );
   if (match) {
     const L = Number(match[1]) / (match[2] ? 100 : 1);
     const H = Number(match[4]);
@@ -114,7 +118,7 @@ export interface KtAccentPalette {
   readonly textDark: string;
   /** The accent as text or an icon in the light theme. */
   readonly textLight: string;
-  /** The translucent wash behind secondary buttons on hover. */
+  /** The translucent wash behind secondary buttons on hover: the fill at 16%. */
   readonly wash: string;
   /** The hue, in degrees, the neutral ramp is tinted with. */
   readonly neutralHue: number;
@@ -168,21 +172,23 @@ export function accentPalette(color: string): KtAccentPalette {
   const base = at(baseL);
 
   // Dark theme text: the darkest step that reads, which keeps the most colour.
-  const dark = ground(DARK_GROUND);
-  const darkGrounds = [dark, over(base, 0.12, dark)];
+  // Accent text sits on the surfaces, on its own 12% tint and on the 16%
+  // wash behind a hovered secondary button.
+  const tints = (g: KtRgb) => [g, over(base, 0.12, g), over(base, 0.16, g)];
+  const darkGrounds = tints(ground(DARK_GROUND));
   let darkL = 0.45;
   while (darkL < 1 && darkGrounds.some((g) => contrastRatio(at(darkL), g) < TARGET)) {
     darkL += 0.0025;
   }
 
   // Light theme text: the lightest step that reads.
-  const lightGrounds = LIGHT_GROUNDS.map(ground).flatMap((g) => [g, over(base, 0.12, g)]);
+  const lightGrounds = LIGHT_GROUNDS.map(ground).flatMap(tints);
   let lightL = 0.7;
   while (lightL > 0 && lightGrounds.some((g) => contrastRatio(at(lightL), g) < TARGET)) {
     lightL -= 0.0025;
   }
 
-  const [r, g, b] = round255(at(darkL));
+  const [r, g, b] = round255(base);
   return {
     base: hex(base),
     hover: hex(at(Math.max(0, baseL - 0.025))),
@@ -213,8 +219,9 @@ const INPUTS = Object.keys(accentProperties(KT_DEFAULT_ACCENT));
  * Themes `root` — the page by default — with any colour; `null` takes it off,
  * back to the `data-accent` preset or the default.
  *
- * The inputs go on as inline custom properties, with `data-accent="custom"`
- * so the token layer re-reads them on an element other than the root.
+ * The inputs go on as inline custom properties. The element also needs a
+ * `data-accent` attribute for the token layer to re-read them there: a preset
+ * already on it is kept, otherwise it gets `data-accent="custom"`.
  */
 export function setAccent(
   color: string | null,
@@ -228,5 +235,7 @@ export function setAccent(
   for (const [name, value] of Object.entries(accentProperties(accentPalette(color)))) {
     root.style.setProperty(name, value);
   }
-  root.dataset['accent'] = 'custom';
+  // A preset already there stays: the inline inputs win over it, and it is
+  // what setAccent(null) goes back to.
+  root.dataset['accent'] ??= 'custom';
 }

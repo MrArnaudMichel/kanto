@@ -22,9 +22,9 @@
 [data-accent='blue'] {
   --accent-base: #1668e3;
   --accent-hover: #0960db;
-  --accent-text-dark: #65a0ff;
-  --accent-text-light: #0051c0;
-  --accent-wash: rgba(101, 160, 255, 0.16);
+  --accent-text-dark: #6aa3ff;
+  --accent-text-light: #004eba;
+  --accent-wash: rgba(22, 104, 227, 0.16);
   --neutral-hue: 259.7;
   --neutral-chroma: 1;
 }
@@ -32,9 +32,9 @@
 [data-accent='teal'] {
   --accent-base: #007c72;
   --accent-hover: #00746a;
-  --accent-text-dark: #3eb2a5;
-  --accent-text-light: #00635b;
-  --accent-wash: rgba(62, 178, 165, 0.16);
+  --accent-text-dark: #42b5a8;
+  --accent-text-light: #005f57;
+  --accent-wash: rgba(0, 124, 114, 0.16);
   --neutral-hue: 184.7;
   --neutral-chroma: 1;
 }
@@ -42,9 +42,9 @@
 [data-accent='green'] {
   --accent-base: #007f36;
   --accent-hover: #007732;
-  --accent-text-dark: #37b75d;
-  --accent-text-light: #006629;
-  --accent-wash: rgba(55, 183, 93, 0.16);
+  --accent-text-dark: #3bba60;
+  --accent-text-light: #006328;
+  --accent-wash: rgba(0, 127, 54, 0.16);
   --neutral-hue: 149.2;
   --neutral-chroma: 1;
 }
@@ -52,9 +52,9 @@
 [data-accent='orange'] {
   --accent-base: #c14500;
   --accent-hover: #b54000;
-  --accent-text-dark: #ff7740;
-  --accent-text-light: #9b3600;
-  --accent-wash: rgba(255, 119, 64, 0.16);
+  --accent-text-dark: #ff7c48;
+  --accent-text-light: #953300;
+  --accent-wash: rgba(193, 69, 0, 0.16);
   --neutral-hue: 41.1;
   --neutral-chroma: 1;
 }
@@ -62,9 +62,9 @@
 [data-accent='pink'] {
   --accent-base: #d21970;
   --accent-hover: #c90369;
-  --accent-text-dark: #ff679e;
-  --accent-text-light: #aa0057;
-  --accent-wash: rgba(255, 103, 158, 0.16);
+  --accent-text-dark: #ff6da1;
+  --accent-text-light: #a30053;
+  --accent-wash: rgba(210, 25, 112, 0.16);
   --neutral-hue: 0.6;
   --neutral-chroma: 1;
 }
@@ -72,9 +72,9 @@
 [data-accent='slate'] {
   --accent-base: #607086;
   --accent-hover: #59687f;
-  --accent-text-dark: #92a3bb;
-  --accent-text-light: #4a5a70;
-  --accent-wash: rgba(146, 163, 187, 0.16);
+  --accent-text-dark: #95a6bf;
+  --accent-text-light: #48576d;
+  --accent-wash: rgba(96, 112, 134, 0.16);
   --neutral-hue: 257.4;
   --neutral-chroma: 0.51;
 }

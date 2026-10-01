@@ -16,14 +16,16 @@ function grounds(palette: ReturnType<typeof accentPalette>) {
       `oklch(${L} ${C * palette.neutralChroma} ${(palette.neutralHue + offset + 360) % 360})`,
     );
   const base = parseColor(palette.base);
-  const tint = (ground: readonly number[]) =>
-    ground.map((c, i) => Math.round(base[i]! * 0.12 + c * 0.88)) as unknown as typeof base;
+  const tint = (ground: readonly number[], alpha = 0.12) =>
+    ground.map((c, i) => Math.round(base[i]! * alpha + c * (1 - alpha))) as unknown as typeof base;
+  // The secondary buttons' hover wash, which accent text also sits on.
+  const wash = (ground: readonly number[]) => tint(ground, 0.16);
   const dark20 = surface(0.3074, 0.018, 16.5);
   const light20 = surface(0.9023, 0.0081, 8.2);
   const white = [255, 255, 255] as const;
   return {
-    dark: [dark20, tint(dark20)],
-    light: [white, light20, tint(white), tint(light20)],
+    dark: [dark20, tint(dark20), wash(dark20)],
+    light: [white, light20, tint(white), tint(light20), wash(white), wash(light20)],
   };
 }
 
@@ -50,7 +52,15 @@ describe('parseColor', () => {
   });
 
   it('turns down what it cannot read', () => {
-    for (const bad of ['blue', '#12345', 'rgb(300, 0, 0)', 'hsl(0 100% 50%)', '']) {
+    for (const bad of [
+      'blue',
+      '#12345',
+      'rgb(300, 0, 0)',
+      'hsl(0 100% 50%)',
+      '',
+      'oklch(0.5 0.1 .)',
+      'rgb(. 1 2)',
+    ]) {
       expect(() => parseColor(bad)).toThrow(TypeError);
     }
   });
@@ -64,8 +74,10 @@ describe('accentPalette', () => {
 
   it('lands close to the violet Kanto ships', () => {
     const violet = accentPalette('#5f5dea');
+    // Within 5: the solver also clears the secondary hover wash, which the
+    // shipped violet text was not tuned against, so it lands a shade lighter.
     const near = (a: string, b: string) =>
-      parseColor(a).every((c, i) => Math.abs(c - parseColor(b)[i]!) <= 3);
+      parseColor(a).every((c, i) => Math.abs(c - parseColor(b)[i]!) <= 5);
     expect(near(violet.base, KT_DEFAULT_ACCENT.base)).toBe(true);
     expect(near(violet.textDark, KT_DEFAULT_ACCENT.textDark)).toBe(true);
   });
@@ -121,6 +133,15 @@ describe('setAccent', () => {
     setAccent(null, root);
     expect(root.getAttribute('style') ?? '').not.toContain('--accent');
     expect(root.hasAttribute('data-accent')).toBe(false);
+  });
+
+  it('goes back to the preset it was set over', () => {
+    const root = document.createElement('div');
+    root.dataset['accent'] = 'blue';
+    setAccent('#e11d48', root);
+    setAccent(null, root);
+    expect(root.dataset['accent']).toBe('blue');
+    expect(root.getAttribute('style') ?? '').not.toContain('--accent');
   });
 
   it('leaves a preset attribute alone when cleared', () => {
