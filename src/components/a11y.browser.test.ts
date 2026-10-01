@@ -349,6 +349,7 @@ async function audit(element: HTMLElement): Promise<string[]> {
 
 afterEach(() => {
   delete document.documentElement.dataset.theme;
+  delete document.documentElement.dataset.accent;
 });
 
 describe.each(['dark', 'light'])('accessibility, %s theme', (theme) => {
@@ -360,5 +361,29 @@ describe.each(['dark', 'light'])('accessibility, %s theme', (theme) => {
 
     // Joined, so a failure prints every violation rather than "Array(2)".
     expect((await audit(element)).join('\n')).toBe('');
+  });
+});
+
+/*
+ * The accent is a choice now, so contrast has to hold for the presets too —
+ * on the elements that paint it: fills, text, rings, selected states.
+ */
+const ACCENT_CASES = Object.entries(CASES).filter(([name]) =>
+  /^kt-(button|badge|calendar|checkbox|toggle|tabs|segmented-control|date-picker|pagination|radio)/.test(
+    name,
+  ),
+);
+
+describe.each(['blue', 'green', 'orange'])('accessibility, %s accent', (accent) => {
+  describe.each(['dark', 'light'])('%s theme', (theme) => {
+    it.each(ACCENT_CASES)('%s has no axe violations', async (_, { markup, setup }) => {
+      document.documentElement.dataset.accent = accent;
+      if (theme === 'light') document.documentElement.dataset.theme = 'light';
+
+      const element = await fixture<HTMLElement>(markup);
+      setup?.(element);
+
+      expect((await audit(element)).join('\n')).toBe('');
+    });
   });
 });

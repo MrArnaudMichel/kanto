@@ -93,6 +93,11 @@ describe('the default accent', () => {
 });
 
 describe('a custom accent', () => {
+  it('takes a preset from data-accent', () => {
+    document.documentElement.dataset['accent'] = 'blue';
+    expectNear(paint('--color-primary-base'), parseColor(accentPalette('#1f6feb').base));
+  });
+
   it('re-tints the primary and the neutrals', () => {
     setAccent('#16a34a');
     const green = accentPalette('#16a34a');

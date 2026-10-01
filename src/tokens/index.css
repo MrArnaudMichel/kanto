@@ -7,6 +7,7 @@
 
 @import './colors.css';
 @import './theme-light.css';
+@import './accents.css';
 @import './typography.css';
 @import './spacing.css';
 @import './responsive.css';
