@@ -238,8 +238,9 @@ export class KtCalendar extends KtElement {
 
       /* A period reads as one band: the days between are tinted and squared
          off, and only its two ends are rounded. */
+      /* A clear band, not a wash: the -soft tint faded on a white popup. */
       .cell.in-range {
-        background: var(--color-primary-soft);
+        background: color-mix(in srgb, var(--color-primary-base) 18%, transparent);
         border-radius: 0;
       }
       .cell.range-start {
@@ -269,7 +270,7 @@ export class KtCalendar extends KtElement {
         gap: 2px;
         padding-right: 6px;
         overflow-y: auto;
-        border-right: var(--border-width) solid var(--border-subtle);
+        border-right: var(--border-width) solid var(--divider-popover);
         outline: none;
         scrollbar-width: thin;
       }

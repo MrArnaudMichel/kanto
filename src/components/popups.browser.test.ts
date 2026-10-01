@@ -144,4 +144,47 @@ describe('popup panels', () => {
     expect(panel.left).toBeGreaterThanOrEqual(0);
     expect(panel.right).toBeLessThanOrEqual(390);
   });
+
+  describe('stand apart from the page', () => {
+    /** Relative luminance of a computed rgb() colour. */
+    const luminance = (colour: string) => {
+      const [r, g, b] = colour
+        .match(/[\d.]+/g)!
+        .slice(0, 3)
+        .map(Number) as [number, number, number];
+      const channel = (c: number) => {
+        const v = c / 255;
+        return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+    };
+    const pageColour = () => getComputedStyle(document.body).backgroundColor;
+
+    for (const theme of ['dark', 'light'] as const) {
+      for (const name of Object.keys(POPUPS)) {
+        it(`${name}, ${theme}`, async () => {
+          document.documentElement.dataset['theme'] = theme;
+          try {
+            const { el } = await mount(name, 'margin-top: 20px');
+            const style = getComputedStyle(shadow(el, POPUPS[name]!.panel));
+
+            if (theme === 'dark') {
+              // Elevation as a lighter surface: the panel is lighter than the page.
+              expect(luminance(style.backgroundColor)).toBeGreaterThan(luminance(pageColour()));
+            } else {
+              // A white panel on a near-white page: an edge and a shadow set it apart.
+              expect(luminance(style.backgroundColor)).toBeGreaterThanOrEqual(
+                luminance(pageColour()),
+              );
+              expect(parseFloat(style.borderTopWidth)).toBeGreaterThan(0);
+              expect(style.borderTopColor).not.toMatch(/rgba\(.*, 0\)|transparent/);
+              expect(style.boxShadow).not.toBe('none');
+            }
+          } finally {
+            delete document.documentElement.dataset['theme'];
+          }
+        });
+      }
+    }
+  });
 });

@@ -220,7 +220,7 @@ export class KtDatePicker extends KtElement {
       .panel {
         box-sizing: border-box;
         padding: var(--padding-expand);
-        background: var(--color-dark-20);
+        background: var(--surface-popover);
         border-radius: var(--radius-input);
 
         visibility: hidden;
@@ -261,7 +261,7 @@ export class KtDatePicker extends KtElement {
         gap: 2px;
         min-width: 128px;
         padding-right: 12px;
-        border-right: var(--border-width) solid var(--border-subtle);
+        border-right: var(--border-width) solid var(--divider-popover);
       }
       .presets button,
       .today {
@@ -306,7 +306,7 @@ export class KtDatePicker extends KtElement {
         max-width: calc(var(--day-size, 32px) * 7);
         padding: 0 0 8px;
         border-right: none;
-        border-bottom: var(--border-width) solid var(--border-subtle);
+        border-bottom: var(--border-width) solid var(--divider-popover);
       }
 
       .footer {
@@ -314,7 +314,7 @@ export class KtDatePicker extends KtElement {
         justify-content: flex-start;
         margin-top: var(--gap-element);
         padding-top: var(--gap-element);
-        border-top: var(--border-width) solid var(--border-subtle);
+        border-top: var(--border-width) solid var(--divider-popover);
       }
       .today {
         color: var(--color-primary-text);

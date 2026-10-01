@@ -79,7 +79,7 @@ export const listboxStyles = css`
     padding: var(--padding-expand);
     overflow: auto;
     list-style: none;
-    background: var(--color-dark-20);
+    background: var(--surface-popover);
     border-radius: var(--radius-input);
     scrollbar-width: thin;
 

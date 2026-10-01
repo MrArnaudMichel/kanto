@@ -58,7 +58,7 @@ export class KtDropdown extends KtElement {
         max-height: 224px;
         margin: 0;
         padding: var(--padding-expand);
-        background: var(--surface-raised);
+        background: var(--surface-popover);
         border-radius: var(--radius-input);
         transform: translateY(-6px);
         transform-origin: top left;

@@ -46,6 +46,14 @@ With React wrappers, React 19 JSX and Vue typings.
   7 and 30 days, this month and last, this year — beside two months; `presets`
   replaces them, `[]` hides them. A single date gets a Today button. On screens
   under 720px it shows one month, the periods above it.
+- **Popovers stand out in the light theme.** Every list, menu and calendar that
+  opens over the page — `kt-select`, `kt-input-menu`, `kt-multi-select`,
+  `kt-dropdown`, `kt-date-picker`, `kt-input`'s country picker — sat on a grey a
+  step darker than the page, where a hover or a period's band barely showed.
+  They now sit on white with an edge and a soft shadow, through new tokens:
+  `--surface-popover`, `--border-popover`, `--shadow-popover`,
+  `--divider-popover`. The dark theme looks as it did. A period's band in the
+  calendar is a clearer tint.
 - `kt-calendar` gains `months="2"`.
 - Floating panels are placed again when their size changes, and keep the width
   of their content wherever they are placed: a period picker no longer runs off

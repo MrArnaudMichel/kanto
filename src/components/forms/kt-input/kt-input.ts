@@ -237,7 +237,7 @@ export class KtInput extends KtElement {
         width: 280px;
         max-height: 225px;
         padding: var(--padding-expand);
-        background: var(--color-dark-20);
+        background: var(--surface-popover);
         border-radius: var(--radius-input);
       }
 

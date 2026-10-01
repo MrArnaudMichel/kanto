@@ -137,6 +137,14 @@
   /* Deliberately opposite the page, for anything that must read as floating
      above it — the tooltip. */
   --surface-inverted: var(--color-dark-8);
+
+  /* What floats over the page — a list, a calendar, a menu. In the dark the
+     ramp sets it apart on its own: a lighter surface, no edge, no shadow. */
+  --surface-popover: var(--color-dark-20);
+  --border-popover: transparent;
+  --shadow-popover: none;
+  /* Lines inside a popover: --border-subtle is the popover's own colour here. */
+  --divider-popover: var(--color-dark-24);
   --text-inverted: var(--color-text-100);
   --text-body: var(--color-text-100);
   --text-muted: var(--color-text-400);

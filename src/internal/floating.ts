@@ -43,7 +43,10 @@ export const floatingStyles = css`
     width: max-content;
     margin: 0;
     color: inherit;
-    border: none;
+    /* Set apart from the page by the theme: a lighter surface in the dark,
+       an edge and a soft shadow in the light. */
+    border: var(--border-width) solid var(--border-popover);
+    box-shadow: var(--shadow-popover);
   }
 `;
 

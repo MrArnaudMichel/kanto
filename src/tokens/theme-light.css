@@ -86,6 +86,14 @@
 
   /* Inverted really is inverted: a dark bubble on a light page. */
   --surface-inverted: rgba(29, 28, 34, 1);
+
+  /* Light, a darker step reads as a grey smudge and fades whatever sits on it,
+     and a white one is lost on a near-white page: white, then, with an edge
+     and the system's one soft shadow besides the toasts'. */
+  --surface-popover: var(--color-dark-8);
+  --border-popover: var(--color-dark-20);
+  --shadow-popover: 0 8px 24px rgba(28, 28, 30, 0.12), 0 1px 3px rgba(28, 28, 30, 0.08);
+  --divider-popover: var(--color-dark-20);
   --text-inverted: rgba(244, 244, 245, 1);
 }
 
@@ -157,6 +165,14 @@
     --border-code: var(--color-dark-20);
 
     --surface-inverted: rgba(29, 28, 34, 1);
+
+    /* Light, a darker step reads as a grey smudge and fades whatever sits on it,
+       and a white one is lost on a near-white page: white, then, with an edge
+       and the system's one soft shadow besides the toasts'. */
+    --surface-popover: var(--color-dark-8);
+    --border-popover: var(--color-dark-20);
+    --shadow-popover: 0 8px 24px rgba(28, 28, 30, 0.12), 0 1px 3px rgba(28, 28, 30, 0.08);
+    --divider-popover: var(--color-dark-20);
     --text-inverted: rgba(244, 244, 245, 1);
   }
 }

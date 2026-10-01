@@ -49,7 +49,15 @@ Dark is the canonical theme and is what `:root` carries.
 
 - **Surfaces are a ramp, not a shadow scale.** Elevation means a lighter
   surface: `--color-dark-12` (page) → `--color-dark-16` (card) →
-  `--color-dark-20` (raised). The only shadow in the system is on toasts.
+  `--color-dark-20` (raised). Shadows are kept for what floats over the page:
+  toasts, and popovers in the light theme.
+- **Popovers have their own surface.** Lists, menus and calendars that open
+  over the page use `--surface-popover`, `--border-popover`,
+  `--shadow-popover` and, for lines inside them, `--divider-popover`. In the
+  dark the ramp sets them apart alone — a lighter surface, no edge, no shadow.
+  In the light a darker step reads as a grey smudge and fades what sits on it,
+  and white alone is lost on a near-white page: white, then, with an edge and a
+  soft shadow.
 - **Semantic colours come in four variants.** `-base` is opaque, for solid
   fills; `-soft` is the same hue at 12% alpha, for tinted backgrounds; `-hover`
   is 16%; `-text` is for text and icons. Never colour text with `-base`: it is
