@@ -103,16 +103,23 @@ export function setAppearance(
   const preset = KT_ACCENTS.find((accent) => accent.id === appearance.accent);
   if (appearance.accent !== undefined && !preset) parseColor(appearance.accent);
 
+  // On the page a default is no attribute at all. On a container it is
+  // written out, so the container can go back to it inside a page that
+  // changed it — except the dark theme, which Kanto only has at the root.
+  const page = root === document.documentElement;
+  const clears = (key: Keyed | 'accent', value: string) =>
+    value === KT_DEFAULT_APPEARANCE[key] && (page || key === 'theme');
+
   for (const key of KEYS) {
     const value = appearance[key];
     if (value === undefined) continue;
-    if (value === KT_DEFAULT_APPEARANCE[key]) delete root.dataset[key];
+    if (clears(key, value)) delete root.dataset[key];
     else root.dataset[key] = value;
   }
   if (appearance.accent === undefined) return;
   if (preset) {
     setAccent(null, root);
-    if (preset.id === KT_DEFAULT_APPEARANCE.accent) delete root.dataset['accent'];
+    if (clears('accent', preset.id)) delete root.dataset['accent'];
     else root.dataset['accent'] = preset.id;
   } else {
     delete root.dataset['accent'];

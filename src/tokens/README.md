@@ -111,9 +111,15 @@ readAppearance(); // { theme: 'auto', accent: 'teal', font: 'inter', radius: 'de
 `setAppearance` changes only the settings it is given, and checks them all
 first: an unknown value throws and changes nothing.
 
-Density scales control heights, paddings and gaps — a button is 34px in
-`compact`, 46px in `comfortable` — on whole pixels. Text size scales every
-type style. Both compose with the mobile and ultra-wide scales.
+Density scales the heights of controls and fields — a button is 34px in
+`compact`, 46px in `comfortable`, on even pixels — the padding and gap
+tokens, and table cells. Text size scales every type token and table text.
+Both compose with the mobile and ultra-wide scales. A few inner sizes —
+calendar cells, the small segmented control — keep their own.
+
+The rounding of heights uses CSS `round()` where the browser has it (Chrome
+125, Firefox 118, Safari 15.4); before that, heights keep their exact
+fraction and nothing else changes.
 
 Kanto ships its own faces only. With `inter`, `plex` or `geist`, load the font
 yourself (Google Fonts has all three); without it, the system face shows.
@@ -121,7 +127,14 @@ yourself (Google Fonts has all three); without it, the system face shows.
 The inputs behind the attributes are `--radius-scale`, `--density-scale`,
 `--text-scale`, `--font-body` and `--font-display`. Set in CSS, they need one
 of the attributes on the same element for the tokens to re-read them there;
-`--font-*` take a full font stack, the scales a plain number.
+`--font-body` and `--font-display` take a full font stack, the scales a plain
+number.
+
+An element carrying one of these attributes re-declares Kanto's spacing and
+type tokens from these inputs, so an app that overrides a token itself —
+`:root { --button-height: 36px }` — repeats the override for that element, or
+overrides the input instead. The same goes for colour tokens under
+`data-accent`.
 
 ## Conventions
 

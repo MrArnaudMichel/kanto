@@ -21,8 +21,8 @@ afterEach(() => {
 });
 
 describe('setAppearance', () => {
-  it('sets each setting as an attribute, and a default as none', () => {
-    const root = document.createElement('div');
+  it('sets each setting as an attribute, and a default on the page as none', () => {
+    const root = document.documentElement;
     setAppearance(
       { theme: 'light', font: 'inter', radius: 'round', density: 'compact', textSize: 'large' },
       root,
@@ -37,6 +37,25 @@ describe('setAppearance', () => {
 
     setAppearance({ radius: 'default', font: 'kanto', theme: 'dark' }, root);
     expect({ ...root.dataset }).toEqual({ density: 'compact', textSize: 'large' });
+  });
+
+  it('writes a default on a container, so it can differ from the page', () => {
+    const panel = document.createElement('div');
+    setAppearance(
+      { density: 'default', font: 'kanto', accent: 'violet', radius: 'default' },
+      panel,
+    );
+    expect({ ...panel.dataset }).toEqual({
+      density: 'default',
+      font: 'kanto',
+      accent: 'violet',
+      radius: 'default',
+    });
+    expect(readAppearance(panel)).toMatchObject({
+      density: 'default',
+      font: 'kanto',
+      accent: 'violet',
+    });
   });
 
   it('touches only the settings it is given', () => {
@@ -54,7 +73,7 @@ describe('setAppearance', () => {
     expect(root.dataset['accent']).toBe('custom');
     expect(root.style.getPropertyValue('--accent-base')).not.toBe('');
     setAppearance({ accent: 'violet' }, root);
-    expect(root.hasAttribute('data-accent')).toBe(false);
+    expect(root.dataset['accent']).toBe('violet'); // written out on a container
     expect(root.style.getPropertyValue('--accent-base')).toBe('');
   });
 
@@ -101,6 +120,19 @@ describe('readAppearance', () => {
     root.dataset['radius'] = 'blob';
     expect(readAppearance(root).radius).toBe('default');
   });
+});
+
+describe('the scale tokens', () => {
+  // round() came to Chrome in 125: outside @supports it would void every
+  // height in older browsers, defaults included.
+  for (const file of ['spacing.css', 'responsive.css']) {
+    it(`${file} rounds only behind @supports`, () => {
+      const text = readFileSync(join(process.cwd(), 'src/tokens', file), 'utf8');
+      const outside = text.replace(/@supports[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, '');
+      expect(outside).not.toContain('round(');
+      expect(text).toMatch(/@supports \(width: round\(nearest, 1px, 1px\)\)/);
+    });
+  }
 });
 
 describe('appearance.css', () => {

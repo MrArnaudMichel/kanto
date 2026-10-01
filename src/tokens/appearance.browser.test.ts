@@ -83,7 +83,8 @@ describe('the scale inputs', () => {
     expect(resolve('--radius-input', 'radius')).toBe('14px');
     expect(resolve('--button-height', 'length')).toBe('34px');
     expect(resolve('--button-height-small', 'length')).toBe('28px');
-    expect(resolve('--padding-card', 'padding')).toBe('20px');
+    // Spacing is not rounded: a fraction of a pixel in a padding moves no text.
+    expect(resolve('--padding-card', 'padding')).toBe('20.4px');
     expect(fontSize('--font-normal-regular').size).toBe('15.75px');
   });
 
@@ -189,5 +190,24 @@ describe.each([
     expect(dot.left - circle.left).toBe(circle.right - dot.right);
     expect(dot.top - circle.top).toBe(circle.bottom - dot.bottom);
     expect(Number.isInteger(dot.left - circle.left)).toBe(true);
+  });
+});
+
+describe('kt-table', () => {
+  it('follows density and text size in its cells', async () => {
+    await page.viewport(1280, 800);
+    document.documentElement.dataset['density'] = 'compact';
+    document.documentElement.dataset['textSize'] = 'large';
+    const table = await fixture<HTMLElement & { columns: unknown; data: unknown }>(
+      '<kt-table></kt-table>',
+    );
+    table.columns = [{ key: 'name', label: 'Name' }];
+    table.data = [{ id: 1, name: 'Ada' }];
+    await settle(table);
+    const th = getComputedStyle(table.shadowRoot!.querySelector('th')!);
+    const td = getComputedStyle(table.shadowRoot!.querySelector('td')!);
+    expect(parseFloat(th.paddingTop)).toBeCloseTo(16 * 0.85, 1);
+    expect(parseFloat(td.paddingTop)).toBeCloseTo(14 * 0.85, 1);
+    expect(parseFloat(td.fontSize)).toBeCloseTo(14 * 1.125, 1);
   });
 });

@@ -128,8 +128,8 @@ export class KtTable extends KtElement {
       }
 
       th {
-        padding: 16px 18px;
-        font-size: 13px;
+        padding: calc(16px * var(--density-scale, 1)) calc(18px * var(--density-scale, 1));
+        font-size: calc(13px * var(--text-scale, 1));
         font-weight: inherit;
         text-align: left;
         white-space: nowrap;
@@ -181,13 +181,13 @@ export class KtTable extends KtElement {
       }
 
       td {
-        padding: 14px 18px;
-        font-size: 14px;
+        padding: calc(14px * var(--density-scale, 1)) calc(18px * var(--density-scale, 1));
+        font-size: calc(14px * var(--text-scale, 1));
         border-bottom: var(--border-width) solid var(--surface-hover);
       }
 
       :host([compact]) td {
-        padding: 8px 12px;
+        padding: calc(8px * var(--density-scale, 1)) calc(12px * var(--density-scale, 1));
       }
 
       /* === VIRTUAL ===
@@ -218,7 +218,7 @@ export class KtTable extends KtElement {
         border: none;
       }
       :host([compact]) th {
-        padding: 10px 12px;
+        padding: calc(10px * var(--density-scale, 1)) calc(12px * var(--density-scale, 1));
       }
 
       .select-cell {
@@ -227,7 +227,7 @@ export class KtTable extends KtElement {
       }
 
       .placeholder {
-        padding: 28px 0;
+        padding: calc(28px * var(--density-scale, 1)) 0;
         color: var(--text-muted);
         text-align: center;
       }
@@ -246,7 +246,7 @@ export class KtTable extends KtElement {
         }
         td,
         th {
-          padding: 10px 12px;
+          padding: calc(10px * var(--density-scale, 1)) calc(12px * var(--density-scale, 1));
         }
       }
     `,

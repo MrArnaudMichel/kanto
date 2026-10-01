@@ -18,38 +18,32 @@
   --radius-full: 9999px; /* toggle track and thumb */
 
   /* === PADDING === */
-  --padding-card: round(nearest, calc(24px * var(--density-scale, 1)), 1px);
-  --padding-modal: round(nearest, calc(24px * var(--density-scale, 1)), 1px);
-  --padding-input: round(nearest, calc(8px * var(--density-scale, 1)), 1px) 0;
-  --padding-form: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
-  --padding-sub-menu: round(nearest, calc(12px * var(--density-scale, 1)), 1px)
-    round(nearest, calc(24px * var(--density-scale, 1)), 1px);
-  --padding-sub-menu-item: round(nearest, calc(8px * var(--density-scale, 1)), 1px)
-    round(nearest, calc(16px * var(--density-scale, 1)), 1px);
-  --padding-expand: round(nearest, calc(8px * var(--density-scale, 1)), 1px);
-  --padding-expand-item: round(nearest, calc(8px * var(--density-scale, 1)), 1px)
-    round(nearest, calc(16px * var(--density-scale, 1)), 1px);
-  --padding-drag-drop: round(nearest, calc(16px * var(--density-scale, 1)), 1px)
-    round(nearest, calc(24px * var(--density-scale, 1)), 1px);
-  --padding-chip: round(nearest, calc(4px * var(--density-scale, 1)), 1px)
-    round(nearest, calc(12px * var(--density-scale, 1)), 1px);
-  --text-area-padding: round(nearest, calc(10px * var(--density-scale, 1)), 1px)
-    round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+  --padding-card: calc(24px * var(--density-scale, 1));
+  --padding-modal: calc(24px * var(--density-scale, 1));
+  --padding-input: calc(8px * var(--density-scale, 1)) 0;
+  --padding-form: calc(16px * var(--density-scale, 1));
+  --padding-sub-menu: calc(12px * var(--density-scale, 1)) calc(24px * var(--density-scale, 1));
+  --padding-sub-menu-item: calc(8px * var(--density-scale, 1)) calc(16px * var(--density-scale, 1));
+  --padding-expand: calc(8px * var(--density-scale, 1));
+  --padding-expand-item: calc(8px * var(--density-scale, 1)) calc(16px * var(--density-scale, 1));
+  --padding-drag-drop: calc(16px * var(--density-scale, 1)) calc(24px * var(--density-scale, 1));
+  --padding-chip: calc(4px * var(--density-scale, 1)) calc(12px * var(--density-scale, 1));
+  --text-area-padding: calc(10px * var(--density-scale, 1)) calc(16px * var(--density-scale, 1));
 
   /* === GAP === */
-  --gap-element: round(nearest, calc(4px * var(--density-scale, 1)), 1px);
-  --gap-button: round(nearest, calc(8px * var(--density-scale, 1)), 1px);
-  --gap-drag-drop: round(nearest, calc(12px * var(--density-scale, 1)), 1px);
-  --gap-form: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
-  --gap-card: round(nearest, calc(20px * var(--density-scale, 1)), 1px);
-  --gap-modal: round(nearest, calc(20px * var(--density-scale, 1)), 1px);
-  --gap-sub-menu: round(nearest, calc(24px * var(--density-scale, 1)), 1px);
+  --gap-element: calc(4px * var(--density-scale, 1));
+  --gap-button: calc(8px * var(--density-scale, 1));
+  --gap-drag-drop: calc(12px * var(--density-scale, 1));
+  --gap-form: calc(16px * var(--density-scale, 1));
+  --gap-card: calc(20px * var(--density-scale, 1));
+  --gap-modal: calc(20px * var(--density-scale, 1));
+  --gap-sub-menu: calc(24px * var(--density-scale, 1));
 
   /* === DIMENSIONS === */
-  --button-height-small: round(nearest, calc(32px * var(--density-scale, 1)), 2px);
-  --button-height: round(nearest, calc(40px * var(--density-scale, 1)), 2px);
-  --button-height-large: round(nearest, calc(48px * var(--density-scale, 1)), 2px);
-  --button-padding-x: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+  --button-height-small: calc(32px * var(--density-scale, 1));
+  --button-height: calc(40px * var(--density-scale, 1));
+  --button-height-large: calc(48px * var(--density-scale, 1));
+  --button-padding-x: calc(16px * var(--density-scale, 1));
 
   /* === BORDERS === */
   --border-width: 1px;
@@ -74,4 +68,19 @@
   --z-side-panel: 300;
   --z-modal: 400;
   --z-toast: 500;
+}
+
+/* Heights land on even pixels, so text centres on whole ones. CSS rounding
+   is newer than the rest of Kanto's CSS: behind @supports, an older
+   browser keeps the unrounded height rather than losing it. */
+@supports (width: round(nearest, 1px, 1px)) {
+  :root,
+  [data-radius],
+  [data-density],
+  [data-text-size],
+  [data-font] {
+    --button-height-small: round(nearest, calc(32px * var(--density-scale, 1)), 2px);
+    --button-height: round(nearest, calc(40px * var(--density-scale, 1)), 2px);
+    --button-height-large: round(nearest, calc(48px * var(--density-scale, 1)), 2px);
+  }
 }
