@@ -82,6 +82,47 @@ A red or a green accent sits close to the danger and success colours; Kanto
 does not stop you, but a primary button and a destructive one will look
 alike.
 
+## Appearance
+
+Besides the accent, four settings change how Kanto looks. Each is a data
+attribute, on the page or on any container:
+
+```html
+<html data-font="inter" data-radius="round" data-density="compact" data-text-size="large"></html>
+```
+
+| Attribute        | Values                                          |
+| ---------------- | ----------------------------------------------- |
+| `data-font`      | `kanto` · `system` · `inter` · `plex` · `geist` |
+| `data-radius`    | `sharp` · `default` · `round`                   |
+| `data-density`   | `compact` · `default` · `comfortable`           |
+| `data-text-size` | `small` · `default` · `large`                   |
+| `data-theme`     | `dark` · `light` · `auto`                       |
+
+Or all at once, with the accent:
+
+```js
+import { setAppearance, readAppearance } from 'kanto-ds';
+
+setAppearance({ theme: 'auto', accent: 'teal', font: 'inter', density: 'compact' });
+readAppearance(); // { theme: 'auto', accent: 'teal', font: 'inter', radius: 'default', … }
+```
+
+`setAppearance` changes only the settings it is given, and checks them all
+first: an unknown value throws and changes nothing.
+
+Density scales control heights, paddings and gaps — a button is 34px in
+`compact`, 46px in `comfortable` — on whole pixels. Text size scales every
+type style. Both compose with the mobile and ultra-wide scales.
+
+Kanto ships its own faces only. With `inter`, `plex` or `geist`, load the font
+yourself (Google Fonts has all three); without it, the system face shows.
+
+The inputs behind the attributes are `--radius-scale`, `--density-scale`,
+`--text-scale`, `--font-body` and `--font-display`. Set in CSS, they need one
+of the attributes on the same element for the tokens to re-read them there;
+`--font-*` take a full font stack, the scales a plain number.
+
 ## Conventions
 
 - **Surfaces are a ramp, not a shadow scale.** Elevation means a lighter

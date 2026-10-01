@@ -26,7 +26,7 @@ import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
-import { ACCENT, INTRODUCTION, INSTALLATION } from './pages/guide.js';
+import { APPEARANCE, INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import {
   applyDocsAppearance,
@@ -167,10 +167,10 @@ const GUIDE: Route[] = [
   },
   {
     section: 'guide',
-    slug: 'accent',
-    label: 'Accent colour',
+    slug: 'appearance',
+    label: 'Appearance',
     group: 'Design',
-    page: () => markdownPage(ACCENT, 'demo/pages/guide.ts'),
+    page: () => markdownPage(APPEARANCE, 'demo/pages/guide.ts'),
   },
 ];
 

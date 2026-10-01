@@ -60,7 +60,13 @@ With React wrappers, React 19 JSX and Vue typings.
 `setAccent('#e11d48')`. Contrast is solved for each colour in OKLCH — white on
 a primary fill and the accent as text both hold 4.5:1 in both themes — and the
 neutral surfaces take a trace of its hue. `accentPalette()` returns the values
-without applying them. The docs site has a chooser in its top bar.
+without applying them. The docs site has a Customise menu in its top bar.
+
+**Appearance.** Font, corners, density and text size join the accent as
+settings: `data-font`, `data-radius`, `data-density` and `data-text-size` on
+the page or a container, or `setAppearance({ … })` for all of them with the
+theme and accent. Density and text size compose with the responsive scales;
+the defaults render as before.
 
 ### Changed
 
