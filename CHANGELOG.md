@@ -5,6 +5,24 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.1] — 2026-10-02
+
+### Fixed
+
+- `import 'kanto-ds'` and `import 'kanto-ds/vue'` registered no element in a
+  production build. The package told bundlers its entry points had no side
+  effects, so Vite and webpack dropped them, and every element with them; a
+  development server does not tree-shake, which is why it only showed once
+  deployed. Both entries now declare their side effects, and every release
+  builds a real application against the packed package before it ships.
+
+### Changed
+
+- The default icons gain the few a first screen reaches for — `plus`,
+  `pencil`, `settings`, `download`, `upload`, `external-link`, `filter`,
+  `ellipsis`, `refresh-cw` — so a button copied from the docs draws its icon
+  without a registration step.
+
 ## [1.6.0] — 2026-10-02
 
 ### Added

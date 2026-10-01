@@ -121,8 +121,10 @@ import 'kanto-ds/components/core/kt-button'; // just this one
 ## Icons
 
 `<kt-icon>` resolves [Lucide](https://lucide.dev) icons by name at render time,
-which means the set cannot be tree-shaken. So Kanto ships only the 24 its own
-elements draw. Register what your application uses:
+which means the set cannot be tree-shaken. So Kanto ships the 24 its own
+elements draw and nine a first screen reaches for (`plus`, `pencil`,
+`settings`, `download`, `upload`, `external-link`, `filter`, `ellipsis`,
+`refresh-cw`). Register what else your application uses:
 
 ```js
 import { Rocket, Wallet } from 'lucide';

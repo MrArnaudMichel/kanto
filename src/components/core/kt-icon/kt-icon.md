@@ -13,8 +13,10 @@ colour of the text around it, with no attribute to keep in sync.
 
 ## Registering icons
 
-Kanto ships only the 24 icons its own elements draw. Register whatever else
-the application uses, once, at start-up:
+Kanto ships the 24 icons its own elements draw and nine a first screen reaches
+for — `plus`, `pencil`, `settings`, `download`, `upload`, `external-link`,
+`filter`, `ellipsis`, `refresh-cw`. Register whatever else the application
+uses, once, at start-up:
 
 ```js
 import { Rocket, Wallet } from 'lucide';

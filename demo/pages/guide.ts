@@ -25,7 +25,7 @@ select.addEventListener('kt-change', (e) => console.log(e.detail.value));
 
 ## What is in the box
 
-Twenty-eight elements across six groups, a token layer that drives all of them, and a light theme that costs no component-specific CSS.
+Forty-nine elements across six groups, a token layer that drives all of them, and a light theme that costs no component-specific CSS.
 
 This site is built with those elements and no framework. If a component breaks, its own documentation breaks with it.
 `;
@@ -68,7 +68,7 @@ import 'kanto-ds/tokens/index.css';
 
 ## Icons
 
-\`<kt-icon>\` resolves [Lucide](https://lucide.dev) icons by name at render time, which means the set cannot be tree-shaken. Kanto ships only the icons its own elements draw; register whatever else you use, once:
+\`<kt-icon>\` resolves [Lucide](https://lucide.dev) icons by name at render time, which means the set cannot be tree-shaken. Kanto ships the icons its own elements draw, and the few a first screen reaches for — \`plus\`, \`pencil\`, \`settings\`, \`download\`, \`upload\`, \`external-link\`, \`filter\`, \`ellipsis\`, \`refresh-cw\`. Register whatever else you use, once:
 
 \`\`\`js
 import { Rocket, Wallet } from 'lucide';
