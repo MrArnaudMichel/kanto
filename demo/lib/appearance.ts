@@ -200,10 +200,12 @@ export function segmented<T extends string>(
   list: readonly { id: T; label: string }[],
   value: T,
   onPick: (id: T) => void,
+  disabled = false,
 ): TemplateResult {
   return html`<kt-segmented-control
     size="small"
     label=${label}
+    ?disabled=${disabled}
     .options=${list.map(({ id, label: text }) => ({ value: id, label: text }))}
     .value=${value}
     @kt-change=${(event: CustomEvent<{ value: T }>) => onPick(event.detail.value)}
