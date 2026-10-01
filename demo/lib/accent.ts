@@ -79,7 +79,10 @@ export function accentChooser(
     );
   };
 
+  const custom = current.kind === 'custom' ? current.color : null;
+
   return html`<div class="accent-panel">
+    <p class="accent-heading">Accent colour</p>
     <div class="accent-swatches" role="radiogroup" aria-label="Accent colour">
       ${KT_ACCENTS.map(
         (accent, index) =>
@@ -98,13 +101,39 @@ export function accentChooser(
       )}
     </div>
     <label class="accent-custom">
-      <input
-        type="color"
-        .value=${current.kind === 'custom' ? current.color : accentSwatch(current)}
-        @input=${(event: Event) =>
-          onPick({ kind: 'custom', color: (event.target as HTMLInputElement).value })}
-      />
-      <span>Custom${current.kind === 'custom' ? html` · <code>${current.color}</code>` : ''}</span>
+      <!-- The native input sits invisible over a swatch of its own, so the
+           row looks like the presets above it and still opens the OS picker. -->
+      <span
+        class=${custom ? 'accent-custom-swatch picked' : 'accent-custom-swatch'}
+        style=${custom ? `--swatch: ${custom}` : ''}
+      >
+        ${custom ? '' : html`<kt-icon name="pipette" size="14"></kt-icon>`}
+        <input
+          type="color"
+          .value=${custom ?? accentSwatch(current)}
+          @input=${(event: Event) =>
+            onPick({ kind: 'custom', color: (event.target as HTMLInputElement).value })}
+        />
+      </span>
+      <span class="accent-custom-label">Custom colour</span>
+      ${custom ? html`<code>${custom}</code>` : ''}
     </label>
   </div>`;
+}
+
+/** The top-bar control: a palette button opening the chooser. */
+export function accentMenu(
+  current: AccentChoice,
+  onPick: (choice: AccentChoice) => void,
+): TemplateResult {
+  return html`<kt-dropdown align="end" class="accent-menu">
+    <kt-button
+      slot="trigger"
+      size="small"
+      variant="secondary-no-bg"
+      icon="palette"
+      label="Accent colour"
+    ></kt-button>
+    <div slot="panel">${accentChooser(current, onPick)}</div>
+  </kt-dropdown>`;
 }

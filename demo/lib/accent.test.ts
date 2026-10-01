@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'lit';
-import { accentChooser, applyAccent, readAccent } from './accent.js';
+import { accentChooser, accentMenu, applyAccent, readAccent } from './accent.js';
 
 const KEY = 'kanto-docs-accent';
 
@@ -109,5 +109,30 @@ describe('the chooser', () => {
     const { radios } = mount({ kind: 'custom', color: '#16a34a' });
     expect(radios.some((r) => r.getAttribute('aria-checked') === 'true')).toBe(false);
     expect(document.body.querySelector('.accent-custom')!.textContent).toContain('#16a34a');
+  });
+});
+
+describe('the top-bar menu', () => {
+  function mount(current = readAccent()) {
+    const host = document.body.appendChild(document.createElement('div'));
+    render(accentMenu(current, vi.fn()), host);
+    return host;
+  }
+
+  it('opens from a palette icon button, named for what it does', () => {
+    const trigger = mount().querySelector('kt-dropdown > kt-button[slot="trigger"]')!;
+    expect(trigger.getAttribute('icon')).toBe('palette');
+    expect(trigger.getAttribute('label')).toBe('Accent colour');
+  });
+
+  it('names the custom colour input', () => {
+    const input = mount().querySelector<HTMLInputElement>('input[type="color"]')!;
+    expect(input.closest('label')!.textContent).toContain('Custom colour');
+  });
+
+  it('shows the custom colour as the custom swatch when one is in use', () => {
+    const host = mount({ kind: 'custom', color: '#16a34a' });
+    const swatch = host.querySelector<HTMLElement>('.accent-custom-swatch')!;
+    expect(swatch.style.getPropertyValue('--swatch')).toBe('#16a34a');
   });
 });

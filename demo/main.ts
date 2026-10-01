@@ -28,7 +28,7 @@ import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
 import { ACCENT, INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
-import { accentChooser, applyAccent, readAccent, type AccentChoice } from './lib/accent.js';
+import { accentMenu, applyAccent, readAccent, type AccentChoice } from './lib/accent.js';
 
 import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
@@ -258,6 +258,8 @@ const href = (route: Route) => `#/${route.section}/${route.slug}`;
 const THEME_KEY = 'kanto-docs-theme';
 type Theme = 'dark' | 'light';
 
+/** The accent on screen; storage may be blocked, so it is kept here too. */
+let accent: AccentChoice = readAccent();
 let filter = '';
 let activeHeading = '';
 /** The headings whose sections are on screen, lit on the contents rail. */
@@ -475,17 +477,11 @@ function shell(): TemplateResult {
       </nav>
 
       <div slot="actions" class="header-actions">
-        <kt-dropdown align="end" class="accent-menu">
-          <button slot="trigger" type="button" class="accent-trigger" aria-label="Accent colour">
-            <span class="accent-dot"></span>
-          </button>
-          <div slot="panel">
-            ${accentChooser(readAccent(), (choice: AccentChoice) => {
-              applyAccent(choice);
-              update();
-            })}
-          </div>
-        </kt-dropdown>
+        ${accentMenu(accent, (choice: AccentChoice) => {
+          accent = choice;
+          applyAccent(choice);
+          update();
+        })}
         <kt-segmented-control
           size="small"
           label="Theme"
@@ -593,7 +589,7 @@ function trackReading(): void {
 
 setRenderer(update);
 applyTheme(readTheme());
-applyAccent(readAccent());
+applyAccent(accent);
 
 window.addEventListener('hashchange', () => {
   filter = '';
