@@ -610,7 +610,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
   'kt-calendar': () =>
     html`<div class="demo-row" style="align-items:flex-start;gap:32px">
       <kt-calendar value="2026-09-25"></kt-calendar>
-      <kt-calendar range value="2026-09-07/2026-09-18"></kt-calendar>
+      <kt-calendar range months="2" value="2026-09-07/2026-09-18"></kt-calendar>
     </div>`,
 
   'kt-date-picker': () =>

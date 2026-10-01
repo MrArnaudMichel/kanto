@@ -12,18 +12,25 @@ when the calendar _is_ the interface — a booking page, a dashboard's date
 filter, a planning view — and `<kt-date-picker>` when it is only a way to fill
 a field.
 
-## Months and years in three clicks
+## A month and a year in two clicks
 
-The title's month and year are buttons:
+The title — "September 2026" — opens one panel: a scrolling list of years
+beside the twelve months of the one chosen. Pick the year, then the month, and
+the days are back, the day of the month kept: from 25 September, choosing March
+1987 lands on 25 March 1987. The list opens on the chosen year, centred, and
+reaches from `min` to `max` — or, without them, 120 years back and 50 ahead,
+birthdays to plans. Typing four digits in the list jumps to that year. Months
+wholly outside `min`/`max` are disabled.
 
-- **The month** opens a grid of the twelve months.
-- **The year** opens a grid of twelve years; the arrows page twelve years at a
-  time.
+The arrows beside the title page a month at a time; they are the only thing
+that does.
 
-Picking a year shows its months, picking a month shows its days — so a date
-decades away is three or four clicks, not three hundred pages. The day of the
-month is kept on the way: from 25 September, choosing March lands on 25 March.
-Months and years wholly outside `min`/`max` are disabled.
+## Two months
+
+`months="2"` shows two months side by side — what `<kt-date-picker range>`
+does, so a period across a month's end is two clicks. Each grid holds its own
+days only, so none shows twice, and the keyboard moves across both, paging
+only once it leaves the second.
 
 ## Keyboard
 
@@ -38,17 +45,22 @@ In the days, the WAI-ARIA date grid pattern:
 | `Shift` + `Page Up` / `Down` | Same day, previous / next year  |
 | `Enter` / `Space`            | Choose the day in focus         |
 
-In the months and years:
+In the year list:
 
 | Key                     | Does                                                                 |
 | ----------------------- | -------------------------------------------------------------------- |
-| Arrows                  | Move through the grid, three to a row                                |
-| `Page Up` / `Page Down` | Previous / next year, or twelve years                                |
-| `Enter` / `Space`       | Choose, and go down a level                                          |
+| `↑` / `↓`               | Previous / next year                                                 |
+| `Page Up` / `Page Down` | Ten years back / ahead                                               |
+| `Home` / `End`          | First / last year offered                                            |
+| Four digits             | That year                                                            |
+| `Enter`, `Tab`          | On to the months                                                     |
 | `Escape`                | Back to the days — and no further, so an enclosing dialog stays open |
 
-Focus follows every switch of view, so the arrow keys keep working without a
-click in between.
+In the months: the arrows, three to a row; `Page Up`/`Page Down` by year;
+`Enter` to choose; `Escape` back to the days.
+
+Focus follows every switch, so the keys keep working without a click in
+between.
 
 ## ISO values and locales
 
@@ -68,6 +80,7 @@ browser's language. A period takes two picks in either order and fires
 | `range`  | `range`   | `boolean`        | `false`            |
 | `min`    | `min`     | `string`         | `''`               |
 | `max`    | `max`     | `string`         | `''`               |
+| `months` | `months`  | `1 \| 2`         | `1`                |
 | `locale` | `locale`  | `string`         | page, then browser |
 | `label`  | `label`   | `string`         | from `setStrings`  |
 

@@ -35,6 +35,21 @@ With React wrappers, React 19 JSX and Vue typings.
   "September 2026" as one control with the arrows grouped beside it, the days
   are 32px, and today is a dot under its number. `KtCalendarView` is now
   `'day' | 'month'`.
+- **`kt-date-picker` takes a typed date**, read the way the reader writes it —
+  `25/09/2026`, `9/25/2026`, `25 sept.`, ISO, the year optional — and a period
+  as two dates around a dash. A date that does not read, or falls outside
+  `min`/`max`, is flagged as `kt-input` flags an error, and reported as
+  `badInput`. The field is a text field now, the calendar button leading it.
+  Parts: `field`, `input`, `trigger` (the button), `panel`, `presets`,
+  `calendar`.
+- **With `range`, `kt-date-picker` offers ready-made periods** — today, the last
+  7 and 30 days, this month and last, this year — beside two months; `presets`
+  replaces them, `[]` hides them. A single date gets a Today button. On screens
+  under 720px it shows one month, the periods above it.
+- `kt-calendar` gains `months="2"`.
+- Floating panels are placed again when their size changes, and keep the width
+  of their content wherever they are placed: a period picker no longer runs off
+  the screen once its months have drawn.
 - `kt-radio`'s dot is centred on whole pixels in every browser; it sat off
   centre in Firefox.
 
