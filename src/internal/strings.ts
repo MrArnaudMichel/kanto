@@ -81,6 +81,12 @@ export interface KtStrings {
   /** A required checkbox left unchecked. */
   checkRequired: string;
   dateRequired: string;
+  /** A typed date that does not read as one; `example` is today, written the reader's way. */
+  dateInvalid: (example: string) => string;
+  /** A typed date outside the field's min and max. */
+  dateOutOfRange: string;
+  /** The date field's button that opens its calendar. */
+  openCalendar: string;
   /** A phone number typed with the prefix only dialled from inside the country. */
   phoneTrunkPrefix: (prefix: string) => string;
 
@@ -170,6 +176,9 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   selectFile: 'Select a file.',
   checkRequired: 'Check this box to continue.',
   dateRequired: 'Select a date.',
+  dateInvalid: (example: string) => `Enter a date like ${example}.`,
+  dateOutOfRange: 'This date is outside the dates you can choose.',
+  openCalendar: 'Open calendar',
   phoneTrunkPrefix: (prefix: string) => `Enter the number without the leading ${prefix}.`,
 
   openMenu: 'Open menu',

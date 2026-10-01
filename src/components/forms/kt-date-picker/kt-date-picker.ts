@@ -1,6 +1,7 @@
 import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { live } from 'lit/directives/live.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit, toggleListener, uniqueId } from '#internal/events';
 import {
@@ -12,10 +13,21 @@ import {
 import { FloatingController, floatingStyles } from '#internal/floating';
 import { dateFormat, resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
-import { compareDates, parseDate, parseRange, toLocalDate, type PlainDate } from '#internal/date';
+import {
+  compareDates,
+  formatDate,
+  formatRange,
+  parseDate,
+  parseRange,
+  toLocalDate,
+  today,
+  type PlainDate,
+} from '#internal/date';
+import { exampleDate, parseTypedDate, parseTypedRange } from '#internal/typed-date';
 import '../kt-calendar/kt-calendar.js';
 import type { KtCalendar } from '../kt-calendar/kt-calendar.js';
 import '../../core/kt-icon/kt-icon.js';
+import '../../feedback/kt-tooltip/kt-tooltip.js';
 
 export type KtDatePickerSize = 'small' | 'medium' | 'large';
 
@@ -27,13 +39,20 @@ export type KtDatePickerSize = 'small' | 'medium' | 'large';
  * the field shows is the same date formatted for the reader's language, and
  * the calendar starts its weeks on the day their region does.
  *
+ * The field takes a date typed the way the reader writes it — `25/09/2026` in
+ * London, `9/25/2026` in New York, `25 sept.` in Paris, ISO anywhere — on Enter
+ * or when it is left. What does not read as a date is flagged, and the value
+ * it had is kept.
+ *
  * The popup is a `<kt-calendar>`, with its keyboard model and its month and
  * year views: the WAI-ARIA date picker dialog pattern, where Escape closes the
  * dialog and hands focus back to the field, and tabbing out closes it too.
  *
  * @element kt-date-picker
  *
- * @csspart trigger - The field.
+ * @csspart field - The field.
+ * @csspart input - The text the date is typed into.
+ * @csspart trigger - The button that opens the calendar.
  * @csspart panel - The calendar popup.
  * @csspart calendar - The `<kt-calendar>` inside it.
  *
@@ -57,7 +76,6 @@ export class KtDatePicker extends KtElement {
         position: relative;
         display: block;
         --field-height: var(--button-height);
-        --day-size: 36px;
       }
       :host([size='small']) {
         --field-height: var(--button-height-small);
@@ -66,88 +84,99 @@ export class KtDatePicker extends KtElement {
         --field-height: var(--button-height-large);
       }
 
+      /* The field, as kt-input draws one: a fill with a resting hairline, an
+         outline on hover and focus that never reflows it. */
       .field {
-        position: relative;
-      }
-
-      .trigger {
-        display: grid;
-        grid-template-columns: 1fr auto;
+        display: flex;
         align-items: center;
-        gap: var(--gap-element);
-        width: 100%;
+        gap: 2px;
         height: var(--field-height);
-        padding: 0 var(--button-padding-x);
+        padding: 0 10px 0 4px;
         color: var(--text-body);
-        font: var(--font-input);
-        text-align: left;
         background-color: var(--color-dark-20);
         border: var(--border-width) solid var(--border-field);
         border-radius: var(--radius-input);
         outline: var(--outline-width) solid transparent;
-        cursor: pointer;
         transition:
           background-color var(--duration-instant),
           outline-color var(--duration-instant);
       }
-      .trigger:hover {
+      .field:hover {
         outline: var(--outline-width) solid var(--color-text-700);
       }
-      .trigger:focus-visible,
-      .open .trigger {
+      .field:focus-within,
+      .open .field {
         background-color: var(--color-dark-12);
         outline: var(--outline-width) solid var(--color-primary-base);
       }
-      .error .trigger,
-      .error .trigger:hover {
+      .error .field,
+      .error .field:hover,
+      .error .field:focus-within {
         outline: var(--outline-width) solid var(--color-danger-base);
       }
-      :host(:disabled) .trigger {
+      :host(:disabled) .field {
         color: var(--text-disabled);
         background-color: var(--color-dark-14);
-        cursor: not-allowed;
       }
 
-      .value {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-      .placeholder {
-        color: var(--text-muted);
-      }
-
-      .icons {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--gap-element);
-        color: var(--text-muted);
-      }
-      /* Room for the clear button, which sits over the field, not inside the
-         trigger: a button inside a button is not a thing assistive
-         technology can operate. */
-      .clearable .icons {
-        padding-left: calc(18px + var(--gap-element));
-      }
+      /* The calendar button leads: it says what kind of field this is. */
+      .trigger,
       .clear {
-        position: absolute;
-        top: 50%;
-        /* Just left of the calendar icon, in the room .icons keeps for it. */
-        right: calc(var(--button-padding-x) + 18px + var(--gap-element));
         display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
         padding: 0;
         color: var(--text-muted);
         background: none;
         border: none;
-        border-radius: var(--radius-sub-menu);
+        border-radius: calc(var(--radius-input) - 2px);
         cursor: pointer;
-        transform: translateY(-50%);
+        transition:
+          background-color var(--duration-instant),
+          color var(--duration-instant);
+      }
+      .trigger {
+        width: calc(var(--field-height) - 10px);
+        height: calc(var(--field-height) - 10px);
+      }
+      .trigger:hover,
+      .open .trigger {
+        color: var(--text-body);
+        background: var(--color-dark-22);
       }
       .clear:hover {
         color: var(--text-body);
       }
+      .trigger:focus-visible,
       .clear:focus-visible {
         outline: var(--outline-width) solid var(--color-primary-base);
+      }
+      :host(:disabled) .trigger {
+        cursor: not-allowed;
+      }
+
+      input {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        padding: 0 4px;
+        color: inherit;
+        font: var(--font-input);
+        background: transparent;
+        border: none;
+        outline: none;
+      }
+      input::placeholder {
+        color: var(--text-muted);
+      }
+      .error input {
+        color: var(--color-danger-text);
+      }
+
+      .error-icon {
+        flex: none;
+        color: var(--color-danger-text);
       }
 
       /* Placed from the field by FloatingController. */
@@ -185,8 +214,8 @@ export class KtDatePicker extends KtElement {
     `,
   ];
 
-  @query('.trigger')
-  private trigger?: HTMLButtonElement;
+  @query('input')
+  private input?: HTMLInputElement;
 
   @query('kt-calendar')
   private calendar?: KtCalendar;
@@ -196,11 +225,17 @@ export class KtDatePicker extends KtElement {
   private readonly panelId = uniqueId('kt-date-picker-panel');
 
   @state() private open = false;
+  /** What is typed, while it differs from the value shown. */
+  @state() private text = '';
+  @state() private editing = false;
+  /** Why the typed text was turned down, if it was. */
+  @state() private typedError = '';
+  @state() private focused = false;
   @state() private placement: 'bottom' | 'top' = 'bottom';
 
   private floating = new FloatingController(this, {
     panel: () => this.shadowRoot?.querySelector<HTMLElement>('.panel'),
-    anchor: () => this.shadowRoot?.querySelector('.trigger'),
+    anchor: () => this.shadowRoot?.querySelector('.field'),
     onPlace: (side) => {
       this.placement = side === 'top' ? 'top' : 'bottom';
     },
@@ -294,6 +329,7 @@ export class KtDatePicker extends KtElement {
       changed.has('range') ||
       changed.has('required') ||
       changed.has('error') ||
+      changed.has('typedError' as keyof KtDatePicker) ||
       this.stringsChanged(changed)
     ) {
       const complete = this.isComplete();
@@ -302,14 +338,20 @@ export class KtDatePicker extends KtElement {
       const missing = this.required && !complete;
       setValidity(
         this.internals,
-        { valueMissing: missing, customError: Boolean(this.error) },
-        this.error || (missing ? strings().dateRequired : ''),
+        {
+          valueMissing: missing,
+          badInput: Boolean(this.typedError),
+          customError: Boolean(this.error),
+        },
+        this.error || this.typedError || (missing ? strings().dateRequired : ''),
       );
     }
   }
 
   formResetCallback(): void {
     this.value = this.defaultValue;
+    this.editing = false;
+    this.typedError = '';
     this.close(false);
   }
 
@@ -326,7 +368,7 @@ export class KtDatePicker extends KtElement {
   }
 
   override focus(options?: FocusOptions): void {
-    this.trigger?.focus(options);
+    this.input?.focus(options);
   }
 
   // --- Reading the value ---
@@ -388,8 +430,14 @@ export class KtDatePicker extends KtElement {
   }
 
   private toggle(): void {
-    if (this.open) this.close(false);
+    if (this.open) this.close(true);
     else void this.show();
+  }
+
+  /** A click in the text opens the calendar, leaving the focus to type. */
+  private openForTyping(): void {
+    if (this.inactive || this.open) return;
+    this.open = true;
   }
 
   // --- Choosing ---
@@ -397,28 +445,105 @@ export class KtDatePicker extends KtElement {
   private onCalendarChange(event: CustomEvent<{ value: string }>): void {
     // The calendar's own event stops here; the picker reports its value.
     event.stopPropagation();
+    this.editing = false;
+    this.typedError = '';
     this.value = event.detail.value;
     this.close(true);
     emit(this, 'kt-change', { value: this.value });
   }
 
   private clear(): void {
+    this.editing = false;
+    this.typedError = '';
     this.value = null;
     emit(this, 'kt-change', { value: null });
     this.focus();
   }
 
+  // --- Typing ---
+
+  private onInput(event: Event): void {
+    this.text = (event.target as HTMLInputElement).value;
+    this.editing = true;
+  }
+
+  /**
+   * Reads what was typed into the value. Text that is not a date, or is a date
+   * outside min and max, is flagged and the value kept; an empty field empties
+   * the value.
+   */
+  private commitTyped(): void {
+    if (!this.editing) return;
+    this.editing = false;
+    const typed = this.text.trim();
+
+    if (!typed) {
+      this.typedError = '';
+      if (this.value !== null) {
+        this.value = null;
+        emit(this, 'kt-change', { value: null });
+      }
+      return;
+    }
+
+    const locale = this.resolvedLocale;
+    const now = today();
+    const read = this.range
+      ? parseTypedRange(typed, locale, now)
+      : (() => {
+          const date = parseTypedDate(typed, locale, now);
+          return date && { start: date, end: date };
+        })();
+    if (!read) {
+      this.text = typed;
+      this.editing = true;
+      this.typedError = strings().dateInvalid(exampleDate(locale, now));
+      return;
+    }
+
+    const min = parseDate(this.min);
+    const max = parseDate(this.max);
+    if ((min && compareDates(read.start, min) < 0) || (max && compareDates(read.end, max) > 0)) {
+      this.text = typed;
+      this.editing = true;
+      this.typedError = strings().dateOutOfRange;
+      return;
+    }
+
+    this.typedError = '';
+    const value = this.range ? formatRange(read.start, read.end) : formatDate(read.start);
+    if (value !== this.value) {
+      this.value = value;
+      emit(this, 'kt-change', { value });
+    }
+  }
+
   // --- Keyboard ---
 
-  private onTriggerKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault();
-      void this.show();
+  private onInputKeyDown(event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'Enter':
+        event.preventDefault();
+        this.commitTyped();
+        if (!this.typedError) this.close(false);
+        return;
+      case 'Escape':
+        // Puts the text back, and closes the calendar if it was open.
+        if (!this.editing && !this.open) return;
+        event.preventDefault();
+        event.stopPropagation();
+        this.editing = false;
+        this.typedError = '';
+        this.close(false);
+        return;
+      case 'ArrowDown':
+        event.preventDefault();
+        void this.show();
     }
   }
 
   private onPanelKeyDown(event: KeyboardEvent): void {
-    // The calendar keeps Escape for itself while it shows months or years.
+    // The calendar keeps Escape for itself while it shows months and years.
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
@@ -429,56 +554,70 @@ export class KtDatePicker extends KtElement {
   // --- Rendering ---
 
   override render(): TemplateResult {
+    const s = strings();
     const shown = this.display();
-    const placeholder =
-      this.placeholder ?? (this.range ? strings().selectPeriod : strings().selectDate);
-    const showClear = this.clearable && this.value !== null && !this.inactive;
+    const placeholder = this.placeholder ?? (this.range ? s.selectPeriod : s.selectDate);
+    const error = this.error || this.typedError;
+    const showClear =
+      this.clearable && this.value !== null && !this.inactive && !this.editing && !error;
 
     return html`${
-        this.error
-          ? html`<span id="error-message" class="visually-hidden">${this.error}</span>`
-          : nothing
+        error ? html`<span id="error-message" class="visually-hidden">${error}</span>` : nothing
       }
       <div
-        class=${classMap({
-          field: true,
-          open: this.open,
-          error: Boolean(this.error),
-          clearable: showClear,
-        })}
+        class=${classMap({ open: this.open, error: Boolean(error) })}
         @focusout=${this.onFocusOut}
       >
-        <button
-          part="trigger"
-          type="button"
-          class="trigger"
-          aria-haspopup="dialog"
-          aria-expanded=${this.open ? 'true' : 'false'}
-          aria-controls=${this.panelId}
-          aria-label=${this.label ? `${this.label}${shown ? `, ${shown}` : ''}` : nothing}
-          aria-invalid=${this.error ? 'true' : nothing}
-          aria-describedby=${this.error ? 'error-message' : nothing}
-          ?disabled=${this.inactive}
-          @click=${this.toggle}
-          @keydown=${this.onTriggerKeyDown}
-        >
-          <span class=${classMap({ value: true, placeholder: !shown })}>
-            ${shown ?? placeholder}
-          </span>
-          <span class="icons"><kt-icon name="calendar" size="18"></kt-icon></span>
-        </button>
-        ${
-          showClear
-            ? html`<button
-                type="button"
-                class="clear"
-                aria-label=${strings().clear}
-                @click=${this.clear}
-              >
-                <kt-icon name="x" size="18"></kt-icon>
-              </button>`
-            : nothing
-        }
+        <div part="field" class="field">
+          <button
+            part="trigger"
+            type="button"
+            class="trigger"
+            tabindex="-1"
+            aria-label=${s.openCalendar}
+            aria-haspopup="dialog"
+            aria-expanded=${this.open ? 'true' : 'false'}
+            aria-controls=${this.panelId}
+            ?disabled=${this.inactive}
+            @click=${this.toggle}
+          >
+            <kt-icon name="calendar" size="18"></kt-icon>
+          </button>
+          <input
+            part="input"
+            .value=${live(this.editing ? this.text : (shown ?? ''))}
+            placeholder=${placeholder}
+            autocomplete="off"
+            aria-label=${this.label || placeholder}
+            aria-invalid=${error ? 'true' : nothing}
+            aria-describedby=${error ? 'error-message' : nothing}
+            ?disabled=${this.inactive}
+            @input=${this.onInput}
+            @change=${this.commitTyped}
+            @keydown=${this.onInputKeyDown}
+            @click=${this.openForTyping}
+            @focus=${() => {
+              this.focused = true;
+            }}
+            @blur=${() => {
+              this.focused = false;
+            }}
+          />
+          ${
+            error
+              ? html`<kt-tooltip class="error-icon" text=${error} ?open=${this.focused}>
+                  <kt-icon name="circle-alert" size="18"></kt-icon>
+                </kt-tooltip>`
+              : nothing
+          }
+          ${
+            showClear
+              ? html`<button type="button" class="clear" aria-label=${s.clear} @click=${this.clear}>
+                  <kt-icon name="x" size="18"></kt-icon>
+                </button>`
+              : nothing
+          }
+        </div>
 
         <div
           part="panel"
@@ -492,7 +631,7 @@ export class KtDatePicker extends KtElement {
           })}
           role="dialog"
           aria-modal="false"
-          aria-label=${this.range ? strings().selectPeriod : strings().selectDate}
+          aria-label=${this.range ? s.selectPeriod : s.selectDate}
           @keydown=${this.onPanelKeyDown}
         >
           ${

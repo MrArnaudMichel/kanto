@@ -11,6 +11,18 @@ const day = (el: KtDatePicker, iso: string) =>
 const medium = (iso: string, locale = 'en-GB') =>
   new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(`${iso}T12:00`));
 
+const input = (el: KtDatePicker) => el.shadowRoot!.querySelector('input')!;
+
+/** Types into the field, as a person would, then presses `key` if given. */
+async function type(el: KtDatePicker, text: string, key?: string) {
+  input(el).value = text;
+  input(el).dispatchEvent(new Event('input', { bubbles: true }));
+  if (key) {
+    input(el).dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, composed: true }));
+  }
+  await settle(el);
+}
+
 async function open(el: KtDatePicker) {
   $(el, '.trigger').click();
   await settle(el);
@@ -26,19 +38,19 @@ async function pick(el: KtDatePicker, target: HTMLElement) {
 describe('kt-date-picker', () => {
   it('shows a placeholder while empty, for a day or a period', async () => {
     const single = await fixture<KtDatePicker>('<kt-date-picker locale="en-GB"></kt-date-picker>');
-    expect($(single, '.value').textContent!.trim()).toBe('Select a date');
+    expect(input(single).placeholder).toBe('Select a date');
 
     const range = await fixture<KtDatePicker>(
       '<kt-date-picker range locale="en-GB"></kt-date-picker>',
     );
-    expect($(range, '.value').textContent!.trim()).toBe('Select a period');
+    expect(input(range).placeholder).toBe('Select a period');
   });
 
   it('shows its ISO value formatted for the locale', async () => {
     const el = await fixture<KtDatePicker>(
       '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
     );
-    expect($(el, '.value').textContent!.trim()).toBe(medium('2026-09-25'));
+    expect(input(el).value).toBe(medium('2026-09-25'));
   });
 
   it('shows a period as one formatted range', async () => {
@@ -49,7 +61,88 @@ describe('kt-date-picker', () => {
       new Date('2026-09-05T12:00'),
       new Date('2026-09-08T12:00'),
     );
-    expect($(el, '.value').textContent!.trim()).toBe(expected);
+    expect(input(el).value).toBe(expected);
+  });
+
+  it('takes a date typed the way the reader writes it, on Enter', async () => {
+    const el = await fixture<KtDatePicker>('<kt-date-picker locale="en-GB"></kt-date-picker>');
+    const changed = vi.fn();
+    el.addEventListener('kt-change', changed);
+
+    await type(el, '10/09/2026', 'Enter');
+
+    expect(el.value).toBe('2026-09-10');
+    expect(changed).toHaveBeenCalledOnce();
+    expect(input(el).value).toBe(medium('2026-09-10'));
+  });
+
+  it('takes a typed date when the field is left, too', async () => {
+    const el = await fixture<KtDatePicker>('<kt-date-picker locale="en-US"></kt-date-picker>');
+    await type(el, '9/10/2026');
+    input(el).dispatchEvent(new Event('change'));
+    await settle(el);
+
+    expect(el.value).toBe('2026-09-10');
+  });
+
+  it('takes a typed period', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB"></kt-date-picker>',
+    );
+    await type(el, '01/09/2026 – 25/09/2026', 'Enter');
+    expect(el.value).toBe('2026-09-01/2026-09-25');
+  });
+
+  it('flags text that is not a date, keeping the value it had', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
+    );
+    await type(el, 'soon', 'Enter');
+
+    expect(el.value).toBe('2026-09-25');
+    expect(input(el).getAttribute('aria-invalid')).toBe('true');
+    const id = input(el).getAttribute('aria-describedby')!;
+    expect(el.shadowRoot!.getElementById(id)!.textContent).toMatch(
+      /^Enter a date like \d\d\/\d\d\/\d{4}\.$/,
+    );
+
+    // Typing something that reads clears the flag.
+    await type(el, '26/09/2026', 'Enter');
+    expect(input(el).hasAttribute('aria-invalid')).toBe(false);
+  });
+
+  it('turns down a typed date outside min and max', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker locale="en-GB" min="2026-01-01"></kt-date-picker>',
+    );
+    await type(el, '31/12/2025', 'Enter');
+
+    expect(el.value).toBeNull();
+    expect(input(el).getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('empties the value when the text is cleared', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
+    );
+    await type(el, '', 'Enter');
+    expect(el.value).toBeNull();
+  });
+
+  it('puts the text back on Escape', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker locale="en-GB" value="2026-09-25"></kt-date-picker>',
+    );
+    await type(el, '01/0', 'Escape');
+
+    expect(input(el).value).toBe(medium('2026-09-25'));
+    expect(el.value).toBe('2026-09-25');
+  });
+
+  it('opens the calendar from ArrowDown in the field', async () => {
+    const el = await fixture<KtDatePicker>('<kt-date-picker locale="en-GB"></kt-date-picker>');
+    await type(el, '', 'ArrowDown');
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('true');
   });
 
   it('opens a calendar set up like itself', async () => {
@@ -173,7 +266,7 @@ describe('kt-date-picker in a form', () => {
       '<kt-date-picker required></kt-date-picker>',
     );
     expect(internals.setValidity).toHaveBeenLastCalledWith(
-      { valueMissing: true, customError: false },
+      { valueMissing: true, badInput: false, customError: false },
       'Select a date.',
       undefined,
     );

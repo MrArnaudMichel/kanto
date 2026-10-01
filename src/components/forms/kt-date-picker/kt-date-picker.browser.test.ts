@@ -16,6 +16,7 @@ function deepActive(): Element | null {
 }
 
 const trigger = (el: KtDatePicker) => el.shadowRoot!.querySelector('.trigger')!;
+const input = (el: KtDatePicker) => el.shadowRoot!.querySelector('input')!;
 
 describe('kt-date-picker, for real', () => {
   it('is operable from the keyboard alone, and hands focus back', async () => {
@@ -23,10 +24,11 @@ describe('kt-date-picker, for real', () => {
       '<kt-date-picker locale="en-GB" value="2026-09-25" label="Due date"></kt-date-picker>',
     );
 
+    // One tab stop: the text. Down opens the calendar on the chosen day.
     await userEvent.tab();
-    expect(deepActive()).toBe(trigger(el));
+    expect(deepActive()).toBe(input(el));
 
-    await userEvent.keyboard('{Enter}');
+    await userEvent.keyboard('{ArrowDown}');
     await settle(el);
     expect((deepActive() as HTMLElement).dataset.date).toBe('2026-09-25');
 
@@ -34,7 +36,7 @@ describe('kt-date-picker, for real', () => {
     await settle(el);
 
     expect(el.value).toBe('2026-09-27');
-    expect(deepActive()).toBe(trigger(el));
+    expect(deepActive()).toBe(input(el));
   });
 
   it('closes on Escape, focus back on the field', async () => {
@@ -46,7 +48,18 @@ describe('kt-date-picker, for real', () => {
     await settle(el);
 
     expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
-    expect(deepActive()).toBe(trigger(el));
+    expect(deepActive()).toBe(input(el));
+  });
+
+  it('takes a date typed into the field', async () => {
+    const el = await fixture<KtDatePicker>('<kt-date-picker locale="en-GB"></kt-date-picker>');
+
+    await userEvent.click(input(el));
+    await userEvent.keyboard('3/10/2026{Enter}');
+    await settle(el);
+
+    expect(el.value).toBe('2026-10-03');
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
   });
 
   it('closes when focus leaves it', async () => {
