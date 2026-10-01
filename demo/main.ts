@@ -30,6 +30,7 @@ import { releasePage } from './pages/release.js';
 import { APPEARANCE, INTRODUCTION, INSTALLATION } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { homePage } from './pages/home.js';
+import { resetPlayground } from './lib/playground.js';
 import {
   applyDocsAppearance,
   customiseMenu,
@@ -622,6 +623,8 @@ applyDocsAppearance(appearance);
 window.addEventListener('hashchange', () => {
   // Inside an app the invitation would cover what the visitor came to see.
   if (location.hash.startsWith('#/app/')) inviting = false;
+  // Each visit to the home page starts its playground from the site as it is.
+  if (currentRoute().section !== 'home') resetPlayground();
   filter = '';
   activeHeading = '';
   visibleHeadings = [];

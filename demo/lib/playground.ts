@@ -38,8 +38,12 @@ export function playground({
   };
   // Kanto nests light inside dark, not the reverse.
   const siteIsLight = document.documentElement.dataset['theme'] === 'light';
-  const code =
-    current.tab === 'html' ? htmlSnippet(current.appearance) : jsSnippet(current.appearance);
+  // What the frame shows is what is copied and handed over: on a light site
+  // that is light, whatever the disabled control last held.
+  const shown: DocsAppearance = siteIsLight
+    ? { ...current.appearance, theme: 'light' }
+    : current.appearance;
+  const code = current.tab === 'html' ? htmlSnippet(shown) : jsSnippet(shown);
 
   return html`<div class="playground">
     <div class="playground-controls">
@@ -86,7 +90,7 @@ export function playground({
       <div
         class="playground-frame"
         ${ref((frame) => {
-          if (frame instanceof HTMLElement) setAppearance(current.appearance, frame);
+          if (frame instanceof HTMLElement) setAppearance(shown, frame);
         })}
       >
         ${previewScreen()}
@@ -114,10 +118,7 @@ export function playground({
             }}
             >Copy my theme</kt-button
           >
-          <kt-button
-            class="playground-use"
-            variant="secondary"
-            @click=${() => onUse(current.appearance)}
+          <kt-button class="playground-use" variant="secondary" @click=${() => onUse(shown)}
             >Use on this site</kt-button
           >
         </div>

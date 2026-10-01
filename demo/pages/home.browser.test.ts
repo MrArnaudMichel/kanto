@@ -5,6 +5,7 @@
 import axe from 'axe-core';
 import { render } from 'lit';
 import { afterEach, describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { settle } from '#test/fixture';
 import 'kanto-ds/styles.css';
 import '../shell.css';
@@ -45,7 +46,9 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
     ).toEqual([]);
   });
 
-  it('lazy-loads its app miniatures and keeps them out of the tab order', async () => {
+  it('loads an app miniature only as it nears the screen, and keeps it out of the tab order', async () => {
+    // Below 720px the miniatures are not drawn, and so never load.
+    await page.viewport(1280, 800);
     const host = document.body.appendChild(document.createElement('main'));
     render(
       homePage({ appearance: KT_DEFAULT_APPEARANCE, onUse: () => {}, rerender: () => {} }),
@@ -54,9 +57,25 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
     const frames = [...host.querySelectorAll('iframe')];
     expect(frames.length).toBe(4);
     for (const frame of frames) {
-      expect(frame.getAttribute('loading')).toBe('lazy');
       expect(frame.hasAttribute('inert')).toBe(true);
       expect(frame.getAttribute('tabindex')).toBe('-1');
     }
+    // Far below the fold: nothing booted yet.
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(frames.every((frame) => !frame.getAttribute('src'))).toBe(true);
+
+    frames[0]!.scrollIntoView();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(frames[0]!.getAttribute('src')).toContain('#/app/');
+  });
+});
+
+describe('the Customise invitation', () => {
+  it('stays inside the page beside a right-hand button', () => {
+    const bar = document.body.appendChild(document.createElement('div'));
+    bar.style.cssText = 'display: flex; justify-content: flex-end; width: 100%';
+    bar.innerHTML = `<div class="header-actions"><button>Customise</button><button>GitHub</button>
+      <div class="customise-invite" role="status">Try Kanto in your colours <button>x</button></div></div>`;
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
   });
 });

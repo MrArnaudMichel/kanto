@@ -76,7 +76,9 @@ body {
 .customise-invite {
   position: absolute;
   top: calc(100% + 10px);
-  left: 0;
+  /* Anchored to the right edge of the actions, so it grows into the page,
+     never past its edge. */
+  right: 0;
   z-index: var(--z-dropdown);
   display: flex;
   align-items: center;
@@ -95,7 +97,7 @@ body {
 .customise-invite::before {
   position: absolute;
   top: -5px;
-  left: 18px;
+  right: var(--customise-invite-notch, 96px);
   width: 8px;
   height: 8px;
   background: inherit;

@@ -4,6 +4,7 @@
  * see it wearing your colours.
  */
 import { html, type TemplateResult } from 'lit';
+import { ref } from 'lit/directives/ref.js';
 import { toaster } from 'kanto-ds';
 import { playground } from '../lib/playground.js';
 import type { DocsAppearance } from '../lib/appearance.js';
@@ -60,6 +61,30 @@ const APPS = [
 ];
 
 let framework: keyof typeof FRAMEWORKS = 'react';
+
+/**
+ * Each miniature is the whole docs site booted in a frame, so it starts only
+ * as it nears the screen. loading="lazy" alone is not enough: Chromium loads
+ * frames a few thousand pixels ahead, which on this page is all four at once.
+ */
+function bootWhenNear(src: string): (frame?: Element) => void {
+  return (frame) => {
+    if (!(frame instanceof HTMLIFrameElement) || frame.getAttribute('src')) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      frame.src = src;
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        frame.src = src;
+        observer.disconnect();
+      },
+      { rootMargin: '200px' },
+    );
+    observer.observe(frame);
+  };
+}
 
 export function homePage({
   appearance,
@@ -134,7 +159,7 @@ export function homePage({
               <a class="home-app" href=${`#/app/${app.path}`}>
                 <span class="home-app-view">
                   <iframe
-                    src=${`${location.pathname}#/app/${app.path}`}
+                    ${ref(bootWhenNear(`${location.pathname}#/app/${app.path}`))}
                     title=${`${app.name}, a preview`}
                     loading="lazy"
                     inert

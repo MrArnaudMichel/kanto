@@ -72,4 +72,13 @@ describe('the playground', () => {
     expect(theme.hasAttribute('disabled')).toBe(true);
     expect(host.querySelector('.playground-theme-note')!.textContent).toMatch(/dark/i);
   });
+
+  it('hands over and writes out the light it shows on a light site', () => {
+    document.documentElement.dataset['theme'] = 'light';
+    const { host, onUse } = mount();
+    host.querySelector<HTMLElement>('[data-accent-id="teal"]')!.click();
+    expect(host.querySelector('.playground-code')!.textContent).toContain('data-theme="light"');
+    host.querySelector<HTMLElement>('.playground-use')!.click();
+    expect(onUse).toHaveBeenCalledWith(expect.objectContaining({ theme: 'light', accent: 'teal' }));
+  });
 });
