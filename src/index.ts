@@ -161,5 +161,17 @@ export {
   type KtStrings,
 } from './internal/strings.js';
 
+// === ACCENT COLOUR ===
+export {
+  accentPalette,
+  accentProperties,
+  contrastRatio,
+  KT_ACCENTS,
+  KT_DEFAULT_ACCENT,
+  parseColor,
+  setAccent,
+} from './theme/accent.js';
+export type { KtAccentPalette, KtRgb } from './theme/accent.js';
+
 // === INTERNALS worth exposing ===
 export { KtElement, defineElement } from './internal/kt-element.js';
