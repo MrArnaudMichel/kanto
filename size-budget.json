@@ -1,7 +1,7 @@
 {
   ".": 76300,
   "./icons": 700,
-  "./strings": 1000,
+  "./strings": 1200,
   "./react": 77200,
   "./react/jsx": 100,
   "./vue": 75800,
@@ -28,7 +28,7 @@
   "./components/feedback/kt-tooltip": 3700,
   "./components/forms/kt-calendar": 8400,
   "./components/forms/kt-checkbox": 4400,
-  "./components/forms/kt-date-picker": 11700,
+  "./components/forms/kt-date-picker": 16100,
   "./components/forms/kt-drag-drop": 6700,
   "./components/forms/kt-form": 3700,
   "./components/forms/kt-input": 11900,

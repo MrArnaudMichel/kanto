@@ -14,7 +14,10 @@ import { FloatingController, floatingStyles } from '#internal/floating';
 import { dateFormat, resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import {
+  addDays,
+  addMonths,
   compareDates,
+  daysInMonth,
   formatDate,
   formatRange,
   parseDate,
@@ -30,6 +33,39 @@ import '../../core/kt-icon/kt-icon.js';
 import '../../feedback/kt-tooltip/kt-tooltip.js';
 
 export type KtDatePickerSize = 'small' | 'medium' | 'large';
+
+/** A ready-made period offered beside the calendar: a label and an ISO interval. */
+export interface KtDatePreset {
+  readonly label: string;
+  readonly value: string;
+}
+
+/**
+ * The periods a dashboard asks for most, ending today. "This month" and "This
+ * year" run to today, not to the end of the month or year: there is no data
+ * in the days still to come.
+ */
+function defaultPresets(): KtDatePreset[] {
+  const s = strings();
+  const now = today();
+  const firstOfMonth = { ...now, day: 1 };
+  const lastMonth = addMonths(firstOfMonth, -1);
+  const period = (start: PlainDate, end: PlainDate) => formatRange(start, end);
+  return [
+    { label: s.presetToday, value: period(now, now) },
+    { label: s.presetLast7Days, value: period(addDays(now, -6), now) },
+    { label: s.presetLast30Days, value: period(addDays(now, -29), now) },
+    { label: s.presetThisMonth, value: period(firstOfMonth, now) },
+    {
+      label: s.presetLastMonth,
+      value: period(lastMonth, {
+        ...lastMonth,
+        day: daysInMonth(lastMonth.year, lastMonth.month),
+      }),
+    },
+    { label: s.presetThisYear, value: period({ year: now.year, month: 1, day: 1 }, now) },
+  ];
+}
 
 /**
  * A date field with a calendar, for one day or a period.
@@ -54,6 +90,7 @@ export type KtDatePickerSize = 'small' | 'medium' | 'large';
  * @csspart input - The text the date is typed into.
  * @csspart trigger - The button that opens the calendar.
  * @csspart panel - The calendar popup.
+ * @csspart presets - The column of ready-made periods, with `range`.
  * @csspart calendar - The `<kt-calendar>` inside it.
  *
  * @fires kt-change - A date or a whole period was chosen, or the value cleared.
@@ -211,6 +248,78 @@ export class KtDatePicker extends KtElement {
       .panel kt-calendar {
         display: block;
       }
+
+      .panel-body {
+        display: flex;
+        gap: 12px;
+      }
+
+      /* Ready-made periods: the quickest way to a period, so they lead. */
+      .presets {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 128px;
+        padding-right: 12px;
+        border-right: var(--border-width) solid var(--border-subtle);
+      }
+      .presets button,
+      .today {
+        height: 32px;
+        padding: 0 10px;
+        color: var(--text-body);
+        font: var(--font-normal-regular);
+        text-align: left;
+        white-space: nowrap;
+        background: none;
+        border: none;
+        border-radius: var(--radius-input);
+        cursor: pointer;
+      }
+      .presets button:hover:not(:disabled),
+      .today:hover:not(:disabled) {
+        background: var(--color-dark-22);
+      }
+      .presets button[aria-pressed='true'] {
+        color: var(--color-primary-text);
+        font-weight: 600;
+        background: var(--color-primary-soft);
+      }
+      .presets button:disabled,
+      .today:disabled {
+        color: var(--text-disabled);
+        cursor: not-allowed;
+      }
+      .presets button:focus-visible,
+      .today:focus-visible {
+        outline: var(--outline-width) solid var(--color-primary-base);
+      }
+
+      /* On a narrow screen the periods wrap in a row above the one month. */
+      .panel-body.compact {
+        flex-direction: column;
+      }
+      .compact .presets {
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: 0;
+        max-width: calc(var(--day-size, 32px) * 7);
+        padding: 0 0 8px;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--border-subtle);
+      }
+
+      .footer {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: var(--gap-element);
+        padding-top: var(--gap-element);
+        border-top: var(--border-width) solid var(--border-subtle);
+      }
+      .today {
+        color: var(--color-primary-text);
+        font-weight: 600;
+      }
     `,
   ];
 
@@ -231,6 +340,8 @@ export class KtDatePicker extends KtElement {
   /** Why the typed text was turned down, if it was. */
   @state() private typedError = '';
   @state() private focused = false;
+  /** Set at each opening on a narrow screen: one month, the periods above it. */
+  @state() private compact = false;
   @state() private placement: 'bottom' | 'top' = 'bottom';
 
   private floating = new FloatingController(this, {
@@ -296,6 +407,14 @@ export class KtDatePicker extends KtElement {
   /** Shows a button that empties the field once it holds a value. */
   @property({ type: Boolean })
   clearable = true;
+
+  /**
+   * Ready-made periods offered beside the calendar, with `range`. Unset: the
+   * periods a dashboard asks for most — today, the last 7 and 30 days, this
+   * month and last, this year. An empty list hides the column.
+   */
+  @property({ attribute: false })
+  presets: readonly KtDatePreset[] | undefined = undefined;
 
   /** Error message. A non-empty value puts the field in its error state. */
   @property({ type: String, reflect: true })
@@ -413,8 +532,12 @@ export class KtDatePicker extends KtElement {
     this.close(false);
   };
 
+  /** Below this width, a period's two months and their periods do not fit. */
+  private static readonly WIDE_ENOUGH = 720;
+
   private async show(): Promise<void> {
     if (this.inactive || this.open) return;
+    this.compact = window.innerWidth < KtDatePicker.WIDE_ENOUGH;
     this.open = true;
 
     // The calendar is rendered fresh on each opening — on the chosen day,
@@ -437,6 +560,7 @@ export class KtDatePicker extends KtElement {
   /** A click in the text opens the calendar, leaving the focus to type. */
   private openForTyping(): void {
     if (this.inactive || this.open) return;
+    this.compact = window.innerWidth < KtDatePicker.WIDE_ENOUGH;
     this.open = true;
   }
 
@@ -450,6 +574,50 @@ export class KtDatePicker extends KtElement {
     this.value = event.detail.value;
     this.close(true);
     emit(this, 'kt-change', { value: this.value });
+  }
+
+  /** A preset, or today: committed at once, the calendar closed. */
+  private apply(value: string): void {
+    this.editing = false;
+    this.typedError = '';
+    this.close(true);
+    if (value === this.value) return;
+    this.value = value;
+    emit(this, 'kt-change', { value });
+  }
+
+  /** Whether any of a period falls outside min and max. */
+  private outOfBounds(value: string): boolean {
+    const { start, end } = parseRange(value);
+    const min = parseDate(this.min);
+    const max = parseDate(this.max);
+    if (!start || !end) return true;
+    return (
+      (min !== null && compareDates(start, min) < 0) || (max !== null && compareDates(end, max) > 0)
+    );
+  }
+
+  private renderPresets(): TemplateResult | typeof nothing {
+    const presets = this.presets ?? defaultPresets();
+    if (!this.range || presets.length === 0) return nothing;
+    return html`<div
+      part="presets"
+      class="presets"
+      role="group"
+      aria-label=${strings().selectPeriod}
+    >
+      ${presets.map(
+        (preset) =>
+          html`<button
+            type="button"
+            aria-pressed=${preset.value === this.value ? 'true' : 'false'}
+            ?disabled=${this.outOfBounds(preset.value)}
+            @click=${() => this.apply(preset.value)}
+          >
+            ${preset.label}
+          </button>`,
+      )}
+    </div>`;
   }
 
   private clear(): void {
@@ -636,16 +804,36 @@ export class KtDatePicker extends KtElement {
         >
           ${
             this.open
-              ? html`<kt-calendar
-                  part="calendar"
-                  .value=${this.value}
-                  ?range=${this.range}
-                  min=${this.min}
-                  max=${this.max}
-                  locale=${this.locale}
-                  label=${this.label}
-                  @kt-change=${this.onCalendarChange}
-                ></kt-calendar>`
+              ? html`<div class=${classMap({ 'panel-body': true, compact: this.compact })}>
+                  ${this.renderPresets()}
+                  <div>
+                    <kt-calendar
+                      part="calendar"
+                      .value=${this.value}
+                      ?range=${this.range}
+                      months=${this.range && !this.compact ? 2 : 1}
+                      min=${this.min}
+                      max=${this.max}
+                      locale=${this.locale}
+                      label=${this.label}
+                      @kt-change=${this.onCalendarChange}
+                    ></kt-calendar>
+                    ${
+                      this.range
+                        ? nothing
+                        : html`<div class="footer">
+                            <button
+                              type="button"
+                              class="today"
+                              ?disabled=${this.outOfBounds(formatRange(today(), today()))}
+                              @click=${() => this.apply(formatDate(today()))}
+                            >
+                              ${s.presetToday}
+                            </button>
+                          </div>`
+                    }
+                  </div>
+                </div>`
               : nothing
           }
         </div>

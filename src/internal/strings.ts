@@ -87,6 +87,13 @@ export interface KtStrings {
   dateOutOfRange: string;
   /** The date field's button that opens its calendar. */
   openCalendar: string;
+  /** The date picker's ready-made periods, and the button for today. */
+  presetToday: string;
+  presetLast7Days: string;
+  presetLast30Days: string;
+  presetThisMonth: string;
+  presetLastMonth: string;
+  presetThisYear: string;
   /** A phone number typed with the prefix only dialled from inside the country. */
   phoneTrunkPrefix: (prefix: string) => string;
 
@@ -179,6 +186,12 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   dateInvalid: (example: string) => `Enter a date like ${example}.`,
   dateOutOfRange: 'This date is outside the dates you can choose.',
   openCalendar: 'Open calendar',
+  presetToday: 'Today',
+  presetLast7Days: 'Last 7 days',
+  presetLast30Days: 'Last 30 days',
+  presetThisMonth: 'This month',
+  presetLastMonth: 'Last month',
+  presetThisYear: 'This year',
   phoneTrunkPrefix: (prefix: string) => `Enter the number without the leading ${prefix}.`,
 
   openMenu: 'Open menu',

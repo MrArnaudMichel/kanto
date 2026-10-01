@@ -38,6 +38,9 @@ export const floatingStyles = css`
     position: fixed;
     inset: auto;
     display: block;
+    /* As wide as what it holds, wherever it is placed: a box sized from its
+       position would change size when moved, and be moved again. */
+    width: max-content;
     margin: 0;
     color: inherit;
     border: none;
@@ -47,6 +50,8 @@ export const floatingStyles = css`
 export class FloatingController implements ReactiveController {
   private open = false;
   private frame = 0;
+  /** Places the panel again when its size changes — content drawn after it opened. */
+  private resizeObserver: ResizeObserver | undefined;
 
   constructor(
     host: ReactiveControllerHost,
@@ -77,13 +82,26 @@ export class FloatingController implements ReactiveController {
     if (open) {
       if (!panel.matches(':popover-open')) panel.showPopover();
       this.place();
-    } else if (panel.matches(':popover-open')) {
-      panel.hidePopover();
+      // A panel measured at opening may grow once what it holds has drawn —
+      // a calendar is an element of its own — and must be placed again.
+      if (!this.resizeObserver && typeof ResizeObserver !== 'undefined') {
+        this.resizeObserver = new ResizeObserver(this.follow);
+        this.resizeObserver.observe(panel);
+      }
+    } else {
+      this.unobserve();
+      if (panel.matches(':popover-open')) panel.hidePopover();
     }
+  }
+
+  private unobserve(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
   }
 
   hostDisconnected(): void {
     this.sync(false);
+    this.unobserve();
     cancelAnimationFrame(this.frame);
   }
 

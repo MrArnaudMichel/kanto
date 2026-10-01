@@ -80,6 +80,43 @@ export class KtCalendar extends KtElement {
         gap: var(--gap-element);
         width: calc(var(--day-size) * 7);
       }
+      /* Two months side by side, for a period that spans a month's end. */
+      .calendar.two {
+        width: calc(var(--day-size) * 14 + var(--month-gap));
+      }
+      :host {
+        --month-gap: 24px;
+      }
+      .months {
+        display: flex;
+        gap: var(--month-gap);
+        height: 100%;
+      }
+      .months > table {
+        flex: 1;
+      }
+      .two .header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--month-gap);
+      }
+      .two .header .title {
+        justify-self: start;
+      }
+      .second {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .second-title {
+        padding-left: 8px;
+        color: var(--text-body);
+        font: var(--font-normal-medium);
+        text-transform: capitalize;
+      }
+      td.blank {
+        pointer-events: none;
+      }
 
       .header {
         display: flex;
@@ -313,6 +350,10 @@ export class KtCalendar extends KtElement {
   @property({ type: String })
   locale = '';
 
+  /** How many months the day view shows side by side: 1, or 2 for a period. */
+  @property({ type: Number, reflect: true })
+  months: 1 | 2 = 1;
+
   /** Accessible name of the calendar. Defaults to the strings registry. */
   @property({ type: String })
   label = '';
@@ -414,13 +455,29 @@ export class KtCalendar extends KtElement {
 
   // --- Moving ---
 
-  /** Moves the tab stop, and the day view with it when it leaves the month. */
+  private get monthSpan(): number {
+    return this.months === 2 ? 2 : 1;
+  }
+
+  /**
+   * Moves the tab stop, and the day view with it only when the date leaves
+   * the months on screen — moving across two months does not page.
+   */
   private jumpTo(date: PlainDate, focus = true): void {
     this.focused = date;
-    if (date.year !== this.month.year || date.month !== this.month.month) {
+    const index = (date.year - this.month.year) * 12 + (date.month - this.month.month);
+    if (index < 0) {
       this.month = { year: date.year, month: date.month, day: 1 };
+    } else if (index >= this.monthSpan) {
+      this.month = addMonths({ year: date.year, month: date.month, day: 1 }, 1 - this.monthSpan);
     }
     this.focusCell = focus;
+  }
+
+  /** The header's arrows: the whole view, and the tab stop with it, by a month. */
+  private page(by: number): void {
+    this.month = addMonths(this.month, by);
+    this.focused = addMonths(this.focused, by);
   }
 
   private setView(view: KtCalendarView): void {
@@ -629,6 +686,15 @@ export class KtCalendar extends KtElement {
     const open = this.view === 'month';
     const shown = open ? this.focused : this.month;
 
+    const navs = html`<div class="navs">
+      <button type="button" class="nav" aria-label=${s.previousMonth} @click=${() => this.page(-1)}>
+        <kt-icon name="chevron-left" size="18"></kt-icon>
+      </button>
+      <button type="button" class="nav" aria-label=${s.nextMonth} @click=${() => this.page(1)}>
+        <kt-icon name="chevron-right" size="18"></kt-icon>
+      </button>
+    </div>`;
+
     return html`<div class="header">
       <button
         type="button"
@@ -642,29 +708,23 @@ export class KtCalendar extends KtElement {
       ${
         open
           ? nothing
-          : html`<div class="navs">
-              <button
-                type="button"
-                class="nav"
-                aria-label=${s.previousMonth}
-                @click=${() => this.jumpTo(addMonths(this.focused, -1), false)}
-              >
-                <kt-icon name="chevron-left" size="18"></kt-icon>
-              </button>
-              <button
-                type="button"
-                class="nav"
-                aria-label=${s.nextMonth}
-                @click=${() => this.jumpTo(addMonths(this.focused, 1), false)}
-              >
-                <kt-icon name="chevron-right" size="18"></kt-icon>
-              </button>
-            </div>`
+          : this.monthSpan === 2
+            ? html`<div class="second">
+                <span class="second-title" aria-hidden="true"
+                  >${this.format({ month: 'long', year: 'numeric' }, addMonths(this.month, 1))}</span
+                >
+                ${navs}
+              </div>`
+            : navs
       }
     </div>`;
   }
 
-  private renderDay(date: PlainDate): TemplateResult {
+  private renderDay(date: PlainDate, gridMonth: PlainDate): TemplateResult {
+    const outside = date.month !== gridMonth.month;
+    // Beside a second month, the neighbours' days would show twice: leave them out.
+    if (outside && this.monthSpan === 2) return html`<td class="blank" role="gridcell"></td>`;
+
     const { start, end } = this.selection;
     const rangeStart = this.anchor ?? start;
     const rangeEnd = this.anchor ? this.focused : end;
@@ -684,7 +744,7 @@ export class KtCalendar extends KtElement {
       role="gridcell"
       class=${classMap({
         cell: true,
-        outside: date.month !== this.month.month,
+        outside,
         current: isToday,
         selected,
         'in-range': inRange,
@@ -707,8 +767,19 @@ export class KtCalendar extends KtElement {
   }
 
   private renderDays(): TemplateResult {
-    const weeks = monthGrid(this.month.year, this.month.month, firstDayOfWeek(this.resolvedLocale));
-    return html`<table role="grid" aria-labelledby=${this.liveId} @keydown=${this.onDayKeyDown}>
+    const grids = Array.from({ length: this.monthSpan }, (_, index) =>
+      this.renderMonth(addMonths(this.month, index)),
+    );
+    return this.monthSpan === 2 ? html`<div class="months">${grids}</div>` : grids[0]!;
+  }
+
+  private renderMonth(month: PlainDate): TemplateResult {
+    const weeks = monthGrid(month.year, month.month, firstDayOfWeek(this.resolvedLocale));
+    return html`<table
+      role="grid"
+      aria-label=${this.format({ month: 'long', year: 'numeric' }, month)}
+      @keydown=${this.onDayKeyDown}
+    >
       <thead>
         <tr>
           ${weeks[0]!.map(
@@ -725,7 +796,7 @@ export class KtCalendar extends KtElement {
         ${weeks.map(
           (week) =>
             html`<tr>
-              ${week.map((day) => this.renderDay(day))}
+              ${week.map((day) => this.renderDay(day, month))}
             </tr>`,
         )}
       </tbody>
@@ -817,7 +888,7 @@ export class KtCalendar extends KtElement {
 
     return html`<div
       part="base"
-      class="calendar"
+      class=${classMap({ calendar: true, two: this.monthSpan === 2 })}
       role="group"
       aria-label=${this.label || (this.range ? s.selectPeriod : s.selectDate)}
     >

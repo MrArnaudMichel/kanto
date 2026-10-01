@@ -7,10 +7,11 @@
  * there is no room below.
  */
 import { describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
-import type { KtDropdown, KtMultiSelect, KtSelect } from 'kanto-ds';
+import type { KtDatePicker, KtDropdown, KtMultiSelect, KtSelect } from 'kanto-ds';
 
 const OPTIONS = [
   { id: 'fr', label: 'France' },
@@ -108,4 +109,39 @@ describe('popup panels', () => {
       );
     });
   }
+
+  it('keeps a panel on screen when its content grows after it opens', async () => {
+    // The period picker's two months draw a moment after its panel is placed:
+    // measured at opening, the panel looked narrow enough to fit, then grew.
+    await page.viewport(1000, 800);
+    const row = await fixture<HTMLDivElement>(
+      '<div style="display: flex; justify-content: flex-end"><kt-date-picker range locale="en-GB" style="width: 280px"></kt-date-picker></div>',
+    );
+    const el = row.querySelector('kt-date-picker')!;
+    await userEvent.click(shadow(el, '.trigger'));
+    await settle(el);
+    await settle(el.shadowRoot!.querySelector('kt-calendar'));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const panel = shadow(el, '.panel').getBoundingClientRect();
+    expect(panel.right).toBeLessThanOrEqual(window.innerWidth);
+    expect(panel.left).toBeGreaterThanOrEqual(0);
+  });
+
+  it('fits a period picker on a phone, with one month and the periods above it', async () => {
+    await page.viewport(390, 800);
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB" style="width: 300px"></kt-date-picker>',
+    );
+    await userEvent.click(shadow(el, '.trigger'));
+    await settle(el);
+    await settle(el.shadowRoot!.querySelector('kt-calendar'));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(el.shadowRoot!.querySelector('kt-calendar')!.months).toBe(1);
+    const panel = shadow(el, '.panel').getBoundingClientRect();
+    expect(panel.left).toBeGreaterThanOrEqual(0);
+    expect(panel.right).toBeLessThanOrEqual(390);
+  });
 });

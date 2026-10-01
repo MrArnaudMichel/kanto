@@ -165,6 +165,11 @@ const CASES: Record<string, Case> = {
       '<kt-date-picker label="Due date" locale="en-GB" value="2026-09-25" min="2026-09-10"></kt-date-picker>',
     setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.trigger')!.click(),
   },
+  'kt-date-picker period (open)': {
+    markup:
+      '<kt-date-picker range label="Report period" locale="en-GB" value="2026-09-01/2026-09-25"></kt-date-picker>',
+    setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.trigger')!.click(),
+  },
   'kt-date-picker (open period)': {
     markup:
       '<kt-date-picker range label="Period" locale="en-GB" value="2026-09-05/2026-09-12"></kt-date-picker>',

@@ -251,3 +251,55 @@ describe('kt-calendar: month and year', () => {
     expect(cell(el, '2026-3').hasAttribute('aria-disabled')).toBe(false);
   });
 });
+
+describe('kt-calendar: two months', () => {
+  const grids = (el: KtCalendar) => $$(el, 'table[role="grid"]');
+
+  it('shows two months side by side under one header', async () => {
+    const el = await mount(
+      '<kt-calendar locale="en-GB" months="2" value="2026-09-25"></kt-calendar>',
+    );
+
+    expect(grids(el)).toHaveLength(2);
+    expect(grids(el).map((grid) => grid.getAttribute('aria-label'))).toEqual([
+      'September 2026',
+      'October 2026',
+    ]);
+    expect($$(el, '.title')).toHaveLength(1);
+    expect($(el, '.second-title').textContent!.trim()).toBe('October 2026');
+  });
+
+  it('leaves out the days of the neighbouring months, so none shows twice', async () => {
+    const el = await mount(
+      '<kt-calendar locale="en-GB" months="2" value="2026-09-25"></kt-calendar>',
+    );
+    // 30 September is September's, not also the first row of October's grid.
+    expect($$(el, '[data-date="2026-09-30"]')).toHaveLength(1);
+    expect($$(el, '[data-date="2026-10-01"]')).toHaveLength(1);
+  });
+
+  it('keeps the keyboard moving across both months, and pages only past the second', async () => {
+    const el = await mount(
+      '<kt-calendar locale="en-GB" months="2" value="2026-09-30"></kt-calendar>',
+    );
+
+    await key(el, 'ArrowRight', {});
+    expect(focusedDay(el)).toBe('2026-10-01');
+    expect(grids(el)[0]!.getAttribute('aria-label')).toBe('September 2026');
+
+    for (let step = 0; step < 31; step += 1) await key(el, 'ArrowRight');
+    expect(focusedDay(el)).toBe('2026-11-01');
+    expect(grids(el)[0]!.getAttribute('aria-label')).toBe('October 2026');
+  });
+
+  it('pages by one month with its arrows', async () => {
+    const el = await mount(
+      '<kt-calendar locale="en-GB" months="2" value="2026-09-25"></kt-calendar>',
+    );
+    await click(el, $$(el, '.nav')[1]!);
+    expect(grids(el).map((grid) => grid.getAttribute('aria-label'))).toEqual([
+      'October 2026',
+      'November 2026',
+    ]);
+  });
+});

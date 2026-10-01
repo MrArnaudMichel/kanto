@@ -12,6 +12,12 @@ const medium = (iso: string, locale = 'en-GB') =>
   new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(`${iso}T12:00`));
 
 const input = (el: KtDatePicker) => el.shadowRoot!.querySelector('input')!;
+const presets = (el: KtDatePicker) => [
+  ...el.shadowRoot!.querySelectorAll<HTMLButtonElement>('.presets button'),
+];
+/** A local date as ISO, the way the picker writes today. */
+const isoOf = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
 /** Types into the field, as a person would, then presses `key` if given. */
 async function type(el: KtDatePicker, text: string, key?: string) {
@@ -143,6 +149,93 @@ describe('kt-date-picker', () => {
     const el = await fixture<KtDatePicker>('<kt-date-picker locale="en-GB"></kt-date-picker>');
     await type(el, '', 'ArrowDown');
     expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('offers a button for today under the calendar', async () => {
+    const el = await fixture<KtDatePicker>('<kt-date-picker locale="en-GB"></kt-date-picker>');
+    await open(el);
+
+    $(el, '.today').click();
+    await settle(el);
+
+    expect(el.value).toBe(isoOf(new Date()));
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('shows two months side by side for a period', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB"></kt-date-picker>',
+    );
+    await open(el);
+    expect(calendar(el).months).toBe(2);
+  });
+
+  it('offers the periods a dashboard asks for, and applies one at a click', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB"></kt-date-picker>',
+    );
+    const changed = vi.fn();
+    el.addEventListener('kt-change', changed);
+    await open(el);
+
+    expect(presets(el).map((button) => button.textContent!.trim())).toEqual([
+      'Today',
+      'Last 7 days',
+      'Last 30 days',
+      'This month',
+      'Last month',
+      'This year',
+    ]);
+
+    presets(el)[1]!.click();
+    await settle(el);
+
+    const now = new Date();
+    const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+    expect(el.value).toBe(`${isoOf(weekAgo)}/${isoOf(now)}`);
+    expect(changed).toHaveBeenCalledOnce();
+    expect($(el, '.trigger').getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('marks the period its value matches', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB"></kt-date-picker>',
+    );
+    await open(el);
+    // Last month: never the same period as today, whatever day the suite runs.
+    presets(el)[4]!.click();
+    await settle(el);
+    await open(el);
+
+    expect(presets(el)[4]!.getAttribute('aria-pressed')).toBe('true');
+    expect(presets(el)[0]!.getAttribute('aria-pressed')).toBe('false');
+  });
+
+  it('takes its own periods, or none', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB"></kt-date-picker>',
+    );
+    el.presets = [{ label: 'Q3 2026', value: '2026-07-01/2026-09-30' }];
+    await open(el);
+    expect(presets(el).map((button) => button.textContent!.trim())).toEqual(['Q3 2026']);
+
+    el.presets = [];
+    await settle(el);
+    expect(el.shadowRoot!.querySelector('.presets')).toBeNull();
+  });
+
+  it('disables a period that reaches outside min and max', async () => {
+    const el = await fixture<KtDatePicker>(
+      '<kt-date-picker range locale="en-GB" min="2026-01-01" max="2026-12-31"></kt-date-picker>',
+    );
+    el.presets = [
+      { label: 'Q4 2025', value: '2025-10-01/2025-12-31' },
+      { label: 'Q1 2026', value: '2026-01-01/2026-03-31' },
+    ];
+    await open(el);
+
+    expect(presets(el)[0]!.disabled).toBe(true);
+    expect(presets(el)[1]!.disabled).toBe(false);
   });
 
   it('opens a calendar set up like itself', async () => {
