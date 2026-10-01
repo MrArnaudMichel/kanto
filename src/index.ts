@@ -172,6 +172,24 @@ export {
   setAccent,
 } from './theme/accent.js';
 export type { KtAccentPalette, KtRgb } from './theme/accent.js';
+export {
+  KT_DEFAULT_APPEARANCE,
+  KT_DENSITIES,
+  KT_FONTS,
+  KT_RADII,
+  KT_TEXT_SIZES,
+  KT_THEMES,
+  readAppearance,
+  setAppearance,
+} from './theme/appearance.js';
+export type {
+  KtAppearance,
+  KtDensity,
+  KtFont,
+  KtRadius,
+  KtTextSize,
+  KtTheme,
+} from './theme/appearance.js';
 
 // === INTERNALS worth exposing ===
 export { KtElement, defineElement } from './internal/kt-element.js';

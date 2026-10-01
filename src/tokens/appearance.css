@@ -1,0 +1,65 @@
+/**
+ * Appearance presets: the font, corners, density and text size, each a data
+ * attribute on the page or any container.
+ *
+ *     <html data-font="inter" data-radius="round" data-density="compact">
+ *
+ * Each sets an input the token layer reads; the tokens re-declare themselves
+ * on any element carrying one of these attributes, so a container can differ
+ * from the page. Kanto ships its own fonts only: an app choosing Inter, IBM
+ * Plex Sans or Geist loads the face itself, or the system stack shows.
+ */
+
+[data-radius='sharp'] {
+  --radius-scale: 0.25;
+}
+[data-radius='round'] {
+  --radius-scale: 1.75;
+}
+
+[data-density='compact'] {
+  --density-scale: 0.85;
+}
+[data-density='comfortable'] {
+  --density-scale: 1.15;
+}
+
+[data-text-size='small'] {
+  --text-scale: 0.93;
+}
+[data-text-size='large'] {
+  --text-scale: 1.125;
+}
+
+[data-font='system'] {
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+[data-font='inter'] {
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Inter', system-ui, sans-serif;
+}
+[data-font='plex'] {
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-display: 'IBM Plex Sans', system-ui, sans-serif;
+}
+[data-font='geist'] {
+  --font-body: 'Geist', system-ui, sans-serif;
+  --font-display: 'Geist', system-ui, sans-serif;
+}
+
+/* The defaults, spelled out so a container can go back to them inside one
+   that changed them — each resetting its own scale only. */
+[data-radius='default'] {
+  --radius-scale: 1;
+}
+[data-density='default'] {
+  --density-scale: 1;
+}
+[data-text-size='default'] {
+  --text-scale: 1;
+}
+[data-font='kanto'] {
+  --font-body: 'Mulish', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+}

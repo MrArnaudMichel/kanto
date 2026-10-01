@@ -111,3 +111,36 @@ describe('the scale inputs', () => {
     expect(resolve('--button-height', 'length', outer)).toBe('40px');
   });
 });
+
+describe('the presets', () => {
+  it('scale through their attributes', () => {
+    const root = document.documentElement;
+    root.dataset['radius'] = 'round';
+    root.dataset['density'] = 'compact';
+    root.dataset['textSize'] = 'large';
+    root.dataset['font'] = 'system';
+    expect(resolve('--radius-input', 'radius')).toBe('14px');
+    expect(resolve('--button-height', 'length')).toBe('34px');
+    expect(fontSize('--font-normal-regular').size).toBe('15.75px');
+    expect(fontSize('--font-normal-regular').fontFamily).toMatch(/^system-ui/);
+    expect(fontSize('--font-title-h1').fontFamily).toMatch(/^system-ui/);
+  });
+
+  it('sharpen and loosen', () => {
+    const root = document.documentElement;
+    root.dataset['radius'] = 'sharp';
+    root.dataset['density'] = 'comfortable';
+    expect(resolve('--radius-input', 'radius')).toBe('2px');
+    expect(resolve('--button-height', 'length')).toBe('46px');
+  });
+
+  it('apply on a container inside a light subtree', () => {
+    const light = document.createElement('div');
+    light.dataset['theme'] = 'light';
+    const box = document.createElement('div');
+    box.dataset['density'] = 'compact';
+    light.append(box);
+    document.body.append(light);
+    expect(resolve('--button-height', 'length', box)).toBe('34px');
+  });
+});
