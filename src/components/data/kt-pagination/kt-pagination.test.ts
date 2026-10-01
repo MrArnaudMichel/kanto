@@ -3,9 +3,13 @@ import { fixture, settle } from '../../../test/fixture.js';
 import './kt-pagination.js';
 import type { KtPagination } from './kt-pagination.js';
 
-const buttons = (el: KtPagination) => [
-  ...el.shadowRoot!.querySelectorAll<HTMLButtonElement>('button'),
-];
+/** The two controls are <kt-button>s, so reach through to their own buttons. */
+const buttons = (el: KtPagination) =>
+  [...el.shadowRoot!.querySelectorAll('kt-button')].map((b) =>
+    b.shadowRoot!.querySelector('button')!,
+  );
+
+const controls = (el: KtPagination) => [...el.shadowRoot!.querySelectorAll('kt-button')];
 const info = (el: KtPagination) => el.shadowRoot!.querySelector('.info')!.textContent!.trim();
 
 describe('kt-pagination', () => {
@@ -20,14 +24,14 @@ describe('kt-pagination', () => {
     const first = await fixture<KtPagination>(
       '<kt-pagination page="1" total-pages="3"></kt-pagination>',
     );
-    expect(buttons(first)[0]!.disabled).toBe(true);
-    expect(buttons(first)[1]!.disabled).toBe(false);
+    expect(controls(first)[0]!.disabled).toBe(true);
+    expect(controls(first)[1]!.disabled).toBe(false);
 
     const last = await fixture<KtPagination>(
       '<kt-pagination page="3" total-pages="3"></kt-pagination>',
     );
-    expect(buttons(last)[0]!.disabled).toBe(false);
-    expect(buttons(last)[1]!.disabled).toBe(true);
+    expect(controls(last)[0]!.disabled).toBe(false);
+    expect(controls(last)[1]!.disabled).toBe(true);
   });
 
   it('moves and reports', async () => {
@@ -61,5 +65,14 @@ describe('kt-pagination', () => {
 
     expect(el.page).toBe(1);
     expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('reuses kt-button rather than inventing a control', async () => {
+    // A paging control with its own colours, hover and disabled states is how
+    // a design system ends up with two kinds of button on one screen.
+    const el = await fixture<KtPagination>('<kt-pagination total-pages="3"></kt-pagination>');
+    expect(controls(el)).toHaveLength(2);
+    for (const control of controls(el)) expect(control.variant).toBe('dark');
+    expect(el.shadowRoot!.querySelector('nav > button')).toBeNull();
   });
 });

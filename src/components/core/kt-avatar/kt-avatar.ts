@@ -62,10 +62,11 @@ export class KtAvatar extends KtElement {
         --kt-avatar-size: 48px;
       }
 
-      /* The identity hue is worn the way every other tinted thing in Kanto
-         wears one — a hairline of the colour, a wash of it behind, the colour
-         itself as the ink. A saturated fill with white initials is a different
-         system's idea, and beside a chip or a badge it looks like one. */
+      /* The identity hue is worn exactly the way every other tinted thing in
+         Kanto wears one: the colour at 12% behind, the colour itself as the
+         ink, and no border — the same pair as a secondary button, a danger
+         button or a badge tone. A saturated fill with white initials is a
+         different system's idea, and beside those it looks like one. */
       .avatar {
         position: relative;
         display: inline-flex;
@@ -78,22 +79,15 @@ export class KtAvatar extends KtElement {
         overflow: hidden;
         color: var(--kt-avatar-hue, var(--text-muted));
         font: 600 calc(var(--kt-avatar-size) * 0.36) / 1 var(--font-family-body);
-        background: color-mix(
-          in srgb,
-          var(--kt-avatar-hue, transparent) 18%,
-          var(--surface-raised)
-        );
-        border: var(--border-width) solid
-          color-mix(in srgb, var(--kt-avatar-hue, transparent) 55%, var(--border-subtle));
+        background: color-mix(in srgb, var(--kt-avatar-hue, transparent) 12%, transparent);
         border-radius: var(--radius-full);
         user-select: none;
       }
 
-      /* A photograph fills the circle; the tint underneath would only show at
-         the edges as a ring nobody asked for. */
-      .avatar.has-image {
+      /* No hue to tint with, and a photograph that fills the circle anyway. */
+      .avatar.has-image,
+      .avatar.anonymous {
         background: var(--surface-raised);
-        border-color: var(--border-subtle);
       }
 
       :host([square]) .avatar {
@@ -178,7 +172,7 @@ export class KtAvatar extends KtElement {
 
     return html`<span
       part="base"
-      class=${classMap({ avatar: true, 'has-image': showImage })}
+      class=${classMap({ avatar: true, 'has-image': showImage, anonymous: !this.name })}
       style=${showImage ? '' : `--kt-avatar-hue:${this.hue}`}
       role="img"
       aria-label=${this.name || 'Avatar'}

@@ -2,13 +2,17 @@ import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '../../../internal/kt-element.js';
 import { emit } from '../../../internal/events.js';
-import '../../core/kt-icon/kt-icon.js';
+import '../../core/kt-button/kt-button.js';
 
 /**
  * Previous / next paging, with the position between them.
  *
  * Extracted from the table footer so a card list or a gallery can page the same
  * way a table does.
+ *
+ * The two controls are `<kt-button variant="dark">`, not buttons of its own:
+ * a paging control that invents its own colours, hover and disabled states is
+ * how a design system ends up with two kinds of button on one screen.
  *
  * @element kt-pagination
  *
@@ -29,37 +33,15 @@ export class KtPagination extends KtElement {
       nav {
         display: flex;
         align-items: center;
-        gap: 12px;
-      }
-
-      button {
-        padding: 6px 10px;
-        color: var(--text-body);
-        font: var(--font-normal-small);
-        background: transparent;
-        border: var(--border-width) solid var(--border-subtle);
-        border-radius: 6px;
-        cursor: pointer;
-      }
-
-      button:hover:not(:disabled) {
-        background: var(--color-dark-14);
-      }
-
-      button:disabled {
-        color: var(--text-disabled);
-        cursor: not-allowed;
-      }
-
-      button:focus-visible {
-        outline: var(--outline-width) solid var(--color-primary-base);
-        outline-offset: 1px;
+        gap: var(--gap-button);
       }
 
       .info {
+        padding: 0 4px;
         color: var(--text-muted);
-        font: var(--font-normal-small);
+        font: var(--font-normal-regular);
         font-variant-numeric: tabular-nums;
+        white-space: nowrap;
       }
     `,
   ];
@@ -87,16 +69,14 @@ export class KtPagination extends KtElement {
     const last = this.page >= this.totalPages;
 
     return html`<nav aria-label=${this.label}>
-      <button
+      <kt-button
         part="previous"
-        type="button"
+        variant="dark"
+        icon="chevron-left"
         ?disabled=${first}
-        aria-label="Previous page"
         @click=${() => this.go(this.page - 1)}
+        >Previous</kt-button
       >
-        <kt-icon name="chevron-left" size="16"></kt-icon>
-        Previous
-      </button>
 
       <!-- polite, so a page change is announced without interrupting whatever
            the reader is already working through -->
@@ -104,16 +84,15 @@ export class KtPagination extends KtElement {
         Page ${this.page} / ${this.totalPages}
       </span>
 
-      <button
+      <kt-button
         part="next"
-        type="button"
+        variant="dark"
+        icon="chevron-right"
+        icon-position="right"
         ?disabled=${last}
-        aria-label="Next page"
         @click=${() => this.go(this.page + 1)}
+        >Next</kt-button
       >
-        Next
-        <kt-icon name="chevron-right" size="16"></kt-icon>
-      </button>
     </nav>`;
   }
 }
