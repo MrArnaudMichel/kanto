@@ -13,6 +13,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
@@ -22,6 +23,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { gzipSync } from 'node:zlib';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'vite';
@@ -81,6 +83,24 @@ try {
       );
     } else {
       console.log(`ok   ${name}: ${EXPECTED[name].join(', ')} registered`);
+    }
+  }
+
+  // The CDN file: one module, nothing left to resolve, every element in it.
+  const cdn = join(installed, pkg.jsdelivr ?? 'missing');
+  if (!pkg.jsdelivr || !existsSync(cdn)) {
+    failures.push('the CDN file: package.json names no jsdelivr file, or it is not in the package');
+  } else {
+    const code = readFileSync(cdn, 'utf8');
+    const bare = /(?:^|[;\s])(?:import|export)[^'"]*?from\s*["'](?![./])([^"']+)["']/m.exec(code);
+    const missing = ['kt-button', 'kt-table', 'kt-date-picker'].filter(
+      (tag) => !new RegExp(`['"\`]${tag}['"\`]`).test(code),
+    );
+    if (bare) failures.push(`the CDN file imports "${bare[1]}", which a browser cannot resolve`);
+    else if (missing.length) failures.push(`the CDN file is missing ${missing.join(', ')}`);
+    else {
+      const kB = (gzipSync(code).length / 1024).toFixed(1);
+      console.log(`ok   the CDN file: self-contained, ${kB} kB gzipped`);
     }
   }
 } finally {

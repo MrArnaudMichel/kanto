@@ -49,6 +49,29 @@ That registers every element and loads the token layer. Then use them as markup:
 <kt-button variant="primary" icon="plus">New entity</kt-button>
 \`\`\`
 
+## No build step
+
+One stylesheet and one script, from a CDN — a prototype, a static page, a CMS
+template:
+
+\`\`\`html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/kanto-ds@1/dist/styles.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/kanto-ds@1"></script>
+
+<kt-button variant="primary" icon="plus">New entity</kt-button>
+\`\`\`
+
+The script is every element in one minified file, Lit included — about 85 kB
+gzipped. \`@1\` follows the latest 1.x release; pin an exact version in
+production. The library's functions are its exports:
+
+\`\`\`html
+<script type="module">
+  import { setAppearance, toaster } from 'https://cdn.jsdelivr.net/npm/kanto-ds@1';
+  setAppearance({ accent: 'teal' });
+</script>
+\`\`\`
+
 ## Import one element
 
 Applications that use a handful should import those instead, so the bundler can drop the rest:

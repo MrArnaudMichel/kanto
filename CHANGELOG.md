@@ -5,6 +5,20 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.7.0] — 2026-10-02
+
+### Added
+
+- **A file for the CDN.** `dist/cdn/kanto.min.js` is every element in one
+  minified module, Lit and the default icons included, about 85 kB gzipped.
+  The package's `unpkg` and `jsdelivr` fields point at it, so a page with no
+  build step needs one script tag:
+  `<script type="module" src="https://cdn.jsdelivr.net/npm/kanto-ds@1"></script>`.
+  The release checks load it with nothing left to resolve.
+- The docs site opens on a home page: a playground that re-themes a real
+  Kanto screen and hands over the code, or opens it as a running project on
+  StackBlitz.
+
 ## [1.6.1] — 2026-10-02
 
 ### Fixed

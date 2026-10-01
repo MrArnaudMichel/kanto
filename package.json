@@ -37,6 +37,8 @@
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
+  "unpkg": "./dist/cdn/kanto.min.js",
+  "jsdelivr": "./dist/cdn/kanto.min.js",
   "types": "./dist/index.d.ts",
   "customElements": "./dist/custom-elements.json",
   "web-types": "./dist/web-types.json",
@@ -286,7 +288,8 @@
   ],
   "scripts": {
     "dev": "vite --config demo/vite.config.ts",
-    "build": "npm run build:js && npm run build:types && npm run build:static && npm run build:manifest",
+    "build": "npm run build:js && npm run build:cdn && npm run build:types && npm run build:static && npm run build:manifest",
+    "build:cdn": "node scripts/build-cdn.js",
     "build:js": "vite build",
     "build:types": "tsc -p tsconfig.build.json",
     "build:static": "node scripts/copy-static.js",

@@ -283,6 +283,16 @@
   content: counter(step) '.';
 }
 
+/* The no-build path, one line under the steps. */
+.home-alt {
+  margin: 0 0 24px;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+}
+.home-alt a {
+  color: var(--color-primary-text);
+}
+
 /* === Narrower screens === */
 
 @media (max-width: 1100px) {

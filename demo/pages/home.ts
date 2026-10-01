@@ -198,6 +198,11 @@ export function homePage({
           <kt-code language="html">${USE}</kt-code>
         </li>
       </ol>
+      <p class="home-alt">
+        No bundler?
+        <a href="#/guide/installation#no-build-step">One stylesheet and one script tag</a>
+        do it.
+      </p>
       <kt-button variant="secondary" @click=${() => (location.hash = '#/guide/installation')}
         >Read the guide</kt-button
       >

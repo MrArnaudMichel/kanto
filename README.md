@@ -23,6 +23,13 @@ import 'kanto-ds/styles.css';
 </kt-card>
 ```
 
+No bundler? One stylesheet and one script tag:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/kanto-ds@1/dist/styles.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/kanto-ds@1"></script>
+```
+
 ---
 
 ## Showcase
