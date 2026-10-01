@@ -172,7 +172,7 @@ export class KtInput extends KtElement {
       .icon-button:focus-visible {
         outline: var(--outline-width) solid var(--color-primary-base);
         outline-offset: 2px;
-        border-radius: 2px;
+        border-radius: calc(2px * var(--radius-scale, 1));
       }
 
       .clear {

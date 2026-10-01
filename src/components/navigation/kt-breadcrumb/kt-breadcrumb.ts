@@ -53,7 +53,7 @@ export class KtBreadcrumb extends KtElement {
         padding: 2px 6px;
         color: var(--text-muted);
         font: var(--font-normal-regular);
-        border-radius: 6px;
+        border-radius: calc(6px * var(--radius-scale, 1));
         text-decoration: none;
       }
 

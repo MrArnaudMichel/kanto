@@ -74,7 +74,7 @@ export class KtCode extends KtElement {
         font: var(--font-normal-small);
         background: transparent;
         border: none;
-        border-radius: 5px;
+        border-radius: calc(5px * var(--radius-scale, 1));
         cursor: pointer;
         transition:
           color var(--duration-instant),

@@ -112,7 +112,7 @@ export abstract class KtSegmentedField extends KtElement {
          a digit will go into; the caret itself would only flicker. */
       .segment {
         padding: 1px 2px;
-        border-radius: 4px;
+        border-radius: calc(4px * var(--radius-scale, 1));
         outline: none;
         caret-color: transparent;
         white-space: nowrap;

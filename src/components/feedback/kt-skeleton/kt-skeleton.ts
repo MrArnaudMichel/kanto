@@ -55,7 +55,7 @@ export class KtSkeleton extends KtElement {
       }
 
       .text {
-        border-radius: 4px;
+        border-radius: calc(4px * var(--radius-scale, 1));
       }
 
       .circle {

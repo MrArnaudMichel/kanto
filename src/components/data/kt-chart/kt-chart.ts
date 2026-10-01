@@ -287,7 +287,7 @@ export class KtChart extends KtElement {
         width: 8px;
         height: 8px;
         background: var(--swatch);
-        border-radius: 2px;
+        border-radius: calc(2px * var(--radius-scale, 1));
       }
 
       .swatch.hollow {

@@ -8,62 +8,86 @@
 
 /* === MOBILE (< 600px) === */
 @media (max-width: 599px) {
-  :root {
-    --font-title-studio: 400 36px/44px var(--font-family-display);
-    --font-title-h1: 600 30px/36px var(--font-family-display);
-    --font-title-h4: 400 22px/28px var(--font-family-display);
-    --font-title-h6: 600 18px/22px var(--font-family-display);
-    --font-normal-regular: 400 12px/18px var(--font-family-body);
-    --font-normal-medium: 500 12px/18px var(--font-family-body);
-    --font-normal-small: 400 10px/14px var(--font-family-body);
+  :root,
+  [data-radius],
+  [data-density],
+  [data-text-size],
+  [data-font] {
+    --font-title-studio: 400 calc(36px * var(--text-scale, 1)) / calc(44px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h1: 600 calc(30px * var(--text-scale, 1)) / calc(36px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h4: 400 calc(22px * var(--text-scale, 1)) / calc(28px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h6: 600 calc(18px * var(--text-scale, 1)) / calc(22px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-normal-regular: 400 calc(12px * var(--text-scale, 1)) / calc(18px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-normal-medium: 500 calc(12px * var(--text-scale, 1)) / calc(18px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-normal-small: 400 calc(10px * var(--text-scale, 1)) / calc(14px * var(--text-scale, 1))
+      var(--font-family-body);
     /* 16px keeps iOS Safari from zooming on focus. */
-    --font-input: 400 16px/1.4 var(--font-family-body);
-    --font-code-regular: 400 12px/16px var(--font-family-code);
+    --font-input: 400 calc(16px * var(--text-scale, 1))/1.4 var(--font-family-body);
+    --font-code-regular: 400 calc(12px * var(--text-scale, 1)) / calc(16px * var(--text-scale, 1))
+      var(--font-family-code);
 
-    --padding-card: 16px;
-    --padding-modal: 16px;
-    --padding-input: 8px 0;
-    --padding-form: 12px;
-    --button-padding-x: 12px;
+    --padding-card: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+    --padding-modal: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+    --padding-input: round(nearest, calc(8px * var(--density-scale, 1)), 1px) 0;
+    --padding-form: round(nearest, calc(12px * var(--density-scale, 1)), 1px);
+    --button-padding-x: round(nearest, calc(12px * var(--density-scale, 1)), 1px);
 
-    --gap-card: 14px;
-    --gap-modal: 14px;
-    --gap-element: 4px;
-    --gap-form: 12px;
-    --gap-button: 8px;
+    --gap-card: round(nearest, calc(14px * var(--density-scale, 1)), 1px);
+    --gap-modal: round(nearest, calc(14px * var(--density-scale, 1)), 1px);
+    --gap-element: round(nearest, calc(4px * var(--density-scale, 1)), 1px);
+    --gap-form: round(nearest, calc(12px * var(--density-scale, 1)), 1px);
+    --gap-button: round(nearest, calc(8px * var(--density-scale, 1)), 1px);
 
-    --button-height-small: 30px;
-    --button-height: 36px;
-    --button-height-large: 42px;
+    --button-height-small: round(nearest, calc(30px * var(--density-scale, 1)), 2px);
+    --button-height: round(nearest, calc(36px * var(--density-scale, 1)), 2px);
+    --button-height-large: round(nearest, calc(42px * var(--density-scale, 1)), 2px);
   }
 }
 
 /* === TABLET (600px – 1023px) === */
 @media (min-width: 600px) and (max-width: 1023px) {
-  :root {
-    --font-title-studio: 400 44px/52px var(--font-family-display);
-    --font-title-h1: 600 36px/42px var(--font-family-display);
-    --font-title-h4: 400 26px/32px var(--font-family-display);
-    --font-title-h6: 600 20px/24px var(--font-family-display);
-    --font-normal-regular: 400 14px/18px var(--font-family-body);
-    --font-normal-medium: 500 14px/18px var(--font-family-body);
-    --font-normal-small: 400 12px/16px var(--font-family-body);
-    --font-code-regular: 400 14px/18px var(--font-family-code);
+  :root,
+  [data-radius],
+  [data-density],
+  [data-text-size],
+  [data-font] {
+    --font-title-studio: 400 calc(44px * var(--text-scale, 1)) / calc(52px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h1: 600 calc(36px * var(--text-scale, 1)) / calc(42px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h4: 400 calc(26px * var(--text-scale, 1)) / calc(32px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h6: 600 calc(20px * var(--text-scale, 1)) / calc(24px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-normal-regular: 400 calc(14px * var(--text-scale, 1)) / calc(18px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-normal-medium: 500 calc(14px * var(--text-scale, 1)) / calc(18px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-normal-small: 400 calc(12px * var(--text-scale, 1)) / calc(16px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-code-regular: 400 calc(14px * var(--text-scale, 1)) / calc(18px * var(--text-scale, 1))
+      var(--font-family-code);
 
-    --padding-card: 20px;
-    --padding-modal: 20px;
-    --padding-input: 10px 0;
-    --padding-form: 16px;
+    --padding-card: round(nearest, calc(20px * var(--density-scale, 1)), 1px);
+    --padding-modal: round(nearest, calc(20px * var(--density-scale, 1)), 1px);
+    --padding-input: round(nearest, calc(10px * var(--density-scale, 1)), 1px) 0;
+    --padding-form: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
 
-    --gap-card: 18px;
-    --gap-modal: 18px;
-    --gap-element: 4px;
-    --gap-form: 14px;
-    --gap-button: 10px;
+    --gap-card: round(nearest, calc(18px * var(--density-scale, 1)), 1px);
+    --gap-modal: round(nearest, calc(18px * var(--density-scale, 1)), 1px);
+    --gap-element: round(nearest, calc(4px * var(--density-scale, 1)), 1px);
+    --gap-form: round(nearest, calc(14px * var(--density-scale, 1)), 1px);
+    --gap-button: round(nearest, calc(10px * var(--density-scale, 1)), 1px);
 
-    --button-height-small: 32px;
-    --button-height: 40px;
-    --button-height-large: 46px;
+    --button-height-small: round(nearest, calc(32px * var(--density-scale, 1)), 2px);
+    --button-height: round(nearest, calc(40px * var(--density-scale, 1)), 2px);
+    --button-height-large: round(nearest, calc(46px * var(--density-scale, 1)), 2px);
   }
 }
 
@@ -71,36 +95,52 @@
    Kanto ships on trading-desk and NOC displays; at 21:9 the desktop scale
    reads as tiny rather than dense. */
 @media (min-aspect-ratio: 21/9) {
-  :root {
-    --font-title-studio: 400 72px/84px var(--font-family-display);
-    --font-title-h1: 600 56px/64px var(--font-family-display);
-    --font-title-h4: 400 36px/44px var(--font-family-display);
-    --font-title-h6: 600 28px/34px var(--font-family-display);
-    --font-normal-regular: 400 16px/22px var(--font-family-body);
-    --font-normal-medium: 500 16px/22px var(--font-family-body);
-    --font-normal-small: 400 14px/18px var(--font-family-body);
-    --font-code-regular: 400 16px/22px var(--font-family-code);
+  :root,
+  [data-radius],
+  [data-density],
+  [data-text-size],
+  [data-font] {
+    --font-title-studio: 400 calc(72px * var(--text-scale, 1)) / calc(84px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h1: 600 calc(56px * var(--text-scale, 1)) / calc(64px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h4: 400 calc(36px * var(--text-scale, 1)) / calc(44px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-title-h6: 600 calc(28px * var(--text-scale, 1)) / calc(34px * var(--text-scale, 1))
+      var(--font-family-display);
+    --font-normal-regular: 400 calc(16px * var(--text-scale, 1)) / calc(22px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-normal-medium: 500 calc(16px * var(--text-scale, 1)) / calc(22px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-normal-small: 400 calc(14px * var(--text-scale, 1)) / calc(18px * var(--text-scale, 1))
+      var(--font-family-body);
+    --font-code-regular: 400 calc(16px * var(--text-scale, 1)) / calc(22px * var(--text-scale, 1))
+      var(--font-family-code);
 
-    --padding-card: 36px;
-    --padding-modal: 36px;
-    --padding-input: 16px 0;
-    --padding-form: 24px;
+    --padding-card: round(nearest, calc(36px * var(--density-scale, 1)), 1px);
+    --padding-modal: round(nearest, calc(36px * var(--density-scale, 1)), 1px);
+    --padding-input: round(nearest, calc(16px * var(--density-scale, 1)), 1px) 0;
+    --padding-form: round(nearest, calc(24px * var(--density-scale, 1)), 1px);
 
-    --gap-card: 32px;
-    --gap-modal: 32px;
-    --gap-element: 6px;
-    --gap-form: 20px;
-    --gap-button: 16px;
+    --gap-card: round(nearest, calc(32px * var(--density-scale, 1)), 1px);
+    --gap-modal: round(nearest, calc(32px * var(--density-scale, 1)), 1px);
+    --gap-element: round(nearest, calc(6px * var(--density-scale, 1)), 1px);
+    --gap-form: round(nearest, calc(20px * var(--density-scale, 1)), 1px);
+    --gap-button: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
 
-    --button-height-small: 40px;
-    --button-height: 52px;
-    --button-height-large: 60px;
+    --button-height-small: round(nearest, calc(40px * var(--density-scale, 1)), 2px);
+    --button-height: round(nearest, calc(52px * var(--density-scale, 1)), 2px);
+    --button-height-large: round(nearest, calc(60px * var(--density-scale, 1)), 2px);
   }
 }
 
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
-  :root {
+  :root,
+  [data-radius],
+  [data-density],
+  [data-text-size],
+  [data-font] {
     --duration-instant: 0s;
     --duration-fast: 0s;
     --duration-normal: 0s;

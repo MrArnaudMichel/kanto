@@ -3,43 +3,53 @@
  * overrides live in `responsive.css`.
  */
 
-:root {
+:root,
+[data-radius],
+[data-density],
+[data-text-size],
+[data-font] {
   /* === RADIUS === */
-  --border-radius: 8px; /* inputs, buttons, square chips */
-  --border-radius-card: 12px;
-  --radius-input: 8px;
-  --radius-modal: 12px;
-  --radius-sub-menu: 2px;
+  --border-radius: calc(8px * var(--radius-scale, 1)); /* inputs, buttons, square chips */
+  --border-radius-card: calc(12px * var(--radius-scale, 1));
+  --radius-input: calc(8px * var(--radius-scale, 1));
+  --radius-modal: calc(12px * var(--radius-scale, 1));
+  --radius-sub-menu: calc(2px * var(--radius-scale, 1));
   --radius-pill: 20px; /* tag chips */
   --radius-full: 9999px; /* toggle track and thumb */
 
   /* === PADDING === */
-  --padding-card: 24px;
-  --padding-modal: 24px;
-  --padding-input: 8px 0;
-  --padding-form: 16px;
-  --padding-sub-menu: 12px 24px;
-  --padding-sub-menu-item: 8px 16px;
-  --padding-expand: 8px;
-  --padding-expand-item: 8px 16px;
-  --padding-drag-drop: 16px 24px;
-  --padding-chip: 4px 12px;
-  --text-area-padding: 10px 16px;
+  --padding-card: round(nearest, calc(24px * var(--density-scale, 1)), 1px);
+  --padding-modal: round(nearest, calc(24px * var(--density-scale, 1)), 1px);
+  --padding-input: round(nearest, calc(8px * var(--density-scale, 1)), 1px) 0;
+  --padding-form: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+  --padding-sub-menu: round(nearest, calc(12px * var(--density-scale, 1)), 1px)
+    round(nearest, calc(24px * var(--density-scale, 1)), 1px);
+  --padding-sub-menu-item: round(nearest, calc(8px * var(--density-scale, 1)), 1px)
+    round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+  --padding-expand: round(nearest, calc(8px * var(--density-scale, 1)), 1px);
+  --padding-expand-item: round(nearest, calc(8px * var(--density-scale, 1)), 1px)
+    round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+  --padding-drag-drop: round(nearest, calc(16px * var(--density-scale, 1)), 1px)
+    round(nearest, calc(24px * var(--density-scale, 1)), 1px);
+  --padding-chip: round(nearest, calc(4px * var(--density-scale, 1)), 1px)
+    round(nearest, calc(12px * var(--density-scale, 1)), 1px);
+  --text-area-padding: round(nearest, calc(10px * var(--density-scale, 1)), 1px)
+    round(nearest, calc(16px * var(--density-scale, 1)), 1px);
 
   /* === GAP === */
-  --gap-element: 4px;
-  --gap-button: 8px;
-  --gap-drag-drop: 12px;
-  --gap-form: 16px;
-  --gap-card: 20px;
-  --gap-modal: 20px;
-  --gap-sub-menu: 24px;
+  --gap-element: round(nearest, calc(4px * var(--density-scale, 1)), 1px);
+  --gap-button: round(nearest, calc(8px * var(--density-scale, 1)), 1px);
+  --gap-drag-drop: round(nearest, calc(12px * var(--density-scale, 1)), 1px);
+  --gap-form: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
+  --gap-card: round(nearest, calc(20px * var(--density-scale, 1)), 1px);
+  --gap-modal: round(nearest, calc(20px * var(--density-scale, 1)), 1px);
+  --gap-sub-menu: round(nearest, calc(24px * var(--density-scale, 1)), 1px);
 
   /* === DIMENSIONS === */
-  --button-height-small: 32px;
-  --button-height: 40px;
-  --button-height-large: 48px;
-  --button-padding-x: 16px;
+  --button-height-small: round(nearest, calc(32px * var(--density-scale, 1)), 2px);
+  --button-height: round(nearest, calc(40px * var(--density-scale, 1)), 2px);
+  --button-height-large: round(nearest, calc(48px * var(--density-scale, 1)), 2px);
+  --button-padding-x: round(nearest, calc(16px * var(--density-scale, 1)), 1px);
 
   /* === BORDERS === */
   --border-width: 1px;

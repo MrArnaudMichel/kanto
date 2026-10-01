@@ -79,7 +79,7 @@ export class KtKbd extends KtElement {
         font-family: var(--font-family-body);
         background: var(--surface-card);
         border: var(--border-width) solid var(--border-subtle);
-        border-radius: 5px;
+        border-radius: calc(5px * var(--radius-scale, 1));
       }
     `,
   ];

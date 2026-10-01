@@ -161,7 +161,7 @@ export class KtToast extends KtElement {
         color: currentcolor;
         background: transparent;
         border: none;
-        border-radius: 4px;
+        border-radius: calc(4px * var(--radius-scale, 1));
         cursor: pointer;
       }
       .close:focus-visible {

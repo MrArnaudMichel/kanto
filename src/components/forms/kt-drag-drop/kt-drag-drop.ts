@@ -135,7 +135,7 @@ export class KtDragDrop extends KtElement {
         overflow: hidden;
         color: var(--color-info-text);
         background: var(--color-dark-14);
-        border-radius: 6px;
+        border-radius: calc(6px * var(--radius-scale, 1));
       }
 
       .info {

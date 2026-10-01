@@ -135,7 +135,7 @@ export class KtAlert extends KtElement {
         color: currentcolor;
         background: none;
         border: none;
-        border-radius: 4px;
+        border-radius: calc(4px * var(--radius-scale, 1));
         cursor: pointer;
         opacity: 0.7;
       }

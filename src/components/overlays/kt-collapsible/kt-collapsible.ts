@@ -68,7 +68,7 @@ export class KtCollapsible extends KtElement {
       summary:focus-visible {
         outline: var(--outline-width) solid var(--color-primary-base);
         outline-offset: 2px;
-        border-radius: 4px;
+        border-radius: calc(4px * var(--radius-scale, 1));
       }
 
       .chevron {

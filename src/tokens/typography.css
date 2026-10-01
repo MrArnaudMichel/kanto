@@ -12,29 +12,36 @@
  * gets a sensible system face.
  */
 
-:root {
+:root,
+[data-radius],
+[data-density],
+[data-text-size],
+[data-font] {
   /* === FAMILIES === */
-  --font-family-display: 'Manrope', 'Segoe UI', system-ui, sans-serif;
-  --font-family-body: 'Mulish', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-display: var(--font-display, 'Manrope', 'Segoe UI', system-ui, sans-serif);
+  --font-family-body: var(--font-body, 'Mulish', system-ui, -apple-system, 'Segoe UI', sans-serif);
   --font-family-code: 'Source Code Pro', ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
 
   /* === TITLES (Manrope) === */
-  --font-title-studio: 400 48px/58px var(--font-family-display);
-  --font-title-h1: 600 36px/43px var(--font-family-display);
-  --font-title-h4: 400 24px/29px var(--font-family-display);
-  --font-title-h6: 600 18px var(--font-family-display);
+  --font-title-studio: 400 calc(48px * var(--text-scale, 1)) / calc(58px * var(--text-scale, 1))
+    var(--font-family-display);
+  --font-title-h1: 600 calc(36px * var(--text-scale, 1)) / calc(43px * var(--text-scale, 1))
+    var(--font-family-display);
+  --font-title-h4: 400 calc(24px * var(--text-scale, 1)) / calc(29px * var(--text-scale, 1))
+    var(--font-family-display);
+  --font-title-h6: 600 calc(18px * var(--text-scale, 1)) var(--font-family-display);
 
   /* Overline uses the body face despite living with the titles. */
-  --font-title-overline: 600 10px var(--font-family-body);
+  --font-title-overline: 600 calc(10px * var(--text-scale, 1)) var(--font-family-body);
 
   /* === BODY & UI (Mulish) === */
-  --font-normal-regular: 400 14px var(--font-family-body);
-  --font-normal-medium: 500 14px var(--font-family-body);
-  --font-normal-small: 400 12px var(--font-family-body);
-  --font-input: 400 14px var(--font-family-body);
+  --font-normal-regular: 400 calc(14px * var(--text-scale, 1)) var(--font-family-body);
+  --font-normal-medium: 500 calc(14px * var(--text-scale, 1)) var(--font-family-body);
+  --font-normal-small: 400 calc(12px * var(--text-scale, 1)) var(--font-family-body);
+  --font-input: 400 calc(14px * var(--text-scale, 1)) var(--font-family-body);
 
   /* === CODE === */
-  --font-code-regular: 400 14px var(--font-family-code);
+  --font-code-regular: 400 calc(14px * var(--text-scale, 1)) var(--font-family-code);
 
   /* === TRACKING === */
   --letter-spacing-overline: 2px;

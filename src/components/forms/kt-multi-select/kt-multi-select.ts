@@ -170,7 +170,7 @@ export class KtMultiSelect extends KtElement {
         color: var(--text-muted);
         background: transparent;
         border: none;
-        border-radius: 4px;
+        border-radius: calc(4px * var(--radius-scale, 1));
         cursor: pointer;
         transition:
           background-color var(--duration-instant),
