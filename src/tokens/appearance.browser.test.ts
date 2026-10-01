@@ -6,6 +6,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import '../styles.css';
+import '../index.js';
+import { fixture, settle } from '#test/fixture';
 
 type Probe = { property: string; read: keyof CSSStyleDeclaration };
 const AS: Record<string, Probe> = {
@@ -142,5 +144,50 @@ describe('the presets', () => {
     light.append(box);
     document.body.append(light);
     expect(resolve('--button-height', 'length', box)).toBe('34px');
+  });
+});
+
+/** The element that carries each field's height. */
+const FIELD: Record<string, string> = {
+  'kt-input': '.field',
+  'kt-select': '.trigger',
+  'kt-date-input': '.field',
+  'kt-time-input': '.field',
+  'kt-date-picker': '.field',
+};
+
+describe.each([
+  ['compact', 'small'],
+  ['default', 'default'],
+  ['comfortable', 'large'],
+])('fields at density %s, text %s', (density, textSize) => {
+  it('stand as tall as one another and the button height', async () => {
+    document.documentElement.dataset['density'] = density;
+    document.documentElement.dataset['textSize'] = textSize;
+    const row = await fixture<HTMLDivElement>(`<div>
+      <kt-input label="Name"></kt-input>
+      <kt-select label="Country"></kt-select>
+      <kt-date-input label="Due" locale="en-GB"></kt-date-input>
+      <kt-time-input label="At" locale="en-GB"></kt-time-input>
+      <kt-date-picker label="Due"></kt-date-picker>
+    </div>`);
+    await Promise.all([...row.children].map((el) => settle(el)));
+    const heights = [...row.children].map(
+      (el) => el.shadowRoot!.querySelector(FIELD[el.localName]!)!.getBoundingClientRect().height,
+    );
+    const expected = parseFloat(resolve('--button-height', 'length'));
+    expect(heights).toEqual(heights.map(() => expected));
+  });
+
+  it('keep the radio dot centred on whole pixels', async () => {
+    document.documentElement.dataset['density'] = density;
+    document.documentElement.dataset['textSize'] = textSize;
+    const radio = await fixture<HTMLElement>('<kt-radio value="a" checked>Yearly</kt-radio>');
+    await settle(radio);
+    const circle = radio.shadowRoot!.querySelector('.circle')!.getBoundingClientRect();
+    const dot = radio.shadowRoot!.querySelector('.dot')!.getBoundingClientRect();
+    expect(dot.left - circle.left).toBe(circle.right - dot.right);
+    expect(dot.top - circle.top).toBe(circle.bottom - dot.bottom);
+    expect(Number.isInteger(dot.left - circle.left)).toBe(true);
   });
 });

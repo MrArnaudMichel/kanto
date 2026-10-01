@@ -387,3 +387,18 @@ describe.each(['blue', 'green', 'orange'])('accessibility, %s accent', (accent) 
     });
   });
 });
+
+describe.each([
+  { density: 'compact', textSize: 'small', radius: 'sharp' },
+  { density: 'comfortable', textSize: 'large', radius: 'round' },
+])('accessibility, appearance %o', (appearance) => {
+  afterEach(() => {
+    for (const key of Object.keys(appearance)) delete document.documentElement.dataset[key];
+  });
+  it.each(Object.entries(CASES))('%s has no axe violations', async (_, { markup, setup }) => {
+    Object.assign(document.documentElement.dataset, appearance);
+    const element = await fixture<HTMLElement>(markup);
+    setup?.(element);
+    expect((await audit(element)).join('\n')).toBe('');
+  });
+});
