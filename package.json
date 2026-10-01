@@ -161,6 +161,10 @@
       "types": "./dist/components/forms/kt-checkbox/kt-checkbox.d.ts",
       "default": "./dist/components/forms/kt-checkbox/kt-checkbox.js"
     },
+    "./components/forms/kt-date-input": {
+      "types": "./dist/components/forms/kt-date-input/kt-date-input.d.ts",
+      "default": "./dist/components/forms/kt-date-input/kt-date-input.js"
+    },
     "./components/forms/kt-date-picker": {
       "types": "./dist/components/forms/kt-date-picker/kt-date-picker.d.ts",
       "default": "./dist/components/forms/kt-date-picker/kt-date-picker.js"

@@ -25,6 +25,22 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-date-input`** — a date typed into its parts, day, month and year.
+
+- The segments follow the reader's language — `25/09/2026` in London,
+  `09/25/2026` in New York, `25.09.2026` in Berlin — and the focus moves on as
+  each fills, so a date is eight keystrokes. The arrows step a segment, a day
+  never past its month's end; a two-digit year is written out on leaving it.
+- The value is ISO 8601 and `null` until complete; `kt-change` fires once per
+  date. A day that does not exist, or one outside `min`/`max`, shows the
+  field's error tooltip.
+- `calendar` adds a button that opens a `<kt-calendar>` on the field's date.
+- A form control with `required`, `error`, `form.reset()` and a disabled
+  fieldset. Each segment is a spinbutton with the numeric keypad on a phone;
+  their names and placeholders join `KtStrings`.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - **`kt-calendar`'s title opens one panel of years and months**, instead of a

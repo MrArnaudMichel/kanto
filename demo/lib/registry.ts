@@ -613,6 +613,12 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-calendar range months="2" value="2026-09-07/2026-09-18"></kt-calendar>
     </div>`,
 
+  'kt-date-input': () =>
+    html`<div class="demo-stack" style="max-width:320px">
+      <kt-date-input label="Date of birth" max="2026-12-31"></kt-date-input>
+      <kt-date-input label="Due date" calendar value="2026-09-25"></kt-date-input>
+    </div>`,
+
   'kt-date-picker': () =>
     html`<div class="demo-stack" style="max-width:320px">
       <kt-date-picker label="Due date" value="2026-09-25"></kt-date-picker>

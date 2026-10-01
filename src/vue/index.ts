@@ -51,6 +51,7 @@ import type { KtLabelInput } from 'kanto-ds';
 import type { KtSelect } from 'kanto-ds';
 import type { KtCheckbox } from 'kanto-ds';
 import type { KtCalendar } from 'kanto-ds';
+import type { KtDateInput } from 'kanto-ds';
 import type { KtDatePicker } from 'kanto-ds';
 import type { KtRadioGroup } from 'kanto-ds';
 import type { KtRadio } from 'kanto-ds';
@@ -122,6 +123,7 @@ declare module 'vue' {
     'kt-select': KtProps<KtSelect>;
     'kt-checkbox': KtProps<KtCheckbox>;
     'kt-calendar': KtProps<KtCalendar>;
+    'kt-date-input': KtProps<KtDateInput>;
     'kt-date-picker': KtProps<KtDatePicker>;
     'kt-radio-group': KtProps<KtRadioGroup>;
     'kt-radio': KtProps<KtRadio>;

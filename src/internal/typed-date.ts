@@ -19,6 +19,23 @@ function fold(text: string): string {
     .toLowerCase();
 }
 
+/**
+ * How the language writes a date in numbers: the order of day, month and year,
+ * and what goes between them — `25/09/2026`, `09/25/2026`, `25.09.2026`.
+ */
+export function dateLayout(locale: string): {
+  order: ('day' | 'month' | 'year')[];
+  separator: string;
+} {
+  const parts = dateFormat(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).formatToParts(new Date(2026, 8, 30));
+  const separator = parts.find((part) => part.type === 'literal')?.value.trim() || '/';
+  return { order: numericOrder(locale), separator };
+}
+
 /** The order the language writes day, month and year in numbers. */
 function numericOrder(locale: string): ('day' | 'month' | 'year')[] {
   const parts = dateFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -115,6 +132,11 @@ function numberOrderFor(
   count: number,
 ): readonly ('day' | 'month' | 'year')[] {
   return count === 3 ? order : order.filter((part) => part !== 'year');
+}
+
+/** A typed year: two digits are this century or the last, whichever is nearer. */
+export function typedYear(digits: string, reference: number): number | null {
+  return readYear(digits, reference);
 }
 
 /** A date typed in `locale`, or null when it does not read as one. */

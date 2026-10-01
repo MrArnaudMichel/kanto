@@ -36,6 +36,7 @@ import type {
   KtSelect,
   KtCheckbox,
   KtCalendar,
+  KtDateInput,
   KtDatePicker,
   KtRadioGroup,
   KtRadio,
@@ -121,6 +122,7 @@ declare module 'react' {
       'kt-label-input': KtProps<KtLabelInput>;
       'kt-toggle': KtProps<KtToggle, { 'kt-change': { checked: boolean } }>;
       'kt-calendar': KtProps<KtCalendar, { 'kt-change': { value: string } }>;
+      'kt-date-input': KtProps<KtDateInput, { 'kt-change': { value: string | null } }>;
       'kt-date-picker': KtProps<KtDatePicker, { 'kt-change': { value: string | null } }>;
       'kt-checkbox': KtProps<KtCheckbox, { 'kt-change': { checked: boolean } }>;
       'kt-radio-group': KtProps<KtRadioGroup, { 'kt-change': { value: string | null } }>;

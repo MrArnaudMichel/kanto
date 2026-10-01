@@ -94,6 +94,21 @@ export interface KtStrings {
   presetThisMonth: string;
   presetLastMonth: string;
   presetThisYear: string;
+  /** The segments of the date and time inputs: their names, then what an empty one shows. */
+  segmentDay: string;
+  segmentMonth: string;
+  segmentYear: string;
+  segmentHour: string;
+  segmentMinute: string;
+  segmentSecond: string;
+  segmentDayPeriod: string;
+  placeholderDay: string;
+  placeholderMonth: string;
+  placeholderYear: string;
+  placeholderTime: string;
+  /** A required time left empty, and one outside min and max. */
+  timeRequired: string;
+  timeOutOfRange: string;
   /** A phone number typed with the prefix only dialled from inside the country. */
   phoneTrunkPrefix: (prefix: string) => string;
 
@@ -192,6 +207,19 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   presetThisMonth: 'This month',
   presetLastMonth: 'Last month',
   presetThisYear: 'This year',
+  segmentDay: 'Day',
+  segmentMonth: 'Month',
+  segmentYear: 'Year',
+  segmentHour: 'Hour',
+  segmentMinute: 'Minute',
+  segmentSecond: 'Second',
+  segmentDayPeriod: 'AM or PM',
+  placeholderDay: 'dd',
+  placeholderMonth: 'mm',
+  placeholderYear: 'yyyy',
+  placeholderTime: '--',
+  timeRequired: 'Enter a time.',
+  timeOutOfRange: 'This time is outside the times you can choose.',
   phoneTrunkPrefix: (prefix: string) => `Enter the number without the leading ${prefix}.`,
 
   openMenu: 'Open menu',

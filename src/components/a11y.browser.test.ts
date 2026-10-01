@@ -157,6 +157,17 @@ const CASES: Record<string, Case> = {
     // Rendered by the time setup runs: open the panel before the audit.
     setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.title')!.click(),
   },
+  'kt-date-input': {
+    markup: '<kt-date-input label="Due date" locale="en-GB" value="2026-09-25"></kt-date-input>',
+  },
+  'kt-date-input empty': {
+    markup: '<kt-date-input label="Due date" locale="en-GB" required></kt-date-input>',
+  },
+  'kt-date-input calendar (open)': {
+    markup:
+      '<kt-date-input calendar label="Due date" locale="en-GB" value="2026-09-25"></kt-date-input>',
+    setup: (el) => el.shadowRoot!.querySelector<HTMLElement>('.trigger')!.click(),
+  },
   'kt-date-picker': {
     markup: '<kt-date-picker label="Due date" locale="en-GB" value="2026-09-25"></kt-date-picker>',
   },

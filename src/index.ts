@@ -35,6 +35,7 @@ export { KtCheckbox } from './components/forms/kt-checkbox/kt-checkbox.js';
 export type { KtCheckboxSize } from './components/forms/kt-checkbox/kt-checkbox.js';
 export { KtCalendar } from './components/forms/kt-calendar/kt-calendar.js';
 export type { KtCalendarView } from './components/forms/kt-calendar/kt-calendar.js';
+export { KtDateInput } from './components/forms/kt-date-input/kt-date-input.js';
 export { KtDatePicker } from './components/forms/kt-date-picker/kt-date-picker.js';
 export type {
   KtDatePickerSize,

@@ -55,6 +55,11 @@ const POPUPS: Record<string, Case> = {
     open: (el) => shadow(el, '.toggle').click(),
     panel: '.popup',
   },
+  'kt-date-input': {
+    markup: '<kt-date-input calendar label="Due" value="2026-09-14"></kt-date-input>',
+    open: (el) => shadow(el, '.trigger').click(),
+    panel: '.panel',
+  },
   'kt-date-picker': {
     markup: '<kt-date-picker label="Due" value="2026-09-14"></kt-date-picker>',
     open: (el) => shadow(el, '.trigger').click(),
