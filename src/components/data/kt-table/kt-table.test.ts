@@ -196,7 +196,8 @@ describe('kt-table', () => {
 
       const next = el
         .shadowRoot!.querySelector('kt-pagination')!
-        .shadowRoot!.querySelectorAll<HTMLButtonElement>('button')[1]!;
+        .shadowRoot!.querySelectorAll('kt-button')[1]!
+        .shadowRoot!.querySelector<HTMLButtonElement>('button')!;
       next.click();
       await settle(el);
 
