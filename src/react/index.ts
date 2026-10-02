@@ -45,6 +45,7 @@ import {
   KtRadioGroup as KtRadioGroupElement,
 } from '../components/forms/kt-radio-group/kt-radio-group.js';
 import { KtSelect as KtSelectElement } from '../components/forms/kt-select/kt-select.js';
+import { KtSteps as KtStepsElement } from '../components/navigation/kt-steps/kt-steps.js';
 import { KtSlider as KtSliderElement } from '../components/forms/kt-slider/kt-slider.js';
 import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea/kt-textarea.js';
 import { KtTimeInput as KtTimeInputElement } from '../components/forms/kt-time-input/kt-time-input.js';
@@ -160,6 +161,13 @@ export const KtInput = createComponent({
     onKtClear: 'kt-clear' as Kt<never>,
     onKtCountryChange: 'kt-country-change' as Kt<{ country: string; dialCode: string }>,
   },
+});
+
+export const KtSteps = createComponent({
+  tagName: 'kt-steps',
+  elementClass: KtStepsElement,
+  react: React,
+  events: { onKtChange: 'kt-change' as Kt<{ id: string }> },
 });
 
 export const KtSlider = createComponent({

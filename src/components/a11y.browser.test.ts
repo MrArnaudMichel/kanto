@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtSteps,
   KtCommandPalette,
   KtBreadcrumb,
   KtChart,
@@ -283,6 +284,26 @@ const CASES: Record<string, Case> = {
   'kt-slider': { markup: '<kt-slider label="Volume" value="40" show-value></kt-slider>' },
   'kt-slider range': {
     markup: '<kt-slider range label="Price" value="20/80" show-value></kt-slider>',
+  },
+  'kt-steps': {
+    markup: '<kt-steps label="Sign-up" current="team" navigable></kt-steps>',
+    setup: (el) => {
+      (el as KtSteps).steps = [
+        { id: 'account', label: 'Account' },
+        { id: 'billing', label: 'Billing', description: 'Card or invoice', error: false },
+        { id: 'team', label: 'Team' },
+      ];
+    },
+  },
+  'kt-steps with an error, vertical': {
+    markup: '<kt-steps label="Sign-up" current="team" orientation="vertical"></kt-steps>',
+    setup: (el) => {
+      (el as KtSteps).steps = [
+        { id: 'account', label: 'Account' },
+        { id: 'billing', label: 'Billing', description: 'Card or invoice', error: true },
+        { id: 'team', label: 'Team' },
+      ];
+    },
   },
   'kt-modal': { markup: '<kt-modal open heading="Edit entity"><p>Body</p></kt-modal>' },
   'kt-confirm-dialog': {

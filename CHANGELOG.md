@@ -37,6 +37,16 @@ range.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-steps`** — the steps of a flow and where the reader is in it.
+
+- Steps before `current` are complete, `current` is ringed, the rest are to
+  come; a step with `error` shows where to go back to.
+- With `navigable`, completed steps are buttons back to them — never forward.
+- Across, or down a rail with `orientation="vertical"`.
+- An ordered list with `aria-current="step"`, each state said in words.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ## [1.7.0] — 2026-10-02
 
 ### Added

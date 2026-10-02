@@ -1,6 +1,6 @@
 # Kanto
 
-> Fifty-one accessible web components for dashboards, admin tools and forms,
+> Fifty-two accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -73,6 +73,7 @@ In a project, every page below is also at
 - [kt-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-header/kt-header.md): The application header: a banner landmark holding the brand, the primary navigation and a row of actions.
 - [kt-page-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-page-header/kt-page-header.md): The block every screen opens with: an overline, a title, a sentence, and the actions that belong to the page rather than to anything on it.
 - [kt-segmented-control](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-segmented-control/kt-segmented-control.md): A small set of mutually exclusive choices, drawn as one inset track with the selected segment raised out of it.
+- [kt-steps](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-steps/kt-steps.md): The steps of a flow — sign-up, checkout, onboarding — and where the reader is in it.
 - [kt-sub-menu-navigation](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.md): The sidebar: uppercase overline section titles over lists of links, to any depth.
 - [kt-tabs](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-tabs/kt-tabs.md): An underlined tab bar.
 - [kt-toggle-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-toggle-button/kt-toggle-button.md): A button that stays pressed.

@@ -645,6 +645,31 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-multi-select>
     </div>`,
 
+  'kt-steps': () =>
+    html`<div class="demo-stack" style="max-width:100%;gap:36px">
+      <kt-steps
+        label="Sign-up"
+        current="team"
+        navigable
+        .steps=${[
+          { id: 'account', label: 'Account' },
+          { id: 'billing', label: 'Billing', description: 'Card or invoice' },
+          { id: 'team', label: 'Team' },
+          { id: 'done', label: 'Done' },
+        ]}
+      ></kt-steps>
+      <kt-steps
+        label="Onboarding"
+        current="connect"
+        orientation="vertical"
+        .steps=${[
+          { id: 'profile', label: 'Your profile', description: 'Name and photo' },
+          { id: 'connect', label: 'Connect your bank', description: 'Read-only access' },
+          { id: 'invite', label: 'Invite your team' },
+        ]}
+      ></kt-steps>
+    </div>`,
+
   'kt-slider': () =>
     html`<div class="demo-stack" style="max-width:420px">
       <kt-slider label="Volume" value="40" show-value></kt-slider>

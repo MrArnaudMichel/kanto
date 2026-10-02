@@ -1,7 +1,7 @@
 {
   "name": "kanto-ds",
   "version": "1.7.0",
-  "description": "Fifty-one accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
+  "description": "Fifty-two accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
     "web-components",
@@ -253,6 +253,10 @@
     "./components/navigation/kt-segmented-control": {
       "types": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.d.ts",
       "default": "./dist/components/navigation/kt-segmented-control/kt-segmented-control.js"
+    },
+    "./components/navigation/kt-steps": {
+      "types": "./dist/components/navigation/kt-steps/kt-steps.d.ts",
+      "default": "./dist/components/navigation/kt-steps/kt-steps.js"
     },
     "./components/navigation/kt-sub-menu-navigation": {
       "types": "./dist/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.d.ts",
