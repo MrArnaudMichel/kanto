@@ -19,11 +19,11 @@ no component carries theme-specific CSS. Responsive scales for mobile, tablet
 and ultra-wide, plus a `prefers-reduced-motion` block that zeroes every
 duration in the system at once.
 
-**43 elements** across six groups, each in a folder of its own holding the
+**42 elements** across six groups, each in a folder of its own holding the
 element, its tests and its documentation:
 
-- **Core** — `kt-button`, `kt-card`, `kt-chip`, `kt-code`, `kt-icon`,
-  `kt-avatar`, `kt-badge`, `kt-kbd`
+- **Core** — `kt-button`, `kt-card`, `kt-code`, `kt-icon`, `kt-avatar`,
+  `kt-badge`, `kt-kbd`
 - **Forms** — `kt-form`, `kt-input` (with phone mode), `kt-textarea`,
   `kt-label-input`, `kt-select`, `kt-input-menu`, `kt-toggle`, `kt-drag-drop`
 - **Navigation** — `kt-header`, `kt-breadcrumb`, `kt-sub-menu-navigation`,
@@ -109,7 +109,7 @@ renders; only a whole screen shows what happens when forty of them share one.
   tabindex and no key handler, so the table could not be sorted by keyboard.
 - **The segmented control is a radio group.** It rendered N independent
   buttons: five options meant five tab stops and no arrow keys.
-- **Clickable cards and chips are real controls** — `role="button"`, a tab
+- **Clickable cards and badges are real controls** — `role="button"`, a tab
   stop, Enter and Space.
 - **The side panel and confirm dialog are native `<dialog>`s.** As fixed
   divs, Tab walked straight out of the panel into the page behind it.
@@ -119,7 +119,7 @@ renders; only a whole screen shows what happens when forty of them share one.
   could sit unread.
 - **Progress bars clamp their value.** Dividing by an unguarded `max` rendered
   `width: NaN%`.
-- **Category chips tint through `color-mix`** instead of concatenating `"33"`
+- **Category badges tint through `color-mix`** instead of concatenating `"33"`
   onto a hex string, which only ever worked for six-digit hex.
 - **Table sorting is locale-aware** — "Ångström" files next to "Angstrom", and
   "Entity 2" precedes "Entity 10". Empty values sort last in both directions.
