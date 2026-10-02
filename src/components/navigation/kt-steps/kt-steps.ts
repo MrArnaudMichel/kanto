@@ -62,94 +62,97 @@ export class KtSteps extends KtElement {
 
       ol {
         display: flex;
-        gap: 12px;
         margin: 0;
         padding: 0;
         list-style: none;
       }
       :host([orientation='vertical']) ol {
         flex-direction: column;
-        gap: 0;
       }
 
+      /* Across, the steps share the width evenly: a column each, the marker
+         on top and the text centred under it. */
       li {
         position: relative;
-        display: flex;
         flex: 1 1 0;
-        gap: 12px;
-        align-items: flex-start;
         min-width: 0;
       }
-      /* The last step has no connector to stretch: it ends the row. */
-      li:last-child {
+      .step {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        text-align: center;
+      }
+      :host([orientation='vertical']) li {
         flex: none;
+        padding-bottom: 24px;
+      }
+      :host([orientation='vertical']) li:last-child {
+        padding-bottom: 0;
+      }
+      :host([orientation='vertical']) .step {
+        flex-direction: row;
+        gap: 12px;
+        align-items: flex-start;
+        text-align: start;
       }
 
-      /* The line to the next step: through the markers' middle across, down
-         their middle when vertical. */
+      /* The line to the next step, from marker to marker through their
+         middle, clear of each: 8px across, 6px down. */
       .connector {
-        flex: 1 1 24px;
-        min-width: 16px;
+        position: absolute;
+        top: calc(var(--kt-steps-marker) / 2 - 1px);
+        left: calc(50% + var(--kt-steps-marker) / 2 + 8px);
+        width: calc(100% - var(--kt-steps-marker) - 16px);
         height: 2px;
-        margin-top: calc(var(--kt-steps-marker) / 2 - 1px);
         background: var(--border-field);
         border-radius: var(--radius-full);
       }
       li[data-state='complete'] .connector {
         background: var(--color-primary-base);
       }
-      :host([orientation='vertical']) li {
-        flex: none;
-        padding-bottom: 20px;
-      }
-      :host([orientation='vertical']) li:last-child {
-        padding-bottom: 0;
-      }
-      /* Clear of both markers — and of the current one's ring — by 6px. */
       :host([orientation='vertical']) .connector {
-        position: absolute;
         top: calc(var(--kt-steps-marker) + 6px);
         left: calc(var(--kt-steps-marker) / 2 - 1px);
         width: 2px;
         height: calc(100% - var(--kt-steps-marker) - 12px);
-        min-width: 0;
-        margin: 0;
       }
 
-      /* Shaped like the rest of Kanto: the theme's radius, a field's
-         border; the current step is tinted, the done ones filled. */
+      /* A filled circle: the tick when done, the number otherwise. */
       .marker {
-        display: inline-grid;
+        display: grid;
         flex: none;
         place-items: center;
         width: var(--kt-steps-marker);
         height: var(--kt-steps-marker);
-        color: var(--text-muted);
+        color: var(--text-body);
         font: var(--font-normal-small);
         font-weight: 600;
-        line-height: 1;
-        background: var(--surface-field);
-        border: var(--border-width) solid var(--border-field);
-        border-radius: var(--radius-input);
+        /* A field's border colour: a grey that reads on a card and a page,
+           in both themes. */
+        background: var(--border-field);
+        border-radius: 50%;
         transition:
           background-color var(--duration-fast) var(--easing-standard),
-          border-color var(--duration-fast) var(--easing-standard),
           color var(--duration-fast) var(--easing-standard);
       }
-      li[data-state='complete'] .marker {
+      li[data-state='complete'] .marker,
+      li[data-state='current'] .marker {
         color: var(--color-white);
         background: var(--color-primary-base);
-        border-color: var(--color-primary-base);
-      }
-      li[data-state='current'] .marker {
-        color: var(--color-primary-text);
-        background: var(--color-primary-soft);
-        border-color: var(--color-primary-base);
       }
       li[data-state='error'] .marker {
-        color: var(--color-danger-text);
-        background: var(--color-danger-soft);
-        border-color: var(--color-danger-base);
+        color: var(--color-white);
+        background: var(--color-danger-base);
+      }
+      /* Trimmed to the digits' height, so the grid centres the ink, not a
+         line box padded by the font's ascent and descent. */
+      .number {
+        display: block;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+        text-box: trim-both cap alphabetic;
       }
       /* Lucide's tick sits high in its square; this puts its ink on the
          marker's middle. */
@@ -159,18 +162,23 @@ export class KtSteps extends KtElement {
 
       .text {
         display: grid;
-        gap: 0;
+        gap: 2px;
         min-width: 0;
+        padding: 0 4px;
       }
-      /* As tall as the marker, so the label sits on its middle whatever the
-         font's line height. */
+      :host([orientation='vertical']) .text {
+        gap: 0;
+        padding: 0;
+      }
       .label {
+        color: var(--text-muted);
+        font: var(--font-normal-medium);
+      }
+      /* Down, as tall as the marker, so the label sits on its middle. */
+      :host([orientation='vertical']) .label {
         display: flex;
         align-items: center;
         min-height: var(--kt-steps-marker);
-        color: var(--text-muted);
-        font: var(--font-normal-medium);
-        white-space: nowrap;
       }
       li[data-state='current'] .label,
       li[data-state='complete'] .label {
@@ -184,25 +192,26 @@ export class KtSteps extends KtElement {
         font: var(--font-normal-small);
       }
 
-      button {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        margin: -4px;
-        padding: 4px;
+      button.step {
+        width: 100%;
+        margin: 0;
+        padding: 0;
         color: inherit;
         font: inherit;
-        text-align: start;
         background: none;
         border: none;
         border-radius: var(--radius-input);
         cursor: pointer;
       }
-      button:hover .label {
+      button.step:hover .label {
         color: var(--color-primary-text);
       }
-      button:focus-visible {
+      button.step:hover .marker {
+        background: var(--color-primary-hover);
+      }
+      button.step:focus-visible {
         outline: var(--outline-width) solid var(--color-primary-base);
+        outline-offset: 4px;
       }
 
       .visually-hidden {
@@ -264,7 +273,7 @@ export class KtSteps extends KtElement {
             ? html`<kt-icon name="check" size="14"></kt-icon>`
             : state === 'error'
               ? html`<kt-icon name="circle-alert" size="14"></kt-icon>`
-              : html`${index + 1}`;
+              : html`<span class="number">${index + 1}</span>`;
         const body = html`<span part="marker" class="marker" aria-hidden="true">${marker}</span>
           <span class="text">
             <span class="label">${step.label}</span>
@@ -278,7 +287,13 @@ export class KtSteps extends KtElement {
           data-state=${state}
           aria-current=${index === currentIndex ? 'step' : nothing}
         >
-          ${back ? html`<button type="button" @click=${() => this.goTo(step)}>${body}</button>` : body}
+          ${
+            back
+              ? html`<button class="step" type="button" @click=${() => this.goTo(step)}>
+                  ${body}
+                </button>`
+              : html`<span class="step">${body}</span>`
+          }
           ${index < this.steps.length - 1 ? html`<span part="connector" class="connector" aria-hidden="true"></span>` : nothing}
         </li>`;
       })}

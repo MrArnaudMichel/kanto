@@ -14,9 +14,9 @@ const STEPS = [
   { id: 'done', label: 'Done' },
 ];
 
-async function mount(orientation = 'horizontal'): Promise<KtSteps> {
+async function mount(orientation = 'horizontal', navigable = false): Promise<KtSteps> {
   const el = await fixture<KtSteps>(
-    `<kt-steps current="team" orientation="${orientation}" style="width: 900px"></kt-steps>`,
+    `<kt-steps current="team" orientation="${orientation}" ${navigable ? 'navigable' : ''} style="width: 900px"></kt-steps>`,
   );
   el.steps = STEPS;
   await settle(el);
@@ -24,7 +24,8 @@ async function mount(orientation = 'horizontal'): Promise<KtSteps> {
 }
 
 const box = (node: Element) => node.getBoundingClientRect();
-const middle = (rect: DOMRect) => rect.top + rect.height / 2;
+const middleY = (rect: DOMRect) => rect.top + rect.height / 2;
+const middleX = (rect: DOMRect) => rect.left + rect.width / 2;
 const all = (el: KtSteps, selector: string) => [...el.shadowRoot!.querySelectorAll(selector)];
 /** One connector between each two steps — never none, or the checks pass empty. */
 function connectors(el: KtSteps): Element[] {
@@ -33,77 +34,97 @@ function connectors(el: KtSteps): Element[] {
   return found;
 }
 
-describe('kt-steps layout', () => {
-  it('runs each connector through the middle of the markers, description or not', async () => {
+describe('kt-steps across', () => {
+  for (const navigable of [false, true]) {
+    describe(navigable ? 'navigable' : 'read-only', () => {
+      it('puts each label under its marker, centred on it', async () => {
+        const el = await mount('horizontal', navigable);
+        const markers = all(el, '.marker');
+        all(el, '.label').forEach((label, index) => {
+          const marker = box(markers[index]!);
+          expect(Math.abs(middleX(box(label)) - middleX(marker))).toBeLessThanOrEqual(1);
+          expect(box(label).top).toBeGreaterThanOrEqual(marker.bottom);
+        });
+      });
+
+      it('runs each connector from marker to marker, through their middle, clear of both', async () => {
+        const el = await mount('horizontal', navigable);
+        const markers = all(el, '.marker');
+        connectors(el).forEach((connector, index) => {
+          const line = box(connector);
+          const from = box(markers[index]!);
+          const to = box(markers[index + 1]!);
+          expect(Math.abs(middleY(line) - middleY(from))).toBeLessThanOrEqual(1);
+          const before = line.left - from.right;
+          const after = to.left - line.right;
+          expect(before).toBeGreaterThanOrEqual(6);
+          expect(Math.abs(before - after)).toBeLessThanOrEqual(1);
+        });
+      });
+    });
+  }
+
+  it('gives every step the same width', async () => {
     const el = await mount();
-    const marker = middle(box(all(el, '.marker')[0]!));
-    for (const connector of connectors(el)) {
-      expect(Math.abs(middle(box(connector)) - marker)).toBeLessThanOrEqual(1);
+    const widths = all(el, 'li').map((li) => Math.round(box(li).width));
+    expect(new Set(widths).size).toBe(1);
+  });
+});
+
+describe('kt-steps markers', () => {
+  it('are filled circles', async () => {
+    const el = await mount();
+    for (const marker of all(el, '.marker')) {
+      const style = getComputedStyle(marker);
+      expect(style.borderTopLeftRadius).toBe('50%');
+      expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      expect(box(marker).width).toBe(box(marker).height);
     }
   });
 
-  it('centres each label on its marker', async () => {
+  it('centre the tick on the marker, by its ink', async () => {
     const el = await mount();
+    const done = all(el, '.marker')[0]!;
+    // The ink, not the icon's box: Lucide's tick sits high in its square.
+    const tick = done.querySelector('kt-icon')!.shadowRoot!.querySelector('path')!;
+    expect(Math.abs(middleY(box(tick)) - middleY(box(done)))).toBeLessThanOrEqual(0.25);
+    expect(Math.abs(middleX(box(tick)) - middleX(box(done)))).toBeLessThanOrEqual(0.5);
+  });
+
+  it('centre the number on the marker, by its cap height', async () => {
+    const el = await mount();
+    for (const marker of all(el, '.marker').slice(2)) {
+      const number = marker.querySelector('.number')!;
+      expect(Math.abs(middleY(box(number)) - middleY(box(marker)))).toBeLessThanOrEqual(0.5);
+      expect(Math.abs(middleX(box(number)) - middleX(box(marker)))).toBeLessThanOrEqual(0.5);
+      // Trimmed to the digits, not the line: smaller than the font size.
+      expect(box(number).height).toBeLessThan(parseFloat(getComputedStyle(number).fontSize));
+    }
+  });
+});
+
+describe('kt-steps down', () => {
+  it('centres each label on its marker, beside it', async () => {
+    const el = await mount('vertical');
     const markers = all(el, '.marker');
     all(el, '.label').forEach((label, index) => {
-      expect(Math.abs(middle(box(label)) - middle(box(markers[index]!)))).toBeLessThanOrEqual(1);
+      const marker = box(markers[index]!);
+      expect(Math.abs(middleY(box(label)) - middleY(marker))).toBeLessThanOrEqual(1);
+      expect(box(label).left).toBeGreaterThan(marker.right);
     });
   });
 
-  it('ends on the last step, with no gap after it', async () => {
-    const el = await mount();
-    const last = box(all(el, 'li').at(-1)!);
-    expect(Math.abs(last.right - box(el).right)).toBeLessThanOrEqual(1);
-    const label = box(all(el, '.label').at(-1)!);
-    expect(Math.abs(label.right - last.right)).toBeLessThanOrEqual(1);
-  });
-
-  it('spaces the connectors evenly between the steps', async () => {
-    const el = await mount();
-    const steps = all(el, 'li');
-    connectors(el).forEach((connector, index) => {
-      const before = box(connector).left - box(steps[index]!.querySelector('.text')!).right;
-      const after = box(steps[index + 1]!.querySelector('.marker')!).left - box(connector).right;
-      expect(Math.abs(before - after)).toBeLessThanOrEqual(1);
-    });
-  });
-
-  it('draws the vertical connector down the marker middle, clear of both markers', async () => {
+  it('draws the connector down the marker middle, clear of both markers', async () => {
     const el = await mount('vertical');
     const markers = all(el, '.marker');
     connectors(el).forEach((connector, index) => {
       const line = box(connector);
       const above = box(markers[index]!);
       const below = box(markers[index + 1]!);
-      expect(
-        Math.abs(line.left + line.width / 2 - (above.left + above.width / 2)),
-      ).toBeLessThanOrEqual(1);
+      expect(Math.abs(middleX(line) - middleX(above))).toBeLessThanOrEqual(1);
       expect(line.top - above.bottom).toBeGreaterThanOrEqual(6);
       expect(below.top - line.bottom).toBeGreaterThanOrEqual(6);
       expect(line.height).toBeGreaterThan(4);
     });
-  });
-
-  it('centres the tick and the number in their marker', async () => {
-    const el = await mount();
-    const [done, , upcoming] = all(el, '.marker');
-    // The ink, not the icon's box: Lucide's tick sits high in its square.
-    const tick = done!.querySelector('kt-icon')!.shadowRoot!.querySelector('path')!;
-    expect(Math.abs(middle(box(tick)) - middle(box(done!)))).toBeLessThanOrEqual(0.25);
-    const range = document.createRange();
-    range.selectNodeContents(upcoming!);
-    const glyphs = range.getBoundingClientRect();
-    expect(Math.abs(middle(glyphs) - middle(box(upcoming!)))).toBeLessThanOrEqual(1);
-  });
-
-  it('shapes its markers with the theme radius, not as fixed circles', async () => {
-    const el = await mount();
-    // Set where the appearance menu sets it: on the root.
-    document.documentElement.style.setProperty('--radius-scale', '0');
-    try {
-      expect(getComputedStyle(all(el, '.marker')[0]!).borderTopLeftRadius).toBe('0px');
-    } finally {
-      document.documentElement.style.removeProperty('--radius-scale');
-    }
   });
 });
