@@ -29,6 +29,8 @@ import { releasePage } from './pages/release.js';
 import { APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { homePage } from './pages/home.js';
+import { templatePage, templateScreen } from './pages/template.js';
+import { TEMPLATES } from './templates/index.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetPlayground } from './lib/playground.js';
 import {
@@ -48,7 +50,7 @@ registerDocsIcons();
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'home' | 'guide' | 'components' | 'apps' | 'release';
+type Section = 'home' | 'guide' | 'components' | 'templates' | 'apps' | 'release';
 
 interface Route {
   readonly section: Section;
@@ -219,7 +221,22 @@ const HOME: Route = {
   page: () => html``,
 };
 
-const ROUTES: Route[] = [HOME, ...GUIDE, ...COMPONENT_ROUTES, ...APP_ROUTES, ...RELEASE];
+const TEMPLATE_ROUTES: Route[] = TEMPLATES.map((template) => ({
+  section: 'templates' as const,
+  slug: template.slug,
+  label: template.name,
+  group: 'Templates',
+  page: () => templatePage(template, update),
+}));
+
+const ROUTES: Route[] = [
+  HOME,
+  ...GUIDE,
+  ...COMPONENT_ROUTES,
+  ...TEMPLATE_ROUTES,
+  ...APP_ROUTES,
+  ...RELEASE,
+];
 
 /**
  * Components flagged "New" in the navigation: introduced under Added in a
@@ -231,6 +248,7 @@ const NEW_COMPONENTS = newComponents(parseChangelog(changelogDoc), new Date());
 const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
+  { id: 'templates', label: 'Templates', icon: 'layout-template' },
   { id: 'apps', label: 'Apps', icon: 'app-window' },
   { id: 'release', label: 'Release', icon: 'tag' },
 ];
@@ -261,6 +279,11 @@ const APPS: Record<string, () => TemplateResult> = {
 
 /** `#/app/<path>` — anything under it renders without the docs chrome. */
 function currentApp(): (() => TemplateResult) | null {
+  // `#/template/<slug>`: a template alone, as it would be in a product.
+  const screen = /^#\/template\/([a-z-]+)$/.exec(location.hash);
+  const template = screen && TEMPLATES.find((candidate) => candidate.slug === screen[1]);
+  if (template) return () => templateScreen(template);
+
   const match = /^#\/app\/(.+)$/.exec(location.hash);
   if (!match) return null;
   return APPS[match[1]!] ?? null;

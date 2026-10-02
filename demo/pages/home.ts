@@ -9,6 +9,7 @@ import { KT_ACCENTS, toaster } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
 import { playground } from '../lib/playground.js';
 import { SCREEN_COUNT, showcase } from '../lib/showcase.js';
+import { TEMPLATES } from '../templates/index.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
 import { REPO_URL, VERSION } from '../lib/project.js';
@@ -245,6 +246,22 @@ export function homePage({
                     >${entry.slug.replace(/^kt-/, '')}</a
                   >`,
               )}
+            </li>`,
+        )}
+      </ul>
+    </section>
+
+    <section class="home-band" aria-labelledby="home-templates">
+      <h2 id="home-templates">Or start from a whole screen</h2>
+      <p>Pages ready to copy into a product — the markup, its styles and a few lines of script.</p>
+      <ul class="home-templates">
+        ${TEMPLATES.map(
+          (template) =>
+            html`<li>
+              <a href=${`#/templates/${template.slug}`}>
+                <span class="home-template-name">${template.name}</span>
+                <span class="home-template-note">${template.description}</span>
+              </a>
             </li>`,
         )}
       </ul>

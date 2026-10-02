@@ -1257,3 +1257,21 @@ section > h6 {
   background: var(--surface-inverted);
   border-radius: 5px;
 }
+
+/* A template's page: actions beside the preview's heading, room above the code. */
+.template-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.template-code {
+  margin-top: 40px;
+}
+.template-code > kt-tabs {
+  display: block;
+  margin-bottom: 16px;
+}
+/* A whole page of code scrolls inside its block rather than down the page. */
+.template-code kt-code::part(pre) {
+  max-height: 560px;
+}

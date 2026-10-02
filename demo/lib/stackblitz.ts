@@ -194,3 +194,49 @@ export function openInStackBlitz(project: StackBlitzProject, doc: Document = doc
   form.submit();
   form.remove();
 }
+
+/** A template as a project: its markup in the page, its script after the imports. */
+export function templateProject(
+  template: { name: string; description: string; html: string; script: string },
+  version: string,
+): StackBlitzProject {
+  const imports = "import 'kanto-ds';\nimport 'kanto-ds/styles.css';\n";
+  const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${template.name} — Kanto</title>
+    <style>
+      body {
+        margin: 0;
+        font: var(--font-normal-regular);
+      }
+    </style>
+  </head>
+  <body>
+${template.html}
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
+`;
+  const pkg = {
+    name: `kanto-${template.name.toLowerCase().replace(/\W+/g, '-')}`,
+    private: true,
+    type: 'module',
+    scripts: { dev: 'vite', build: 'vite build' },
+    stackblitz: { startCommand: 'npm run dev' },
+    dependencies: { 'kanto-ds': `^${version.split('.').slice(0, 2).join('.')}.0` },
+    devDependencies: { vite: '^7.0.0' },
+  };
+  return {
+    title: `${template.name} — Kanto template`,
+    description: template.description,
+    template: 'node',
+    files: {
+      'package.json': `${JSON.stringify(pkg, null, 2)}\n`,
+      'index.html': html,
+      'main.js': `${imports}${template.script}\n`,
+    },
+  };
+}

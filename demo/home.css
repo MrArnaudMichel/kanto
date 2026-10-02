@@ -617,3 +617,40 @@
   display: block;
   margin-bottom: 16px;
 }
+
+/* Templates: a row of whole screens to start from. */
+.home-templates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.home-templates a {
+  display: grid;
+  gap: 6px;
+  height: 100%;
+  padding: 18px;
+  color: inherit;
+  text-decoration: none;
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-modal);
+  transition: border-color var(--duration-fast);
+}
+.home-templates a:hover {
+  border-color: var(--color-primary-base);
+}
+.home-templates a:focus-visible {
+  outline: var(--outline-width) solid var(--color-primary-base);
+  outline-offset: 2px;
+}
+.home-template-name {
+  color: var(--text-body);
+  font: 600 16px / 1.3 var(--font-family-display);
+}
+.home-template-note {
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+}

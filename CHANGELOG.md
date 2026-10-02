@@ -58,6 +58,18 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+- **Templates on the docs site.** Sign-in, dashboard, settings, onboarding and
+  pricing: whole screens built from Kanto, each one source — markup, styles
+  and a short script — shown running, copied as is, or opened on StackBlitz.
+- The docs site searches itself with Cmd+K: every guide, component, template,
+  app and release page, and the site's own actions.
+
+### Changed
+
+- The axe suite waits for transitions inside shadow roots before it measures;
+  dialogs were audited before their entrance had styled them.
+- The docs console runs its Cmd+K on `kt-command-palette`.
+
 ## [1.7.0] — 2026-10-02
 
 ### Added

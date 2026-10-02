@@ -28,7 +28,7 @@ describe('the documentation shell', () => {
 
   it('puts the top-level sections in the header', () => {
     const labels = [...app.querySelectorAll('.top-nav a')].map((a) => a.textContent!.trim());
-    expect(labels).toEqual(['Guide', 'Components', 'Apps', 'Release']);
+    expect(labels).toEqual(['Guide', 'Components', 'Templates', 'Apps', 'Release']);
   });
 
   it('lists the components in the sidebar, grouped', () => {
@@ -133,5 +133,34 @@ describe('the documentation shell', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(document.title).toBe('Installation — Kanto');
     expect(app.querySelector('#no-build-step')).not.toBeNull();
+  });
+
+  it('gives each template a page, and the template a screen of its own', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/templates/dashboard';
+    await tick();
+    expect(document.title).toBe('Dashboard — Kanto');
+    expect(app.querySelector('.app-preview-frame')!.getAttribute('src')).toContain(
+      '#/template/dashboard',
+    );
+    expect(app.querySelector('kt-code')).not.toBeNull();
+
+    location.hash = '#/template/dashboard';
+    await tick();
+    expect(app.querySelector('kt-header')).toBeNull();
+    expect(app.querySelector('#orders')).not.toBeNull();
+    expect((app.querySelector('#orders') as HTMLElement & { data: unknown[] }).data.length).toBe(5);
+  });
+
+  it('runs the script of each template when moving from one to the next', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/template/dashboard';
+    await tick();
+    location.hash = '#/template/onboarding';
+    await tick();
+    await tick();
+    expect((app.querySelector('#steps') as HTMLElement & { steps: unknown[] }).steps.length).toBe(
+      3,
+    );
   });
 });
