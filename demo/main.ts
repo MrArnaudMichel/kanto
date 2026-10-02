@@ -13,16 +13,6 @@ import { commandTarget, siteCommands } from './lib/site-search.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
 import { newComponents, parseChangelog } from './lib/releases.js';
 import { setRenderer } from './lib/render.js';
-import { consoleHome } from './apps/console/home.js';
-import { consoleInbox } from './apps/console/inbox.js';
-import { consoleCustomers } from './apps/console/customers.js';
-import { consoleSettings } from './apps/console/settings.js';
-import { consoleFiles } from './apps/console/files.js';
-import { consoleActivity } from './apps/console/activity.js';
-import { consoleIntegrations } from './apps/console/integrations.js';
-import { landingPage } from './apps/landing.js';
-import { chatPage } from './apps/chat.js';
-import { portfolioPage } from './apps/portfolio.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
@@ -30,6 +20,7 @@ import { APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js'
 import { foundationsPage } from './pages/foundations.js';
 import { homePage } from './pages/home.js';
 import { templatePage, templateScreen } from './pages/template.js';
+import type { SettingsSection } from './apps/console/settings.js';
 import { TEMPLATES } from './templates/index.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetPlayground } from './lib/playground.js';
@@ -260,22 +251,38 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
  * chrome: an application shell wrapped in another application shell reads as
  * neither, and the point of these pages is what a whole product looks like.
  */
-const APPS: Record<string, () => TemplateResult> = {
-  'console/home': consoleHome,
-  'console/inbox': consoleInbox,
-  'console/customers': consoleCustomers,
-  'console/files': consoleFiles,
-  'console/activity': consoleActivity,
-  'console/integrations': consoleIntegrations,
-  'console/settings/general': () => consoleSettings('general'),
-  'console/settings/members/people': () => consoleSettings('people'),
-  'console/settings/members/roles': () => consoleSettings('roles'),
-  'console/settings/notifications': () => consoleSettings('notifications'),
-  'console/settings/security': () => consoleSettings('security'),
-  landing: landingPage,
-  chat: chatPage,
-  portfolio: portfolioPage,
+type Screen = () => TemplateResult;
+
+/**
+ * The demo apps, each loaded the first time it is opened: a visitor reading
+ * the docs does not download a console, a chat and a portfolio as well.
+ */
+const settings = (section: SettingsSection) => () =>
+  import('./apps/console/settings.js').then(
+    (m): Screen =>
+      () =>
+        m.consoleSettings(section),
+  );
+const APPS: Record<string, () => Promise<Screen>> = {
+  'console/home': () => import('./apps/console/home.js').then((m) => m.consoleHome),
+  'console/inbox': () => import('./apps/console/inbox.js').then((m) => m.consoleInbox),
+  'console/customers': () => import('./apps/console/customers.js').then((m) => m.consoleCustomers),
+  'console/files': () => import('./apps/console/files.js').then((m) => m.consoleFiles),
+  'console/activity': () => import('./apps/console/activity.js').then((m) => m.consoleActivity),
+  'console/integrations': () =>
+    import('./apps/console/integrations.js').then((m) => m.consoleIntegrations),
+  'console/settings/general': settings('general'),
+  'console/settings/members/people': settings('people'),
+  'console/settings/members/roles': settings('roles'),
+  'console/settings/notifications': settings('notifications'),
+  'console/settings/security': settings('security'),
+  landing: () => import('./apps/landing.js').then((m) => m.landingPage),
+  chat: () => import('./apps/chat.js').then((m) => m.chatPage),
+  portfolio: () => import('./apps/portfolio.js').then((m) => m.portfolioPage),
 };
+
+/** Apps already loaded, by path. */
+const loadedApps = new Map<string, Screen>();
 
 /** `#/app/<path>` — anything under it renders without the docs chrome. */
 function currentApp(): (() => TemplateResult) | null {
@@ -285,8 +292,16 @@ function currentApp(): (() => TemplateResult) | null {
   if (template) return () => templateScreen(template);
 
   const match = /^#\/app\/(.+)$/.exec(location.hash);
-  if (!match) return null;
-  return APPS[match[1]!] ?? null;
+  const path = match?.[1];
+  if (!path || !APPS[path]) return null;
+  const loaded = loadedApps.get(path);
+  if (loaded) return loaded;
+  void APPS[path]().then((screen) => {
+    loadedApps.set(path, screen);
+    update();
+  });
+  // A blank page for the moment the app takes to arrive.
+  return () => html`<div class="app-loading" aria-busy="true"></div>`;
 }
 
 function currentRoute(): Route {

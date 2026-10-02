@@ -33,3 +33,19 @@ if (names.length === 0 || missing.length) {
   process.exit(1);
 }
 console.log(`ok   the built docs site holds all ${names.length} docs icons`);
+
+// The demo apps load when opened, not with every page: the entry script must
+// not carry them. "Operations console" is written in the console alone.
+const entry = /<script[^>]+src="\.?\/?(assets\/[^"]+\.js)"/.exec(
+  readFileSync(join(root, 'dist-demo/index.html'), 'utf8'),
+)?.[1];
+const entryCode = entry ? readFileSync(join(root, 'dist-demo', entry), 'utf8') : '';
+if (!entry || entryCode.includes('Operations console')) {
+  console.error(
+    '\n✗ The docs site loads the demo apps with every page: they belong in chunks of their own.\n',
+  );
+  process.exit(1);
+}
+console.log(
+  `ok   the demo apps load on their own (${(entryCode.length / 1024).toFixed(0)} kB entry)`,
+);

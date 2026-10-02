@@ -46,6 +46,10 @@ describe('the full-bleed applications', () => {
     location.hash = hash;
     window.dispatchEvent(new HashChangeEvent('hashchange'));
     await new Promise((resolve) => setTimeout(resolve, 0));
+    // An app loads the first time it is opened: wait for it to arrive.
+    for (let i = 0; i < 200 && app.querySelector('.app-loading'); i += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
   };
 
   for (const route of APP_ROUTES) {
