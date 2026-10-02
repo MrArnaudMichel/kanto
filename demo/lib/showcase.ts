@@ -275,6 +275,48 @@ const SCREENS: (() => TemplateResult)[] = [
     ),
   () =>
     card(
+      'Filters',
+      'Narrow the listings.',
+      html`<kt-slider
+          label="Price a night"
+          range
+          min="0"
+          max="500"
+          step="10"
+          value="80/260"
+          show-value
+          .format=${(n: number) => `$${n}`}
+        ></kt-slider>
+        <div class="showcase-split">
+          <kt-label-input label="Bedrooms"
+            ><kt-number-input min="0" max="8" value="2"></kt-number-input
+          ></kt-label-input>
+          <kt-label-input label="Guests"
+            ><kt-number-input min="1" max="16" value="4"></kt-number-input
+          ></kt-label-input>
+        </div>`,
+      html`<kt-button variant="primary" @click=${() => toaster.success('Showing 128 homes')}
+        >Show 128 homes</kt-button
+      >`,
+    ),
+  () =>
+    card(
+      'Checkout',
+      '',
+      html`<kt-steps
+        label="Checkout"
+        current="payment"
+        orientation="vertical"
+        .steps=${[
+          { id: 'cart', label: 'Cart', description: '3 items' },
+          { id: 'shipping', label: 'Shipping', description: 'Paris, France' },
+          { id: 'payment', label: 'Payment' },
+          { id: 'review', label: 'Review' },
+        ]}
+      ></kt-steps>`,
+    ),
+  () =>
+    card(
       'Schedule a call',
       'We will send an invite to your calendar.',
       html`<div class="showcase-split">
