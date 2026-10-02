@@ -23,7 +23,6 @@ import { consoleIntegrations } from './apps/console/integrations.js';
 import { landingPage } from './apps/landing.js';
 import { chatPage } from './apps/chat.js';
 import { portfolioPage } from './apps/portfolio.js';
-import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
@@ -703,16 +702,6 @@ window.addEventListener('hashchange', () => {
   const anchor = location.hash.split('#')[2];
   if (anchor) document.getElementById(anchor)?.scrollIntoView();
   document.querySelector('kt-header')?.closeMenu();
-});
-
-// ⌘K / Ctrl-K opens the console's command palette wherever you are in it.
-window.addEventListener('keydown', (event) => {
-  if (event.key.toLowerCase() !== 'k' || !(event.metaKey || event.ctrlKey)) return;
-  if (!location.hash.startsWith('#/app/console')) return;
-
-  event.preventDefault();
-  shellState.paletteOpen = !shellState.paletteOpen;
-  update();
 });
 
 // `/` jumps to the filter, the way every docs site people already use does.

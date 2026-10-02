@@ -1,6 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
-import type { KtNavItem, KtNavSection } from 'kanto-ds';
+import type { KtCommand, KtNavItem, KtNavSection } from 'kanto-ds';
 import { rerender } from '../lib/render.js';
 
 /**
@@ -61,16 +61,12 @@ export const NAV: readonly KtNavSection[] = [
 
 interface ShellState {
   collapsed: boolean;
-  paletteOpen: boolean;
-  paletteQuery: string;
   cookiesAccepted: boolean;
   unread: number;
 }
 
 export const shellState: ShellState = {
   collapsed: false,
-  paletteOpen: false,
-  paletteQuery: '',
   cookiesAccepted: false,
   unread: 4,
 };
@@ -93,73 +89,37 @@ export function navLeaves(
   return out;
 }
 
+/** Cmd+K in the console: every page of it, and the way back to the docs. */
 function commandPalette(): TemplateResult {
-  const commands = [
-    ...navLeaves().map((leaf) => ({ ...leaf, hint: 'Go to' })),
+  const commands: KtCommand[] = [
+    ...navLeaves().map((leaf) => ({
+      id: leaf.href,
+      label: leaf.label,
+      group: 'Go to',
+      icon: leaf.icon,
+    })),
     {
+      id: '#/guide/introduction',
       label: 'Back to the documentation',
-      hint: 'Leave',
+      group: 'Leave',
       icon: 'book-open',
-      href: '#/guide/introduction',
+      keywords: ['docs', 'exit'],
     },
   ];
-  const needle = shellState.paletteQuery.trim().toLowerCase();
-  const matches = needle
-    ? commands.filter((c) => c.label.toLowerCase().includes(needle))
-    : commands;
 
-  return html`<kt-modal
-    ?open=${shellState.paletteOpen}
-    size="small"
-    no-close-button
-    @kt-close=${() => {
-      shellState.paletteOpen = false;
-      shellState.paletteQuery = '';
-      rerender();
+  return html`<kt-command-palette
+    placeholder="Search pages and settings…"
+    .commands=${commands}
+    @kt-select=${(event: CustomEvent<{ id: string }>) => {
+      location.hash = event.detail.id;
     }}
-  >
-    <div slot="header" style="width:100%">
-      <kt-input
-        id="palette-input"
-        icon="search"
-        placeholder="Search commands..."
-        .value=${shellState.paletteQuery}
-        @kt-input=${(e: CustomEvent<{ value: string }>) => {
-          shellState.paletteQuery = e.detail.value;
-          rerender();
-        }}
-      ></kt-input>
-    </div>
+  ></kt-command-palette>`;
+}
 
-    ${
-      matches.length === 0
-        ? html`<kt-empty-state
-            compact
-            icon="search"
-            heading="No commands found"
-            description="Try a different word."
-          ></kt-empty-state>`
-        : html`<ul class="palette-list">
-            ${matches.map(
-              (command) =>
-                html`<li>
-                  <a
-                    class="palette-item"
-                    href=${command.href}
-                    @click=${() => {
-                      shellState.paletteOpen = false;
-                      shellState.paletteQuery = '';
-                    }}
-                  >
-                    <kt-icon name=${command.icon} size="16"></kt-icon>
-                    <span class="palette-label">${command.label}</span>
-                    <span class="palette-hint">${command.hint}</span>
-                  </a>
-                </li>`,
-            )}
-          </ul>`
-    }
-  </kt-modal>`;
+/** Opens the console's palette, from a search field that only looks like one. */
+function openPalette(): void {
+  const palette = document.querySelector('kt-command-palette');
+  if (palette) palette.open = true;
 }
 
 function sidebar(active: string): TemplateResult {
@@ -174,13 +134,7 @@ function sidebar(active: string): TemplateResult {
       </span>
     </a>
 
-    <button
-      class="app-search"
-      @click=${() => {
-        shellState.paletteOpen = true;
-        rerender();
-      }}
-    >
+    <button class="app-search" @click=${openPalette}>
       <kt-icon name="search" size="16"></kt-icon>
       <span>Search...</span>
       <kt-kbd keys="mod k"></kt-kbd>
@@ -258,13 +212,7 @@ export function consoleShell(
           }}
         ></kt-button>
 
-        <button
-          class="topbar-search"
-          @click=${() => {
-            shellState.paletteOpen = true;
-            rerender();
-          }}
-        >
+        <button class="topbar-search" @click=${openPalette}>
           <kt-icon name="search" size="16"></kt-icon>
           <span>Search customers, files and settings...</span>
           <kt-kbd keys="mod k"></kt-kbd>
