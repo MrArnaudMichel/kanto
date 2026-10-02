@@ -280,6 +280,10 @@ const CASES: Record<string, Case> = {
       ];
     },
   },
+  'kt-slider': { markup: '<kt-slider label="Volume" value="40" show-value></kt-slider>' },
+  'kt-slider range': {
+    markup: '<kt-slider range label="Price" value="20/80" show-value></kt-slider>',
+  },
   'kt-modal': { markup: '<kt-modal open heading="Edit entity"><p>Body</p></kt-modal>' },
   'kt-confirm-dialog': {
     markup: '<kt-confirm-dialog open message="Delete it?"></kt-confirm-dialog>',

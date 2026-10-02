@@ -31,6 +31,7 @@ import type {
   KtForm,
   KtInput,
   KtTextarea,
+  KtSlider,
   KtLabelInput,
   KtToggle,
   KtSelect,
@@ -117,6 +118,10 @@ declare module 'react' {
           'kt-clear': never;
           'kt-country-change': { country: string; dialCode: string };
         }
+      >;
+      'kt-slider': KtProps<
+        KtSlider,
+        { 'kt-input': { value: string }; 'kt-change': { value: string } }
       >;
       'kt-textarea': KtProps<
         KtTextarea,

@@ -1,5 +1,5 @@
 {
-  ".": 84700,
+  ".": 93400,
   "./icons": 800,
   "./strings": 1400,
   "./react": 85600,
@@ -7,14 +7,14 @@
   "./vue": 84200,
   "./components/core/kt-avatar": 4800,
   "./components/core/kt-badge": 4800,
-  "./components/core/kt-button": 4400,
+  "./components/core/kt-button": 4900,
   "./components/core/kt-split-button": 9100,
   "./components/core/kt-card": 3700,
   "./components/core/kt-code": 4500,
   "./components/core/kt-icon": 3200,
   "./components/core/kt-kbd": 2600,
   "./components/data/kt-chart": 14500,
-  "./components/data/kt-meter": 2900,
+  "./components/data/kt-meter": 3300,
   "./components/data/kt-pagination": 5000,
   "./components/data/kt-stat": 6100,
   "./components/data/kt-table": 8800,
@@ -44,8 +44,8 @@
   "./components/navigation/kt-page-header": 2600,
   "./components/navigation/kt-segmented-control": 5400,
   "./components/navigation/kt-sub-menu-navigation": 6800,
-  "./components/navigation/kt-tabs": 4900,
-  "./components/navigation/kt-toggle-button": 4200,
+  "./components/navigation/kt-tabs": 5400,
+  "./components/navigation/kt-toggle-button": 4700,
   "./components/navigation/kt-toggle-button-group": 5100,
   "./components/overlays/kt-collapsible": 4000,
   "./components/overlays/kt-confirm-dialog": 6100,
@@ -54,5 +54,6 @@
   "./components/overlays/kt-side-panel": 5700,
   "./components/forms/kt-date-input": 16300,
   "./components/forms/kt-time-input": 6700,
-  "./components/overlays/kt-command-palette": 7100
+  "./components/overlays/kt-command-palette": 7100,
+  "./components/forms/kt-slider": 4100
 }

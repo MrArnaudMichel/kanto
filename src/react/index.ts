@@ -45,6 +45,7 @@ import {
   KtRadioGroup as KtRadioGroupElement,
 } from '../components/forms/kt-radio-group/kt-radio-group.js';
 import { KtSelect as KtSelectElement } from '../components/forms/kt-select/kt-select.js';
+import { KtSlider as KtSliderElement } from '../components/forms/kt-slider/kt-slider.js';
 import { KtTextarea as KtTextareaElement } from '../components/forms/kt-textarea/kt-textarea.js';
 import { KtTimeInput as KtTimeInputElement } from '../components/forms/kt-time-input/kt-time-input.js';
 import { KtToggle as KtToggleElement } from '../components/forms/kt-toggle/kt-toggle.js';
@@ -158,6 +159,16 @@ export const KtInput = createComponent({
     onKtChange: 'kt-change' as Kt<{ value: string }>,
     onKtClear: 'kt-clear' as Kt<never>,
     onKtCountryChange: 'kt-country-change' as Kt<{ country: string; dialCode: string }>,
+  },
+});
+
+export const KtSlider = createComponent({
+  tagName: 'kt-slider',
+  elementClass: KtSliderElement,
+  react: React,
+  events: {
+    onKtInput: 'kt-input' as Kt<{ value: string }>,
+    onKtChange: 'kt-change' as Kt<{ value: string }>,
   },
 });
 

@@ -1,6 +1,6 @@
 # Kanto
 
-> Fifty accessible web components for dashboards, admin tools and forms,
+> Fifty-one accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -62,6 +62,7 @@ In a project, every page below is also at
 - [kt-multi-select](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-multi-select/kt-multi-select.md): Several choices from a list: type to narrow it, pick as many as you need.
 - [kt-radio-group](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-radio-group/kt-radio-group.md): One choice among a few, all visible at once.
 - [kt-select](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-select/kt-select.md): A single-choice dropdown.
+- [kt-slider](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-slider/kt-slider.md): A value picked by sliding along a range: a volume, a threshold, or with `range`, a price between two ends.
 - [kt-textarea](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-textarea/kt-textarea.md): A multi-line field, with the same borderless fill and outline states as `<kt-input>`.
 - [kt-time-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-time-input/kt-time-input.md): A time of day typed into its parts — hours, minutes and, if asked, seconds.
 - [kt-toggle](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-toggle/kt-toggle.md): An on/off switch.

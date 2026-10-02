@@ -645,6 +645,21 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-multi-select>
     </div>`,
 
+  'kt-slider': () =>
+    html`<div class="demo-stack" style="max-width:420px">
+      <kt-slider label="Volume" value="40" show-value></kt-slider>
+      <kt-slider
+        label="Budget"
+        range
+        min="0"
+        max="5000"
+        step="100"
+        value="800/3200"
+        show-value
+        .format=${(n: number) => `$${n.toLocaleString('en-US')}`}
+      ></kt-slider>
+    </div>`,
+
   'kt-toggle': () =>
     html`<div class="demo-stack">
       <kt-toggle checked>Notifications</kt-toggle>

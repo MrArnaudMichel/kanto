@@ -24,6 +24,19 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-slider`** — a value picked by sliding: a volume, a threshold, a price
+range.
+
+- One thumb, or two with `range`; each is a native range input, so the
+  keyboard and what a screen reader announces come from the platform.
+- The value is text — `"40"`, or `"20/80"` for a range — kept within `min`
+  and `max` and on `step`; two thumbs never cross.
+- `show-value` shows it above the track, through `format` when given one;
+  `kt-input` fires while sliding, `kt-change` once let go.
+- A form control, with `form.reset()` and a disabled fieldset.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ## [1.7.0] — 2026-10-02
 
 ### Added

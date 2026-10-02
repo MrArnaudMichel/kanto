@@ -114,6 +114,8 @@ export interface KtStrings {
   commandHintMove: string;
   commandHintRun: string;
   commandHintClose: string;
+  sliderMinimum: string;
+  sliderMaximum: string;
   /** A phone number typed with the prefix only dialled from inside the country. */
   phoneTrunkPrefix: (prefix: string) => string;
 
@@ -230,6 +232,8 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   commandHintMove: 'to move',
   commandHintRun: 'to run',
   commandHintClose: 'to close',
+  sliderMinimum: 'minimum',
+  sliderMaximum: 'maximum',
   phoneTrunkPrefix: (prefix: string) => `Enter the number without the leading ${prefix}.`,
 
   openMenu: 'Open menu',

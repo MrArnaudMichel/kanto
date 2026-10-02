@@ -56,6 +56,7 @@ export type { KtRadioGroupOrientation } from './components/forms/kt-radio-group/
 export { KtSelect } from './components/forms/kt-select/kt-select.js';
 export type { KtSelectSize } from './components/forms/kt-select/kt-select.js';
 export { KtTextarea } from './components/forms/kt-textarea/kt-textarea.js';
+export { KtSlider } from './components/forms/kt-slider/kt-slider.js';
 export { KtTimeInput } from './components/forms/kt-time-input/kt-time-input.js';
 export type { KtHourCycle } from './components/forms/kt-time-input/kt-time-input.js';
 export { KtToggle } from './components/forms/kt-toggle/kt-toggle.js';
