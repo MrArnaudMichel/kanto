@@ -8,6 +8,7 @@ import { ref } from 'lit/directives/ref.js';
 import { KT_ACCENTS, toaster } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
 import { playground } from '../lib/playground.js';
+import { SCREEN_COUNT, showcase } from '../lib/showcase.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
 import { REPO_URL, VERSION } from '../lib/project.js';
@@ -89,77 +90,8 @@ const SPECIMENS: { source: string; live: () => TemplateResult }[] = [
   },
 ];
 
-/** The library's groups, by what a screen needs, each with a small live example. */
-const GALLERY: { group: string; need: string; live: () => TemplateResult }[] = [
-  {
-    group: 'Forms',
-    need: 'Fields that validate, explain their errors and submit with the form.',
-    live: () =>
-      html`<kt-input label="Email" value="dana@northwind.io"></kt-input>
-        <kt-toggle checked>Weekly digest</kt-toggle>`,
-  },
-  {
-    group: 'Data',
-    need: 'Tables that sort, select and page; stats, charts and meters.',
-    live: () =>
-      html`<kt-stat label="Revenue" value="$48,210" delta="+8.2%" trend="up"></kt-stat>
-        <kt-meter label="Storage" used="25.8 GB used" total="of 983 GB" value="3"></kt-meter>`,
-  },
-  {
-    group: 'Navigation',
-    need: 'Headers, tabs, breadcrumbs and switches between views.',
-    live: () =>
-      html`<kt-segmented-control
-        label="Range"
-        .options=${[
-          { value: 'day', label: 'Day' },
-          { value: 'week', label: 'Week' },
-          { value: 'month', label: 'Month' },
-        ]}
-        value="week"
-      ></kt-segmented-control>`,
-  },
-  {
-    group: 'Feedback',
-    need: 'Alerts, toasts, tooltips, progress and the empty state.',
-    live: () =>
-      html`<kt-progress-bar
-          label="Uploading invoices"
-          value="64"
-          show-label
-          show-value
-        ></kt-progress-bar>
-        <div class="home-gallery-row">
-          <kt-badge tone="success">Paid</kt-badge><kt-badge tone="warning">Pending</kt-badge
-          ><kt-badge tone="danger">Overdue</kt-badge>
-        </div>`,
-  },
-  {
-    group: 'Overlays',
-    need: 'Menus, modals, side panels and confirmations, keyboard and all.',
-    live: () =>
-      html`<kt-dropdown
-        .options=${[
-          { id: 'edit', label: 'Edit' },
-          { id: 'duplicate', label: 'Duplicate' },
-          { id: 'archive', label: 'Archive' },
-        ]}
-        @kt-select=${(event: CustomEvent<{ value: string }>) =>
-          toaster.success(`${event.detail.value[0]!.toUpperCase()}${event.detail.value.slice(1)}d`)}
-      >
-        <kt-button slot="trigger" variant="secondary" icon="ellipsis">Actions</kt-button>
-      </kt-dropdown>`,
-  },
-  {
-    group: 'Core',
-    need: 'Buttons, cards, badges, avatars, icons and code.',
-    live: () =>
-      html`<div class="home-gallery-row">
-        <kt-avatar name="Dana Whitfield"></kt-avatar><kt-avatar name="Rowan Ellis"></kt-avatar
-        ><kt-button variant="secondary" icon="plus">Invite</kt-button>
-      </div>`,
-  },
-];
+/** The library's families, in the order the sidebar lists them. */
+const FAMILIES = ['Core', 'Forms', 'Navigation', 'Feedback', 'Overlays', 'Data'];
 
 /** What people ask before they adopt a design system, answered straight. */
 const QUESTIONS: { heading: string; answer: TemplateResult }[] = [
@@ -295,36 +227,33 @@ export function homePage({
       </div>
     </section>
 
+    <section class="home-band home-showcase" aria-labelledby="home-gallery">
+      <h2 id="home-gallery">Everything a product screen needs</h2>
+      <p>
+        ${SCREEN_COUNT} everyday screens, built from Kanto alone and all live. Type in them, open
+        the menus, pick a day — then change their look from the row above.
+      </p>
+      ${showcase(rerender)}
+      <ul class="home-gallery">
+        ${FAMILIES.map(
+          (family) =>
+            html`<li>
+              <span class="home-gallery-family">${family}</span>
+              ${COMPONENTS.filter((entry) => entry.group === family).map(
+                (entry) =>
+                  html`<a href=${`#/components/${entry.slug}`}
+                    >${entry.slug.replace(/^kt-/, '')}</a
+                  >`,
+              )}
+            </li>`,
+        )}
+      </ul>
+    </section>
+
     <section class="home-band" aria-labelledby="home-try">
       <h2 id="home-try">Make it yours before you install it</h2>
       <p>Every setting below is one attribute in your project. Pick, look, copy.</p>
       ${playground({ start: appearance, onUse, rerender })}
-    </section>
-
-    <section class="home-band" aria-labelledby="home-gallery">
-      <h2 id="home-gallery">Everything a product screen needs</h2>
-      <p>
-        ${COMPONENTS.length} elements in six families, each documented with what it is for and when
-        to reach for something else.
-      </p>
-      <ul class="home-gallery">
-        ${GALLERY.map(
-          (tile) =>
-            html`<li class="home-gallery-tile">
-              <h3>${tile.group}</h3>
-              <p>${tile.need}</p>
-              <div class="home-gallery-live">${tile.live()}</div>
-              <ul class="home-gallery-links">
-                ${COMPONENTS.filter((entry) => entry.group === tile.group).map(
-                  (entry) =>
-                    html`<li>
-                      <a href=${`#/components/${entry.slug}`}>${entry.slug.replace(/^kt-/, '')}</a>
-                    </li>`,
-                )}
-              </ul>
-            </li>`,
-        )}
-      </ul>
     </section>
 
     <section class="home-band" aria-labelledby="home-frameworks">

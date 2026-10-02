@@ -107,6 +107,7 @@ import {
   FileArchive,
   Image,
   Table,
+  Landmark,
 } from 'lucide';
 import { registerIcons } from 'kanto-ds';
 
@@ -213,4 +214,5 @@ registerIcons({
   FileArchive,
   Image,
   Table,
+  Landmark,
 });
