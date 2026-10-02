@@ -120,6 +120,9 @@ export interface KtStrings {
   stepCurrent: string;
   stepUpcoming: string;
   stepError: string;
+  numberRequired: string;
+  decrease: string;
+  increase: string;
   /** A phone number typed with the prefix only dialled from inside the country. */
   phoneTrunkPrefix: (prefix: string) => string;
 
@@ -242,6 +245,9 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   stepCurrent: 'Current step',
   stepUpcoming: 'Not started',
   stepError: 'Needs attention',
+  numberRequired: 'Enter a number.',
+  decrease: 'Decrease',
+  increase: 'Increase',
   phoneTrunkPrefix: (prefix: string) => `Enter the number without the leading ${prefix}.`,
 
   openMenu: 'Open menu',

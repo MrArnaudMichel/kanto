@@ -58,6 +58,7 @@ import type { KtRadioGroup } from 'kanto-ds';
 import type { KtRadio } from 'kanto-ds';
 import type { KtTextarea } from 'kanto-ds';
 import type { KtSlider } from 'kanto-ds';
+import type { KtNumberInput } from 'kanto-ds';
 import type { KtSteps } from 'kanto-ds';
 import type { KtToggle } from 'kanto-ds';
 import type { KtBreadcrumb } from 'kanto-ds';
@@ -134,6 +135,7 @@ declare module 'vue' {
     'kt-radio': KtProps<KtRadio>;
     'kt-textarea': KtProps<KtTextarea>;
     'kt-slider': KtProps<KtSlider>;
+    'kt-number-input': KtProps<KtNumberInput>;
     'kt-steps': KtProps<KtSteps>;
     'kt-toggle': KtProps<KtToggle>;
     'kt-breadcrumb': KtProps<KtBreadcrumb>;

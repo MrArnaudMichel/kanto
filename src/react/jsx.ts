@@ -32,6 +32,7 @@ import type {
   KtInput,
   KtTextarea,
   KtSlider,
+  KtNumberInput,
   KtSteps,
   KtLabelInput,
   KtToggle,
@@ -121,6 +122,7 @@ declare module 'react' {
         }
       >;
       'kt-steps': KtProps<KtSteps, { 'kt-change': { id: string } }>;
+      'kt-number-input': KtProps<KtNumberInput, { 'kt-change': { value: number | null } }>;
       'kt-slider': KtProps<
         KtSlider,
         { 'kt-input': { value: string }; 'kt-change': { value: string } }

@@ -281,6 +281,12 @@ const CASES: Record<string, Case> = {
       ];
     },
   },
+  'kt-number-input': {
+    markup: '<kt-number-input label="Seats" min="1" max="50" value="5"></kt-number-input>',
+  },
+  'kt-number-input in error': {
+    markup: '<kt-number-input label="Seats" value="60" error="At most 50"></kt-number-input>',
+  },
   'kt-slider': { markup: '<kt-slider label="Volume" value="40" show-value></kt-slider>' },
   'kt-slider range': {
     markup: '<kt-slider range label="Price" value="20/80" show-value></kt-slider>',

@@ -1,6 +1,6 @@
 # Kanto
 
-> Fifty-two accessible web components for dashboards, admin tools and forms,
+> Fifty-three accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -60,6 +60,7 @@ In a project, every page below is also at
 - [kt-input-menu](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-input-menu/kt-input-menu.md): A combobox: type to narrow the list, then pick.
 - [kt-label-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-label-input/kt-label-input.md): A label above a form control, with a red asterisk when it is required.
 - [kt-multi-select](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-multi-select/kt-multi-select.md): Several choices from a list: type to narrow it, pick as many as you need.
+- [kt-number-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-number-input/kt-number-input.md): A number field with − and + beside it: a quantity, a seat count, an amount.
 - [kt-radio-group](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-radio-group/kt-radio-group.md): One choice among a few, all visible at once.
 - [kt-select](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-select/kt-select.md): A single-choice dropdown.
 - [kt-slider](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-slider/kt-slider.md): A value picked by sliding along a range: a volume, a threshold, or with `range`, a price between two ends.

@@ -670,6 +670,21 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-steps>
     </div>`,
 
+  'kt-number-input': () =>
+    html`<div class="demo-row" style="align-items:flex-end">
+      <kt-label-input label="Seats" style="width:180px">
+        <kt-number-input min="1" max="50" value="5"></kt-number-input>
+      </kt-label-input>
+      <kt-label-input label="Amount" style="width:220px">
+        <kt-number-input
+          locale="fr-FR"
+          step="0.01"
+          value="1234.5"
+          .formatOptions=${{ style: 'currency', currency: 'EUR' }}
+        ></kt-number-input>
+      </kt-label-input>
+    </div>`,
+
   'kt-slider': () =>
     html`<div class="demo-stack" style="max-width:420px">
       <kt-slider label="Volume" value="40" show-value></kt-slider>

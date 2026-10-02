@@ -33,6 +33,7 @@ const CONTROLS: Record<string, Case> = {
   'kt-date-input': { markup: '<kt-date-input label="Due"></kt-date-input>' },
   'kt-time-input': { markup: '<kt-time-input label="Starts"></kt-time-input>' },
   'kt-date-picker': { markup: '<kt-date-picker label="Due"></kt-date-picker>' },
+  'kt-number-input': { markup: '<kt-number-input label="Seats"></kt-number-input>' },
   'kt-slider': { markup: '<kt-slider label="Volume"></kt-slider>' },
   'kt-checkbox': { markup: '<kt-checkbox>Send me updates</kt-checkbox>' },
   'kt-toggle': { markup: '<kt-toggle>Notifications</kt-toggle>' },

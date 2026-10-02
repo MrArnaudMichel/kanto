@@ -2,9 +2,9 @@
   ".": 93400,
   "./icons": 800,
   "./strings": 1400,
-  "./react": 85600,
+  "./react": 94400,
   "./react/jsx": 100,
-  "./vue": 84200,
+  "./vue": 92900,
   "./components/core/kt-avatar": 4800,
   "./components/core/kt-badge": 5300,
   "./components/core/kt-button": 4900,
@@ -23,7 +23,7 @@
   "./components/feedback/kt-empty-state": 3800,
   "./components/feedback/kt-progress-bar": 3600,
   "./components/feedback/kt-skeleton": 2600,
-  "./components/feedback/kt-toast": 5800,
+  "./components/feedback/kt-toast": 6400,
   "./components/feedback/kt-toast-container": 6500,
   "./components/feedback/kt-tooltip": 4200,
   "./components/forms/kt-calendar": 9300,
@@ -56,5 +56,6 @@
   "./components/forms/kt-time-input": 6700,
   "./components/overlays/kt-command-palette": 7100,
   "./components/forms/kt-slider": 4100,
-  "./components/navigation/kt-steps": 5000
+  "./components/navigation/kt-steps": 5000,
+  "./components/forms/kt-number-input": 6100
 }

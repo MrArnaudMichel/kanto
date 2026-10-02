@@ -47,6 +47,17 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-number-input`** — a number field with − and + beside it.
+
+- Typed the way the language writes a number — `1 234,5` in French — or
+  stepped with the buttons and the arrows, Page Up and Down by ten, Home and
+  End to the bounds; kept within `min` and `max` and on `step`.
+- At rest it reads through `formatOptions`: a currency, a percentage, a unit.
+- A spinbutton and a form control: `required`, `error` (announced),
+  `form.reset()` and a disabled fieldset.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ## [1.7.0] — 2026-10-02
 
 ### Added
