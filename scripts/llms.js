@@ -9,7 +9,7 @@
  * llms.txt (https://llmstxt.org) is a short markdown index: what Kanto is,
  * the few rules that make code right the first time, and a link to each page.
  */
-import { copyFileSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -26,6 +26,27 @@ const GROUPS = {
   data: 'Data',
 };
 
+/**
+ * A page's summary: its first paragraph, joined, cut at the end of its first
+ * sentence — a line of a wrapped paragraph can stop mid-thought.
+ */
+function summaryOf(from) {
+  const paragraph = readFileSync(join(root, from), 'utf8')
+    .split('\n\n')[1]
+    .replace(/\s*\n\s*/g, ' ')
+    .trim();
+  const sentence = /^.*?[.!?)](?=\s|$)/.exec(paragraph);
+  return sentence ? sentence[0] : paragraph;
+}
+
+/** A page as it ships: dist/docs is flat, so a sibling link loses its folder. */
+export function docForPackage(doc) {
+  return readFileSync(join(root, doc.from), 'utf8').replace(
+    /\]\(\.\.\/(kt-[a-z-]+)\/\1\.md/g,
+    '](./$1.md',
+  );
+}
+
 /** Every component page: its tag, group, source and place in the package. */
 export function componentDocs() {
   return Object.keys(GROUPS).flatMap((group) =>
@@ -34,9 +55,7 @@ export function componentDocs() {
       .sort()
       .map((tag) => {
         const from = `src/components/${group}/${tag}/${tag}.md`;
-        // The line under the title is each page's one-sentence summary.
-        const summary = readFileSync(join(root, from), 'utf8').split('\n')[2]?.trim() ?? '';
-        return { tag, group, from, to: `dist/docs/${tag}.md`, summary };
+        return { tag, group, from, to: `dist/docs/${tag}.md`, summary: summaryOf(from) };
       }),
   );
 }
@@ -99,7 +118,7 @@ if (run) {
   console.log('wrote demo/public/llms.txt');
   if (process.argv.includes('--docs')) {
     mkdirSync(join(root, 'dist/docs'), { recursive: true });
-    for (const doc of componentDocs()) copyFileSync(join(root, doc.from), join(root, doc.to));
+    for (const doc of componentDocs()) writeFileSync(join(root, doc.to), docForPackage(doc));
     console.log(`copied ${componentDocs().length} component pages to dist/docs/`);
   }
 }

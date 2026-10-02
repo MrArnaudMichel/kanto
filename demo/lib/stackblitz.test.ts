@@ -32,7 +32,7 @@ describe('stackblitzProject', () => {
   it('sets a custom colour from the script, which no attribute can hold', () => {
     const project = stackblitzProject(with_({ accent: '#e11d48' }), '1.6.1');
     expect(project.files['index.html']).toContain('<html lang="en">');
-    expect(project.files['main.js']).toContain("setAccent('#e11d48');");
+    expect(project.files['main.js']).toContain('setAccent("#e11d48");');
   });
 
   it('opens on a small real screen, not a blank page', () => {
@@ -40,6 +40,31 @@ describe('stackblitzProject', () => {
     for (const tag of ['kt-stat', 'kt-input', 'kt-select', 'kt-button', 'kt-table']) {
       expect(html).toContain(`<${tag}`);
     }
+  });
+});
+
+describe('stackblitzProject, carried over faithfully', () => {
+  it('loads a face Kanto does not ship, so the project shows the font the playground did', () => {
+    const html = stackblitzProject(with_({ font: 'plex' }), '1.6.1').files['index.html']!;
+    expect(html).toContain('data-font="plex"');
+    expect(html).toMatch(
+      /<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com\/css2\?family=IBM\+Plex\+Sans/,
+    );
+    expect(stackblitzProject(KT_DEFAULT_APPEARANCE, '1.6.1').files['index.html']).not.toContain(
+      'fonts.googleapis.com',
+    );
+  });
+
+  it('writes a custom colour as a string literal, whatever it holds', () => {
+    const main = stackblitzProject(with_({ accent: '#e11d48' }), '1.6.1').files['main.js']!;
+    expect(main).toContain('setAccent("#e11d48");');
+  });
+
+  it('says how to start, rather than leaving StackBlitz to guess', () => {
+    const pkg = JSON.parse(
+      stackblitzProject(KT_DEFAULT_APPEARANCE, '1.6.1').files['package.json']!,
+    );
+    expect(pkg.stackblitz.startCommand).toBe('npm run dev');
   });
 });
 

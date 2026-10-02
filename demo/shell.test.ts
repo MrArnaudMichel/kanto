@@ -127,4 +127,11 @@ describe('the documentation shell', () => {
     await tick();
     expect(document.title).toBe('Kanto — web components in your colours, in any framework');
   });
+
+  it('opens a guide page at a section linked with an anchor', async () => {
+    location.hash = '#/guide/installation#no-build-step';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(document.title).toBe('Installation — Kanto');
+    expect(app.querySelector('#no-build-step')).not.toBeNull();
+  });
 });

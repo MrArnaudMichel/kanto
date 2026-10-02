@@ -13,8 +13,8 @@ colour, a font and a density, watch a real screen change, and copy the one
 line that does it in your project — or open it on StackBlitz.
 
 They are standard custom elements, so the same `<kt-button>` runs in React,
-Vue, Angular, Svelte and plain HTML. Two complete themes, keyboard and screen
-reader support checked by axe in both, and no framework to adopt.
+Vue, Angular, Svelte and plain HTML. Two complete themes, every element audited by axe in both and driven
+by the keyboard in its tests, and no framework to adopt.
 
 ## Start
 
@@ -51,7 +51,7 @@ Colour, font, corners, density and text size are each one attribute, on the
 page or on any container:
 
 ```html
-<html data-accent="teal" data-font="inter" data-density="compact"></html>
+<html data-accent="teal" data-radius="round" data-density="compact"></html>
 ```
 
 Or any colour at all — Kanto solves the shades for it and keeps every text at
@@ -62,6 +62,9 @@ import { setAppearance } from 'kanto-ds';
 
 setAppearance({ accent: '#e11d48', radius: 'round', textSize: 'large' });
 ```
+
+Fonts other than Kanto's own (`data-font="inter"`, `"plex"`, `"geist"`) need
+the face loaded by your page, from Google Fonts or your own files.
 
 ---
 

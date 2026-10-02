@@ -266,7 +266,8 @@ function currentApp(): (() => TemplateResult) | null {
 }
 
 function currentRoute(): Route {
-  const [section, slug] = location.hash.replace(/^#\/?/, '').split('/');
+  // `#/guide/installation#no-build-step`: the route, then a heading on it.
+  const [section, slug] = location.hash.replace(/^#\/?/, '').split('#')[0]!.split('/');
   if (!section || section === 'home') return HOME;
   return (
     ROUTES.find((route) => route.section === section && route.slug === slug) ??
@@ -645,6 +646,9 @@ window.addEventListener('hashchange', () => {
   visibleHeadings = [];
   window.scrollTo({ top: 0 });
   update();
+  // A link to a heading lands on it, once the page that holds it has drawn.
+  const anchor = location.hash.split('#')[2];
+  if (anchor) document.getElementById(anchor)?.scrollIntoView();
   document.querySelector('kt-header')?.closeMenu();
 });
 

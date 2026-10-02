@@ -65,3 +65,21 @@ jobs:
           else
             npm publish
           fi
+
+      # `cdn.jsdelivr.net/npm/kanto-ds@1` is cached for hours at the edge. Once
+      # npm serves the new version — which can take a quarter of an hour — ask
+      # jsDelivr to forget the old one, so the documented script tag follows
+      # the release the same day. A failure here never fails the release.
+      - name: Refresh the CDN
+        if: github.event.release.prerelease == false
+        continue-on-error: true
+        run: |
+          version=$(node -p "require('./package.json').version")
+          for attempt in $(seq 1 40); do
+            if [ "$(npm view "kanto-ds@$version" version 2>/dev/null)" = "$version" ]; then break; fi
+            sleep 30
+          done
+          major=${version%%.*}
+          for path in "kanto-ds@$major" "kanto-ds@$major/dist/styles.css" "kanto-ds" "kanto-ds/dist/styles.css"; do
+            curl -fsS "https://purge.jsdelivr.net/npm/$path" > /dev/null && echo "purged $path"
+          done

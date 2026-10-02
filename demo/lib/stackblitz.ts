@@ -80,6 +80,23 @@ const STYLES = `body {
 }
 `;
 
+/**
+ * Kanto ships its own faces only; the others come from Google Fonts, as the
+ * docs site loads them, so the project shows the face the playground did.
+ */
+const FONTS: Partial<Record<string, string>> = {
+  inter: 'Inter',
+  plex: 'IBM+Plex+Sans',
+  geist: 'Geist',
+};
+
+function fontLink(font: string): string {
+  const family = FONTS[font];
+  return family
+    ? `\n    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=${family}:wght@400;500;600&display=swap" />`
+    : '';
+}
+
 /** The project for an appearance, on `version` of the package. */
 export function stackblitzProject(
   appearance: Required<KtAppearance>,
@@ -94,7 +111,7 @@ export function stackblitzProject(
       : "import { toaster } from 'kanto-ds';",
     "import './style.css';",
     '',
-    ...(custom ? [`setAccent('${custom}');`, ''] : []),
+    ...(custom ? [`setAccent(${JSON.stringify(custom)});`, ''] : []),
     '// Data goes in as properties: anything that is not a string or a boolean.',
     "document.querySelector('#region').options = [",
     "  { id: 'eu', label: 'Europe' },",
@@ -122,7 +139,7 @@ export function stackblitzProject(
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kanto starter</title>
+    <title>Kanto starter</title>${fontLink(appearance.font)}
   </head>
 ${SCREEN}
 </html>
@@ -133,6 +150,7 @@ ${SCREEN}
     private: true,
     type: 'module',
     scripts: { dev: 'vite', build: 'vite build' },
+    stackblitz: { startCommand: 'npm run dev' },
     // The minor, not the patch: the site deploys as a release is cut, and npm
     // can take a while to serve the newest patch to an install.
     dependencies: { 'kanto-ds': `^${version.split('.').slice(0, 2).join('.')}.0` },

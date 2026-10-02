@@ -40,13 +40,13 @@ In a project, every page below is also at
 ### Core
 
 - [kt-avatar](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-avatar/kt-avatar.md): A person or an organisation, as a picture or as their initials.
-- [kt-badge](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-badge/kt-badge.md): A compact label: a pill `tag`, a monospaced `code` token, a `category` tinted
-- [kt-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-button/kt-button.md): The Kanto action button. Ten variants, three sizes, an optional Lucide icon.
-- [kt-card](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-card/kt-card.md): The system's content surface: 12px radius, a 1px `--border-subtle` border, 24px
+- [kt-badge](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-badge/kt-badge.md): A compact label: a pill `tag`, a monospaced `code` token, a `category` tinted with a colour of your choosing, or a `count`.
+- [kt-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-button/kt-button.md): The Kanto action button.
+- [kt-card](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-card/kt-card.md): The system's content surface: 12px radius, a 1px `--border-subtle` border, 24px of padding, 20px between its rows.
 - [kt-code](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-code/kt-code.md): A block of code on a recessed surface, with its language and a copy button.
-- [kt-icon](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-icon/kt-icon.md): A [Lucide](https://lucide.dev) icon, resolved from the registry by name.
+- [kt-icon](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-icon/kt-icon.md): A [Lucide](https://lucide.dev)
 - [kt-kbd](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-kbd/kt-kbd.md): A keyboard shortcut, rendered per platform.
-- [kt-split-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-split-button/kt-split-button.md): One button carrying a menu of related actions. The body runs the action a user
+- [kt-split-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-split-button/kt-split-button.md): One button carrying a menu of related actions.
 
 ### Forms
 
@@ -54,25 +54,25 @@ In a project, every page below is also at
 - [kt-checkbox](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-checkbox/kt-checkbox.md): A checkbox: a choice that applies when the form is submitted.
 - [kt-date-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-date-input/kt-date-input.md): A date typed into its parts — day, month and year, each its own segment.
 - [kt-date-picker](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-date-picker/kt-date-picker.md): A date field with a calendar, for one day or a period.
-- [kt-drag-drop](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-drag-drop/kt-drag-drop.md): A file drop zone. Takes a drop or a click, lists what was picked, and lets each
+- [kt-drag-drop](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-drag-drop/kt-drag-drop.md): A file drop zone.
 - [kt-form](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-form/kt-form.md): A panel grouping related fields.
 - [kt-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-input/kt-input.md): A single-line text field.
 - [kt-input-menu](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-input-menu/kt-input-menu.md): A combobox: type to narrow the list, then pick.
 - [kt-label-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-label-input/kt-label-input.md): A label above a form control, with a red asterisk when it is required.
 - [kt-multi-select](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-multi-select/kt-multi-select.md): Several choices from a list: type to narrow it, pick as many as you need.
-- [kt-radio-group](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-radio-group/kt-radio-group.md): One choice among a few, all visible at once. The options are `<kt-radio>`
+- [kt-radio-group](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-radio-group/kt-radio-group.md): One choice among a few, all visible at once.
 - [kt-select](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-select/kt-select.md): A single-choice dropdown.
-- [kt-textarea](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-textarea/kt-textarea.md): A multi-line field, with the same borderless fill and outline states as
+- [kt-textarea](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-textarea/kt-textarea.md): A multi-line field, with the same borderless fill and outline states as `<kt-input>`.
 - [kt-time-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-time-input/kt-time-input.md): A time of day typed into its parts — hours, minutes and, if asked, seconds.
 - [kt-toggle](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-toggle/kt-toggle.md): An on/off switch.
 
 ### Navigation
 
 - [kt-breadcrumb](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-breadcrumb/kt-breadcrumb.md): A trail showing where the current page sits.
-- [kt-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-header/kt-header.md): The application header: a banner landmark holding the brand, the primary
-- [kt-page-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-page-header/kt-page-header.md): The block every screen opens with: an overline, a title, a sentence, and the
-- [kt-segmented-control](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-segmented-control/kt-segmented-control.md): A small set of mutually exclusive choices, drawn as one inset track with the
-- [kt-sub-menu-navigation](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.md): The sidebar: uppercase overline section titles over lists of links, to any
+- [kt-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-header/kt-header.md): The application header: a banner landmark holding the brand, the primary navigation and a row of actions.
+- [kt-page-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-page-header/kt-page-header.md): The block every screen opens with: an overline, a title, a sentence, and the actions that belong to the page rather than to anything on it.
+- [kt-segmented-control](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-segmented-control/kt-segmented-control.md): A small set of mutually exclusive choices, drawn as one inset track with the selected segment raised out of it.
+- [kt-sub-menu-navigation](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.md): The sidebar: uppercase overline section titles over lists of links, to any depth.
 - [kt-tabs](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-tabs/kt-tabs.md): An underlined tab bar.
 - [kt-toggle-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-toggle-button/kt-toggle-button.md): A button that stays pressed.
 - [kt-toggle-button-group](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-toggle-button-group/kt-toggle-button-group.md): Joins `<kt-toggle-button>`s into one bar and owns their selection.
@@ -82,23 +82,23 @@ In a project, every page below is also at
 - [kt-alert](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-alert/kt-alert.md): A message that stays on the page.
 - [kt-empty-state](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-empty-state/kt-empty-state.md): What a screen shows when it has nothing to show.
 - [kt-progress-bar](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-progress-bar/kt-progress-bar.md): A determinate progress bar.
-- [kt-skeleton](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-skeleton/kt-skeleton.md): A loading placeholder, pulsing between `--surface-raised` and `--surface-hover`
+- [kt-skeleton](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-skeleton/kt-skeleton.md): A loading placeholder, pulsing between `--surface-raised` and `--surface-hover` — the same elevation ramp everything else in Kanto uses, so it reads as part of the page rather than as a grey rectangle pasted onto it.
 - [kt-toast](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-toast/kt-toast.md): A transient notification.
 - [kt-toast-container](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-toast-container/kt-toast-container.md): The stack that owns the toasts on screen, and the imperative shortcut to it.
-- [kt-tooltip](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-tooltip/kt-tooltip.md): A short label that appears on hover or focus. Wrap what it describes:
+- [kt-tooltip](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/feedback/kt-tooltip/kt-tooltip.md): A short label that appears on hover or focus.
 
 ### Overlays
 
 - [kt-collapsible](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-collapsible/kt-collapsible.md): A section that folds away.
 - [kt-confirm-dialog](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-confirm-dialog/kt-confirm-dialog.md): A centred yes/no overlay for an action worth stopping to think about.
-- [kt-dropdown](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-dropdown/kt-dropdown.md): A panel anchored to a trigger. The generic overlay in the system.
+- [kt-dropdown](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-dropdown/kt-dropdown.md): A panel anchored to a trigger.
 - [kt-modal](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-modal/kt-modal.md): A centred dialog for anything that is not a yes/no question.
-- [kt-side-panel](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-side-panel/kt-side-panel.md): A drawer sliding in from the right, for viewing or editing one record without
+- [kt-side-panel](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-side-panel/kt-side-panel.md): A drawer sliding in from the right, for viewing or editing one record without losing the list behind it.
 
 ### Data
 
-- [kt-chart](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-chart/kt-chart.md): A chart, drawn from the token layer: line, area and bar — stacked, sideways or
-- [kt-meter](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-meter/kt-meter.md): How a fixed total is spent: storage by file type, a budget by category, seats by
+- [kt-chart](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-chart/kt-chart.md): A chart, drawn from the token layer: line, area and bar — stacked, sideways or mixed — plus scatter, bubble, pie, doughnut, polar area and radar.
+- [kt-meter](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-meter/kt-meter.md): How a fixed total is spent: storage by file type, a budget by category, seats by role.
 - [kt-pagination](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-pagination/kt-pagination.md): Previous / next paging, with the position between them.
 - [kt-stat](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-stat/kt-stat.md): One headline figure: a label, a value, and how it moved.
 - [kt-table](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-table/kt-table.md): A data table: tri-state sorting, single or multiple selection, paging.
