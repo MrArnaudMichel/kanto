@@ -1,7 +1,6 @@
 import { html, nothing, render, type TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
-import * as lucide from 'lucide';
-import { registerIcons, toaster } from 'kanto-ds';
+import { toaster } from 'kanto-ds';
 import 'kanto-ds';
 import 'kanto-ds/styles.css';
 import './shell.css';
@@ -43,9 +42,8 @@ import tokensDoc from '../src/tokens/README.md?raw';
 import frameworksDoc from '../docs/frameworks.md?raw';
 import changelogDoc from '../CHANGELOG.md?raw';
 
-// The docs draw on far more icons than the seventeen the library ships. This
-// is the "prototyping" registration the icon page warns against in production.
-registerIcons(lucide);
+// The docs draw on more icons than the library ships; this registers those, only.
+import './lib/icons.js';
 
 /* ------------------------------------------------------------------ routes */
 
