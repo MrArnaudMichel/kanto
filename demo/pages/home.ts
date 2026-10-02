@@ -123,7 +123,12 @@ const GALLERY: { group: string; need: string; live: () => TemplateResult }[] = [
     group: 'Feedback',
     need: 'Alerts, toasts, tooltips, progress and the empty state.',
     live: () =>
-      html`<kt-progress-bar label="Uploading invoices" value="64" show-label show-value></kt-progress-bar>
+      html`<kt-progress-bar
+          label="Uploading invoices"
+          value="64"
+          show-label
+          show-value
+        ></kt-progress-bar>
         <div class="home-gallery-row">
           <kt-badge tone="success">Paid</kt-badge><kt-badge tone="warning">Pending</kt-badge
           ><kt-badge tone="danger">Overdue</kt-badge>
@@ -245,9 +250,9 @@ export function homePage({
             type="button"
             class="home-install"
             @click=${() => {
-            void navigator.clipboard?.writeText(INSTALL);
-            toaster.success('Copied');
-          }}
+              void navigator.clipboard?.writeText(INSTALL);
+              toaster.success('Copied');
+            }}
           >
             <code>${INSTALL}</code><kt-icon name="copy" size="16"></kt-icon>
             <span class="visually-hidden">Copy the install command</span>
@@ -311,11 +316,11 @@ export function homePage({
               <div class="home-gallery-live">${tile.live()}</div>
               <ul class="home-gallery-links">
                 ${COMPONENTS.filter((entry) => entry.group === tile.group).map(
-                (entry) =>
-                  html`<li>
-                    <a href=${`#/components/${entry.slug}`}>${entry.slug.replace(/^kt-/, '')}</a>
-                  </li>`,
-              )}
+                  (entry) =>
+                    html`<li>
+                      <a href=${`#/components/${entry.slug}`}>${entry.slug.replace(/^kt-/, '')}</a>
+                    </li>`,
+                )}
               </ul>
             </li>`,
         )}
