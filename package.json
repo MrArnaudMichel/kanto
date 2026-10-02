@@ -1,6 +1,6 @@
 {
   "name": "kanto-ds",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "Forty-nine accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
