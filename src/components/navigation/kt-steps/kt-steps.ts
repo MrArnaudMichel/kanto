@@ -35,6 +35,7 @@ type StepState = 'complete' | 'current' | 'upcoming' | 'error';
  * @csspart list - The `<ol>`.
  * @csspart step - A step.
  * @csspart marker - A step's number, tick or alert.
+ * @csspart connector - The line from a step to the next.
  *
  * @fires kt-change - A completed step was picked, with `navigable`. `detail: { id }`.
  *
@@ -75,37 +76,44 @@ export class KtSteps extends KtElement {
         position: relative;
         display: flex;
         flex: 1 1 0;
-        gap: 10px;
+        gap: 12px;
         align-items: flex-start;
         min-width: 0;
       }
-      /* The connector to the next step: after the label across, down the
-         marker's middle when vertical. */
-      li:not(:last-child)::after {
+      /* The last step has no connector to stretch: it ends the row. */
+      li:last-child {
+        flex: none;
+      }
+
+      /* The line to the next step: through the markers' middle across, down
+         their middle when vertical. */
+      .connector {
         flex: 1 1 24px;
-        align-self: center;
-        height: 2px;
         min-width: 16px;
+        height: 2px;
+        margin-top: calc(var(--kt-steps-marker) / 2 - 1px);
         background: var(--color-dark-22);
         border-radius: var(--radius-full);
-        content: '';
       }
-      li[data-state='complete']:not(:last-child)::after {
+      li[data-state='complete'] .connector {
         background: var(--color-primary-base);
       }
       :host([orientation='vertical']) li {
         flex: none;
         padding-bottom: 20px;
       }
-      :host([orientation='vertical']) li:not(:last-child)::after {
+      :host([orientation='vertical']) li:last-child {
+        padding-bottom: 0;
+      }
+      /* Clear of both markers — and of the current one's ring — by 6px. */
+      :host([orientation='vertical']) .connector {
         position: absolute;
-        top: calc(var(--kt-steps-marker) + 4px);
+        top: calc(var(--kt-steps-marker) + 6px);
         left: calc(var(--kt-steps-marker) / 2 - 1px);
-        flex: none;
         width: 2px;
-        /* Explicit: a flex item keeps its flex sizing even out of the flow. */
-        height: calc(100% - var(--kt-steps-marker) - 8px);
+        height: calc(100% - var(--kt-steps-marker) - 12px);
         min-width: 0;
+        margin: 0;
       }
 
       .marker {
@@ -138,11 +146,15 @@ export class KtSteps extends KtElement {
 
       .text {
         display: grid;
-        gap: 2px;
+        gap: 0;
         min-width: 0;
-        padding-top: calc((var(--kt-steps-marker) - 1.4em) / 2);
       }
+      /* As tall as the marker, so the label sits on its middle whatever the
+         font's line height. */
       .label {
+        display: flex;
+        align-items: center;
+        min-height: var(--kt-steps-marker);
         color: var(--text-muted);
         font: var(--font-normal-medium);
         white-space: nowrap;
@@ -254,6 +266,7 @@ export class KtSteps extends KtElement {
           aria-current=${index === currentIndex ? 'step' : nothing}
         >
           ${back ? html`<button type="button" @click=${() => this.goTo(step)}>${body}</button>` : body}
+          ${index < this.steps.length - 1 ? html`<span part="connector" class="connector" aria-hidden="true"></span>` : nothing}
         </li>`;
       })}
     </ol>`;
