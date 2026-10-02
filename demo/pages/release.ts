@@ -1,4 +1,5 @@
 import { html, nothing, type TemplateResult } from 'lit';
+import { code } from '../lib/highlight.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { renderUntrustedMarkdown, type Heading } from '../lib/markdown.js';
 import { rerender } from '../lib/render.js';
@@ -140,7 +141,7 @@ function currentRelease(entry: ReleaseEntry): TemplateResult {
       ${entry.date ? html`<span class="release-current-date">${entry.date}</span>` : nothing}
     </div>
 
-    <kt-code language="shell" copy>${INSTALL_COMMAND}</kt-code>
+    ${code(INSTALL_COMMAND, 'shell')}
 
     <div class="release-current-links">
       ${jumpTo(anchorFor(entry.tag), 'Read the notes')}

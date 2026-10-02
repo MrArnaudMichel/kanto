@@ -9,6 +9,7 @@ import { ref } from 'lit/directives/ref.js';
 import { KT_DENSITIES, KT_RADII, KT_TEXT_SIZES, setAppearance, toaster } from 'kanto-ds';
 import { accentChooser, fontChooser, segmented, type DocsAppearance } from './appearance.js';
 import { htmlSnippet, jsSnippet } from './snippet.js';
+import { code as codeBlock } from './highlight.js';
 import { openInStackBlitz, stackblitzProject } from './stackblitz.js';
 import { VERSION } from './project.js';
 
@@ -109,7 +110,9 @@ export function playground({
             rerender();
           }}
         ></kt-tabs>
-        <pre class="playground-code"><code>${code}</code></pre>
+        <div class="playground-code">
+          ${codeBlock(code, current.tab === 'html' ? 'html' : 'js', { copy: false })}
+        </div>
         <div class="playground-actions">
           <kt-button
             class="playground-copy"

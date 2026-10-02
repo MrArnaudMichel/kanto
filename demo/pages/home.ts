@@ -7,6 +7,7 @@ import { html, type TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 import { toaster } from 'kanto-ds';
 import { playground } from '../lib/playground.js';
+import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
 import { REPO_URL, VERSION } from '../lib/project.js';
 import { openInStackBlitz, stackblitzProject } from '../lib/stackblitz.js';
@@ -151,9 +152,7 @@ export function homePage({
           rerender();
         }}
       ></kt-tabs>
-      <kt-code language=${framework === 'react' ? 'tsx' : framework === 'html' ? 'html' : framework}
-        >${FRAMEWORKS[framework]}</kt-code
-      >
+      ${code(FRAMEWORKS[framework], framework === 'react' ? 'tsx' : framework === 'html' ? 'html' : framework === 'vue' ? 'vue' : 'ts')}
     </section>
 
     <section class="home-band" aria-labelledby="home-apps">
@@ -187,15 +186,15 @@ export function homePage({
       <ol class="home-steps">
         <li>
           <p>Install it.</p>
-          <kt-code language="bash">${INSTALL}</kt-code>
+          ${code(INSTALL, 'bash')}
         </li>
         <li>
           <p>Import it once.</p>
-          <kt-code language="js">${IMPORTS}</kt-code>
+          ${code(IMPORTS, 'js')}
         </li>
         <li>
           <p>Use it.</p>
-          <kt-code language="html">${USE}</kt-code>
+          ${code(USE, 'html')}
         </li>
       </ol>
       <p class="home-alt">

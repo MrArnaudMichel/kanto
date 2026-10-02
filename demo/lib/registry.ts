@@ -1,4 +1,5 @@
 import { html, type TemplateResult } from 'lit';
+import { code } from './highlight.js';
 import { ref } from 'lit/directives/ref.js';
 import type { KtSegmentedControl, KtTable } from 'kanto-ds';
 import { MONTHS, buildEntities, monthlyRevenue, serverPage } from './data.js';
@@ -537,9 +538,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
 
   'kt-code': () =>
     html`<div class="demo-stack" style="max-width:100%">
-      <kt-code language="js" copy
-        >const total = items.reduce((sum, i) => sum + i.amount, 0);</kt-code
-      >
+      ${code('const total = items.reduce((sum, i) => sum + i.amount, 0);', 'js')}
       <kt-code>npm install kanto-ds</kt-code>
     </div>`,
 

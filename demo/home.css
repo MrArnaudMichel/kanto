@@ -175,16 +175,8 @@
   display: grid;
   gap: 12px;
 }
-.playground-code {
-  margin: 0;
-  padding: 14px 16px;
-  overflow-x: auto;
-  color: var(--text-code);
-  font: var(--font-code-regular);
-  white-space: pre-wrap;
-  background: var(--surface-code);
-  border: var(--border-width) solid var(--border-code);
-  border-radius: var(--radius-input);
+.playground-code kt-code {
+  display: block;
 }
 .playground-actions {
   display: flex;

@@ -1,34 +1,5 @@
 import { Marked, type Tokens } from 'marked';
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-import typescript from 'highlight.js/lib/languages/typescript';
-import xml from 'highlight.js/lib/languages/xml';
-import css from 'highlight.js/lib/languages/css';
-import bash from 'highlight.js/lib/languages/bash';
-import json from 'highlight.js/lib/languages/json';
-
-for (const [name, language] of [
-  ['javascript', javascript],
-  ['typescript', typescript],
-  ['xml', xml],
-  ['css', css],
-  ['bash', bash],
-  ['json', json],
-] as const) {
-  hljs.registerLanguage(name, language);
-}
-
-/** Language aliases used in the component docs. */
-const ALIASES: Record<string, string> = {
-  js: 'javascript',
-  jsx: 'javascript',
-  ts: 'typescript',
-  tsx: 'typescript',
-  html: 'xml',
-  vue: 'xml',
-  svelte: 'xml',
-  sh: 'bash',
-};
+import { escapeHtml, grammarOf, highlight } from './highlight.js';
 
 export interface Heading {
   readonly id: string;
@@ -84,10 +55,8 @@ export function renderDoc(source: string): RenderedDoc {
         return `<h${depth} id="${id}">${this.parser.parseInline(tokens)}</h${depth}>`;
       },
       code({ text, lang }: Tokens.Code) {
-        const language = ALIASES[lang ?? ''] ?? lang ?? '';
-        const highlighted = hljs.getLanguage(language)
-          ? hljs.highlight(text, { language }).value
-          : escapeHtml(text);
+        const language = grammarOf(lang ?? '');
+        const highlighted = highlight(text, language);
 
         // The chrome is <kt-code>'s job; this only supplies the highlighted
         // markup it slots.
@@ -187,12 +156,4 @@ export function plainTextOf(html: string): string {
     .replace(/&#0?39;/g, "'")
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&');
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }

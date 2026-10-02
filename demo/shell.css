@@ -959,7 +959,8 @@ main {
 /* === CODE ===
    The chrome belongs to <kt-code>. What is left here is the syntax palette,
    built from Kanto tokens rather than a vendored highlight.js theme, so it
-   follows the light theme like everything else. */
+   follows the light theme and the accent like everything else. The -text
+   steps, not the fills: they hold 4.5:1 on the code surface in both themes. */
 
 .prose kt-code {
   margin: 0 0 18px;
@@ -967,7 +968,7 @@ main {
 
 .hljs-comment,
 .hljs-quote {
-  color: var(--color-text-500);
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -975,19 +976,19 @@ main {
 .hljs-selector-tag,
 .hljs-literal,
 .hljs-doctag {
-  color: var(--color-primary-base);
+  color: var(--color-primary-text);
 }
 
 .hljs-string,
 .hljs-regexp,
 .hljs-addition {
-  color: var(--color-success-base);
+  color: var(--color-success-text);
 }
 
 .hljs-number,
 .hljs-symbol,
 .hljs-bullet {
-  color: var(--color-warning-base);
+  color: var(--color-warning-text);
 }
 
 .hljs-title,
@@ -995,7 +996,7 @@ main {
 .hljs-name,
 .hljs-selector-id,
 .hljs-selector-class {
-  color: var(--color-info-base);
+  color: var(--color-info-text);
 }
 
 .hljs-attr,
@@ -1003,16 +1004,16 @@ main {
 .hljs-variable,
 .hljs-template-variable,
 .hljs-type {
-  color: var(--color-danger-base);
+  color: var(--color-danger-text);
 }
 
 .hljs-built_in,
 .hljs-class .hljs-title {
-  color: var(--color-info-base);
+  color: var(--color-info-text);
 }
 
 .hljs-deletion {
-  color: var(--color-danger-base);
+  color: var(--color-danger-text);
 }
 
 .hljs-emphasis {
