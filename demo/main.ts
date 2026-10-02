@@ -26,7 +26,7 @@ import { shellState } from './apps/shell.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
-import { APPEARANCE, INTRODUCTION, INSTALLATION } from './pages/guide.js';
+import { APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { homePage } from './pages/home.js';
 import { resetPlayground } from './lib/playground.js';
@@ -152,6 +152,13 @@ const GUIDE: Route[] = [
     label: 'Frameworks',
     group: 'Get started',
     page: () => markdownPage(frameworksDoc, 'docs/frameworks.md'),
+  },
+  {
+    section: 'guide',
+    slug: 'tools',
+    label: 'AI and editors',
+    group: 'Get started',
+    page: () => markdownPage(TOOLS, 'demo/pages/guide.ts'),
   },
   {
     section: 'guide',

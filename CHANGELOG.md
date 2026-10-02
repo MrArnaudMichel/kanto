@@ -15,6 +15,10 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   build step needs one script tag:
   `<script type="module" src="https://cdn.jsdelivr.net/npm/kanto-ds@1"></script>`.
   The release checks load it with nothing left to resolve.
+- **For AI assistants.** `llms.txt` at the docs site's root indexes Kanto for
+  them — the rules that make code right the first time and every component's
+  page — and each page now ships in the package as
+  `dist/docs/<tag>.md`, where an assistant working in a project finds it.
 - The docs site opens on a home page: a playground that re-themes a real
   Kanto screen and hands over the code, or opens it as a running project on
   StackBlitz.

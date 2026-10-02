@@ -205,3 +205,38 @@ type tokens from these inputs, so an app that overrides a token itself —
 overrides the input instead. The same goes for colour tokens under
 \`data-accent\`.
 `;
+
+export const TOOLS = `# AI assistants and editors
+
+Kanto describes itself to the tools you write code with, so the first suggestion is the right one.
+
+## AI assistants
+
+Point an assistant at the index, written for them:
+
+\`\`\`text
+https://kanto.arnaudmichel.fr/llms.txt
+\`\`\`
+
+It holds what Kanto is, the rules that make code right the first time — data as properties, \`kt-\` events, tokens rather than colours, the appearance attributes — and a link to every component's page.
+
+Inside a project the pages are already there: each component's documentation ships in the package, at \`node_modules/kanto-ds/dist/docs/<tag>.md\`. Tell your assistant to read the page of a component before using it, as you would.
+
+Working in this repository with Claude Code, the \`SKILL.md\` at its root is a skill: the design guidelines, the tokens and the components, read before building.
+
+## Editors
+
+The package ships a [Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/) and editor data generated from it, so plain HTML and templates get completion and hover docs for every \`kt-*\` tag, attribute and event.
+
+- **WebStorm and other JetBrains IDEs** read \`web-types.json\` from the package on their own.
+- **VS Code** needs pointing at it once, in \`.vscode/settings.json\`:
+
+\`\`\`json
+{
+  "html.customData": ["./node_modules/kanto-ds/dist/vscode.html-custom-data.json"],
+  "css.customData": ["./node_modules/kanto-ds/dist/vscode.css-custom-data.json"]
+}
+\`\`\`
+
+- **Storybook** and API-docs generators take \`kanto-ds/custom-elements.json\`.
+`;

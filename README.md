@@ -206,6 +206,11 @@ editor data generated from it, so plain HTML gets completion and hover docs:
 
 - **Storybook** and API-docs generators take `kanto-ds/custom-elements.json`.
 
+**AI assistants** read [`llms.txt`](https://kanto.arnaudmichel.fr/llms.txt): the
+rules that make code right the first time and a link to every component's
+page. In a project, each page also ships at
+`node_modules/kanto-ds/dist/docs/<tag>.md`.
+
 ## Accessibility
 
 Not a phase at the end; it is why several of these components exist in this

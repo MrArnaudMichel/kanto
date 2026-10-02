@@ -307,7 +307,7 @@
     "build:cdn": "node scripts/build-cdn.js",
     "build:js": "vite build",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:static": "node scripts/copy-static.js",
+    "build:static": "node scripts/copy-static.js && node scripts/llms.js --docs",
     "build:manifest": "cem analyze --config custom-elements-manifest.config.js",
     "build:demo": "vite build --config demo/vite.config.ts",
     "test": "vitest run",
