@@ -19,9 +19,23 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   them — the rules that make code right the first time and every component's
   page — and each page now ships in the package as
   `dist/docs/<tag>.md`, where an assistant working in a project finds it.
-- The docs site opens on a home page: a playground that re-themes a real
-  Kanto screen and hands over the code, or opens it as a running project on
-  StackBlitz.
+- The docs site opens on a home page: a wall of seventeen live product
+  screens built from Kanto, re-themed from one row; a playground that
+  re-themes a real screen and hands over the code, or opens it as a running
+  project on StackBlitz; and answers to the questions people ask before they
+  adopt a design system.
+- Every code block on the docs site is coloured, in colours that hold 4.5:1
+  in both themes.
+
+### Fixed
+
+- In the dark theme, an alert's action button in the alert's own tone — the
+  example on the `kt-alert` page — read below 4.5:1 once the alert sat on a
+  card: 4.11:1 for info, 4.45:1 for danger. `--color-info-text` and
+  `--color-danger-text` are a shade lighter, and the accessibility suite now
+  audits alerts with an action, on the page and on a card.
+- A closed floating panel near the right edge — a menu in a blurred header —
+  no longer widens the page.
 
 ## [1.6.1] — 2026-10-02
 
