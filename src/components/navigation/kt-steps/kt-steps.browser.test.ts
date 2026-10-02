@@ -83,4 +83,27 @@ describe('kt-steps layout', () => {
       expect(line.height).toBeGreaterThan(4);
     });
   });
+
+  it('centres the tick and the number in their marker', async () => {
+    const el = await mount();
+    const [done, , upcoming] = all(el, '.marker');
+    // The ink, not the icon's box: Lucide's tick sits high in its square.
+    const tick = done!.querySelector('kt-icon')!.shadowRoot!.querySelector('path')!;
+    expect(Math.abs(middle(box(tick)) - middle(box(done!)))).toBeLessThanOrEqual(0.25);
+    const range = document.createRange();
+    range.selectNodeContents(upcoming!);
+    const glyphs = range.getBoundingClientRect();
+    expect(Math.abs(middle(glyphs) - middle(box(upcoming!)))).toBeLessThanOrEqual(1);
+  });
+
+  it('shapes its markers with the theme radius, not as fixed circles', async () => {
+    const el = await mount();
+    // Set where the appearance menu sets it: on the root.
+    document.documentElement.style.setProperty('--radius-scale', '0');
+    try {
+      expect(getComputedStyle(all(el, '.marker')[0]!).borderTopLeftRadius).toBe('0px');
+    } finally {
+      document.documentElement.style.removeProperty('--radius-scale');
+    }
+  });
 });

@@ -92,7 +92,7 @@ export class KtSteps extends KtElement {
         min-width: 16px;
         height: 2px;
         margin-top: calc(var(--kt-steps-marker) / 2 - 1px);
-        background: var(--color-dark-22);
+        background: var(--border-field);
         border-radius: var(--radius-full);
       }
       li[data-state='complete'] .connector {
@@ -116,6 +116,8 @@ export class KtSteps extends KtElement {
         margin: 0;
       }
 
+      /* Shaped like the rest of Kanto: the theme's radius, a field's
+         border; the current step is tinted, the done ones filled. */
       .marker {
         display: inline-grid;
         flex: none;
@@ -123,10 +125,16 @@ export class KtSteps extends KtElement {
         width: var(--kt-steps-marker);
         height: var(--kt-steps-marker);
         color: var(--text-muted);
-        font: 600 calc(12px * var(--text-scale, 1)) / 1 var(--font-family-body);
-        background: var(--surface-card);
-        border: 2px solid var(--color-dark-24);
-        border-radius: 50%;
+        font: var(--font-normal-small);
+        font-weight: 600;
+        line-height: 1;
+        background: var(--surface-field);
+        border: var(--border-width) solid var(--border-field);
+        border-radius: var(--radius-input);
+        transition:
+          background-color var(--duration-fast) var(--easing-standard),
+          border-color var(--duration-fast) var(--easing-standard),
+          color var(--duration-fast) var(--easing-standard);
       }
       li[data-state='complete'] .marker {
         color: var(--color-white);
@@ -135,13 +143,18 @@ export class KtSteps extends KtElement {
       }
       li[data-state='current'] .marker {
         color: var(--color-primary-text);
+        background: var(--color-primary-soft);
         border-color: var(--color-primary-base);
-        box-shadow: 0 0 0 4px var(--color-primary-soft);
       }
       li[data-state='error'] .marker {
         color: var(--color-danger-text);
         background: var(--color-danger-soft);
         border-color: var(--color-danger-base);
+      }
+      /* Lucide's tick sits high in its square; this puts its ink on the
+         marker's middle. */
+      .marker kt-icon[name='check'] {
+        translate: 0 0.5px;
       }
 
       .text {
