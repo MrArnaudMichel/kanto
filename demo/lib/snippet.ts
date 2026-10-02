@@ -36,7 +36,11 @@ export function customAccent(appearance: Appearance): string | null {
 
 /** The settings as attributes on <html>; a custom colour, which no attribute holds, as a note. */
 export function htmlSnippet(appearance: Appearance): string {
-  const tag = `<html${htmlAttributes(appearance)}>`;
+  const attributes = htmlAttributes(appearance);
+  const tag = `<html${attributes}>`;
+  if (!attributes && isPreset(appearance.accent)) {
+    return `${tag}\n<!-- Kanto as it ships. Pick a colour, a font or a density to see its attribute. -->`;
+  }
   return isPreset(appearance.accent)
     ? tag
     : `${tag}\n<!-- and in a script: setAccent('${appearance.accent}') -->`;

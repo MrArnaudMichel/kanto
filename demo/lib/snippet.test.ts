@@ -5,8 +5,10 @@ import { htmlSnippet, jsSnippet } from './snippet.js';
 const with_ = (patch: object) => ({ ...KT_DEFAULT_APPEARANCE, ...patch });
 
 describe('htmlSnippet', () => {
-  it('is a bare <html> for Kanto as it ships', () => {
-    expect(htmlSnippet(KT_DEFAULT_APPEARANCE)).toBe('<html>');
+  it('says what to do while Kanto is as it ships', () => {
+    expect(htmlSnippet(KT_DEFAULT_APPEARANCE)).toBe(
+      '<html>\n<!-- Kanto as it ships. Pick a colour, a font or a density to see its attribute. -->',
+    );
   });
 
   it('lists only what differs, in a fixed order', () => {
