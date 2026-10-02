@@ -21,7 +21,7 @@ import '../kt-icon/kt-icon.js';
  * ```
  *
  * For a token or an identifier inside a sentence, reach for
- * `<kt-chip variant="code">` instead — this is for blocks.
+ * `<kt-badge variant="code">` instead — this is for blocks.
  *
  * @element kt-code
  *

@@ -405,7 +405,7 @@ function shell(): TemplateResult {
       <!-- In the brand slot, not the default one: the header centres the
            default slot as a group, and a version chip belongs beside the
            wordmark rather than beside the sections. -->
-      <kt-chip slot="brand" variant="code">v1.0.0</kt-chip>
+      <kt-badge slot="brand" variant="code">v1.0.0</kt-badge>
 
       <nav class="top-nav">
         ${SECTIONS.map(

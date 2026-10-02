@@ -53,7 +53,7 @@ the raw value, so it only has to handle the columns it cares about.
 ```js
 table.renderCell = (row, column) =>
   column.key === 'status'
-    ? html`<kt-chip variant="category" color="var(--color-success-base)">${row.status}</kt-chip>`
+    ? html`<kt-badge variant="category" color="var(--color-success-base)">${row.status}</kt-badge>`
     : undefined;
 ```
 

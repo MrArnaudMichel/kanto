@@ -38,7 +38,6 @@ import type { KtAvatar } from '../components/core/kt-avatar/kt-avatar.js';
 import type { KtBadge } from '../components/core/kt-badge/kt-badge.js';
 import type { KtButton } from '../components/core/kt-button/kt-button.js';
 import type { KtCard } from '../components/core/kt-card/kt-card.js';
-import type { KtChip } from '../components/core/kt-chip/kt-chip.js';
 import type { KtCode } from '../components/core/kt-code/kt-code.js';
 import type { KtIcon } from '../components/core/kt-icon/kt-icon.js';
 import type { KtKbd } from '../components/core/kt-kbd/kt-kbd.js';
@@ -103,7 +102,6 @@ declare module 'vue' {
     'kt-badge': KtProps<KtBadge>;
     'kt-button': KtProps<KtButton>;
     'kt-card': KtProps<KtCard>;
-    'kt-chip': KtProps<KtChip>;
     'kt-code': KtProps<KtCode>;
     'kt-icon': KtProps<KtIcon>;
     'kt-kbd': KtProps<KtKbd>;

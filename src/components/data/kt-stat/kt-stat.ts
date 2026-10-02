@@ -160,7 +160,9 @@ export class KtStat extends KtElement {
               <span part="value" class="value">${this.value}</span>
               ${
                 this.delta
-                  ? html`<kt-badge variant=${this.deltaVariant}>${this.delta}</kt-badge>`
+                  ? html`<kt-badge variant="count" tone=${this.deltaVariant}
+                      >${this.delta}</kt-badge
+                    >`
                   : nothing
               }
             </div>`

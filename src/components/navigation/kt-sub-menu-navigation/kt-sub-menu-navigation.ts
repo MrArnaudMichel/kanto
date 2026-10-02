@@ -294,7 +294,7 @@ export class KtSubMenuNavigation extends KtElement {
     const body = html`
       ${item.icon ? html`<kt-icon name=${item.icon} size="16"></kt-icon>` : nothing}
       <span class="label">${item.label}</span>
-      ${item.badge ? html`<kt-badge pill>${item.badge}</kt-badge>` : nothing}
+      ${item.badge ? html`<kt-badge variant="count">${item.badge}</kt-badge>` : nothing}
       ${
         branch
           ? html`<kt-icon

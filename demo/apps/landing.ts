@@ -129,7 +129,7 @@ export function landingPage(): TemplateResult {
     </kt-header>
 
     <section class="hero">
-      <kt-badge variant="primary" pill>v1.0 is out</kt-badge>
+      <kt-badge tone="primary">v1.0 is out</kt-badge>
       <h1>A design system for tools people work in all day</h1>
       <p>
         Dark-first, data-dense, and framework-agnostic. Thirty custom elements that run anywhere,
@@ -164,7 +164,7 @@ export function landingPage(): TemplateResult {
             <div class="overline">Revenue</div>
             <div style="font:var(--font-title-h4)">$292,342</div>
           </div>
-          <kt-badge variant="success">+12% this quarter</kt-badge>
+          <kt-badge variant="count" tone="success">+12% this quarter</kt-badge>
         </div>
         <kt-chart
           type="area"
@@ -217,7 +217,7 @@ export function landingPage(): TemplateResult {
             html`<kt-card ?selected=${Boolean(plan.featured)}>
               <div slot="header" class="row" style="justify-content:space-between">
                 <h6>${plan.name}</h6>
-                ${plan.featured ? html`<kt-badge variant="primary">Most popular</kt-badge>` : ''}
+                ${plan.featured ? html`<kt-badge tone="primary">Most popular</kt-badge>` : ''}
               </div>
               <div style="font:var(--font-title-h1);line-height:1.1">${plan.price}</div>
               <span class="muted" style="font:var(--font-normal-small)">${plan.note}</span>

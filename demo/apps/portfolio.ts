@@ -292,7 +292,9 @@ function caseStudy(): TemplateResult {
                       <span class="case-outcome-label">${outcome.label}</span>
                       ${
                         outcome.delta
-                          ? html`<kt-badge variant="success">${outcome.delta}</kt-badge>`
+                          ? html`<kt-badge variant="count" tone="success"
+                              >${outcome.delta}</kt-badge
+                            >`
                           : nothing
                       }
                     </div>`,
@@ -314,7 +316,7 @@ function caseStudy(): TemplateResult {
               </kt-timeline>
 
               <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:20px">
-                ${project.tags.map((tag) => html`<kt-chip label=${tag}></kt-chip>`)}
+                ${project.tags.map((tag) => html`<kt-badge label=${tag}></kt-badge>`)}
               </div>
             </div>
           `
@@ -374,7 +376,7 @@ export function portfolioPage(): TemplateResult {
         class="portrait-avatar"
       ></kt-avatar>
       <div class="portrait-copy">
-        <kt-chip label="Available from October" variant="category"></kt-chip>
+        <kt-badge label="Available from October" variant="category"></kt-badge>
         <h1>I build the interfaces other people build on.</h1>
         <p>
           Ten years of product engineering, most of it spent on the unglamorous middle layer —
@@ -455,7 +457,7 @@ export function portfolioPage(): TemplateResult {
                     <h5 class="work-name">${project.name}</h5>
                     <p class="muted">${project.tagline}</p>
                     <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:12px">
-                      ${project.tags.map((tag) => html`<kt-chip label=${tag}></kt-chip>`)}
+                      ${project.tags.map((tag) => html`<kt-badge label=${tag}></kt-badge>`)}
                     </div>
                     <span slot="footer" class="work-more">
                       Read the case study

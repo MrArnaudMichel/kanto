@@ -21,7 +21,6 @@ import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-ava
 import { KtBadge as KtBadgeElement } from '../components/core/kt-badge/kt-badge.js';
 import { KtButton as KtButtonElement } from '../components/core/kt-button/kt-button.js';
 import { KtCard as KtCardElement } from '../components/core/kt-card/kt-card.js';
-import { KtChip as KtChipElement } from '../components/core/kt-chip/kt-chip.js';
 import { KtCode as KtCodeElement } from '../components/core/kt-code/kt-code.js';
 import { KtIcon as KtIconElement } from '../components/core/kt-icon/kt-icon.js';
 import { KtKbd as KtKbdElement } from '../components/core/kt-kbd/kt-kbd.js';
@@ -77,6 +76,10 @@ export const KtBadge = createComponent({
   tagName: 'kt-badge',
   elementClass: KtBadgeElement,
   react: React,
+  events: {
+    onKtBadgeClick: 'kt-badge-click' as Kt<never>,
+    onKtRemove: 'kt-remove' as Kt<never>,
+  },
 });
 
 export const KtButton = createComponent({
@@ -90,13 +93,6 @@ export const KtCard = createComponent({
   elementClass: KtCardElement,
   react: React,
   events: { onKtCardClick: 'kt-card-click' as Kt<never> },
-});
-
-export const KtChip = createComponent({
-  tagName: 'kt-chip',
-  elementClass: KtChipElement,
-  react: React,
-  events: { onKtChipClick: 'kt-chip-click' as Kt<never> },
 });
 
 export const KtCode = createComponent({

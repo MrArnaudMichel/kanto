@@ -1,6 +1,6 @@
 {
   "name": "kanto",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Dark-first, framework-agnostic design system for data-dense product interfaces.",
   "keywords": [
     "design-system",
@@ -62,10 +62,6 @@
     "./components/core/kt-card": {
       "types": "./dist/components/core/kt-card/kt-card.d.ts",
       "default": "./dist/components/core/kt-card/kt-card.js"
-    },
-    "./components/core/kt-chip": {
-      "types": "./dist/components/core/kt-chip/kt-chip.d.ts",
-      "default": "./dist/components/core/kt-chip/kt-chip.js"
     },
     "./components/core/kt-code": {
       "types": "./dist/components/core/kt-code/kt-code.d.ts",

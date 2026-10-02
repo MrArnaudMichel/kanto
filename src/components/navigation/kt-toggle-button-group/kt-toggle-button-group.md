@@ -17,7 +17,7 @@ group.addEventListener('kt-change', (e) => console.log(e.detail.value));
 ## The group owns the selection
 
 Buttons are slotted rather than described by an options array, so a label can be
-anything — an icon, a count, a chip.
+anything — an icon, a count, a badge.
 
 Inside a group a button becomes **controlled**: it no longer flips itself and no
 longer emits. The group reads the click, works out what the selection now is,

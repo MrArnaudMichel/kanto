@@ -38,7 +38,7 @@ function swatch(token: string, label: string): TemplateResult {
     ></span>
     <span class="stack" style="gap:2px">
       <span>${label}</span>
-      <kt-chip variant="code">${token}</kt-chip>
+      <kt-badge variant="code">${token}</kt-badge>
     </span>
   </div>`;
 }
@@ -89,7 +89,7 @@ export function foundationsPage(): TemplateResult {
           ([token, label]) =>
             html`<kt-card>
               <div style=${`font: var(${token})`}>${label}</div>
-              <kt-chip slot="footer" variant="code">${token}</kt-chip>
+              <kt-badge slot="footer" variant="code">${token}</kt-badge>
             </kt-card>`,
         )}
       </div>
@@ -104,7 +104,7 @@ export function foundationsPage(): TemplateResult {
               <span
                 style=${`height:20px;background:var(--color-primary-soft);border-left:2px solid var(--color-primary-base);border-right:2px solid var(--color-primary-base);width:var(${token})`}
               ></span>
-              <kt-chip variant="code">${token}</kt-chip>
+              <kt-badge variant="code">${token}</kt-badge>
               <span style="color:var(--text-muted)">${label}</span>
             </div>`,
         )}
@@ -121,7 +121,7 @@ export function foundationsPage(): TemplateResult {
                 style=${`width:56px;height:40px;flex:none;background:var(--surface-raised);border-radius:var(${token})`}
               ></span>
               <span class="stack" style="gap:2px">
-                <kt-chip variant="code">${token}</kt-chip>
+                <kt-badge variant="code">${token}</kt-badge>
                 <span style="color:var(--text-muted);font:var(--font-normal-small)">${label}</span>
               </span>
             </div>`,

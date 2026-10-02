@@ -39,9 +39,9 @@ Style the highlighter's classes from the token layer and they follow the theme:
 }
 ```
 
-## Against `<kt-chip variant="code">`
+## Against `<kt-badge variant="code">`
 
-`<kt-chip variant="code">` is for a token inside a sentence — an identifier, a
+`<kt-badge variant="code">` is for a token inside a sentence — an identifier, a
 property name, a custom property. `<kt-code>` is for a block. Both draw on
 `--surface-code`, so they read as the same material at two scales.
 
