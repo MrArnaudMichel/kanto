@@ -107,6 +107,61 @@ describe('kt-number-input', () => {
   });
 });
 
+describe('kt-number-input, read faithfully', () => {
+  it('keeps a negative number negative in a language that writes the minus as −', async () => {
+    const el = await fixture<KtNumberInput>(
+      '<kt-number-input locale="sv-SE" value="-20"></kt-number-input>',
+    );
+    field(el).dispatchEvent(new FocusEvent('focus'));
+    await settle(el);
+    field(el).dispatchEvent(new FocusEvent('blur'));
+    await settle(el);
+    expect(el.value).toBe(-20);
+  });
+
+  it('reads a percentage as it shows it: 50% is 0.5', async () => {
+    const el = await fixture<KtNumberInput>(
+      '<kt-number-input locale="en-US" step="0.01" value="0.5"></kt-number-input>',
+    );
+    el.formatOptions = { style: 'percent' };
+    await settle(el);
+    expect(field(el).value).toBe('50%');
+    field(el).dispatchEvent(new FocusEvent('focus'));
+    await settle(el);
+    expect(field(el).value).toBe('50');
+    await typeIn(el, '75%');
+    expect(el.value).toBe(0.75);
+  });
+
+  it('turns down text with letters in it, rather than guessing', async () => {
+    const el = await fixture<KtNumberInput>('<kt-number-input value="3"></kt-number-input>');
+    await typeIn(el, '1e3');
+    expect(el.value).toBe(3);
+  });
+
+  it('keeps the decimals of min as well as of step', async () => {
+    const el = await fixture<KtNumberInput>(
+      '<kt-number-input min="0.5" step="1" value="1.5"></kt-number-input>',
+    );
+    expect(el.value).toBe(1.5);
+  });
+
+  it('takes formatOptions that ask for more decimals than the default', async () => {
+    const el = await fixture<KtNumberInput>(
+      '<kt-number-input step="0.1" value="1.5"></kt-number-input>',
+    );
+    el.formatOptions = { minimumFractionDigits: 4 };
+    await settle(el);
+    expect(field(el).value).toBe('1.5000');
+  });
+
+  it('reads an unreadable value attribute as empty', async () => {
+    const el = await fixture<KtNumberInput>('<kt-number-input value="abc"></kt-number-input>');
+    expect(el.value).toBeNull();
+    expect(field(el).value).toBe('');
+  });
+});
+
 describe('kt-number-input in error', () => {
   it('says its error to a screen reader, through the field', async () => {
     const el = await fixture<KtNumberInput>(

@@ -4,6 +4,7 @@ import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
 import { attachFormInternals, setFormValue, type UsableInternals } from '#internal/form-control';
 import { strings } from '#internal/strings';
+import { decimalsOf } from '#internal/numbers';
 
 /**
  * A value picked by sliding along a range: a volume, a threshold, or with
@@ -93,6 +94,9 @@ export class KtSlider extends KtElement {
       }
       input:focus {
         outline: none;
+      }
+      input.front {
+        z-index: 1;
       }
       input::-webkit-slider-runnable-track {
         height: 100%;
@@ -224,7 +228,7 @@ export class KtSlider extends KtElement {
     const step = this.step > 0 ? this.step : 1;
     const snapped = this.min + Math.round((n - this.min) / step) * step;
     // Rounding to the step's decimals keeps 0.1 + 0.2 from showing as 0.30000000000000004.
-    const decimals = (String(step).split('.')[1] ?? '').length;
+    const decimals = Math.max(decimalsOf(step), decimalsOf(this.min));
     return Number(Math.min(this.max, Math.max(this.min, snapped)).toFixed(decimals));
   }
 
@@ -264,9 +268,17 @@ export class KtSlider extends KtElement {
     const shown = this.range
       ? `${this.format(numbers[0]!)} – ${this.format(numbers[1]!)}`
       : this.format(numbers[0]!);
-    const names = this.range
-      ? [`${this.label}, ${s.sliderMinimum}`, `${this.label}, ${s.sliderMaximum}`]
-      : [this.label];
+    const capital = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+    const names = !this.range
+      ? [this.label]
+      : this.label
+        ? [`${this.label}, ${s.sliderMinimum}`, `${this.label}, ${s.sliderMaximum}`]
+        : [capital(s.sliderMinimum), capital(s.sliderMaximum)];
+    // Met at one point, the thumbs are drawn one over the other and the later
+    // input catches the pointer. Above the bottom, the low one goes on top, so
+    // a pointer can pull the range open downwards; at the bottom the high one
+    // stays on top to pull it open upwards.
+    const lowOnTop = this.range && numbers[0] === numbers[1] && numbers[0]! > this.min;
 
     return html`${
         this.showValue
@@ -286,6 +298,7 @@ export class KtSlider extends KtElement {
         ${numbers.map(
           (n, index) =>
             html`<input
+              class=${index === 0 && lowOnTop ? 'front' : ''}
               type="range"
               min=${this.min}
               max=${this.max}

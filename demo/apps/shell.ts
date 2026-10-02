@@ -89,9 +89,12 @@ export function navLeaves(
   return out;
 }
 
-/** Cmd+K in the console: every page of it, and the way back to the docs. */
+/** Every page of the console, and the way back to the docs. Built once. */
+let consoleCommands: KtCommand[] | undefined;
+
+/** Cmd+K in the console. The same list each render, so the palette keeps its place. */
 function commandPalette(): TemplateResult {
-  const commands: KtCommand[] = [
+  const commands = (consoleCommands ??= [
     ...navLeaves().map((leaf) => ({
       id: leaf.href,
       label: leaf.label,
@@ -105,7 +108,7 @@ function commandPalette(): TemplateResult {
       icon: 'book-open',
       keywords: ['docs', 'exit'],
     },
-  ];
+  ]);
 
   return html`<kt-command-palette
     placeholder="Search pages and settings…"

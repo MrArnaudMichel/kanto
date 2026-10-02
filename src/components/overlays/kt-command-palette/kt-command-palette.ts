@@ -261,6 +261,13 @@ export class KtCommandPalette extends KtElement {
   }
 
   override updated(changed: PropertyValues<this>): void {
+    // Private states, so the map is read untyped.
+    const moved = changed as PropertyValues;
+    if (moved.has('activeIndex') || moved.has('query')) {
+      this.renderRoot
+        .querySelector(`#${this.optionId(this.activeIndex)}`)
+        ?.scrollIntoView({ block: 'nearest' });
+    }
     if (!changed.has('open')) return;
     if (this.open) {
       this.returnFocus = deepActiveElement();
@@ -270,7 +277,7 @@ export class KtCommandPalette extends KtElement {
       emit(this, 'kt-open');
     } else if (changed.get('open') === true) {
       closeDialog(this.dialog);
-      this.returnFocus?.focus?.();
+      if (this.returnFocus?.isConnected) this.returnFocus.focus();
       this.returnFocus = null;
       emit(this, 'kt-close');
     }
@@ -290,8 +297,12 @@ export class KtCommandPalette extends KtElement {
   }
 
   private onDocumentKeyDown = (event: KeyboardEvent): void => {
-    if (!this.hotkey || event.key.toLowerCase() !== this.hotkey.toLowerCase()) return;
+    if (!this.hotkey || event.defaultPrevented || event.repeat) return;
     if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return;
+    const key = this.hotkey.toLowerCase();
+    // The code catches the key on a layout whose letters are not Latin.
+    const hit = event.key?.toLowerCase() === key || event.code === `Key${key.toUpperCase()}`;
+    if (!hit) return;
     event.preventDefault();
     this.open = !this.open;
   };
@@ -341,6 +352,11 @@ export class KtCommandPalette extends KtElement {
     this.open = false;
   }
 
+  /** The browser can close the dialog itself; the property follows. */
+  private onDialogClose(): void {
+    if (this.open) this.open = false;
+  }
+
   private onDialogClick(event: MouseEvent): void {
     if (isBackdropClick(this.dialog, event)) this.open = false;
   }
@@ -359,6 +375,7 @@ export class KtCommandPalette extends KtElement {
       part="dialog"
       aria-label=${s.commandPalette}
       @cancel=${this.onDialogCancel}
+      @close=${this.onDialogClose}
       @click=${this.onDialogClick}
     >
       <div class="search">
@@ -383,7 +400,7 @@ export class KtCommandPalette extends KtElement {
       <div part="list" class="list" id=${this.listId} role="listbox" aria-label=${s.commandPalette}>
         ${
           list.length === 0
-            ? html`<div class="empty" role="presentation">${s.noResults}</div>`
+            ? html`<div class="empty" aria-hidden="true">${s.noResults}</div>`
             : grouped(list).map(
                 (group) =>
                   html`<div class="group" role="group" aria-label=${group.name || s.commandPalette}>
@@ -415,6 +432,8 @@ export class KtCommandPalette extends KtElement {
               )
         }
       </div>
+
+      <div class="visually-hidden" role="status">${list.length === 0 ? s.noResults : nothing}</div>
 
       <div part="footer" class="footer" aria-hidden="true">
         <span><kt-kbd>↑</kt-kbd><kt-kbd>↓</kt-kbd>${s.commandHintMove}</span>

@@ -146,4 +146,30 @@ describe('kt-command-palette', () => {
     const el = await mount();
     expect(options(el)[0]!.querySelector('kt-kbd')!.getAttribute('keys')).toBe('mod i');
   });
+
+  it('says aloud that nothing matches', async () => {
+    const el = await mount();
+    await type(el, 'zzz');
+    expect(root(el).querySelector('[role="status"]')!.textContent).toContain('No results');
+  });
+
+  it('ignores a key event without a key, one already handled, and a held key', async () => {
+    const el = await mount('');
+    expect(() =>
+      document.dispatchEvent(new KeyboardEvent('keydown', { ctrlKey: true })),
+    ).not.toThrow();
+    const handled = new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, cancelable: true });
+    handled.preventDefault();
+    document.dispatchEvent(handled);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, repeat: true }));
+    await settle(el);
+    expect(el.open).toBe(false);
+  });
+
+  it('follows its dialog when the browser closes it', async () => {
+    const el = await mount();
+    root(el).querySelector('dialog')!.dispatchEvent(new Event('close'));
+    await settle(el);
+    expect(el.open).toBe(false);
+  });
 });

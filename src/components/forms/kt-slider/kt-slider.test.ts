@@ -88,6 +88,18 @@ describe('kt-slider', () => {
     });
   });
 
+  it('names its thumbs sensibly without a label', async () => {
+    const el = await fixture<KtSlider>('<kt-slider range value="20/80"></kt-slider>');
+    expect(thumbs(el).map((t) => t.getAttribute('aria-label'))).toEqual(['Minimum', 'Maximum']);
+  });
+
+  it('keeps the decimals of min as well as of step', async () => {
+    const el = await fixture<KtSlider>(
+      '<kt-slider min="0.5" max="10" step="1" value="1.5"></kt-slider>',
+    );
+    expect(el.value).toBe('1.5');
+  });
+
   it('takes no input while disabled', async () => {
     const el = await fixture<KtSlider>('<kt-slider disabled></kt-slider>');
     expect(thumbs(el)[0]!.disabled).toBe(true);

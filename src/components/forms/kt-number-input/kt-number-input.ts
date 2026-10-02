@@ -11,6 +11,7 @@ import {
 } from '#internal/form-control';
 import { resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
+import { decimalsOf } from '#internal/numbers';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtNumberInputSize = 'small' | 'medium' | 'large';
@@ -24,16 +25,27 @@ function separators(locale: string): { group: string; decimal: string } {
   };
 }
 
-/** A number typed the way `locale` writes one, or NaN. "1 234,5" in French is 1234.5. */
-export function parseLocaleNumber(text: string, locale: string): number {
+/**
+ * A number typed the way `locale` writes one, or NaN. "1 234,5" in French is
+ * 1234.5; "−20" with a true minus sign is -20; a percent sign is dropped, and
+ * `percent` divides by a hundred. Text holding letters is no number: it is
+ * turned down rather than guessed at.
+ */
+export function parseLocaleNumber(text: string, locale: string, percent = false): number {
   const { group, decimal } = separators(locale);
-  const cleaned = text
+  const plain = text
+    // Bidi marks around a number in Arabic or Hebrew text.
+    .replace(/[\u200e\u200f\u061c]/g, '')
+    // Minus signs other than the hyphen: Swedish and Finnish write U+2212.
+    .replace(/[\u2212\u2012\u2013\u2014]/g, '-')
     .replace(/\s/g, '')
     .split(group)
     .join('')
     .replace(decimal, '.')
-    .replace(/[^0-9.+-]/g, '');
-  return cleaned === '' || cleaned === '-' ? NaN : Number(cleaned);
+    .replace(/[%\p{Sc}]/gu, '');
+  if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(plain)) return NaN;
+  const n = Number(plain);
+  return percent ? n / 100 : n;
 }
 
 /**
@@ -163,7 +175,15 @@ export class KtNumberInput extends KtElement {
     `,
   ];
 
-  @property({ type: Number })
+  /** The number, or null while empty. An attribute that is no number reads as empty. */
+  @property({
+    converter: {
+      fromAttribute: (text: string | null) => {
+        const n = text === null || text.trim() === '' ? NaN : Number(text);
+        return Number.isFinite(n) ? n : null;
+      },
+    },
+  })
   value: number | null = null;
 
   @property({ type: Number })
@@ -268,7 +288,8 @@ export class KtNumberInput extends KtElement {
     const step = this.step > 0 ? this.step : 1;
     const origin = Number.isFinite(this.min) ? this.min : 0;
     const snapped = origin + Math.round((n - origin) / step) * step;
-    const decimals = (String(step).split('.')[1] ?? '').length;
+    // Decimals of the step and of the origin: min 0.5 with step 1 lands on 1.5.
+    const decimals = Math.max(decimalsOf(step), decimalsOf(origin));
     return Number(Math.min(this.max, Math.max(this.min, snapped)).toFixed(decimals));
   }
 
@@ -283,11 +304,25 @@ export class KtNumberInput extends KtElement {
   /** The text for `value`: plain while typing, the locale's format at rest. */
   private text(value: number | null): string {
     if (value === null) return '';
-    const decimals = (String(this.step).split('.')[1] ?? '').length;
-    const options = this.focused
-      ? { maximumFractionDigits: Math.max(decimals, 20), useGrouping: false }
-      : { maximumFractionDigits: Math.max(decimals, 3), ...this.formatOptions };
-    return new Intl.NumberFormat(this.resolvedLocale, options).format(value);
+    const decimals = Math.max(decimalsOf(this.step), decimalsOf(this.min));
+    if (this.focused) {
+      // The plain number to edit, on the scale it is shown at: 50 for 50%.
+      const shown = this.percent ? value * 100 : value;
+      return new Intl.NumberFormat(this.resolvedLocale, {
+        maximumFractionDigits: 20,
+        useGrouping: false,
+      }).format(Number(shown.toPrecision(15)));
+    }
+    const minimum = this.formatOptions.minimumFractionDigits ?? 0;
+    return new Intl.NumberFormat(this.resolvedLocale, {
+      maximumFractionDigits: Math.max(decimals, 3, minimum),
+      ...this.formatOptions,
+    }).format(value);
+  }
+
+  /** Shown as a percentage: what is typed is on a scale of a hundred. */
+  private get percent(): boolean {
+    return this.formatOptions.style === 'percent';
   }
 
   private stepBy(steps: number): void {
@@ -319,7 +354,7 @@ export class KtNumberInput extends KtElement {
       this.commit(null);
       return;
     }
-    const parsed = parseLocaleNumber(typed, this.resolvedLocale);
+    const parsed = parseLocaleNumber(typed, this.resolvedLocale, this.percent);
     if (Number.isNaN(parsed)) {
       this.input.value = this.text(this.value);
       return;

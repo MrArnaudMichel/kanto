@@ -56,4 +56,21 @@ describe('kt-command-palette, for real', () => {
     await settle(palette);
     expect(palette.open).toBe(false);
   });
+
+  it('scrolls the active command into view as the arrows move', async () => {
+    const palette = await fixture<KtCommandPalette>(
+      '<kt-command-palette open></kt-command-palette>',
+    );
+    palette.commands = Array.from({ length: 60 }, (_, index) => ({
+      id: `c${index}`,
+      label: `Command ${index}`,
+    }));
+    await settle(palette);
+    await userEvent.keyboard('{End}');
+    await settle(palette);
+    const list = palette.shadowRoot!.querySelector('.list')!.getBoundingClientRect();
+    const active = palette.shadowRoot!.querySelector('.option.active')!.getBoundingClientRect();
+    expect(active.bottom).toBeLessThanOrEqual(list.bottom + 1);
+    expect(active.top).toBeGreaterThanOrEqual(list.top - 1);
+  });
 });

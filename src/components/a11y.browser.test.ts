@@ -281,6 +281,15 @@ const CASES: Record<string, Case> = {
       ];
     },
   },
+  'kt-command-palette (no matches)': {
+    markup: '<kt-command-palette open></kt-command-palette>',
+    setup: (el) => {
+      (el as KtCommandPalette).commands = [{ id: 'new', label: 'New invoice' }];
+      const input = el.shadowRoot!.querySelector('input')!;
+      input.value = 'zzz';
+      input.dispatchEvent(new Event('input'));
+    },
+  },
   'kt-number-input': {
     markup: '<kt-number-input label="Seats" min="1" max="50" value="5"></kt-number-input>',
   },

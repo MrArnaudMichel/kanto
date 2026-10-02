@@ -12,6 +12,7 @@ import { INSTALL_COMMAND, REPO_URL, VERSION_TAG } from './lib/project.js';
 import { commandTarget, siteCommands } from './lib/site-search.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
 import { newComponents, parseChangelog } from './lib/releases.js';
+import { lazyLoader } from './lib/lazy.js';
 import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
@@ -281,8 +282,8 @@ const APPS: Record<string, () => Promise<Screen>> = {
   portfolio: () => import('./apps/portfolio.js').then((m) => m.portfolioPage),
 };
 
-/** Apps already loaded, by path. */
-const loadedApps = new Map<string, Screen>();
+/** The apps, each loaded the first time it is opened. */
+const apps = lazyLoader(APPS, () => update());
 
 /** `#/app/<path>` — anything under it renders without the docs chrome. */
 function currentApp(): (() => TemplateResult) | null {
@@ -291,15 +292,31 @@ function currentApp(): (() => TemplateResult) | null {
   const template = screen && TEMPLATES.find((candidate) => candidate.slug === screen[1]);
   if (template) return () => templateScreen(template);
 
-  const match = /^#\/app\/(.+)$/.exec(location.hash);
-  const path = match?.[1];
-  if (!path || !APPS[path]) return null;
-  const loaded = loadedApps.get(path);
-  if (loaded) return loaded;
-  void APPS[path]().then((screen) => {
-    loadedApps.set(path, screen);
-    update();
-  });
+  const path = /^#\/app\/(.+)$/.exec(location.hash)?.[1];
+  const app = path ? apps(path) : null;
+  if (!path || !app) return null;
+  if (app.state === 'ready') return app.value;
+  if (app.state === 'failed')
+    return () =>
+      html`<div class="app-loading">
+        <kt-empty-state
+          icon="triangle-alert"
+          heading="This app did not load"
+          description="The connection may have dropped. Try again, or go back to the documentation."
+        >
+          <kt-button slot="actions" variant="primary" @click=${() => apps.retry(path)}
+            >Try again</kt-button
+          >
+          <kt-button
+            slot="actions"
+            variant="secondary"
+            @click=${() => {
+              location.hash = '#/';
+            }}
+            >Back to the docs</kt-button
+          >
+        </kt-empty-state>
+      </div>`;
   // A blank page for the moment the app takes to arrive.
   return () => html`<div class="app-loading" aria-busy="true"></div>`;
 }
@@ -745,7 +762,8 @@ window.addEventListener('hashchange', () => {
 // `/` jumps to the filter, the way every docs site people already use does.
 window.addEventListener('keydown', (event) => {
   if (event.key !== '/' || event.metaKey || event.ctrlKey) return;
-  const target = event.target as HTMLElement | null;
+  // The node typed in, even inside a shadow root: the palette's own field.
+  const target = event.composedPath()[0] as HTMLElement | null;
   if (target && /^(input|textarea|kt-input|kt-textarea|kt-input-menu)$/i.test(target.tagName))
     return;
 

@@ -34,4 +34,22 @@ describe('kt-slider, for real', () => {
     await settle(el);
     expect(el.value).toBe('20/79');
   });
+
+  it('puts the low thumb under the pointer when both meet at the top, so it can be pulled back', async () => {
+    const el = await fixture<KtSlider>(
+      '<kt-slider range label="Price" value="100/100" style="display:block;width:400px"></kt-slider>',
+    );
+    const box = el.shadowRoot!.querySelector('.control')!.getBoundingClientRect();
+    const hit = el.shadowRoot!.elementFromPoint(box.right - 6, box.top + box.height / 2);
+    expect(hit).toBe(thumbs(el)[0]);
+  });
+
+  it('keeps the high thumb under the pointer when both meet at the bottom', async () => {
+    const el = await fixture<KtSlider>(
+      '<kt-slider range label="Price" value="0/0" style="display:block;width:400px"></kt-slider>',
+    );
+    const box = el.shadowRoot!.querySelector('.control')!.getBoundingClientRect();
+    const hit = el.shadowRoot!.elementFromPoint(box.left + 6, box.top + box.height / 2);
+    expect(hit).toBe(thumbs(el)[1]);
+  });
 });
