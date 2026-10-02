@@ -18,7 +18,7 @@ export const RELEASES: readonly ReleaseEntry[] = [
     version: '1.0.0',
     date: '9 September 2026',
     summary:
-      'The first release as a framework-agnostic design system: forty-three elements on one token layer, with typed entry points for React and Vue.',
+      'The first release as a framework-agnostic design system: forty-two elements on one token layer, with typed entry points for React and Vue.',
     current: true,
   },
 ];
@@ -52,7 +52,7 @@ export function releasePage(changelog: string): DocPage {
                   <span class="release-version">v${release.version}</span>
                   ${
                     release.current
-                      ? html`<kt-badge variant="success">Current</kt-badge>`
+                      ? html`<kt-badge tone="success">Current</kt-badge>`
                       : html`<kt-badge>Archived</kt-badge>`
                   }
                 </div>

@@ -115,7 +115,7 @@ export function consoleIntegrations(): TemplateResult {
               <span class=${`tile-icon ${entry.tone}`}>
                 <kt-icon name=${entry.icon} size="18"></kt-icon>
               </span>
-              <kt-badge variant=${connected ? 'success' : 'neutral'}
+              <kt-badge tone=${connected ? 'success' : 'neutral'}
                 >${connected ? 'Connected' : 'Off'}</kt-badge
               >
             </div>

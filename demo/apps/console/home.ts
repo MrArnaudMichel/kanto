@@ -250,8 +250,8 @@ export function consoleHome(): TemplateResult {
           .renderCell=${(row: Record<string, unknown>, column: { key: string }) => {
             if (column.key === 'amount') return currencyPrecise.format(Number(row['amount']));
             if (column.key === 'status') {
-              return html`<kt-chip variant="category" color=${STATUS_TONE[row['status'] as Status]}
-                >${row['status']}</kt-chip
+              return html`<kt-badge variant="category" color=${STATUS_TONE[row['status'] as Status]}
+                >${row['status']}</kt-badge
               >`;
             }
             if (column.key === 'ref') return html`<code>#${row['ref']}</code>`;
@@ -302,7 +302,7 @@ export function consoleHome(): TemplateResult {
                     >${integration.note}</span
                   >
                 </span>
-                <kt-badge variant=${integration.connected ? 'success' : 'neutral'}
+                <kt-badge tone=${integration.connected ? 'success' : 'neutral'}
                   >${integration.connected ? 'Connected' : 'Off'}</kt-badge
                 >
               </li>

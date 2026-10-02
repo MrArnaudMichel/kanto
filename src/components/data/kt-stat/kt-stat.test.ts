@@ -15,16 +15,16 @@ describe('kt-stat', () => {
   it('colours the delta by meaning, not by sign', async () => {
     // Revenue falling is bad news even though the number went down.
     const falling = await fixture<KtStat>('<kt-stat delta="-3%" trend="down"></kt-stat>');
-    expect(badge(falling)!.getAttribute('variant')).toBe('danger');
+    expect(badge(falling)!.getAttribute('tone')).toBe('danger');
 
     // Churn falling is good news, and the sign is identical.
     const churn = await fixture<KtStat>('<kt-stat delta="-3%" trend="down" inverted></kt-stat>');
-    expect(badge(churn)!.getAttribute('variant')).toBe('success');
+    expect(badge(churn)!.getAttribute('tone')).toBe('success');
   });
 
   it('stays neutral when the trend is flat or unstated', async () => {
     const el = await fixture<KtStat>('<kt-stat delta="+0%"></kt-stat>');
-    expect(badge(el)!.getAttribute('variant')).toBe('neutral');
+    expect(badge(el)!.getAttribute('tone')).toBe('neutral');
   });
 
   it('shows no badge without a delta', async () => {

@@ -11,7 +11,11 @@
 export { KtAvatar } from './components/core/kt-avatar/kt-avatar.js';
 export type { KtAvatarSize, KtAvatarStatus } from './components/core/kt-avatar/kt-avatar.js';
 export { KtBadge } from './components/core/kt-badge/kt-badge.js';
-export type { KtBadgeVariant } from './components/core/kt-badge/kt-badge.js';
+export type {
+  KtBadgeSize,
+  KtBadgeTone,
+  KtBadgeVariant,
+} from './components/core/kt-badge/kt-badge.js';
 export { KtButton } from './components/core/kt-button/kt-button.js';
 export type {
   KtButtonSize,
@@ -20,9 +24,7 @@ export type {
 } from './components/core/kt-button/kt-button.js';
 export { KtCard } from './components/core/kt-card/kt-card.js';
 export type { KtCardImagePosition } from './components/core/kt-card/kt-card.js';
-export { KtChip } from './components/core/kt-chip/kt-chip.js';
 export { KtCode } from './components/core/kt-code/kt-code.js';
-export type { KtChipVariant } from './components/core/kt-chip/kt-chip.js';
 export { KtIcon } from './components/core/kt-icon/kt-icon.js';
 export { KtKbd } from './components/core/kt-kbd/kt-kbd.js';
 

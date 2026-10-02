@@ -359,7 +359,7 @@ function toolCall(call: ToolCall): TemplateResult {
   return html`<kt-collapsible class="tool-call">
     <span slot="summary" class="tool-head">
       <kt-icon name="terminal" size="14"></kt-icon>
-      <kt-chip variant="code" label=${call.name}></kt-chip>
+      <kt-badge variant="code" label=${call.name}></kt-badge>
       <span class="muted">${call.rows ? `${call.rows} rows` : 'done'}</span>
     </span>
     <div class="tool-body">

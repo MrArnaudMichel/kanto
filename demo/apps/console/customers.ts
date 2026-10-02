@@ -175,8 +175,8 @@ export function consoleCustomers(): TemplateResult {
             if (column.key === 'amount') return currency.format(Number(row['amount']));
             if (column.key === 'ref') return html`<code>${row['ref']}</code>`;
             if (column.key === 'status') {
-              return html`<kt-chip variant="category" color=${STATUS_TONE[row['status'] as Status]}
-                >${row['status']}</kt-chip
+              return html`<kt-badge variant="category" color=${STATUS_TONE[row['status'] as Status]}
+                >${row['status']}</kt-badge
               >`;
             }
             return undefined;

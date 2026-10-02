@@ -374,7 +374,7 @@ function security(): TemplateResult {
               <div class="stack" style="gap:2px">
                 <span
                   >${device}
-                  ${current ? html`<kt-badge variant="success">This device</kt-badge>` : ''}</span
+                  ${current ? html`<kt-badge tone="success" size="small">This device</kt-badge>` : ''}</span
                 >
                 <span class="muted" style="font:var(--font-normal-small)">${meta}</span>
               </div>

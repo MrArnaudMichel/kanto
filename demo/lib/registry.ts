@@ -45,15 +45,6 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-avatar name="Kanto Studio" square size="large"></kt-avatar>
     </div>`,
 
-  'kt-badge': () =>
-    html`<div class="demo-row">
-      <kt-badge pill>4</kt-badge>
-      <kt-badge variant="success">+12%</kt-badge>
-      <kt-badge variant="danger">-2%</kt-badge>
-      <kt-badge variant="info">Beta</kt-badge>
-      <kt-badge pill max="99">128</kt-badge>
-    </div>`,
-
   'kt-kbd': () =>
     html`<div class="demo-row">
       <kt-kbd keys="mod k"></kt-kbd>
@@ -206,13 +197,33 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       </kt-card>
     </div>`,
 
-  'kt-chip': () =>
-    html`<div class="demo-row">
-      <kt-chip>Active</kt-chip>
-      <kt-chip clickable>Filter: region</kt-chip>
-      <kt-chip variant="code">--color-primary-base</kt-chip>
-      <kt-chip variant="category" color="var(--color-success-base)">Delivered</kt-chip>
-      <kt-chip error>Failed</kt-chip>
+  'kt-badge': () =>
+    html`<div class="demo-stack" style="max-width:100%">
+      <div class="demo-row">
+        <kt-badge>Design systems</kt-badge>
+        <kt-badge tone="primary">In review</kt-badge>
+        <kt-badge tone="success">Active</kt-badge>
+        <kt-badge tone="warning">Degraded</kt-badge>
+        <kt-badge tone="danger">Failed</kt-badge>
+        <kt-badge tone="info">Beta</kt-badge>
+      </div>
+      <div class="demo-row">
+        <kt-badge variant="code">--color-primary-base</kt-badge>
+        <kt-badge variant="category" color="var(--color-success-base)">Delivered</kt-badge>
+        <kt-badge variant="category" color="#3987e5">Infrastructure</kt-badge>
+        <kt-badge icon="user" size="small">Assigned to me</kt-badge>
+      </div>
+      <div class="demo-row">
+        <kt-badge variant="count">4</kt-badge>
+        <kt-badge variant="count" max="99">128</kt-badge>
+        <kt-badge variant="count" tone="success">+12%</kt-badge>
+        <kt-badge variant="count" tone="danger">-2%</kt-badge>
+      </div>
+      <div class="demo-row">
+        <kt-badge clickable>Filter: region</kt-badge>
+        <kt-badge removable>North East</kt-badge>
+        <kt-badge removable tone="primary">Pro plan</kt-badge>
+      </div>
     </div>`,
 
   'kt-code': () =>

@@ -13,7 +13,7 @@ import { KtToggleButton } from '../kt-toggle-button/kt-toggle-button.js';
  * happen to be drawn together.
  *
  * The buttons are slotted rather than described by an options array, so a
- * button can hold whatever its label needs — an icon, a count, a chip.
+ * button can hold whatever its label needs — an icon, a count, a badge.
  *
  * @element kt-toggle-button-group
  *

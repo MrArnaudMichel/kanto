@@ -3,7 +3,7 @@ import type { CSSResultGroup } from 'lit';
 
 import { KtButton } from '../components/core/kt-button/kt-button.js';
 import { KtCard } from '../components/core/kt-card/kt-card.js';
-import { KtChip } from '../components/core/kt-chip/kt-chip.js';
+import { KtBadge } from '../components/core/kt-badge/kt-badge.js';
 import { KtCode } from '../components/core/kt-code/kt-code.js';
 import { KtInput } from '../components/forms/kt-input/kt-input.js';
 import { KtInputMenu } from '../components/forms/kt-input-menu/kt-input-menu.js';
@@ -20,7 +20,7 @@ import { KtDropdown } from '../components/overlays/kt-dropdown/kt-dropdown.js';
 const ELEMENTS: readonly [string, { styles: CSSResultGroup }][] = [
   ['kt-button', KtButton],
   ['kt-card', KtCard],
-  ['kt-chip', KtChip],
+  ['kt-badge', KtBadge],
   ['kt-code', KtCode],
   ['kt-input', KtInput],
   ['kt-input-menu', KtInputMenu],
@@ -92,7 +92,7 @@ describe('component stylesheets', () => {
    * The ramp inverts between themes: `--color-dark-8` is the darkest surface
    * under `:root` and pure white under `data-theme="light"`, while
    * `--color-white` is near-white in both. Pairing them gives white on white
-   * the moment someone switches theme — which is exactly how the code chip and
+   * the moment someone switches theme — which is exactly how the code badge and
    * the tooltip disappeared.
    *
    * A recessed or inverted surface is a *role*, so it gets its own token:
