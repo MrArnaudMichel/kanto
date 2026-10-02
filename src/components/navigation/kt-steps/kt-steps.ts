@@ -23,7 +23,7 @@ type StepState = 'complete' | 'current' | 'upcoming' | 'error';
  * is in it.
  *
  * Steps before `current` are complete, `current` is current, the rest are to
- * come; a step with `error` shows as needing attention wherever it is. With
+ * come — all of them, while `current` names no step; a step with `error` shows as needing attention wherever it is. With
  * `navigable`, a completed step is a button that goes back to it; going
  * forward is the flow's job, not the stepper's.
  *

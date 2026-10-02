@@ -124,4 +124,17 @@ describe('kt-slider in a form', () => {
     await settle(el);
     expect(el.value).toBe('30');
   });
+
+  it('waits for every property before it bounds the value', async () => {
+    const el = document.createElement('kt-slider');
+    el.value = '150';
+    document.body.append(el);
+    el.max = 200;
+    await el.updateComplete;
+    expect(el.value).toBe('150');
+    el.value = '20';
+    el.formResetCallback();
+    expect(el.value).toBe('150');
+    el.remove();
+  });
 });

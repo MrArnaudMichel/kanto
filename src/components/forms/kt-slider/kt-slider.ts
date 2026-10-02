@@ -187,7 +187,11 @@ export class KtSlider extends KtElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.internals ??= attachFormInternals(this);
-    this.value = this.normalised(this.value);
+  }
+
+  // Bounded on the first update, not on connect: a script may set `max`
+  // after appending the element, and the value must wait for it.
+  override firstUpdated(): void {
     this.defaultValue = this.value;
   }
 
