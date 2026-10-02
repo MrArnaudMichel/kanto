@@ -113,6 +113,44 @@ body {
   }
 }
 
+/* The docs search: a field-shaped button that opens Cmd+K. */
+.site-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--button-height-small);
+  min-width: 200px;
+  padding: 0 6px 0 10px;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  background: var(--surface-field);
+  border: var(--border-width) solid var(--border-field);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: border-color var(--duration-instant);
+}
+.site-search:hover {
+  border-color: var(--text-muted);
+}
+.site-search:focus-visible {
+  outline: var(--outline-width) solid var(--color-primary-base);
+  outline-offset: 2px;
+}
+.site-search-text {
+  flex: 1;
+  text-align: start;
+}
+@media (max-width: 899px) {
+  .site-search {
+    min-width: 0;
+    padding: 0 8px;
+  }
+  .site-search-text,
+  .site-search kt-kbd {
+    display: none;
+  }
+}
+
 /* The Customise menu: theme, accent, font, corners, density, text size. */
 .customise-menu::part(panel) {
   /* The dropdown's 224px is a menu's width; this panel holds a form. */

@@ -8,7 +8,8 @@ import './apps.css';
 import './home.css';
 
 import { COMPONENTS } from './lib/registry.js';
-import { REPO_URL, VERSION_TAG } from './lib/project.js';
+import { INSTALL_COMMAND, REPO_URL, VERSION_TAG } from './lib/project.js';
+import { commandTarget, siteCommands } from './lib/site-search.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
 import { newComponents, parseChangelog } from './lib/releases.js';
 import { setRenderer } from './lib/render.js';
@@ -286,6 +287,40 @@ let appearance: DocsAppearance = readDocsAppearance();
 /** Whether the first-visit invitation beside Customise is showing. */
 let inviting = false;
 
+/** Every page and site action, for Cmd+K: built once, the routes are fixed. */
+const SEARCH_COMMANDS = siteCommands(ROUTES.filter((route) => route.section !== 'home'));
+
+function openSearch(): void {
+  const palette = document.querySelector('kt-command-palette');
+  if (palette) palette.open = true;
+}
+
+/** Runs what the docs search picked. */
+function runSearch(id: string): void {
+  const target = commandTarget(id);
+  if (!target) return;
+  switch (target.kind) {
+    case 'page':
+      location.hash = target.hash;
+      break;
+    case 'theme':
+    case 'accent': {
+      const patch = target.kind === 'theme' ? { theme: target.theme } : { accent: target.accent };
+      appearance = { ...appearance, ...patch };
+      applyDocsAppearance(appearance);
+      update();
+      break;
+    }
+    case 'copy-install':
+      void navigator.clipboard?.writeText(INSTALL_COMMAND);
+      toaster.success('Install command copied');
+      break;
+    case 'github':
+      window.open(REPO_URL, '_blank', 'noopener');
+      break;
+  }
+}
+
 /** "Use on this site": the playground's appearance becomes the site's, as Customise would set it. */
 function useAppearance(next: DocsAppearance): void {
   appearance = next;
@@ -503,6 +538,17 @@ function shell(): TemplateResult {
       </nav>
 
       <div slot="actions" class="header-actions">
+        <button
+          type="button"
+          class="site-search"
+          aria-label="Search the docs"
+          aria-keyshortcuts="Control+K Meta+K"
+          @click=${openSearch}
+        >
+          <kt-icon name="search" size="16"></kt-icon>
+          <span class="site-search-text">Search</span>
+          <kt-kbd keys="mod k"></kt-kbd>
+        </button>
         ${customiseMenu(
           appearance,
           (next) => {
@@ -539,6 +585,12 @@ function shell(): TemplateResult {
         ${SECTIONS.map((section) => html`<a href=${`#/${section.id}`}>${section.label}</a>`)}
       </nav>
     </kt-header>
+
+    <kt-command-palette
+      placeholder="Search the docs, or run a command…"
+      .commands=${SEARCH_COMMANDS}
+      @kt-select=${(event: CustomEvent<{ id: string }>) => runSearch(event.detail.id)}
+    ></kt-command-palette>
 
     ${
       route.section === 'home'

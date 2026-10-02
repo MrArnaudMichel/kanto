@@ -108,6 +108,8 @@ import {
   Image,
   Table,
   Landmark,
+  Moon,
+  Sun,
 } from 'lucide';
 import { registerIcons } from 'kanto-ds';
 
@@ -221,5 +223,7 @@ export function registerDocsIcons(): void {
     Image,
     Table,
     Landmark,
+    Moon,
+    Sun,
   });
 }
