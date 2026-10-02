@@ -109,6 +109,11 @@ export interface KtStrings {
   /** A required time left empty, and one outside min and max. */
   timeRequired: string;
   timeOutOfRange: string;
+  commandPalette: string;
+  commandPlaceholder: string;
+  commandHintMove: string;
+  commandHintRun: string;
+  commandHintClose: string;
   /** A phone number typed with the prefix only dialled from inside the country. */
   phoneTrunkPrefix: (prefix: string) => string;
 
@@ -220,6 +225,11 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   placeholderTime: '--',
   timeRequired: 'Enter a time.',
   timeOutOfRange: 'This time is outside the times you can choose.',
+  commandPalette: 'Command palette',
+  commandPlaceholder: 'Type a command or search…',
+  commandHintMove: 'to move',
+  commandHintRun: 'to run',
+  commandHintClose: 'to close',
   phoneTrunkPrefix: (prefix: string) => `Enter the number without the leading ${prefix}.`,
 
   openMenu: 'Open menu',

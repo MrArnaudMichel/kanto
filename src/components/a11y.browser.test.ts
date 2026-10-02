@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtCommandPalette,
   KtBreadcrumb,
   KtChart,
   KtDropdown,
@@ -269,6 +270,16 @@ const CASES: Record<string, Case> = {
       (el as KtDropdown).options = OPTIONS;
     },
   },
+  'kt-command-palette (open)': {
+    markup: '<kt-command-palette open></kt-command-palette>',
+    setup: (el) => {
+      (el as KtCommandPalette).commands = [
+        { id: 'new', label: 'New invoice', group: 'Create', shortcut: 'mod i' },
+        { id: 'settings', label: 'Open settings', group: 'Navigate', icon: 'settings' },
+        { id: 'export', label: 'Export as CSV', group: 'Navigate', disabled: true },
+      ];
+    },
+  },
   'kt-modal': { markup: '<kt-modal open heading="Edit entity"><p>Body</p></kt-modal>' },
   'kt-confirm-dialog': {
     markup: '<kt-confirm-dialog open message="Delete it?"></kt-confirm-dialog>',
@@ -339,8 +350,25 @@ const PAGE_RULES = ['region', 'landmark-one-main', 'page-has-heading-one'];
 
 async function audit(element: HTMLElement): Promise<string[]> {
   await settle(element);
-  // Let entrance transitions finish: contrast measured mid-fade is wrong.
-  const animations = document.getAnimations();
+  // Let entrance transitions finish: contrast measured mid-fade is wrong. A
+  // transition from @starting-style only exists once a frame has styled the
+  // element, so wait for two frames before collecting them.
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  // document.getAnimations() leaves out shadow trees, where a component's own
+  // transitions run: ask each shadow root as well.
+  const roots: DocumentOrShadowRoot[] = [document];
+  const walk = (root: Document | ShadowRoot) =>
+    root.querySelectorAll('*').forEach((node) => {
+      if (node.shadowRoot) {
+        roots.push(node.shadowRoot);
+        walk(node.shadowRoot);
+      }
+    });
+  walk(document);
+  // A loop — a skeleton's shimmer — never finishes; only entrances are awaited.
+  const animations = roots
+    .flatMap((root) => root.getAnimations())
+    .filter((animation) => animation.effect?.getTiming().iterations !== Infinity);
   await Promise.all(animations.map((animation) => animation.finished.catch(() => undefined)));
 
   const results = await axe.run(element.parentElement!, {

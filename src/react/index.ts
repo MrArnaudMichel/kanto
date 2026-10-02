@@ -20,6 +20,7 @@
 import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';
 import type { KtOption } from '../internal/listbox.js';
+import type { KtCommand } from '../internal/command-search.js';
 
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
 import { KtBadge as KtBadgeElement } from '../components/core/kt-badge/kt-badge.js';
@@ -65,6 +66,7 @@ import { KtTooltip as KtTooltipElement } from '../components/feedback/kt-tooltip
 import { KtCollapsible as KtCollapsibleElement } from '../components/overlays/kt-collapsible/kt-collapsible.js';
 import { KtConfirmDialog as KtConfirmDialogElement } from '../components/overlays/kt-confirm-dialog/kt-confirm-dialog.js';
 import { KtDropdown as KtDropdownElement } from '../components/overlays/kt-dropdown/kt-dropdown.js';
+import { KtCommandPalette as KtCommandPaletteElement } from '../components/overlays/kt-command-palette/kt-command-palette.js';
 import { KtModal as KtModalElement } from '../components/overlays/kt-modal/kt-modal.js';
 import { KtSidePanel as KtSidePanelElement } from '../components/overlays/kt-side-panel/kt-side-panel.js';
 import { KtChart as KtChartElement } from '../components/data/kt-chart/kt-chart.js';
@@ -382,6 +384,17 @@ export const KtDropdown = createComponent({
   react: React,
   events: {
     onKtSelect: 'kt-select' as Kt<{ value: string | number }>,
+    onKtOpen: 'kt-open' as Kt<never>,
+    onKtClose: 'kt-close' as Kt<never>,
+  },
+});
+
+export const KtCommandPalette = createComponent({
+  tagName: 'kt-command-palette',
+  elementClass: KtCommandPaletteElement,
+  react: React,
+  events: {
+    onKtSelect: 'kt-select' as Kt<{ id: string; command: KtCommand }>,
     onKtOpen: 'kt-open' as Kt<never>,
     onKtClose: 'kt-close' as Kt<never>,
   },

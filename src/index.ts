@@ -117,6 +117,8 @@ export type {
   KtDropdownPlacement,
 } from './components/overlays/kt-dropdown/kt-dropdown.js';
 export { KtModal } from './components/overlays/kt-modal/kt-modal.js';
+export { KtCommandPalette } from './components/overlays/kt-command-palette/kt-command-palette.js';
+export type { KtCommand } from './components/overlays/kt-command-palette/kt-command-palette.js';
 export type { KtModalSize } from './components/overlays/kt-modal/kt-modal.js';
 export { KtSidePanel } from './components/overlays/kt-side-panel/kt-side-panel.js';
 

@@ -5,6 +5,25 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.8.0] — 2026-10-02
+
+### Added
+
+**`kt-command-palette`** — the palette a product opens on Cmd+K.
+
+- Give it `commands` — a label, and optionally a group, an icon, keywords, a
+  shortcut to show, a disabled state — and it lists them under their groups,
+  narrows them as you type and runs the one you pick with `kt-select`.
+- The search takes every word typed, in any order, in the label, a keyword or
+  the group, ignoring case and accents, and ranks a label that starts with it
+  first. Ties keep the order you gave.
+- Cmd+K or Ctrl+K opens and closes it from anywhere; `hotkey` changes the
+  letter or turns it off.
+- Built on the native `<dialog>`; the field is a combobox over a listbox, the
+  focus goes in on opening and back where it was on closing.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ## [1.7.0] — 2026-10-02
 
 ### Added

@@ -77,6 +77,7 @@ import type { KtCollapsible } from 'kanto-ds';
 import type { KtConfirmDialog } from 'kanto-ds';
 import type { KtDropdown } from 'kanto-ds';
 import type { KtModal } from 'kanto-ds';
+import type { KtCommandPalette } from 'kanto-ds';
 import type { KtSidePanel } from 'kanto-ds';
 import type { KtChart } from 'kanto-ds';
 import type { KtMeter } from 'kanto-ds';
@@ -150,6 +151,7 @@ declare module 'vue' {
     'kt-confirm-dialog': KtProps<KtConfirmDialog>;
     'kt-dropdown': KtProps<KtDropdown>;
     'kt-modal': KtProps<KtModal>;
+    'kt-command-palette': KtProps<KtCommandPalette>;
     'kt-side-panel': KtProps<KtSidePanel>;
     'kt-chart': KtProps<KtChart>;
     'kt-meter': KtProps<KtMeter>;

@@ -63,6 +63,8 @@ import type {
   KtCollapsible,
   KtDropdown,
   KtModal,
+  KtCommandPalette,
+  KtCommand,
   KtSidePanel,
   KtConfirmDialog,
   KtChart,
@@ -178,6 +180,10 @@ declare module 'react' {
         { 'kt-select': { value: string | number }; 'kt-open': never; 'kt-close': never }
       >;
       'kt-modal': KtProps<KtModal, { 'kt-close': never }>;
+      'kt-command-palette': KtProps<
+        KtCommandPalette,
+        { 'kt-select': { id: string; command: KtCommand }; 'kt-open': never; 'kt-close': never }
+      >;
       'kt-side-panel': KtProps<KtSidePanel, { 'kt-close': never }>;
       'kt-confirm-dialog': KtProps<KtConfirmDialog, { 'kt-confirm': never; 'kt-cancel': never }>;
       'kt-chart': KtProps<

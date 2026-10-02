@@ -431,6 +431,52 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     </div>`;
   },
 
+  'kt-command-palette': () =>
+    html`<div class="demo-row">
+      <kt-button
+        variant="secondary"
+        icon="search"
+        @click=${(e: Event) => {
+          const palette = (e.target as HTMLElement)
+            .closest('.demo-row')!
+            .querySelector('kt-command-palette')!;
+          palette.open = true;
+        }}
+        >Open the palette</kt-button
+      >
+      <span class="muted">or press <kt-kbd keys="mod j"></kt-kbd></span>
+      <kt-command-palette
+        hotkey="j"
+        .commands=${[
+          {
+            id: 'new-invoice',
+            label: 'New invoice',
+            group: 'Create',
+            icon: 'plus',
+            shortcut: 'mod i',
+          },
+          {
+            id: 'new-customer',
+            label: 'New customer',
+            group: 'Create',
+            icon: 'user-plus',
+            keywords: ['client'],
+          },
+          { id: 'invoices', label: 'Go to invoices', group: 'Navigate', icon: 'file-text' },
+          { id: 'settings', label: 'Open settings', group: 'Navigate', icon: 'settings' },
+          {
+            id: 'export',
+            label: 'Export as CSV',
+            group: 'Actions',
+            icon: 'download',
+            disabled: true,
+          },
+        ]}
+        @kt-select=${(e: CustomEvent<{ command: { label: string } }>) =>
+          void import('kanto-ds').then((m) => m.toaster.success(e.detail.command.label))}
+      ></kt-command-palette>
+    </div>`,
+
   'kt-modal': () =>
     html`<div class="demo-row">
       <kt-button

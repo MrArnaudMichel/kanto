@@ -1,6 +1,6 @@
 # Kanto
 
-> Forty-nine accessible web components for dashboards, admin tools and forms,
+> Fifty accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -90,6 +90,7 @@ In a project, every page below is also at
 ### Overlays
 
 - [kt-collapsible](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-collapsible/kt-collapsible.md): A section that folds away.
+- [kt-command-palette](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-command-palette/kt-command-palette.md): The palette a product opens on Cmd+K: every action and page, a few keystrokes away.
 - [kt-confirm-dialog](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-confirm-dialog/kt-confirm-dialog.md): A centred yes/no overlay for an action worth stopping to think about.
 - [kt-dropdown](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-dropdown/kt-dropdown.md): A panel anchored to a trigger.
 - [kt-modal](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-modal/kt-modal.md): A centred dialog for anything that is not a yes/no question.
