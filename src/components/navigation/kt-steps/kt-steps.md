@@ -65,11 +65,12 @@ interface KtStep {
 | ----------- | ---------------- |
 | `kt-change` | `{ id: string }` |
 
-| Part     | Description                    |
-| -------- | ------------------------------ |
-| `list`   | The `<ol>`                     |
-| `step`   | A step                         |
-| `marker` | A step's number, tick or alert |
+| Part        | Description                      |
+| ----------- | -------------------------------- |
+| `list`      | The `<ol>`                       |
+| `step`      | A step                           |
+| `marker`    | A step's number, tick or alert   |
+| `connector` | The line from a step to the next |
 
 ## Accessibility
 
