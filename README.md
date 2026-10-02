@@ -1,10 +1,22 @@
 # Kanto
 
-**A design system for data-dense product interfaces** — dashboards, admin
-tools, forms.
+**Forty-nine web components for dashboards, admin tools and forms — in your
+colours, in any framework.**
 
-The components are standard custom elements, so they run in React, Vue,
-Angular, Svelte or plain HTML without a per-framework rewrite.
+[![npm](https://img.shields.io/npm/v/kanto-ds?color=5f5dea&label=npm)](https://www.npmjs.com/package/kanto-ds)
+[![CI](https://github.com/MrArnaudMichel/kanto/actions/workflows/ci.yml/badge.svg)](https://github.com/MrArnaudMichel/kanto/actions/workflows/ci.yml)
+[![Accessibility: axe, both themes](https://img.shields.io/badge/accessibility-axe%20tested%2C%20both%20themes-5f5dea)](#accessibility)
+[![License: MIT](https://img.shields.io/badge/license-MIT-5f5dea)](LICENSE)
+
+**[Open the live docs and playground](https://kanto.arnaudmichel.fr).** Pick a
+colour, a font and a density, watch a real screen change, and copy the one
+line that does it in your project — or open it on StackBlitz.
+
+They are standard custom elements, so the same `<kt-button>` runs in React,
+Vue, Angular, Svelte and plain HTML. Two complete themes, keyboard and screen
+reader support checked by axe in both, and no framework to adopt.
+
+## Start
 
 ```bash
 npm install kanto-ds
@@ -28,6 +40,27 @@ No bundler? One stylesheet and one script tag:
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/kanto-ds@1/dist/styles.css" />
 <script type="module" src="https://cdn.jsdelivr.net/npm/kanto-ds@1"></script>
+```
+
+Per-framework setup — React 18 and 19, Vue, Angular, Svelte — is in
+**[docs/frameworks.md](docs/frameworks.md)**.
+
+## Make it yours
+
+Colour, font, corners, density and text size are each one attribute, on the
+page or on any container:
+
+```html
+<html data-accent="teal" data-font="inter" data-density="compact"></html>
+```
+
+Or any colour at all — Kanto solves the shades for it and keeps every text at
+4.5:1 in both themes:
+
+```js
+import { setAppearance } from 'kanto-ds';
+
+setAppearance({ accent: '#e11d48', radius: 'round', textSize: 'large' });
 ```
 
 ---

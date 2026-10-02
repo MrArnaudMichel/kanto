@@ -553,7 +553,17 @@ function shell(): TemplateResult {
 
 /* ------------------------------------------------------------- bookkeeping */
 
+/** The tab title: the page, then the system; the home page says what Kanto is. */
+function pageTitle(): string {
+  if (currentApp()) return document.title;
+  const route = currentRoute();
+  return route.section === 'home'
+    ? 'Kanto — web components in your colours, in any framework'
+    : `${route.label} — Kanto`;
+}
+
 function update(): void {
+  document.title = pageTitle();
   render(shell(), document.querySelector<HTMLElement>('#app')!);
   // The rail's entries only exist once rendered, and a page that does not
   // scroll would otherwise never place its fill.

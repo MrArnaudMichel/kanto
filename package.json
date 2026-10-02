@@ -1,14 +1,29 @@
 {
   "name": "kanto-ds",
   "version": "1.6.1",
-  "description": "Framework-agnostic design system for data-dense product interfaces.",
+  "description": "Forty-nine accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
     "web-components",
     "custom-elements",
     "lit",
     "ui",
-    "dark-theme"
+    "ui-kit",
+    "components",
+    "dashboard",
+    "admin",
+    "forms",
+    "data-table",
+    "date-picker",
+    "react",
+    "vue",
+    "angular",
+    "svelte",
+    "accessible",
+    "a11y",
+    "theming",
+    "dark-theme",
+    "dark-mode"
   ],
   "homepage": "https://kanto.arnaudmichel.fr",
   "bugs": {

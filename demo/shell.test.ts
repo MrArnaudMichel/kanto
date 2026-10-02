@@ -114,4 +114,17 @@ describe('the documentation shell', () => {
     const checked = app.querySelector('.playground [data-accent-id][aria-checked="true"]');
     expect(checked!.getAttribute('data-accent-id')).toBe('violet');
   });
+
+  it('names each page in the tab title, and the home page by what Kanto is', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/components/kt-date-picker';
+    await tick();
+    expect(document.title).toMatch(/date-picker.* — Kanto$/);
+    location.hash = '#/guide/installation';
+    await tick();
+    expect(document.title).toBe('Installation — Kanto');
+    location.hash = '#/';
+    await tick();
+    expect(document.title).toBe('Kanto — web components in your colours, in any framework');
+  });
 });

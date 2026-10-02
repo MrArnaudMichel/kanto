@@ -1,0 +1,150 @@
+<!doctype html>
+<!--
+  The share image, demo/public/og.png (1200×630). Rendered from Kanto itself:
+  copy this file into demo/, run the docs dev server, and screenshot
+  /og.html at 1200×630.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script type="module">
+      import 'kanto-ds';
+      import 'kanto-ds/styles.css';
+    </script>
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: var(--surface-page);
+        color: var(--text-body);
+        font-family: var(--font-family-body);
+      }
+      .og {
+        display: grid;
+        grid-template-columns: 560px 1fr;
+        gap: 48px;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 64px 64px 56px;
+      }
+      .left {
+        display: flex;
+        flex-direction: column;
+      }
+      .mark {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font: 600 22px var(--font-family-display);
+        letter-spacing: 0.02em;
+      }
+      .mark svg {
+        width: 36px;
+        height: 36px;
+      }
+      .mark span {
+        color: var(--color-primary-text);
+      }
+      .og h1 {
+        color: var(--text-body);
+        margin: 56px 0 0;
+        font: 600 62px/1.04 var(--font-family-display);
+        letter-spacing: -0.025em;
+      }
+      .og p {
+        margin: 24px 0 0;
+        max-width: 34ch;
+        color: var(--text-muted);
+        font: 400 22px/1.5 var(--font-family-body);
+      }
+      .foot {
+        margin-top: auto;
+        color: var(--text-muted);
+        font: 500 20px var(--font-family-body);
+      }
+      .foot code {
+        color: var(--text-body);
+        font: 400 19px var(--font-family-code);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        align-content: center;
+      }
+      .tile {
+        color: var(--text-body);
+        display: grid;
+        gap: 14px;
+        padding: 22px;
+        background: var(--surface-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .name {
+        font: 600 15px var(--font-family-display);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="og">
+      <div class="left">
+        <div class="mark">
+          <svg viewBox="0 0 64 64">
+            <rect width="64" height="64" rx="14" fill="#5f5dea" />
+            <path
+              d="M21 16h8v13.2L40.6 16H50L37.4 30.2 51 48h-9.6L31.9 35.4 29 38.6V48h-8z"
+              fill="#fff"
+            /></svg
+          >KANTO <span>DS</span>
+        </div>
+        <h1>Components that take your brand in a minute.</h1>
+        <p>
+          Forty-nine accessible web components for dashboards, admin tools and forms. Any framework.
+        </p>
+        <div class="foot">kanto.arnaudmichel.fr &nbsp;&nbsp; <code>npm install kanto-ds</code></div>
+      </div>
+      <div class="grid">
+        <div class="tile" data-accent="violet">
+          <div class="row">
+            <span class="name">Violet</span><kt-badge tone="primary">Default</kt-badge>
+          </div>
+          <kt-toggle checked>Weekly digest</kt-toggle
+          ><kt-button variant="primary">Save changes</kt-button>
+        </div>
+        <div class="tile" data-accent="teal" data-radius="round">
+          <div class="row">
+            <span class="name">Teal, round</span><kt-badge tone="primary">Pro</kt-badge>
+          </div>
+          <kt-toggle checked>Weekly digest</kt-toggle
+          ><kt-button variant="primary">Save changes</kt-button>
+        </div>
+        <div class="tile" data-accent="orange" data-radius="sharp">
+          <div class="row">
+            <span class="name">Orange, sharp</span><kt-badge tone="primary">New</kt-badge>
+          </div>
+          <kt-toggle checked>Weekly digest</kt-toggle
+          ><kt-button variant="primary">Save changes</kt-button>
+        </div>
+        <div class="tile" data-theme="light" data-accent="pink">
+          <div class="row">
+            <span class="name">Pink, light</span><kt-badge tone="primary">Beta</kt-badge>
+          </div>
+          <kt-toggle checked>Weekly digest</kt-toggle
+          ><kt-button variant="primary">Save changes</kt-button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
