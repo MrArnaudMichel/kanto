@@ -29,6 +29,7 @@ import { releasePage } from './pages/release.js';
 import { APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { homePage } from './pages/home.js';
+import { registerDocsIcons } from './lib/icons.js';
 import { resetPlayground } from './lib/playground.js';
 import {
   applyDocsAppearance,
@@ -43,7 +44,7 @@ import frameworksDoc from '../docs/frameworks.md?raw';
 import changelogDoc from '../CHANGELOG.md?raw';
 
 // The docs draw on more icons than the library ships; this registers those, only.
-import './lib/icons.js';
+registerDocsIcons();
 
 /* ------------------------------------------------------------------ routes */
 

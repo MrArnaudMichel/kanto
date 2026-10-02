@@ -8,7 +8,9 @@ import { join } from 'node:path';
 import * as lucide from 'lucide';
 import { describe, expect, it } from 'vitest';
 import { getIcon, toKebabCase } from 'kanto-ds/icons';
-import './icons.js';
+import { registerDocsIcons } from './icons.js';
+
+registerDocsIcons();
 
 const LUCIDE = new Set(Object.keys(lucide).map(toKebabCase));
 

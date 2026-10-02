@@ -310,6 +310,7 @@
     "build:static": "node scripts/copy-static.js && node scripts/llms.js --docs",
     "build:manifest": "cem analyze --config custom-elements-manifest.config.js",
     "build:demo": "vite build --config demo/vite.config.ts",
+    "check:demo": "node scripts/check-demo.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -322,7 +323,7 @@
     "check:exports": "node scripts/check-exports.js",
     "check:consumer": "node scripts/check-consumer.js",
     "check:size": "node scripts/check-size.js",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports && npm run check:consumer && npm run check:size && npm run build:demo",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run check:exports && npm run check:consumer && npm run check:size && npm run build:demo && npm run check:demo",
     "release": "node scripts/release.js",
     "release:dry": "node scripts/release.js --dry-run",
     "prepublishOnly": "npm run verify"
