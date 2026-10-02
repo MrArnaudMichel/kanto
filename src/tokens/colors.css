@@ -56,9 +56,12 @@
   --color-success-soft: rgba(53, 221, 131, 0.12);
 
   /* === TEXT STEPS OF THE BRAND AND SEMANTIC COLOURS === */
+  /* Info and danger are a shade lighter than the rest need: an alert's action
+     button lays its tint on the alert's, and on a card that double tint is the
+     lightest ground these text steps meet. */
   --color-primary-text: var(--accent-text-dark, #8e97ff);
-  --color-danger-text: #ff727f;
-  --color-info-text: #06b0fc;
+  --color-danger-text: #ff7984;
+  --color-info-text: #43bbff;
   --color-warning-text: #fca80d;
   --color-success-text: #01df7e;
 

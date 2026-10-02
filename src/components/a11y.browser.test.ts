@@ -311,6 +311,16 @@ for (const variant of ['info', 'success', 'warning', 'danger', 'neutral']) {
     markup: `<kt-alert variant="${variant}" heading="Heads up" description="Something changed."></kt-alert>`,
   };
 }
+// An alert's action button sits on the alert's own tint, a step away from
+// the surfaces a button is tuned for.
+for (const variant of ['info', 'success', 'warning', 'danger']) {
+  CASES[`kt-alert ${variant} with an action`] = {
+    markup: `<kt-alert variant="${variant}" heading="Heads up" description="Something changed."><kt-button slot="actions" size="small" variant="${variant}">Review</kt-button></kt-alert>`,
+  };
+  CASES[`kt-alert ${variant} with an action, on a card`] = {
+    markup: `<div style="padding: 16px; background: var(--surface-card)"><kt-alert variant="${variant}" heading="Heads up" description="Something changed."><kt-button slot="actions" size="small" variant="${variant}">Review</kt-button></kt-alert></div>`,
+  };
+}
 for (const variant of ['success', 'information', 'warning', 'error']) {
   CASES[`kt-toast ${variant}`] = {
     markup: `<kt-toast variant="${variant}" heading="Saved" description="All changes kept."></kt-toast>`,
