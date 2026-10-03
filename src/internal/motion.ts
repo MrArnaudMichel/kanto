@@ -22,3 +22,24 @@ export function durationOf(element: Element, token: `--duration-${string}`): num
 export function easingOf(element: Element): string {
   return getComputedStyle(element).getPropertyValue('--easing-standard').trim() || 'ease';
 }
+
+/**
+ * Plays `keyframes` on `element` for as long as the duration token says,
+ * with the theme's easing, under `id` so tests and callers can find it.
+ * Cancels an earlier run with the same id, so a quick second change starts
+ * afresh. Null — and nothing played — when the token is zero or the browser
+ * has no Web Animations.
+ */
+export function play(
+  element: Element,
+  keyframes: Keyframe[],
+  token: `--duration-${string}`,
+  id: string,
+): Animation | null {
+  const duration = durationOf(element, token);
+  if (duration <= 0 || typeof element.animate !== 'function') return null;
+  for (const running of element.getAnimations()) if (running.id === id) running.cancel();
+  const animation = element.animate(keyframes, { duration, easing: easingOf(element) });
+  animation.id = id;
+  return animation;
+}

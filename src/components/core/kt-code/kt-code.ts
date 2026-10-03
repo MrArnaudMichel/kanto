@@ -1,6 +1,7 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
+import { play } from '#internal/motion';
 import { emit } from '#internal/events';
 import { strings } from '#internal/strings';
 import '../kt-icon/kt-icon.js';
@@ -158,6 +159,24 @@ export class KtCode extends KtElement {
       // failing loudly over a convenience button helps no one.
     }
     emit(this, 'kt-copy', { code: this.code });
+  }
+
+  // `copied` is private, so the map is read untyped.
+  override updated(changed: PropertyValues): void {
+    super.updated(changed);
+    if (!changed.has('copied') || !this.copied) return;
+    const icon = this.renderRoot.querySelector('.copy kt-icon');
+    if (icon) {
+      play(
+        icon,
+        [
+          { scale: 0.4, opacity: 0 },
+          { scale: 1, opacity: 1 },
+        ],
+        '--duration-normal',
+        'kt-code-copied',
+      );
+    }
   }
 
   override render(): TemplateResult {

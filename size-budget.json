@@ -16,7 +16,7 @@
   "./components/data/kt-chart": 14500,
   "./components/data/kt-meter": 3300,
   "./components/data/kt-pagination": 5600,
-  "./components/data/kt-stat": 6100,
+  "./components/data/kt-stat": 7000,
   "./components/data/kt-table": 8800,
   "./components/data/kt-timeline": 5000,
   "./components/feedback/kt-alert": 4500,
@@ -57,5 +57,5 @@
   "./components/overlays/kt-command-palette": 7100,
   "./components/forms/kt-slider": 4100,
   "./components/navigation/kt-steps": 5900,
-  "./components/forms/kt-number-input": 6100
+  "./components/forms/kt-number-input": 6800
 }

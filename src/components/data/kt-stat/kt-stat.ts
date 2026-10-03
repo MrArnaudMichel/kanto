@@ -1,6 +1,7 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
+import { play } from '#internal/motion';
 import '../../core/kt-icon/kt-icon.js';
 import '../../core/kt-badge/kt-badge.js';
 import '../../feedback/kt-skeleton/kt-skeleton.js';
@@ -140,6 +141,23 @@ export class KtStat extends KtElement {
     if (this.trend === 'flat') return 'neutral';
     const good = this.inverted ? 'down' : 'up';
     return this.trend === good ? 'success' : 'danger';
+  }
+
+  /** A new figure comes up into place — never the first one. */
+  override updated(changed: PropertyValues<this>): void {
+    super.updated(changed);
+    if (!changed.has('value') || changed.get('value') === undefined) return;
+    const value = this.renderRoot.querySelector('.value');
+    if (!value) return;
+    play(
+      value,
+      [
+        { translate: '0 0.35em', opacity: 0 },
+        { translate: '0 0', opacity: 1 },
+      ],
+      '--duration-normal',
+      'kt-stat-value',
+    );
   }
 
   override render(): TemplateResult {

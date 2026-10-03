@@ -104,6 +104,17 @@ export class KtCheckbox extends KtElement {
         pointer-events: none;
       }
 
+      /* A box just checked: the tick comes in. Not one that opens checked. */
+      .box kt-icon.enter {
+        animation: kt-checkbox-tick var(--duration-fast) var(--easing-standard) backwards;
+      }
+      @keyframes kt-checkbox-tick {
+        from {
+          opacity: 0;
+          scale: 0.4;
+        }
+      }
+
       label:hover .box {
         border-color: var(--text-muted);
       }
@@ -190,7 +201,13 @@ export class KtCheckbox extends KtElement {
     this.defaultChecked = this.checked;
   }
 
+  /** True from a check made after the first render, so its tick comes in. */
+  private ticked = false;
+
   override willUpdate(changed: PropertyValues<this>): void {
+    if (this.hasUpdated && (changed.has('checked') || changed.has('indeterminate'))) {
+      this.ticked = this.checked || this.indeterminate;
+    }
     if (
       changed.has('checked') ||
       changed.has('value') ||
@@ -262,7 +279,7 @@ export class KtCheckbox extends KtElement {
             @change=${this.onChange}
           />
           <span part="box" class="box">
-            ${icon ? html`<kt-icon name=${icon} size="14"></kt-icon>` : nothing}
+            ${icon ? html`<kt-icon class=${this.ticked ? 'enter' : ''} name=${icon} size="14"></kt-icon>` : nothing}
           </span>
         </span>
         <span class="text"><slot></slot></span>

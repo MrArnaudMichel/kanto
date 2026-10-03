@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { durationOf, parseTime } from './motion.js';
+import { durationOf, parseTime, play } from './motion.js';
 
 describe('parseTime', () => {
   it('reads seconds and milliseconds', () => {
@@ -28,6 +28,15 @@ describe('durationOf', () => {
     const el = document.createElement('div');
     document.body.append(el);
     expect(durationOf(el, '--duration-slow')).toBe(0);
+    el.remove();
+  });
+});
+
+describe('play', () => {
+  it('does nothing when the theme gives it no time', () => {
+    const el = document.createElement('div');
+    document.body.append(el);
+    expect(play(el, [{ opacity: 0 }, { opacity: 1 }], '--duration-fast', 'kt-test')).toBeNull();
     el.remove();
   });
 });

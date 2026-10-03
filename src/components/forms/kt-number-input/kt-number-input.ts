@@ -12,6 +12,7 @@ import {
 import { resolveLocale } from '#internal/locale';
 import { strings } from '#internal/strings';
 import { decimalsOf } from '#internal/numbers';
+import { play } from '#internal/motion';
 import '../../core/kt-icon/kt-icon.js';
 
 export type KtNumberInputSize = 'small' | 'medium' | 'large';
@@ -95,6 +96,8 @@ export class KtNumberInput extends KtElement {
         background-color: var(--surface-field);
         border: var(--border-width) solid var(--border-field);
         border-radius: var(--radius-input);
+        /* Keeps a rolling number inside the field. */
+        overflow: clip;
         outline: var(--outline-width) solid transparent;
         transition: outline-color var(--duration-instant);
       }
@@ -325,10 +328,34 @@ export class KtNumberInput extends KtElement {
     return this.formatOptions.style === 'percent';
   }
 
+  /** Which way the last step went, for the number to roll that way: 1, -1 or 0. */
+  private rolling = 0;
+
   private stepBy(steps: number): void {
     if (this.inactive) return;
-    const from = this.value ?? (Number.isFinite(this.min) ? this.min : 0);
-    this.commit(this.value === null ? from : from + steps * this.step);
+    const before = this.value;
+    const from = before ?? (Number.isFinite(this.min) ? this.min : 0);
+    this.commit(before === null ? from : from + steps * this.step);
+    if (before !== null && this.value !== null && this.value !== before) {
+      this.rolling = Math.sign(this.value - before);
+    }
+  }
+
+  override updated(changed: PropertyValues<this>): void {
+    super.updated(changed);
+    if (!this.rolling) return;
+    // Up as it grows, the new number coming from below; down as it shrinks.
+    const offset = `${this.rolling * 0.6}em`;
+    this.rolling = 0;
+    play(
+      this.renderRoot.querySelector('input')!,
+      [
+        { translate: `0 ${offset}`, opacity: 0 },
+        { translate: '0 0', opacity: 1 },
+      ],
+      '--duration-fast',
+      'kt-number-roll',
+    );
   }
 
   private onKeyDown(event: KeyboardEvent): void {

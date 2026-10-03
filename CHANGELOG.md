@@ -5,7 +5,7 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.9.0] — 2026-10-03
 
 ### Changed
 
@@ -24,6 +24,11 @@ stops under `prefers-reduced-motion`.
 - `kt-tabs` has one underline that slides from tab to tab, and
   `kt-segmented-control` one surface that slides from segment to segment,
   across or down.
+- Values that change under the reader's eyes say which way: `kt-number-input`
+  rolls its number up as it grows and down as it shrinks, when stepped;
+  `kt-stat` brings a new figure up into place; a box just checked in
+  `kt-checkbox`, and the copy button of `kt-code` once it has copied, bring
+  their tick in.
 
 ## [1.8.0] — 2026-10-03
 
