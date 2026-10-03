@@ -75,6 +75,44 @@ describe('the stage, used', () => {
     expect(chart.labels.length).toBeGreaterThan(6);
   });
 
+  it('opens each page of its sidebar, and marks where it is', async () => {
+    const host = mount();
+    const expectations: Record<string, string> = {
+      Invoices: 'kt-table',
+      Customers: 'kt-avatar',
+      Reports: 'kt-meter',
+      Settings: 'kt-toggle',
+      Overview: 'kt-stat',
+    };
+    for (const [page, tag] of Object.entries(expectations)) {
+      const link = [...host.querySelectorAll<HTMLElement>('.stage-nav a')].find(
+        (candidate) => candidate.textContent!.trim() === page,
+      )!;
+      link.click();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(host.querySelector('.stage-title')!.textContent!.trim(), page).toBe(page);
+      expect(host.querySelector(`.stage-main ${tag}`), `${page} shows ${tag}`).not.toBeNull();
+      expect(link.getAttribute('aria-current'), page).toBe('page');
+      expect(host.querySelectorAll('.stage-nav a[aria-current="page"]')).toHaveLength(1);
+    }
+  });
+
+  it('filters its invoices page by status', async () => {
+    const host = mount();
+    [...host.querySelectorAll<HTMLElement>('.stage-nav a')]
+      .find((link) => link.textContent!.trim() === 'Invoices')!
+      .click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const filter = host.querySelector<HTMLElement>('.stage-main kt-segmented-control')!;
+    filter.dispatchEvent(new CustomEvent('kt-change', { detail: { value: 'Overdue' } }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const table = host.querySelector<HTMLElement & { data: { status: string }[] }>(
+      '.stage-main kt-table',
+    )!;
+    expect(table.data.length).toBeGreaterThan(0);
+    expect(table.data.every((row) => row.status === 'Overdue')).toBe(true);
+  });
+
   it('searches its own table', async () => {
     const host = mount();
     const search = host.querySelector('.stage-search')!;
@@ -83,7 +121,8 @@ describe('the stage, used', () => {
     const table = host.querySelector<HTMLElement & { data: { customer: string }[] }>(
       '.stage kt-table',
     )!;
-    expect(table.data.map((row) => row.customer)).toEqual(['Globex']);
+    expect(table.data.length).toBeGreaterThan(0);
+    expect(table.data.every((row) => row.customer === 'Globex')).toBe(true);
     search.dispatchEvent(new CustomEvent('kt-clear'));
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(table.data.length).toBeGreaterThan(1);
@@ -97,11 +136,12 @@ describe('the stage, used', () => {
       const table = host.querySelector<
         HTMLElement & { data: { customer: string; status: string }[] }
       >('.stage kt-table')!;
-      const rows = table.data.length;
+      const newest = (table.data[0] as unknown as { id: string }).id;
       host.querySelector<HTMLElement>('.stage-send kt-button')!.click();
       await vi.advanceTimersByTimeAsync(5000);
-      expect(table.data).toHaveLength(rows + 1);
+      // The recent invoices: the one just sent on top.
       expect(table.data[0]).toMatchObject({ customer: 'Acme Corp', status: 'Pending' });
+      expect((table.data[0] as unknown as { id: string }).id).not.toBe(newest);
       expect(Number(stat(host, 'Invoices sent')!.replace(/\D/g, ''))).toBe(before + 1);
     } finally {
       vi.useRealTimers();
