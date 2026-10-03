@@ -359,12 +359,24 @@ export class KtButton extends KtElement {
 
   private async finish(phase: 'done' | 'failed'): Promise<void> {
     if (phase === 'done') {
-      // The icon leaves first, in its own way; then the tick comes in.
+      // The icon leaves first, in its own way, from wherever its waiting
+      // motion had taken it; then the tick comes in.
+      const icon = this.renderRoot.querySelector('[part="icon"]');
+      const from = icon ? getComputedStyle(icon).translate : 'none';
       this.phase = 'leaving';
       await this.updateComplete;
-      const icon = this.renderRoot.querySelector('[part="icon"]');
+      const flight = flightOf(this.icon);
       const leaving = icon
-        ? play(icon, flightOf(this.icon).leave, '--duration-slow', 'kt-button-leave')
+        ? play(
+            icon,
+            flight.leave(from === 'none' ? '0 0' : from),
+            '--duration-slow',
+            'kt-button-leave',
+            {
+              easing: 'linear',
+              scale: flight.leaveScale ?? 1,
+            },
+          )
         : null;
       await leaving?.finished.catch(() => undefined);
     }

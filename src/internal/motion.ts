@@ -35,11 +35,20 @@ export function play(
   keyframes: Keyframe[],
   token: `--duration-${string}`,
   id: string,
+  options: {
+    /** Overrides the theme's easing — `linear` when the keyframes carry their own. */
+    readonly easing?: string;
+    /** Multiplies the token's duration, for a motion with several legs. */
+    readonly scale?: number;
+  } = {},
 ): Animation | null {
-  const duration = durationOf(element, token);
+  const duration = durationOf(element, token) * (options.scale ?? 1);
   if (duration <= 0 || typeof element.animate !== 'function') return null;
   for (const running of element.getAnimations()) if (running.id === id) running.cancel();
-  const animation = element.animate(keyframes, { duration, easing: easingOf(element) });
+  const animation = element.animate(keyframes, {
+    duration,
+    easing: options.easing ?? easingOf(element),
+  });
   animation.id = id;
   return animation;
 }

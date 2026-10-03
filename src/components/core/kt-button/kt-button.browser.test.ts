@@ -79,4 +79,39 @@ describe('kt-button run(), in motion', () => {
     expect(played(el).size).toBe(0);
     expect(el.shadowRoot!.querySelector('[part="icon"]')!.getAttribute('name')).toBe('check');
   });
+
+  it('takes off from where the plane is hovering, without a jump', async () => {
+    const el = await mount();
+    let land!: () => void;
+    const running = el.run(() => new Promise<void>((resolve) => (land = resolve)));
+    await settle(el);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const icon = el.shadowRoot!.querySelector('[part="icon"]')!;
+    const hovering = getComputedStyle(icon).translate;
+    expect(hovering).not.toBe('none');
+
+    land();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const leave = played(el).get('kt-button-leave')!;
+    expect(leave).toBeDefined();
+    const start = String(keyframes(leave)[0]!.translate).split(' ').map(parseFloat);
+    const was = hovering.split(' ').map(parseFloat);
+    expect(Math.abs(start[0]! - was[0]!)).toBeLessThanOrEqual(0.5);
+    expect(Math.abs((start[1] ?? 0) - (was[1] ?? 0))).toBeLessThanOrEqual(0.5);
+    await running;
+  });
+
+  it('eases each leg of the flight on its own: back slowing, off speeding up', async () => {
+    const el = await mount();
+    const running = el.run(() => Promise.resolve());
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await settle(el);
+    const leave = played(el).get('kt-button-leave')!;
+    expect(leave.effect!.getTiming().easing).toBe('linear');
+    const [, back, off] = keyframes(leave);
+    expect(back!.easing).not.toBe('linear');
+    expect(off).toBeDefined();
+    expect(keyframes(leave)[1]!.easing).not.toBe(keyframes(leave)[0]!.easing);
+    await running;
+  });
 });

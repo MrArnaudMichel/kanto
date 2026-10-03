@@ -7,16 +7,23 @@
 export interface Flight {
   /** While the action runs: the icon stays and does this, instead of a spinner. */
   readonly waiting?: 'hover';
-  /** On success, before the tick. */
-  readonly leave: Keyframe[];
+  /**
+   * On success, before the tick. The first keyframe is where the icon is
+   * when it goes — wherever its waiting motion had taken it — so it leaves
+   * from there instead of jumping back first. Each keyframe carries the
+   * easing of the leg after it; the whole runs on a linear clock.
+   */
+  readonly leave: (from: string) => Keyframe[];
+  /** How many times the slow duration the leaving takes. */
+  readonly leaveScale?: number;
   /** Back to rest, a moment later. */
   readonly back: Keyframe[];
 }
 
 const FADE: Flight = {
-  leave: [
-    { opacity: 1, scale: 1 },
-    { opacity: 0, scale: 0.6 },
+  leave: (from) => [
+    { translate: from, opacity: 1, scale: 1, easing: 'ease-in' },
+    { translate: from, opacity: 0, scale: 0.6 },
   ],
   back: [
     { opacity: 0, scale: 0.6 },
@@ -26,11 +33,20 @@ const FADE: Flight = {
 
 const PLANE: Flight = {
   waiting: 'hover',
-  leave: [
-    { translate: '0 0', rotate: '0deg', opacity: 1 },
-    // A breath back before it goes.
-    { translate: '-0.15em 0.15em', rotate: '-6deg', opacity: 1, offset: 0.2 },
-    { translate: '1.6em -1.6em', rotate: '10deg', opacity: 0 },
+  leaveScale: 1.5,
+  leave: (from) => [
+    { translate: from, rotate: '0deg', opacity: 1, easing: 'cubic-bezier(0.2, 0, 0.4, 1)' },
+    // A breath back, slowing into it, before it goes.
+    {
+      translate: '-0.15em 0.15em',
+      rotate: '-6deg',
+      opacity: 1,
+      offset: 0.3,
+      easing: 'cubic-bezier(0.55, 0, 0.8, 0.4)',
+    },
+    // Then off, speeding up, fading only at the end.
+    { translate: '1.1em -1.1em', rotate: '6deg', opacity: 1, offset: 0.75 },
+    { translate: '1.8em -1.8em', rotate: '10deg', opacity: 0 },
   ],
   back: [
     { translate: '-0.8em 0.8em', opacity: 0 },
