@@ -2,6 +2,7 @@ import { css, html, nothing, type PropertyValues, type TemplateResult } from 'li
 import { property, queryAll, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
+import { IndicatorController } from '#internal/indicator';
 import { emit } from '#internal/events';
 import {
   attachFormInternals,
@@ -61,6 +62,7 @@ export class KtSegmentedControl extends KtElement {
       }
 
       .track {
+        position: relative;
         display: inline-flex;
         box-sizing: border-box;
         gap: 4px;
@@ -119,12 +121,43 @@ export class KtSegmentedControl extends KtElement {
         background-color: var(--surface-card);
       }
 
-      .option.selected {
-        color: var(--text-body);
-        background-color: var(--surface-raised);
-      }
+      /* Its surface is the thumb below, not its own background. */
+      .option.selected,
       .option.selected:hover:not(:disabled) {
+        color: var(--text-body);
+        background-color: transparent;
+      }
+
+      /* One surface that slides from segment to segment, placed by
+         IndicatorController before the first paint. The segments sit above
+         it. */
+      .thumb {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+        width: var(--kt-indicator-width);
+        height: var(--kt-indicator-height);
+        background-color: var(--surface-raised);
+        border-radius: calc(var(--border-radius) - 4px);
+        translate: var(--kt-indicator-x) var(--kt-indicator-y);
+        pointer-events: none;
+      }
+      .track[data-indicator] .thumb {
+        display: block;
+      }
+      .option {
+        position: relative;
+      }
+      .track:has(.option.selected:hover:not(:disabled)) .thumb {
         background-color: var(--surface-hover);
+      }
+      .track[data-indicator='ready'] .thumb {
+        transition:
+          translate var(--duration-normal) var(--easing-standard),
+          width var(--duration-normal) var(--easing-standard),
+          height var(--duration-normal) var(--easing-standard),
+          background-color var(--duration-normal) var(--easing-standard);
       }
 
       .option:disabled {
@@ -170,6 +203,14 @@ export class KtSegmentedControl extends KtElement {
 
   @queryAll('.option')
   private segments!: NodeListOf<HTMLButtonElement>;
+
+  constructor() {
+    super();
+    new IndicatorController(this, {
+      container: () => this.renderRoot.querySelector<HTMLElement>('.track'),
+      selected: () => this.renderRoot.querySelector<HTMLElement>('.option.selected'),
+    });
+  }
 
   private internals: UsableInternals | null = null;
   private defaultValue: string | number | null = null;
@@ -309,6 +350,7 @@ export class KtSegmentedControl extends KtElement {
       aria-disabled=${this.inactive ? 'true' : nothing}
       @keydown=${this.onKeyDown}
     >
+      <span class="thumb" aria-hidden="true"></span>
       ${this.options.map((option, index) => {
         const selected = option.value === this.value;
         const text = option.label ?? '';

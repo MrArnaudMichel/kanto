@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, queryAll } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
+import { IndicatorController } from '#internal/indicator';
 import { emit } from '#internal/events';
 import '../../core/kt-icon/kt-icon.js';
 import '../../feedback/kt-skeleton/kt-skeleton.js';
@@ -52,6 +53,7 @@ export class KtTabs extends KtElement {
       }
 
       .tablist {
+        position: relative;
         display: flex;
         gap: var(--gap-drag-drop);
         border-bottom: var(--border-width) solid var(--border-subtle);
@@ -92,9 +94,31 @@ export class KtTabs extends KtElement {
         color: var(--text-body);
       }
 
+      /* Underlined by the indicator below, not by its own border. */
       .tab.selected {
         color: var(--text-body);
-        border-bottom-color: var(--color-primary-base);
+      }
+
+      /* One underline that slides from tab to tab, placed by
+         IndicatorController before the first paint. */
+      .indicator {
+        position: absolute;
+        top: calc(var(--kt-indicator-y) + var(--kt-indicator-height) - 2px);
+        left: 0;
+        display: none;
+        width: var(--kt-indicator-width);
+        height: 2px;
+        background: var(--color-primary-base);
+        translate: var(--kt-indicator-x) 0;
+        pointer-events: none;
+      }
+      .tablist[data-indicator] .indicator {
+        display: block;
+      }
+      .tablist[data-indicator='ready'] .indicator {
+        transition:
+          translate var(--duration-normal) var(--easing-standard),
+          width var(--duration-normal) var(--easing-standard);
       }
 
       .tab:disabled {
@@ -118,6 +142,14 @@ export class KtTabs extends KtElement {
 
   @queryAll('.tab')
   private tabElements!: NodeListOf<HTMLButtonElement>;
+
+  constructor() {
+    super();
+    new IndicatorController(this, {
+      container: () => this.renderRoot.querySelector<HTMLElement>('.tablist'),
+      selected: () => this.renderRoot.querySelector<HTMLElement>('.tab.selected'),
+    });
+  }
 
   /** The tabs to show. A property: this is data. */
   @property({ attribute: false })
@@ -218,6 +250,7 @@ export class KtTabs extends KtElement {
           ${tab.label ?? String(tab.value)}
         </button>`;
       })}
+      <span class="indicator" aria-hidden="true"></span>
     </div>`;
   }
 }
