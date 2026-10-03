@@ -1,4 +1,4 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
@@ -109,8 +109,27 @@ export class KtSteps extends KtElement {
         background: var(--border-field);
         border-radius: var(--radius-full);
       }
-      li[data-state='complete'] .connector {
+      /* The fill runs from this step to the next as it is completed, and
+         back as it is undone. */
+      .fill {
+        display: block;
+        width: 100%;
+        height: 100%;
         background: var(--color-primary-base);
+        border-radius: inherit;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--duration-slow) var(--easing-standard);
+      }
+      li[data-state='complete'] .fill {
+        transform: none;
+      }
+      :host([orientation='vertical']) .fill {
+        transform: scaleY(0);
+        transform-origin: top;
+      }
+      :host([orientation='vertical']) li[data-state='complete'] .fill {
+        transform: none;
       }
       :host([orientation='vertical']) .connector {
         top: calc(var(--kt-steps-marker) + 6px);
@@ -158,6 +177,17 @@ export class KtSteps extends KtElement {
          marker's middle. */
       .marker kt-icon[name='check'] {
         translate: 0 0.5px;
+      }
+      /* A step just completed: its tick comes in as the line reaches the
+         next step. Never on the first render — a page opens still. */
+      .marker kt-icon.enter {
+        animation: kt-steps-tick var(--duration-normal) var(--easing-standard) backwards;
+      }
+      @keyframes kt-steps-tick {
+        from {
+          opacity: 0;
+          scale: 0.4;
+        }
       }
 
       .text {
@@ -244,6 +274,18 @@ export class KtSteps extends KtElement {
   @property({ type: Boolean, reflect: true })
   navigable = false;
 
+  /** Steps completed by the last change of `current`, whose tick comes in. */
+  private entering = new Set<number>();
+
+  override willUpdate(changed: PropertyValues<this>): void {
+    if (!changed.has('current') || !this.hasUpdated) return;
+    const index = (id: string | undefined) => this.steps.findIndex((step) => step.id === id);
+    const before = index(changed.get('current'));
+    const now = index(this.current);
+    this.entering = new Set();
+    for (let step = Math.max(before, 0); step < now; step += 1) this.entering.add(step);
+  }
+
   private stateOf(step: KtStep, index: number, currentIndex: number): StepState {
     if (step.error) return 'error';
     if (index < currentIndex) return 'complete';
@@ -270,7 +312,11 @@ export class KtSteps extends KtElement {
         const state = this.stateOf(step, index, currentIndex);
         const marker =
           state === 'complete'
-            ? html`<kt-icon name="check" size="14"></kt-icon>`
+            ? html`<kt-icon
+                class=${this.entering.has(index) ? 'enter' : ''}
+                name="check"
+                size="14"
+              ></kt-icon>`
             : state === 'error'
               ? html`<kt-icon name="circle-alert" size="14"></kt-icon>`
               : html`<span class="number">${index + 1}</span>`;
@@ -294,7 +340,13 @@ export class KtSteps extends KtElement {
                 </button>`
               : html`<span class="step">${body}</span>`
           }
-          ${index < this.steps.length - 1 ? html`<span part="connector" class="connector" aria-hidden="true"></span>` : nothing}
+          ${
+            index < this.steps.length - 1
+              ? html`<span part="connector" class="connector" aria-hidden="true"
+                  ><span class="fill"></span
+                ></span>`
+              : nothing
+          }
         </li>`;
       })}
     </ol>`;

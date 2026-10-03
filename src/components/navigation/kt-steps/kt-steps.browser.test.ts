@@ -20,6 +20,9 @@ async function mount(orientation = 'horizontal', navigable = false): Promise<KtS
   );
   el.steps = STEPS;
   await settle(el);
+  // Drawn once, as a page is before anyone acts on it: a transition needs a
+  // style to start from.
+  await new Promise((resolve) => requestAnimationFrame(resolve));
   return el;
 }
 
@@ -126,5 +129,54 @@ describe('kt-steps down', () => {
       expect(below.top - line.bottom).toBeGreaterThanOrEqual(6);
       expect(line.height).toBeGreaterThan(4);
     });
+  });
+});
+
+describe('kt-steps motion', () => {
+  /** What is moving inside it — transitions and animations, its own only. */
+  const moving = (el: KtSteps) =>
+    el.shadowRoot!.getAnimations().filter((animation) => {
+      const target = (animation.effect as KeyframeEffect).target as Element | null;
+      return (
+        target?.closest('li') &&
+        !(animation instanceof CSSTransition && animation.transitionProperty.includes('color'))
+      );
+    });
+
+  it('stays still when it first appears', async () => {
+    const el = await mount();
+    expect(moving(el)).toHaveLength(0);
+  });
+
+  it('fills the connector to the next step, and draws the tick in', async () => {
+    const el = await mount();
+    el.current = 'done';
+    await settle(el);
+    const fill = all(el, '.connector .fill')[2]!;
+    const fills = fill.getAnimations();
+    expect(
+      fills.some((a) => a instanceof CSSTransition && a.transitionProperty === 'transform'),
+    ).toBe(true);
+    const tick = all(el, '.marker')[2]!.querySelector('kt-icon')!;
+    expect(
+      tick
+        .getAnimations()
+        .some((a) => a instanceof CSSAnimation && a.animationName === 'kt-steps-tick'),
+    ).toBe(true);
+  });
+
+  it('empties it again, going back', async () => {
+    const el = await mount();
+    el.current = 'billing';
+    await settle(el);
+    const fill = all(el, '.connector .fill')[1]!;
+    expect(fill.getAnimations().some((a) => a instanceof CSSTransition)).toBe(true);
+  });
+
+  it('a filled connector is the full width of its track', async () => {
+    const el = await mount();
+    const [done, , ahead] = all(el, '.connector');
+    expect(box(done!.querySelector('.fill')!).width).toBeCloseTo(box(done!).width, 0);
+    expect(box(ahead!.querySelector('.fill')!).width).toBe(0);
   });
 });
