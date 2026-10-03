@@ -101,17 +101,17 @@ describe('the documentation shell', () => {
     expect(app.querySelector('.wordmark')!.getAttribute('href')).toBe('#/');
   });
 
-  it('starts the playground from the site on each visit to the home page', async () => {
+  it('starts the hero colour from the site on each visit to the home page', async () => {
     const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
     location.hash = '#/';
     await tick();
-    app.querySelector<HTMLElement>('.playground [data-accent-id="teal"]')!.click();
+    app.querySelector<HTMLElement>('.home-hero [data-accent-id="teal"]')!.click();
     await tick();
     location.hash = '#/guide/introduction';
     await tick();
     location.hash = '#/';
     await tick();
-    const checked = app.querySelector('.playground [data-accent-id][aria-checked="true"]');
+    const checked = app.querySelector('.home-hero [data-accent-id][aria-checked="true"]');
     expect(checked!.getAttribute('data-accent-id')).toBe('violet');
   });
 

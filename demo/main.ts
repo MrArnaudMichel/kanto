@@ -24,7 +24,8 @@ import { templatePage, templateScreen } from './pages/template.js';
 import type { SettingsSection } from './apps/console/settings.js';
 import { TEMPLATES } from './templates/index.js';
 import { registerDocsIcons } from './lib/icons.js';
-import { resetPlayground } from './lib/playground.js';
+import { resetStage } from './lib/stage.js';
+import { resetReasons } from './lib/reasons.js';
 import {
   applyDocsAppearance,
   customiseMenu,
@@ -746,8 +747,11 @@ applyDocsAppearance(appearance);
 window.addEventListener('hashchange', () => {
   // Inside an app the invitation would cover what the visitor came to see.
   if (location.hash.startsWith('#/app/')) inviting = false;
-  // Each visit to the home page starts its playground from the site as it is.
-  if (currentRoute().section !== 'home') resetPlayground();
+  // Each visit to the home page starts its examples from the site as it is.
+  if (currentRoute().section !== 'home') {
+    resetStage();
+    resetReasons();
+  }
   filter = '';
   activeHeading = '';
   visibleHeadings = [];

@@ -40,6 +40,10 @@ stops under `prefers-reduced-motion`.
   `kt-stat` brings a new figure up into place; a box just checked in
   `kt-checkbox`, and the copy button of `kt-code` once it has copied, bring
   their tick in.
+- The docs site opens on a new home page: a live product screen under the
+  headline, re-coloured from a row of swatches; three reasons, each shown
+  working; the wall of screens; every template and app as a live miniature;
+  and the way in at the end. No code until it is asked for.
 
 ## [1.8.0] — 2026-10-03
 

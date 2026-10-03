@@ -1,14 +1,15 @@
 /**
- * The front door: what Kanto is in two sentences, then the proof — a
- * playground first, because the quickest way to want a design system is to
- * see it wearing your colours.
+ * The front door. A product first — one live screen, re-coloured from a row
+ * of swatches — then three reasons, each shown working; the wall of screens;
+ * whole pages to start from; and the way in. No code until someone asks.
  */
 import { html, type TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
-import { KT_ACCENTS, toaster } from 'kanto-ds';
+import { toaster } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
-import { playground } from '../lib/playground.js';
 import { SCREEN_COUNT, showcase } from '../lib/showcase.js';
+import { stage } from '../lib/stage.js';
+import { REASONS } from '../lib/reasons.js';
 import { TEMPLATES } from '../templates/index.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
@@ -67,30 +68,6 @@ const APPS = [
 
 let framework: keyof typeof FRAMEWORKS = 'react';
 
-/** Three components beside the one line each takes, live under it. */
-const SPECIMENS: { source: string; live: () => TemplateResult }[] = [
-  {
-    source: '<kt-date-picker range label="Report period"></kt-date-picker>',
-    live: () =>
-      html`<kt-date-picker
-        range
-        label="Report period"
-        value="2026-09-01/2026-09-30"
-      ></kt-date-picker>`,
-  },
-  {
-    source: '<kt-time-input label="Starts at" step="15"></kt-time-input>',
-    live: () => html`<kt-time-input label="Starts at" step="15" value="09:30"></kt-time-input>`,
-  },
-  {
-    source: '<kt-button variant="primary" icon="send">Send</kt-button>',
-    live: () =>
-      html`<kt-button variant="primary" icon="send" @click=${() => toaster.success('Invoice sent')}
-        >Send</kt-button
-      >`,
-  },
-];
-
 /** The library's families, in the order the sidebar lists them. */
 const FAMILIES = ['Core', 'Forms', 'Navigation', 'Feedback', 'Overlays', 'Data'];
 
@@ -124,8 +101,8 @@ const QUESTIONS: { heading: string; answer: TemplateResult }[] = [
     heading: 'How do I make it look like my brand?',
     answer: html`One attribute per setting — <code>data-accent</code>, <code>data-font</code>,
       <code>data-radius</code>, <code>data-density</code> — or any colour through
-      <code>setAppearance</code>, which keeps every text readable. The playground above writes the
-      line for you.`,
+      <code>setAppearance</code>, which keeps every text readable. The example above writes the line
+      for you.`,
   },
   {
     heading: 'What is the licence, and what does it cost?',
@@ -136,15 +113,14 @@ const QUESTIONS: { heading: string; answer: TemplateResult }[] = [
 /**
  * Each miniature is the whole docs site booted in a frame, so it starts only
  * as it nears the screen. loading="lazy" alone is not enough: Chromium loads
- * frames a few thousand pixels ahead, which on this page is all four at once.
+ * frames a few thousand pixels ahead, which on this page is all of them at once.
  */
 function bootWhenNear(src: string): (frame?: Element) => void {
   return (frame) => {
     if (!(frame instanceof HTMLIFrameElement) || frame.getAttribute('src')) return;
-    if (typeof IntersectionObserver === 'undefined') {
-      frame.src = src;
-      return;
-    }
+    // Every browser has the observer; without one — a test runner — the
+    // miniature stays empty rather than booting the site nine times over.
+    if (typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
@@ -159,80 +135,75 @@ function bootWhenNear(src: string): (frame?: Element) => void {
 
 export function homePage({
   appearance,
-  onUse,
   rerender,
 }: {
   appearance: DocsAppearance;
   onUse: (appearance: DocsAppearance) => void;
   rerender: () => void;
 }): TemplateResult {
+  const copyInstall = () => {
+    void navigator.clipboard?.writeText(INSTALL);
+    toaster.success('Copied');
+  };
+  const install = html`<button type="button" class="home-install" @click=${copyInstall}>
+    <span class="home-install-prompt" aria-hidden="true">$</span>${INSTALL}<kt-icon
+      name="copy"
+      size="16"
+    ></kt-icon>
+    <span class="visually-hidden">Copy the install command</span>
+  </button>`;
+  const stackblitz = () => openInStackBlitz(stackblitzProject(appearance, VERSION));
+
   return html`<div class="home">
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero-text">
-        <h1 id="home-title">Components that take your brand in a minute.</h1>
+        <h1 id="home-title">Ship the product, not the design system.</h1>
         <p class="home-lead">
-          Kanto is ${COMPONENTS.length} web components for dashboards, admin tools and forms. They
-          run in any framework, pass accessibility checks in both themes, and take your colour, font
-          and density from one line. Free and open source.
+          ${COMPONENTS.length} components for dashboards, admin tools and forms. They work in any
+          framework, read well in both themes, and wear your colours from one line. Free and open
+          source.
         </p>
         <div class="home-actions">
-          <kt-button variant="primary" @click=${() => (location.hash = '#/guide/installation')}
+          <kt-button size="large" @click=${() => (location.hash = '#/guide/installation')}
             >Get started</kt-button
           >
-          <button
-            type="button"
-            class="home-install"
-            @click=${() => {
-              void navigator.clipboard?.writeText(INSTALL);
-              toaster.success('Copied');
-            }}
-          >
-            <code>${INSTALL}</code><kt-icon name="copy" size="16"></kt-icon>
-            <span class="visually-hidden">Copy the install command</span>
-          </button>
+          ${install}
           <kt-button
-            variant="secondary"
+            size="large"
+            variant="secondary-no-bg"
             icon="external-link"
-            @click=${() => openInStackBlitz(stackblitzProject(appearance, VERSION))}
-            >Try it in StackBlitz</kt-button
+            @click=${stackblitz}
+            >Try it live</kt-button
           >
-          <a class="home-link" href=${REPO_URL} target="_blank" rel="noopener">GitHub</a>
         </div>
-        <dl class="home-facts">
-          <div>
-            <dt>${COMPONENTS.length} components</dt>
-            <dd>forms, data, dates, overlays</dd>
-          </div>
-          <div>
-            <dt>2 themes</dt>
-            <dd>audited by axe in both</dd>
-          </div>
-          <div>
-            <dt>${KT_ACCENTS.length} accents</dt>
-            <dd>or any colour you pick</dd>
-          </div>
-          <div>
-            <dt>Any framework</dt>
-            <dd>one implementation</dd>
-          </div>
-        </dl>
       </div>
-      <div class="home-specimens" aria-label="Three components and the code for each">
-        ${SPECIMENS.map(
-          (specimen) =>
-            html`<figure class="home-specimen">
-              ${code(specimen.source, 'html', { copy: false })}
-              <div class="home-specimen-live">${specimen.live()}</div>
-            </figure>`,
-        )}
-      </div>
+      <div class="home-stage">${stage({ siteAccent: appearance.accent, rerender })}</div>
+    </section>
+
+    <section class="home-band home-reasons" aria-labelledby="home-why">
+      <h2 id="home-why">What you get on day one</h2>
+      ${REASONS.map(
+        (reason) =>
+          html`<article class="home-reason">
+            <div class="home-reason-text">
+              <h3>${reason.heading}</h3>
+              <p>${reason.body}</p>
+              <ul>
+                ${reason.points.map(
+                  (point) => html`<li><kt-icon name="check" size="16"></kt-icon>${point}</li>`,
+                )}
+              </ul>
+            </div>
+            <div class="home-reason-demo">${reason.demo(rerender)}</div>
+          </article>`,
+      )}
     </section>
 
     <section class="home-band home-showcase" aria-labelledby="home-gallery">
       <h2 id="home-gallery">Everything a product screen needs</h2>
       <p>
-        ${SCREEN_COUNT} everyday screens, built from Kanto alone and all live. Type in them, open
-        the menus, pick a day — then change their look from the row above.
+        ${SCREEN_COUNT} everyday screens, all Kanto and all live. Type in them, open the menus —
+        then give them another look from the row above.
       </p>
       ${showcase(rerender)}
       <ul class="home-gallery">
@@ -251,71 +222,66 @@ export function homePage({
       </ul>
     </section>
 
-    <section class="home-band" aria-labelledby="home-templates">
-      <h2 id="home-templates">Or start from a whole screen</h2>
-      <p>Pages ready to copy into a product — the markup, its styles and a few lines of script.</p>
-      <ul class="home-templates">
-        ${TEMPLATES.map(
-          (template) =>
-            html`<li>
-              <a href=${`#/templates/${template.slug}`}>
-                <span class="home-template-name">${template.name}</span>
-                <span class="home-template-note">${template.description}</span>
-              </a>
-            </li>`,
+    <section class="home-band home-screens" aria-labelledby="home-templates">
+      <h2 id="home-templates">Start from a whole screen</h2>
+      <p>Pages to copy into a product — the markup, its styles and a few lines of script.</p>
+      <ul class="home-previews">
+        ${TEMPLATES.map((template) =>
+          preview({
+            href: `#/templates/${template.slug}`,
+            src: `${location.pathname}#/template/${template.slug}`,
+            name: template.name,
+            note: template.description,
+          }),
+        )}
+      </ul>
+      <h3 class="home-subhead">And whole apps</h3>
+      <ul class="home-previews home-previews-apps">
+        ${APPS.map((app) =>
+          preview({
+            href: `#/app/${app.path}`,
+            src: `${location.pathname}#/app/${app.path}`,
+            name: app.name,
+            note: app.note,
+          }),
         )}
       </ul>
     </section>
 
-    <section class="home-band" aria-labelledby="home-try">
-      <h2 id="home-try">Make it yours before you install it</h2>
-      <p>Every setting below is one attribute in your project. Pick, look, copy.</p>
-      ${playground({ start: appearance, onUse, rerender })}
-    </section>
-
-    <section class="home-band" aria-labelledby="home-frameworks">
-      <h2 id="home-frameworks">One component, every framework</h2>
-      <p>Kanto is made of standard custom elements, so the same button works wherever HTML does.</p>
-      <kt-tabs
-        .tabs=${[
-          { value: 'react', label: 'React' },
-          { value: 'vue', label: 'Vue' },
-          { value: 'angular', label: 'Angular' },
-          { value: 'html', label: 'HTML' },
-        ]}
-        .value=${framework}
-        @kt-change=${(event: CustomEvent<{ value: keyof typeof FRAMEWORKS }>) => {
-          framework = event.detail.value;
-          rerender();
-        }}
-      ></kt-tabs>
-      ${code(FRAMEWORKS[framework], framework === 'react' ? 'tsx' : framework === 'html' ? 'html' : framework === 'vue' ? 'vue' : 'ts')}
-    </section>
-
-    <section class="home-band" aria-labelledby="home-apps">
-      <h2 id="home-apps">Already in real apps</h2>
-      <p>Four applications built from Kanto alone. Open one and use it.</p>
-      <ul class="home-apps">
-        ${APPS.map(
-          (app) =>
-            html`<li>
-              <a class="home-app" href=${`#/app/${app.path}`}>
-                <span class="home-app-view">
-                  <iframe
-                    ${ref(bootWhenNear(`${location.pathname}#/app/${app.path}`))}
-                    title=${`${app.name}, a preview`}
-                    loading="lazy"
-                    inert
-                    tabindex="-1"
-                    aria-hidden="true"
-                  ></iframe>
-                </span>
-                <span class="home-app-name">${app.name}</span>
-                <span class="home-app-note">${app.note}</span>
-              </a>
-            </li>`,
+    <section class="home-band home-stack" aria-labelledby="home-frameworks">
+      <div class="home-stack-text">
+        <h2 id="home-frameworks">Works with your stack</h2>
+        <p>
+          Kanto is standard custom elements: the same button in React, Vue, Angular or plain HTML,
+          with typed wrappers where a framework wants them.
+        </p>
+      </div>
+      <div class="home-stack-code">
+        <kt-tabs
+          label="Framework"
+          .tabs=${[
+            { value: 'react', label: 'React' },
+            { value: 'vue', label: 'Vue' },
+            { value: 'angular', label: 'Angular' },
+            { value: 'html', label: 'HTML' },
+          ]}
+          .value=${framework}
+          @kt-change=${(event: CustomEvent<{ value: keyof typeof FRAMEWORKS }>) => {
+            framework = event.detail.value;
+            rerender();
+          }}
+        ></kt-tabs>
+        ${code(
+          FRAMEWORKS[framework],
+          framework === 'react'
+            ? 'tsx'
+            : framework === 'html'
+              ? 'html'
+              : framework === 'vue'
+                ? 'vue'
+                : 'ts',
         )}
-      </ul>
+      </div>
     </section>
 
     <section class="home-band home-faq" aria-labelledby="home-faq">
@@ -328,38 +294,58 @@ export function homePage({
       )}
     </section>
 
-    <section class="home-band home-cta" aria-labelledby="home-start">
-      <h2 id="home-start">Start in three steps</h2>
+    <section class="home-cta" aria-labelledby="home-start">
+      <h2 id="home-start">Your next screen, in Kanto.</h2>
+      <p>Install it, import it once, use it.</p>
       <ol class="home-steps">
-        <li>
-          <p>Install it.</p>
-          ${code(INSTALL, 'bash')}
-        </li>
-        <li>
-          <p>Import it once.</p>
-          ${code(IMPORTS, 'js')}
-        </li>
-        <li>
-          <p>Use it.</p>
-          ${code(USE, 'html')}
-        </li>
+        <li>${code(INSTALL, 'bash')}</li>
+        <li>${code(IMPORTS, 'js')}</li>
+        <li>${code(USE, 'html')}</li>
       </ol>
+      <div class="home-actions">
+        <kt-button size="large" @click=${() => (location.hash = '#/guide/installation')}
+          >Read the guide</kt-button
+        >
+        <kt-button size="large" variant="secondary" icon="external-link" @click=${stackblitz}
+          >Open in StackBlitz</kt-button
+        >
+        <a class="home-link" href=${REPO_URL} target="_blank" rel="noopener">Star it on GitHub</a>
+      </div>
       <p class="home-alt">
         No bundler?
         <a href="#/guide/installation#no-build-step">One stylesheet and one script tag</a>
         do it.
       </p>
-      <div class="home-actions">
-        <kt-button variant="primary" @click=${() => (location.hash = '#/guide/installation')}
-          >Read the guide</kt-button
-        >
-        <kt-button
-          variant="secondary"
-          icon="external-link"
-          @click=${() => openInStackBlitz(stackblitzProject(appearance, VERSION))}
-          >Try it in StackBlitz</kt-button
-        >
-      </div>
     </section>
   </div>`;
+}
+
+/** A page shown small and live, loaded only as it nears the screen. */
+function preview({
+  href,
+  src,
+  name,
+  note,
+}: {
+  href: string;
+  src: string;
+  name: string;
+  note: string;
+}): TemplateResult {
+  return html`<li>
+    <a class="home-preview" href=${href}>
+      <span class="home-preview-view">
+        <iframe
+          ${ref(bootWhenNear(src))}
+          title=${`${name}, a preview`}
+          loading="lazy"
+          inert
+          tabindex="-1"
+          aria-hidden="true"
+        ></iframe>
+      </span>
+      <span class="home-preview-name">${name}</span>
+      <span class="home-preview-note">${note}</span>
+    </a>
+  </li>`;
 }

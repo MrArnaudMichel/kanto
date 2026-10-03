@@ -99,7 +99,7 @@ export function applyDocsAppearance(appearance: DocsAppearance): void {
  * Arrow keys across a radio group: each one picks the next choice and moves
  * the focus with it, wrapping at the ends.
  */
-function arrows<T extends string>(
+export function arrows<T extends string>(
   ids: readonly T[],
   attribute: string,
   onPick: (id: T) => void,

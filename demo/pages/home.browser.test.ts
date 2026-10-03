@@ -12,6 +12,7 @@ import '../shell.css';
 import '../home.css';
 import { KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { homePage } from './home.js';
+import { TEMPLATES } from '../templates/index.js';
 
 afterEach(() => {
   delete document.documentElement.dataset['theme'];
@@ -46,7 +47,7 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
     ).toEqual([]);
   });
 
-  it('loads an app miniature only as it nears the screen, and keeps it out of the tab order', async () => {
+  it('loads a page miniature only as it nears the screen, and keeps it out of the tab order', async () => {
     // Below 720px the miniatures are not drawn, and so never load.
     await page.viewport(1280, 800);
     const host = document.body.appendChild(document.createElement('main'));
@@ -55,7 +56,8 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
       host,
     );
     const frames = [...host.querySelectorAll('iframe')];
-    expect(frames.length).toBe(4);
+    // Every template, then the four apps.
+    expect(frames.length).toBe(TEMPLATES.length + 4);
     for (const frame of frames) {
       expect(frame.hasAttribute('inert')).toBe(true);
       expect(frame.getAttribute('tabindex')).toBe('-1');
@@ -66,7 +68,10 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
 
     frames[0]!.scrollIntoView();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(frames[0]!.getAttribute('src')).toContain('#/app/');
+    expect(frames[0]!.getAttribute('src')).toContain('#/template/');
+    frames.at(-1)!.scrollIntoView();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(frames.at(-1)!.getAttribute('src')).toContain('#/app/');
   });
 });
 
