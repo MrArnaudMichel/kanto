@@ -97,6 +97,9 @@ export class KtButton extends KtElement {
         border: none;
         border-radius: var(--border-radius);
         font: var(--font-normal-regular);
+        /* One line, always: the height is fixed, and a label that wrapped —
+           while run() moves the width to a new one — stood on end. */
+        white-space: nowrap;
         cursor: pointer;
         transition:
           background-color var(--duration-instant),
@@ -487,7 +490,12 @@ export class KtButton extends KtElement {
     if (this.widthBefore && Math.abs(width - this.widthBefore) > 0.5) {
       play(
         this,
-        [{ width: `${this.widthBefore}px` }, { width: `${width}px` }],
+        [
+          // Clipped while it moves: a label wider than the button so far is
+          // cut at its edge, not spilled past it.
+          { width: `${this.widthBefore}px`, overflow: 'clip' },
+          { width: `${width}px`, overflow: 'clip' },
+        ],
         '--duration-normal',
         'kt-button-resize',
       );

@@ -2,7 +2,7 @@
  * run(), as it is seen: the plane flying off, the tick coming in, the width
  * following the label, the shake of a failure.
  */
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Send } from 'lucide';
 import { fixture, settle } from '#test/fixture';
 import '../../../styles.css';
@@ -210,4 +210,56 @@ describe('kt-button run(), in motion', () => {
     land();
     await running;
   });
+
+  /** How many lines a text runs to: the distinct tops of its line boxes. */
+  function lines(node: Node): number {
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    return new Set([...range.getClientRects()].map((rect) => Math.round(rect.top))).size;
+  }
+
+  /** Steps through a running resize, checking the label stays one line, clipped. */
+  function expectOneLine(el: KtButton, label: () => Node): void {
+    const resize = played(el).get('kt-button-resize')!;
+    expect(resize).toBeDefined();
+    const duration = resize.effect!.getComputedTiming().duration as number;
+    for (const at of [0, 0.25, 0.5, 0.75]) {
+      resize.pause();
+      resize.currentTime = duration * at;
+      expect(lines(label())).toBe(1);
+      // What does not fit yet is clipped at the button's edge, not spilled.
+      expect(getComputedStyle(el).overflow).toBe('clip');
+    }
+    resize.finish();
+    expect(getComputedStyle(el).overflow).not.toBe('clip');
+  }
+
+  for (const [from, to, outcome] of [
+    ['Send offline', 'Not sent', 'fail'],
+    ['Send', 'Sent to the whole team', 'succeed'],
+  ] as const) {
+    it(`keeps "${to}" on one line while the width moves, and "${from}" on the way back (${outcome})`, async () => {
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+      try {
+        const el = await fixture<KtButton>(
+          `<kt-button icon="send" done-label="${to}" failed-label="${to}">${from}</kt-button>`,
+        );
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        await el
+          .run(() =>
+            outcome === 'fail' ? Promise.reject(new Error('offline')) : Promise.resolve(),
+          )
+          .catch(() => undefined);
+        await settle(el);
+        expectOneLine(el, () => el.shadowRoot!.querySelector('button > span')!);
+
+        // Back to rest: the longer label returns into the narrower button.
+        await vi.advanceTimersByTimeAsync(2000);
+        await settle(el);
+        expectOneLine(el, () => el);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  }
 });
