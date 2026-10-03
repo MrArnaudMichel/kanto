@@ -1,5 +1,6 @@
 import { render } from 'lit';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { resetStage } from '../lib/stage.js';
 import { KT_ACCENTS, KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
 import { TEMPLATES } from '../templates/index.js';
@@ -13,7 +14,10 @@ function mount() {
   return host;
 }
 
-afterEach(() => document.body.replaceChildren());
+afterEach(() => {
+  document.body.replaceChildren();
+  resetStage();
+});
 
 describe('the home page hero', () => {
   it('shows a product, not code', () => {
@@ -50,6 +54,44 @@ describe('the home page hero', () => {
     const actions = mount().querySelector('.home-hero .home-actions')!.textContent!;
     expect(actions).toContain('Get started');
     expect(actions).toContain('npm install kanto-ds');
+  });
+});
+
+describe('the stage, used', () => {
+  const stat = (host: Element, label: string) =>
+    host.querySelector(`.stage kt-stat[label="${label}"]`)!.getAttribute('value');
+
+  it('changes its figures and chart with the period', async () => {
+    const host = mount();
+    const monthly = stat(host, 'Revenue');
+    const period = host.querySelector<HTMLElement & { value: string }>(
+      '.stage-head kt-segmented-control',
+    )!;
+    period.value = 'year';
+    period.dispatchEvent(new CustomEvent('kt-change', { detail: { value: 'year' } }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(stat(host, 'Revenue')).not.toBe(monthly);
+    const chart = host.querySelector<HTMLElement & { labels: string[] }>('.stage kt-chart')!;
+    expect(chart.labels.length).toBeGreaterThan(6);
+  });
+
+  it('adds the invoice it sends to the table, and counts it', async () => {
+    vi.useFakeTimers();
+    try {
+      const host = mount();
+      const before = Number(stat(host, 'Invoices sent')!.replace(/\D/g, ''));
+      const table = host.querySelector<
+        HTMLElement & { data: { customer: string; status: string }[] }
+      >('.stage kt-table')!;
+      const rows = table.data.length;
+      host.querySelector<HTMLElement>('.stage-send kt-button')!.click();
+      await vi.advanceTimersByTimeAsync(5000);
+      expect(table.data).toHaveLength(rows + 1);
+      expect(table.data[0]).toMatchObject({ customer: 'Acme Corp', status: 'Pending' });
+      expect(Number(stat(host, 'Invoices sent')!.replace(/\D/g, ''))).toBe(before + 1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 
