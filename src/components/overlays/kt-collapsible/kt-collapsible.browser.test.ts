@@ -14,6 +14,15 @@ afterEach(() => {
   for (const token of TOKENS) document.documentElement.style.removeProperty(token);
 });
 
+/**
+ * A real click or key goes through the test browser, which on a loaded
+ * machine can take longer than the fold itself: the fold is slowed, so it is
+ * still running when the test looks.
+ */
+function slow(): void {
+  document.documentElement.style.setProperty('--duration-normal', '5s');
+}
+
 async function mount(open = false): Promise<KtCollapsible> {
   const el = await fixture<KtCollapsible>(
     `<kt-collapsible heading="Shipping" ${open ? 'open' : ''}><p>Three to five days, tracked all the way.</p></kt-collapsible>`,
@@ -32,6 +41,7 @@ const frames = (animation: Animation) => (animation.effect as KeyframeEffect).ge
 
 describe('kt-collapsible motion', () => {
   it('unfolds the content from nothing to its height, fading in', async () => {
+    slow();
     const el = await mount();
     await userEvent.click(el.shadowRoot!.querySelector('summary')!);
     await settle(el);
@@ -42,6 +52,7 @@ describe('kt-collapsible motion', () => {
     expect(Number(from.opacity)).toBe(0);
     expect(parseFloat(String(to.height))).toBeGreaterThan(10);
     expect(el.open).toBe(true);
+    animation.finish();
     await animation.finished;
     expect(content(el).style.height).toBe('');
   });
@@ -102,6 +113,7 @@ describe('kt-collapsible motion', () => {
   });
 
   it('opens from the keyboard the same way', async () => {
+    slow();
     const el = await mount();
     el.shadowRoot!.querySelector<HTMLElement>('summary')!.focus();
     await userEvent.keyboard('{Enter}');

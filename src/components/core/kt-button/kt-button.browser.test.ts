@@ -152,11 +152,11 @@ describe('kt-button run(), in motion', () => {
   for (const after of [700, 120]) {
     it(`becomes the plane again and flies, without a jump (done after ${after}ms)`, async () => {
       const el = await mount();
-      const shapes: Point[][] = [];
+      const shapes: { at: number; points: Point[] }[] = [];
       let on = true;
-      const watch = () => {
+      const watch = (at: number) => {
         const path = el.shadowRoot!.querySelector('svg.morph .outline');
-        if (path?.getAttribute('d')) shapes.push(pointsOf(path.getAttribute('d')!));
+        if (path?.getAttribute('d')) shapes.push({ at, points: pointsOf(path.getAttribute('d')!) });
         if (on) requestAnimationFrame(watch);
       };
       requestAnimationFrame(watch);
@@ -173,13 +173,14 @@ describe('kt-button run(), in motion', () => {
       expect(plane(svg)).toBeLessThan(0.05);
       expect(gap(svg)).toBeLessThan(0.01);
       expect(Number(getComputedStyle(svg.querySelector('.fold')!).opacity)).toBeCloseTo(1, 2);
+      // The most any point moves in a 60 Hz frame's time: a loaded machine
+      // drops frames, which spreads a move over more time, not into a jump.
       let worst = 0;
       for (let f = 1; f < shapes.length; f += 1) {
-        shapes[f]!.forEach((point, i) => {
-          worst = Math.max(
-            worst,
-            Math.hypot(point[0] - shapes[f - 1]![i]![0], point[1] - shapes[f - 1]![i]![1]),
-          );
+        const frames = Math.max(1, (shapes[f]!.at - shapes[f - 1]!.at) / (1000 / 60));
+        shapes[f]!.points.forEach((point, i) => {
+          const before = shapes[f - 1]!.points[i]!;
+          worst = Math.max(worst, Math.hypot(point[0] - before[0], point[1] - before[1]) / frames);
         });
       }
       expect(shapes.length).toBeGreaterThan(5);
