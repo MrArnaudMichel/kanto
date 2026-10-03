@@ -9,6 +9,7 @@ import '../../../styles.css';
 import './kt-button.js';
 import { registerIcons } from 'kanto-ds';
 import type { KtButton } from 'kanto-ds';
+import { PLANE, POINTS, resample } from './morph.js';
 
 registerIcons({ Send });
 
@@ -23,6 +24,45 @@ function played(el: KtButton): Map<string, Animation> {
   return new Map(all.filter((a) => a.id.startsWith('kt-button')).map((a) => [a.id, a]));
 }
 const keyframes = (animation: Animation) => (animation.effect as KeyframeEffect).getKeyframes();
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/** The flight, once the spinner has become the plane again and it starts. */
+function takeOff(el: KtButton): Promise<Animation> {
+  return new Promise((resolve) => {
+    const look = () => {
+      const leave = played(el).get('kt-button-leave');
+      if (leave) resolve(leave);
+      else requestAnimationFrame(look);
+    };
+    look();
+  });
+}
+
+type Point = [number, number];
+const pointsOf = (d: string): Point[] =>
+  d
+    .replace(/[MZ]/g, '')
+    .split('L')
+    .map((pair) => pair.trim().split(/\s+/).map(Number) as Point);
+const PLANE_POINTS = resample(PLANE, POINTS);
+/** How far, at most, the drawn outline is from a shape, in icon units. */
+const offBy = (svg: Element, shape: readonly (readonly number[])[]) =>
+  Math.max(
+    ...pointsOf(svg.querySelector('.outline')!.getAttribute('d')!).map((p, i) =>
+      Math.hypot(p[0] - shape[i]![0]!, p[1] - shape[i]![1]!),
+    ),
+  );
+const plane = (svg: Element) => offBy(svg, PLANE_POINTS);
+/** How far the outline is from a ring of radius 9 round the centre. */
+const ring = (svg: Element) =>
+  Math.max(
+    ...pointsOf(svg.querySelector('.outline')!.getAttribute('d')!).map((p) =>
+      Math.abs(Math.hypot(p[0] - 12, p[1] - 12) - 9),
+    ),
+  );
+/** The share of the outline left undrawn: the spinner's opening. */
+const gap = (svg: Element) =>
+  Number((svg.querySelector('.outline')!.getAttribute('stroke-dasharray') ?? '1 0').split(' ')[1]);
 
 async function mount(): Promise<KtButton> {
   const el = await fixture<KtButton>(
@@ -83,9 +123,7 @@ describe('kt-button run(), in motion', () => {
   it('eases each leg of the flight on its own: back slowing, off speeding up', async () => {
     const el = await mount();
     const running = el.run(() => Promise.resolve());
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    await settle(el);
-    const leave = played(el).get('kt-button-leave')!;
+    const leave = await takeOff(el);
     expect(leave.effect!.getTiming().easing).toBe('linear');
     const [, back, off] = keyframes(leave);
     expect(back!.easing).not.toBe('linear');
@@ -94,23 +132,82 @@ describe('kt-button run(), in motion', () => {
     await running;
   });
 
-  it('keeps the plane still while it waits, then flies it from where it rests', async () => {
+  it('turns the plane into a spinning ring while it waits', async () => {
     const el = await mount();
     let land!: () => void;
     const running = el.run(() => new Promise<void>((resolve) => (land = resolve)));
     await settle(el);
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    const icon = el.shadowRoot!.querySelector('[part="icon"]')!;
-    expect(icon.getAttribute('name')).toBe('send');
-    expect(icon.getAnimations()).toHaveLength(0);
-    expect(getComputedStyle(icon).translate).toBe('none');
-
+    await wait(600);
+    const svg = el.shadowRoot!.querySelector('svg.morph')!;
+    expect(svg).not.toBeNull();
+    expect(ring(svg)).toBeLessThan(0.05);
+    expect(gap(svg)).toBeGreaterThan(0.2);
+    const offset = svg.querySelector('.outline')!.getAttribute('stroke-dashoffset');
+    await wait(100);
+    expect(svg.querySelector('.outline')!.getAttribute('stroke-dashoffset')).not.toBe(offset);
     land();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    const leave = played(el).get('kt-button-leave')!;
-    // `0 0` comes back as `0px`: a missing y is zero.
-    const [x, y = 0] = String(keyframes(leave)[0]!.translate).split(' ').map(parseFloat);
-    expect([x, y]).toEqual([0, 0]);
+    await running;
+  });
+
+  for (const after of [700, 120]) {
+    it(`becomes the plane again and flies, without a jump (done after ${after}ms)`, async () => {
+      const el = await mount();
+      const shapes: Point[][] = [];
+      let on = true;
+      const watch = () => {
+        const path = el.shadowRoot!.querySelector('svg.morph .outline');
+        if (path?.getAttribute('d')) shapes.push(pointsOf(path.getAttribute('d')!));
+        if (on) requestAnimationFrame(watch);
+      };
+      requestAnimationFrame(watch);
+      const leaving = new Promise<void>((resolve) => {
+        const look = () =>
+          played(el).has('kt-button-leave') ? resolve() : requestAnimationFrame(look);
+        look();
+      });
+      const running = el.run(() => wait(after));
+      await leaving;
+      on = false;
+      const svg = el.shadowRoot!.querySelector('svg.morph')!;
+      // At take-off: the plane, whole — no gap, the fold back.
+      expect(plane(svg)).toBeLessThan(0.05);
+      expect(gap(svg)).toBeLessThan(0.01);
+      expect(Number(getComputedStyle(svg.querySelector('.fold')!).opacity)).toBeCloseTo(1, 2);
+      let worst = 0;
+      for (let f = 1; f < shapes.length; f += 1) {
+        shapes[f]!.forEach((point, i) => {
+          worst = Math.max(
+            worst,
+            Math.hypot(point[0] - shapes[f - 1]![i]![0], point[1] - shapes[f - 1]![i]![1]),
+          );
+        });
+      }
+      expect(shapes.length).toBeGreaterThan(5);
+      expect(worst).toBeLessThan(1.5);
+      await running;
+    });
+  }
+
+  it('becomes the plane again before it says it failed', async () => {
+    const el = await mount();
+    const running = el.run(() => wait(500).then(() => Promise.reject(new Error('offline'))));
+    await running.catch(() => undefined);
+    await settle(el);
+    expect(el.shadowRoot!.querySelector('[part="icon"]')!.getAttribute('name')).toBe(
+      'circle-alert',
+    );
+    expect(played(el).has('kt-button-shake')).toBe(true);
+  });
+
+  it('keeps the plane, still, when the theme says no motion', async () => {
+    for (const token of TOKENS) document.documentElement.style.setProperty(token, '0s');
+    const el = await mount();
+    let land!: () => void;
+    const running = el.run(() => new Promise<void>((resolve) => (land = resolve)));
+    await settle(el);
+    expect(el.shadowRoot!.querySelector('svg.morph')).toBeNull();
+    expect(el.shadowRoot!.querySelector('[part="icon"]')!.getAttribute('name')).toBe('send');
+    land();
     await running;
   });
 });

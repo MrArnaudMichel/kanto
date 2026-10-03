@@ -14,8 +14,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   `done-label` — or, if it throws, a shake, an alert and `failed-label`, and
   rests again two seconds later. It hands back what the action resolved or
   threw, and a second call while one runs gets the same promise. A `send`
-  plane waits still and flies off to the top right when done; other icons
-  show a spinner while waiting, and fade.
+  plane turns into the spinner itself — its outline drawn round into a
+  turning arc — then back into the plane, which flies off to the top right;
+  other icons give way to a spinner, and fade.
 
 ### Changed
 

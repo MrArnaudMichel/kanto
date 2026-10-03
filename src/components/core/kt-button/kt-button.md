@@ -47,9 +47,10 @@ throws. Two seconds later the button is back at rest. `done-label` and
 
 It resolves with what the action resolved with and rejects with what it threw,
 so the caller still handles the error. A second call while one runs gets the
-same promise. Some icons leave in their own way — a `send` plane flies off to
-the top right — and the rest fade; under reduced motion only the label and
-icon change.
+same promise. A `send` plane turns into the spinner itself while it waits —
+its outline drawn round into a turning arc — and back into the plane, which
+flies off to the top right; other icons give way to a spinner, and fade. Under
+reduced motion only the label and icon change.
 
 ## Forms
 

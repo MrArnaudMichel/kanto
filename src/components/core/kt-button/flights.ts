@@ -5,8 +5,11 @@
  * breath back, then flies off to the top right. Keyed by the Lucide name.
  */
 export interface Flight {
-  /** While the action runs, the icon stays, still, instead of a spinner. */
-  readonly waitsStill?: boolean;
+  /**
+   * While the action runs, the icon's own outline becomes the spinner — and
+   * becomes the icon again when it is done — instead of being swapped for one.
+   */
+  readonly morphs?: boolean;
   /**
    * On success, before the tick. Each keyframe carries the easing of the
    * leg after it; the whole runs on a linear clock.
@@ -30,7 +33,7 @@ const FADE: Flight = {
 };
 
 const PLANE: Flight = {
-  waitsStill: true,
+  morphs: true,
   leaveScale: 1.5,
   leave: [
     { translate: '0 0', rotate: '0deg', opacity: 1, easing: 'cubic-bezier(0.2, 0, 0.4, 1)' },

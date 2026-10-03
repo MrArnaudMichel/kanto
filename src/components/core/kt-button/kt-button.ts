@@ -2,8 +2,9 @@ import { css, html, nothing, type PropertyValues, type TemplateResult } from 'li
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
-import { play } from '#internal/motion';
+import { durationOf, play } from '#internal/motion';
 import { ARRIVE, SHAKE, flightOf } from './flights.js';
+import { FOLD, PLANE, PLANE_START, POINTS, circle, mix, pathOf, resample } from './morph.js';
 import '../kt-icon/kt-icon.js';
 
 export type KtButtonVariant =
@@ -26,6 +27,16 @@ type Phase = 'idle' | 'busy' | 'leaving' | 'done' | 'failed';
 
 /** Icon size per button size, so the glyph stays optically balanced. */
 const ICON_SIZE: Record<KtButtonSize, number> = { small: 16, medium: 20, large: 24 };
+
+/** The plane and the spinner's ring, as the same 64 points. */
+const PLANE_POINTS = resample(PLANE, POINTS);
+const RING_POINTS = circle(POINTS, PLANE_START);
+/** The spinner's opening, as a share of the ring. */
+const GAP = 0.28;
+/** One lap of the spinner's arc, in milliseconds. */
+const LAP_MS = 1000;
+
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
 
 /**
  * The Kanto action button.
@@ -323,6 +334,23 @@ export class KtButton extends KtElement {
   /** The button's width before a label change, to move from. */
   private widthBefore = 0;
 
+  /** Whether this run turns its icon into the spinner and back. */
+  private morphing = false;
+  /**
+   * The morph, driven frame by frame: `m` from icon (0) to ring (1), moving
+   * towards `target`; `offset` walks the arc round the ring. One state, so a
+   * change of mind half-way goes back from where it is, never from an end.
+   */
+  private shape = {
+    m: 0,
+    target: 0,
+    offset: 0,
+    frame: 0,
+    last: 0,
+    span: 1,
+    settled: null as (() => void) | null,
+  };
+
   /**
    * Runs `action` and shows how it went. A second call while it runs gets the
    * same promise rather than a second run. Resolves with what the action
@@ -331,6 +359,7 @@ export class KtButton extends KtElement {
   run<T>(action: () => Promise<T>): Promise<T> {
     if (this.running) return this.running as Promise<T>;
     clearTimeout(this.restTimer);
+    this.morphing = Boolean(flightOf(this.icon).morphs) && durationOf(this, '--duration-slow') > 0;
     this.phase = 'busy';
     const running = (async () => {
       try {
@@ -349,6 +378,8 @@ export class KtButton extends KtElement {
   }
 
   private async finish(phase: 'done' | 'failed'): Promise<void> {
+    // The spinner becomes the icon again before anything else happens.
+    if (this.morphing) await this.morphTo(0);
     if (phase === 'done') {
       // The icon leaves first, in its own way; then the tick comes in.
       const icon = this.renderRoot.querySelector('[part="icon"]');
@@ -364,6 +395,7 @@ export class KtButton extends KtElement {
       await leaving?.finished.catch(() => undefined);
     }
     this.widthBefore = this.getBoundingClientRect().width;
+    this.morphing = false;
     this.phase = phase;
     this.restTimer = setTimeout(() => {
       this.widthBefore = this.getBoundingClientRect().width;
@@ -374,7 +406,60 @@ export class KtButton extends KtElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     clearTimeout(this.restTimer);
+    cancelAnimationFrame(this.shape.frame);
+    this.shape.frame = 0;
+    this.shape.settled?.();
     if (!this.running) this.phase = 'idle';
+  }
+
+  /** Moves the morph towards the ring (1) or the icon (0); resolves on arrival at the icon. */
+  private morphTo(target: 0 | 1): Promise<void> {
+    const shape = this.shape;
+    shape.target = target;
+    shape.span = durationOf(this, '--duration-slow');
+    const arrived = new Promise<void>((resolve) => {
+      if (target === 0 && shape.m === 0 && !shape.frame) resolve();
+      else if (target === 0) shape.settled = resolve;
+      else resolve();
+    });
+    if (!shape.frame) {
+      shape.last = 0;
+      shape.frame = requestAnimationFrame(this.step);
+    }
+    return arrived;
+  }
+
+  private step = (now: number): void => {
+    const shape = this.shape;
+    const elapsed = shape.last ? now - shape.last : 0;
+    shape.last = now;
+    const move = elapsed / shape.span;
+    shape.m =
+      shape.target > shape.m
+        ? Math.min(shape.target, shape.m + move)
+        : Math.max(shape.target, shape.m - move);
+    shape.offset = (shape.offset - elapsed / LAP_MS) % 1;
+    this.drawShape();
+    if (shape.target === 0 && shape.m === 0) {
+      shape.frame = 0;
+      shape.settled?.();
+      shape.settled = null;
+      return;
+    }
+    shape.frame = requestAnimationFrame(this.step);
+  };
+
+  /** Draws the morph where it stands: the outline, its opening, the fold. */
+  private drawShape(): void {
+    const svg = this.renderRoot.querySelector('svg.morph');
+    if (!svg) return;
+    const t = easeInOut(this.shape.m);
+    const outline = svg.querySelector('.outline')!;
+    outline.setAttribute('d', pathOf(mix(PLANE_POINTS, RING_POINTS, t)));
+    const gap = GAP * t;
+    outline.setAttribute('stroke-dasharray', `${1 - gap} ${gap}`);
+    outline.setAttribute('stroke-dashoffset', String(this.shape.offset));
+    svg.querySelector<SVGElement>('.fold')!.style.opacity = String(Math.max(0, 1 - t * 2.5));
   }
 
   // `phase` is private, so the map is read untyped.
@@ -382,6 +467,11 @@ export class KtButton extends KtElement {
     super.updated(changed);
     const was = changed.get('phase') as Phase | undefined;
     if (was === undefined || !changed.has('phase')) return;
+    if (this.phase === 'busy' && this.morphing) {
+      // Drawn as the icon before the first paint, then on its way to the ring.
+      this.drawShape();
+      void this.morphTo(1);
+    }
     const icon = this.renderRoot.querySelector('[part="icon"]');
     const button = this.renderRoot.querySelector('button')!;
 
@@ -454,7 +544,9 @@ export class KtButton extends KtElement {
     switch (this.phase) {
       case 'busy':
         // An icon with a flight of its own waits still, ready to go.
-        return this.icon && flight.waitsStill
+        // An icon that becomes the spinner itself, or that keeps still
+        // when there is no time to move, is kept rather than swapped.
+        return this.icon && flight.morphs
           ? { name: this.icon, motion: '' }
           : { name: 'loader-circle', motion: 'spin' };
       case 'done':
@@ -469,17 +561,36 @@ export class KtButton extends KtElement {
   override render(): TemplateResult {
     const iconOnly = Boolean(this.icon) && !this.hasLabelText;
     const shown = this.shownIcon;
-    const icon = shown
-      ? html`<kt-icon
-          part="icon"
-          class=${shown.motion || nothing}
-          name=${shown.name}
-          size=${ICON_SIZE[this.size]}
-        ></kt-icon>`
-      : nothing;
+    const busy = this.phase === 'busy' || this.phase === 'leaving';
+    // While it morphs, the icon is drawn here, point by point; see drawShape().
+    const icon =
+      busy && this.morphing
+        ? html`<svg
+            part="icon"
+            class="morph"
+            viewBox="0 0 24 24"
+            width=${ICON_SIZE[this.size]}
+            height=${ICON_SIZE[this.size]}
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path class="outline" pathLength="1"></path>
+            <path class="fold" d=${FOLD}></path>
+          </svg>`
+        : shown
+          ? html`<kt-icon
+              part="icon"
+              class=${shown.motion || nothing}
+              name=${shown.name}
+              size=${ICON_SIZE[this.size]}
+            ></kt-icon>`
+          : nothing;
     const replaced =
       this.phase === 'done' ? this.doneLabel : this.phase === 'failed' ? this.failedLabel : '';
-    const busy = this.phase === 'busy' || this.phase === 'leaving';
 
     return html`<button
         part="button"
