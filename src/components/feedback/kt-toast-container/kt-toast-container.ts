@@ -1,6 +1,7 @@
 import { css, html, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
+import { durationOf, easingOf } from '#internal/motion';
 import type { KtToast, KtToastVariant } from '../kt-toast/kt-toast.js';
 import '../kt-toast/kt-toast.js';
 
@@ -73,6 +74,10 @@ export class KtToastContainer extends KtElement {
       ::slotted(kt-toast) {
         pointer-events: auto;
       }
+      /* On its way out: already gone, as far as a pointer is concerned. */
+      ::slotted(kt-toast[leaving]) {
+        pointer-events: none;
+      }
     `,
   ];
 
@@ -85,7 +90,7 @@ export class KtToastContainer extends KtElement {
 
   /** The toasts currently on screen, oldest first. */
   get toasts(): KtToast[] {
-    return [...this.querySelectorAll('kt-toast')];
+    return [...this.querySelectorAll<KtToast>('kt-toast:not([leaving])')];
   }
 
   /** Raises a toast and returns it, so a caller can close it early. */
@@ -106,17 +111,65 @@ export class KtToastContainer extends KtElement {
     else this.append(toast);
 
     this.enforceLimit();
+    void toast.updateComplete.then(() => {
+      if (toast.isConnected && !toast.hasAttribute('leaving')) this.move(toast, 'in');
+    });
     return toast;
   }
 
-  /** Removes one toast. */
+  /** Removes one toast: it fades and folds away, then leaves the page. */
   dismiss(toast: KtToast): void {
-    toast.remove();
+    if (toast.hasAttribute('leaving')) return;
+    toast.setAttribute('leaving', '');
+    toast.setAttribute('aria-hidden', 'true');
+    const animation = this.move(toast, 'out');
+    if (!animation) toast.remove();
+    else
+      void animation.finished.then(
+        () => toast.remove(),
+        () => toast.remove(),
+      );
   }
 
   /** Removes every toast. */
   clear(): void {
-    for (const toast of this.toasts) toast.remove();
+    for (const toast of this.toasts) this.dismiss(toast);
+  }
+
+  /**
+   * Slides a toast in from the screen edge, or out towards it, while its
+   * height opens or folds — so the rest of the stack moves smoothly rather
+   * than jumping. Null when the theme gives no time to move in: reduced
+   * motion, or no theme at all.
+   */
+  private move(toast: KtToast, way: 'in' | 'out'): Animation | null {
+    const duration = durationOf(this, way === 'in' ? '--duration-normal' : '--duration-fast');
+    if (duration <= 0 || typeof toast.animate !== 'function') return null;
+    for (const running of toast.getAnimations()) running.cancel();
+
+    const height = `${toast.getBoundingClientRect().height}px`;
+    const gap = `-${getComputedStyle(this).rowGap}`;
+    // The gap beside it folds with it: the one before it, or after it when first.
+    const margin = toast.previousElementSibling ? 'marginTop' : 'marginBottom';
+    const away =
+      way === 'in'
+        ? `translateY(${this.position.startsWith('top') ? -8 : 8}px)`
+        : `translateX(${this.position.endsWith('left') ? -16 : 16}px)`;
+    const shown: Keyframe = { opacity: 1, height, transform: 'none', [margin]: '0px' };
+    const hidden: Keyframe = { opacity: 0, height: '0px', transform: away, [margin]: gap };
+
+    toast.style.overflow = 'clip';
+    const animation = toast.animate(way === 'in' ? [hidden, shown] : [shown, hidden], {
+      duration,
+      easing: easingOf(this),
+      fill: way === 'out' ? 'forwards' : 'none',
+    });
+    animation.id = `kt-toast-${way}`;
+    const done = () => {
+      if (way === 'in') toast.style.removeProperty('overflow');
+    };
+    void animation.finished.then(done, done);
+    return animation;
   }
 
   private enforceLimit(): void {
@@ -126,7 +179,10 @@ export class KtToastContainer extends KtElement {
     const excess = toasts.length - this.limit;
     const oldestFirst = this.position.startsWith('top') ? [...toasts].reverse() : toasts;
 
-    for (let index = 0; index < excess; index += 1) oldestFirst[index]?.remove();
+    for (let index = 0; index < excess; index += 1) {
+      const oldest = oldestFirst[index];
+      if (oldest) this.dismiss(oldest);
+    }
   }
 
   /** Hovering the stack freezes every countdown; leaving it resumes them. */
