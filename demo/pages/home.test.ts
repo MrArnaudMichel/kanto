@@ -75,6 +75,20 @@ describe('the stage, used', () => {
     expect(chart.labels.length).toBeGreaterThan(6);
   });
 
+  it('searches its own table', async () => {
+    const host = mount();
+    const search = host.querySelector('.stage-search')!;
+    search.dispatchEvent(new CustomEvent('kt-input', { detail: { value: 'glob' } }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const table = host.querySelector<HTMLElement & { data: { customer: string }[] }>(
+      '.stage kt-table',
+    )!;
+    expect(table.data.map((row) => row.customer)).toEqual(['Globex']);
+    search.dispatchEvent(new CustomEvent('kt-clear'));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(table.data.length).toBeGreaterThan(1);
+  });
+
   it('adds the invoice it sends to the table, and counts it', async () => {
     vi.useFakeTimers();
     try {

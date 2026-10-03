@@ -51,6 +51,8 @@ type Invoice = { id: string; customer: string; amount: string; status: string };
 let period: Period = 'month';
 let invoices: Invoice[] = [];
 let sentHere = 0;
+/** What the stage's search holds: it narrows the table to matching invoices. */
+let query = '';
 
 /** Back to the site's accent and the stage's first state, for the next visit. */
 export function resetStage(): void {
@@ -58,6 +60,7 @@ export function resetStage(): void {
   period = 'month';
   invoices = [];
   sentHere = 0;
+  query = '';
 }
 
 const NAV = [
@@ -123,6 +126,14 @@ function swatches(current: string, onPick: (id: string) => void): TemplateResult
   </div>`;
 }
 
+/** The invoices whose number or customer holds the query, ignoring case. */
+function matching(list: readonly Invoice[], text: string): Invoice[] {
+  const wanted = text.trim().toLowerCase();
+  return wanted
+    ? list.filter((invoice) => `${invoice.id} ${invoice.customer}`.toLowerCase().includes(wanted))
+    : [...list];
+}
+
 /** Adds the invoice the form holds to the top of the table, and counts it. */
 function record(form: Element): void {
   const select = form.querySelector<HTMLElement & { value: string | null }>('kt-select');
@@ -167,7 +178,23 @@ export function stage({
     >
       <div class="stage-bar">
         <span class="stage-brand"><kt-icon name="layers" size="18"></kt-icon>Northwind</span>
-        <kt-input class="stage-search" size="small" placeholder="Search invoices"></kt-input>
+        <kt-input
+          class="stage-search"
+          size="small"
+          placeholder="Search invoices"
+          label="Search invoices"
+          icon="search"
+          clearable
+          .value=${query}
+          @kt-input=${(event: CustomEvent<{ value: string }>) => {
+            query = event.detail.value;
+            rerender();
+          }}
+          @kt-clear=${() => {
+            query = '';
+            rerender();
+          }}
+        ></kt-input>
         <kt-avatar name="Dana Whitfield" size="small"></kt-avatar>
       </div>
       <div class="stage-body">
@@ -266,7 +293,7 @@ export function stage({
             <h3>Recent invoices</h3>
             <kt-table
               .columns=${COLUMNS}
-              .data=${invoices}
+              .data=${matching(invoices, query)}
               .renderCell=${statusBadge}
               label="Recent invoices"
             ></kt-table>
