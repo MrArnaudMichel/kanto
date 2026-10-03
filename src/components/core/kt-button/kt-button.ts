@@ -240,18 +240,35 @@ export class KtButton extends KtElement {
       .spin {
         animation: kt-button-spin calc(var(--duration-slow) * 2) linear infinite;
       }
+      /* Waiting to fly: the plane lifts a little, easing into it, then
+         breathes — a slow rise and fall. On its own layer, so it moves by
+         fractions of a pixel instead of snapping between whole ones. */
       .hover {
-        animation: kt-button-hover calc(var(--duration-slow) * 2) var(--easing-standard) infinite
-          alternate;
+        will-change: translate, transform;
+        animation:
+          kt-button-lift var(--duration-slow) cubic-bezier(0.2, 0, 0.2, 1) forwards,
+          kt-button-breathe calc(var(--duration-slow) * 3) ease-in-out var(--duration-slow) infinite
+            alternate;
       }
       @keyframes kt-button-spin {
         to {
           rotate: 1turn;
         }
       }
-      @keyframes kt-button-hover {
+      @keyframes kt-button-lift {
+        from {
+          translate: 0 0;
+        }
         to {
-          translate: 0.08em -0.12em;
+          translate: 0.1em -0.1em;
+        }
+      }
+      @keyframes kt-button-breathe {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-0.12em);
         }
       }
       .visually-hidden {
@@ -362,14 +379,16 @@ export class KtButton extends KtElement {
       // The icon leaves first, in its own way, from wherever its waiting
       // motion had taken it; then the tick comes in.
       const icon = this.renderRoot.querySelector('[part="icon"]');
-      const from = icon ? getComputedStyle(icon).translate : 'none';
+      const at = icon ? getComputedStyle(icon) : null;
+      const from = at?.translate ?? 'none';
+      const breathing = at?.transform ?? 'none';
       this.phase = 'leaving';
       await this.updateComplete;
       const flight = flightOf(this.icon);
       const leaving = icon
         ? play(
             icon,
-            flight.leave(from === 'none' ? '0 0' : from),
+            flight.leave(from === 'none' ? '0 0' : from, breathing),
             '--duration-slow',
             'kt-button-leave',
             {

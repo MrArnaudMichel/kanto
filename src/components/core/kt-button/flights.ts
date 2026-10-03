@@ -9,11 +9,12 @@ export interface Flight {
   readonly waiting?: 'hover';
   /**
    * On success, before the tick. The first keyframe is where the icon is
-   * when it goes — wherever its waiting motion had taken it — so it leaves
-   * from there instead of jumping back first. Each keyframe carries the
-   * easing of the leg after it; the whole runs on a linear clock.
+   * when it goes — its `translate` and `transform`, wherever its waiting
+   * motion had taken them — so it leaves from there instead of jumping back
+   * first. Each keyframe carries the easing of the leg after it; the whole
+   * runs on a linear clock.
    */
-  readonly leave: (from: string) => Keyframe[];
+  readonly leave: (from: string, transform: string) => Keyframe[];
   /** How many times the slow duration the leaving takes. */
   readonly leaveScale?: number;
   /** Back to rest, a moment later. */
@@ -21,9 +22,9 @@ export interface Flight {
 }
 
 const FADE: Flight = {
-  leave: (from) => [
-    { translate: from, opacity: 1, scale: 1, easing: 'ease-in' },
-    { translate: from, opacity: 0, scale: 0.6 },
+  leave: (from, transform) => [
+    { translate: from, transform, opacity: 1, scale: 1, easing: 'ease-in' },
+    { translate: from, transform: 'none', opacity: 0, scale: 0.6 },
   ],
   back: [
     { opacity: 0, scale: 0.6 },
@@ -34,11 +35,18 @@ const FADE: Flight = {
 const PLANE: Flight = {
   waiting: 'hover',
   leaveScale: 1.5,
-  leave: (from) => [
-    { translate: from, rotate: '0deg', opacity: 1, easing: 'cubic-bezier(0.2, 0, 0.4, 1)' },
+  leave: (from, transform) => [
+    {
+      translate: from,
+      transform,
+      rotate: '0deg',
+      opacity: 1,
+      easing: 'cubic-bezier(0.2, 0, 0.4, 1)',
+    },
     // A breath back, slowing into it, before it goes.
     {
       translate: '-0.15em 0.15em',
+      transform: 'none',
       rotate: '-6deg',
       opacity: 1,
       offset: 0.3,
@@ -46,7 +54,7 @@ const PLANE: Flight = {
     },
     // Then off, speeding up, fading only at the end.
     { translate: '1.1em -1.1em', rotate: '6deg', opacity: 1, offset: 0.75 },
-    { translate: '1.8em -1.8em', rotate: '10deg', opacity: 0 },
+    { translate: '1.8em -1.8em', transform: 'none', rotate: '10deg', opacity: 0 },
   ],
   back: [
     { translate: '-0.8em 0.8em', opacity: 0 },
