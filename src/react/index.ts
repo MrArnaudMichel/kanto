@@ -57,6 +57,7 @@ import { KtSegmentedControl as KtSegmentedControlElement } from '../components/n
 import { KtSubMenuNavigation as KtSubMenuNavigationElement } from '../components/navigation/kt-sub-menu-navigation/kt-sub-menu-navigation.js';
 import { KtTabs as KtTabsElement } from '../components/navigation/kt-tabs/kt-tabs.js';
 import { KtHeader as KtHeaderElement } from '../components/navigation/kt-header/kt-header.js';
+import { KtFooter as KtFooterElement } from '../components/navigation/kt-footer/kt-footer.js';
 import { KtToggleButton as KtToggleButtonElement } from '../components/navigation/kt-toggle-button/kt-toggle-button.js';
 import { KtToggleButtonGroup as KtToggleButtonGroupElement } from '../components/navigation/kt-toggle-button-group/kt-toggle-button-group.js';
 import { KtAlert as KtAlertElement } from '../components/feedback/kt-alert/kt-alert.js';
@@ -329,6 +330,12 @@ export const KtTabs = createComponent({
   elementClass: KtTabsElement,
   react: React,
   events: { onKtChange: 'kt-change' as Kt<{ value: string | number }> },
+});
+
+export const KtFooter = createComponent({
+  tagName: 'kt-footer',
+  elementClass: KtFooterElement,
+  react: React,
 });
 
 export const KtHeader = createComponent({

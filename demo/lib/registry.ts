@@ -793,6 +793,47 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button slot="actions" size="small" variant="dark" icon="search">Search</kt-button>
     </kt-header>`,
 
+  'kt-footer': () => {
+    const columns = [
+      {
+        heading: 'Product',
+        links: [
+          { label: 'Features', href: '#/components/kt-footer' },
+          { label: 'Pricing', href: '#/components/kt-footer' },
+          { label: 'Changelog', href: '#/components/kt-footer' },
+        ],
+      },
+      {
+        heading: 'Company',
+        links: [
+          { label: 'About', href: '#/components/kt-footer' },
+          { label: 'GitHub', href: 'https://github.com', external: true },
+        ],
+      },
+      {
+        heading: 'Help',
+        links: [
+          { label: 'Documentation', href: '#/components/kt-footer' },
+          { label: 'Contact', href: '#/components/kt-footer' },
+        ],
+      },
+    ];
+    return html`<div style="display:grid;gap:24px">
+      <kt-footer label="Site" .columns=${columns}>
+        <strong slot="brand">ACME</strong>
+        Invoicing for small teams.
+        <kt-button slot="actions" size="small" variant="secondary" icon="mail"
+          >Contact us</kt-button
+        >
+        <span slot="legal">© 2026 Acme. All rights reserved.</span>
+      </kt-footer>
+      <kt-footer label="Product" variant="simple" .columns=${columns.slice(0, 1)}>
+        <strong slot="brand">ACME</strong>
+        <span slot="legal">© 2026 Acme</span>
+      </kt-footer>
+    </div>`;
+  },
+
   'kt-breadcrumb': () => {
     const trail = html`<kt-breadcrumb
       .items=${[

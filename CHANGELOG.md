@@ -9,6 +9,21 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+**`kt-footer`** — the site footer: the brand, columns of links and a legal
+line.
+
+- The columns are data — `footer.columns = [{ heading, links }]` — each link a
+  label and an address; an `external` one is marked with an icon a screen
+  reader skips.
+- Slots for the brand, a word under it, actions and the legal line, whose row
+  is left out while empty.
+- `variant="simple"` runs the links along one row; `heading-level`,
+  `bordered` and `--kt-footer-max-width` fit it to the page.
+- Lays itself out from its own width, side by side or stacked; a contentinfo
+  landmark with its columns as one navigation.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 - **`kt-button` runs an action and shows how it went.** `run(action)` keeps
   the button busy while the action runs, then shows a tick — and
   `done-label` — or, if it throws, a shake, an alert and `failed-label`, and
@@ -53,6 +68,12 @@ stops under `prefers-reduced-motion`.
   headline, re-coloured from a row of swatches; three reasons, each shown
   working; the wall of screens; every template and app as a live miniature;
   and the way in at the end. No code until it is asked for.
+
+### Fixed
+
+- Links in the page took the accent's fill shade, 3.4:1 on the dark theme:
+  `a` now takes `--color-primary-text`, made for text, and reads 4.5:1 in
+  both themes.
 
 ## [1.8.0] — 2026-10-03
 

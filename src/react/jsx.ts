@@ -54,6 +54,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtFooter,
   KtToggleButton,
   KtToggleButtonGroup,
   KtAlert,
@@ -168,6 +169,7 @@ declare module 'react' {
       >;
       'kt-tabs': KtProps<KtTabs, { 'kt-change': { value: string | number } }>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
+      'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<
         KtToggleButton,
         { 'kt-change': { selected: boolean; value: string } }

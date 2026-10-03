@@ -84,6 +84,7 @@ writing a control of your own.
 ### Navigation
 
 - `kt-breadcrumb` — A trail showing where the current page sits.
+- `kt-footer` — The site footer: a contentinfo landmark holding the brand and a word about the product, columns of links, actions, and a legal line under them.
 - `kt-header` — The application header: a banner landmark holding the brand, the primary navigation and a row of actions.
 - `kt-page-header` — The block every screen opens with: an overline, a title, a sentence, and the actions that belong to the page rather than to anything on it.
 - `kt-segmented-control` — A small set of mutually exclusive choices, drawn as one inset track with the selected segment raised out of it.

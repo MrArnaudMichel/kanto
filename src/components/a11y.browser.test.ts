@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtFooter,
   KtSteps,
   KtCommandPalette,
   KtBreadcrumb,
@@ -227,6 +228,34 @@ const CASES: Record<string, Case> = {
       <span slot="brand">KANTO</span>
       <nav aria-label="Main"><a href="/docs">Docs</a></nav>
     </kt-header>`,
+  },
+  'kt-footer': {
+    markup: `<kt-footer label="Site">
+      <a slot="brand" href="/">ACME</a>
+      Invoicing for small teams.
+      <span slot="legal">© 2026 Acme</span>
+    </kt-footer>`,
+    setup: (el) => {
+      (el as KtFooter).columns = [
+        { heading: 'Product', links: [{ label: 'Pricing', href: '/pricing' }] },
+        {
+          heading: 'Company',
+          links: [{ label: 'GitHub', href: 'https://github.com/acme', external: true }],
+        },
+      ];
+    },
+  },
+  'kt-footer (simple)': {
+    markup: `<kt-footer label="Site" variant="simple"><a slot="brand" href="/">ACME</a></kt-footer>`,
+    setup: (el) => {
+      (el as KtFooter).columns = [
+        { heading: 'Product', links: [{ label: 'Pricing', href: '/pricing' }] },
+        {
+          heading: 'Company',
+          links: [{ label: 'GitHub', href: 'https://github.com/acme', external: true }],
+        },
+      ];
+    },
   },
   'kt-page-header': {
     markup: '<kt-page-header eyebrow="Dashboard" heading="Good evening"></kt-page-header>',

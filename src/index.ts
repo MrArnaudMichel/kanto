@@ -78,6 +78,12 @@ export { KtSteps } from './components/navigation/kt-steps/kt-steps.js';
 export type { KtStep, KtStepsOrientation } from './components/navigation/kt-steps/kt-steps.js';
 export type { KtTab } from './components/navigation/kt-tabs/kt-tabs.js';
 export { KtHeader } from './components/navigation/kt-header/kt-header.js';
+export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
+export type {
+  KtFooterColumn,
+  KtFooterLink,
+  KtFooterVariant,
+} from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtNavItem,
   KtNavSection,

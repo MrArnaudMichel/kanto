@@ -1,6 +1,6 @@
 # Kanto
 
-> Fifty-three accessible web components for dashboards, admin tools and forms,
+> Fifty-four accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -71,6 +71,7 @@ In a project, every page below is also at
 ### Navigation
 
 - [kt-breadcrumb](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-breadcrumb/kt-breadcrumb.md): A trail showing where the current page sits.
+- [kt-footer](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-footer/kt-footer.md): The site footer: a contentinfo landmark holding the brand and a word about the product, columns of links, actions, and a legal line under them.
 - [kt-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-header/kt-header.md): The application header: a banner landmark holding the brand, the primary navigation and a row of actions.
 - [kt-page-header](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-page-header/kt-page-header.md): The block every screen opens with: an overline, a title, a sentence, and the actions that belong to the page rather than to anything on it.
 - [kt-segmented-control](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-segmented-control/kt-segmented-control.md): A small set of mutually exclusive choices, drawn as one inset track with the selected segment raised out of it.
