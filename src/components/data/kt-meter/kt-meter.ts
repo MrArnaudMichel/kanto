@@ -85,6 +85,8 @@ export class KtMeter extends KtElement {
         min-width: 2px;
         height: 100%;
         border-radius: var(--radius-full);
+        /* A new value moves the fill, the way a progress bar's does. */
+        transition: width var(--duration-slow) var(--easing-standard);
       }
 
       .legend {
