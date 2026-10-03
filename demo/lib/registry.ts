@@ -1,7 +1,7 @@
 import { html, type TemplateResult } from 'lit';
 import { code } from './highlight.js';
 import { ref } from 'lit/directives/ref.js';
-import type { KtSegmentedControl, KtTable } from 'kanto-ds';
+import type { KtButton, KtSegmentedControl, KtTable } from 'kanto-ds';
 import { MONTHS, buildEntities, monthlyRevenue, serverPage } from './data.js';
 
 /**
@@ -508,14 +508,47 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
 
   'kt-button': () =>
     html`<div class="demo-row">
-      <kt-button icon="plus">New entity</kt-button>
-      <kt-button variant="secondary" icon="refresh-cw">Refresh</kt-button>
-      <kt-button variant="dark">Cancel</kt-button>
-      <kt-button variant="danger">Delete</kt-button>
-      <kt-button variant="text">View full history</kt-button>
-      <kt-button icon="trash-2" variant="delete" label="Delete"></kt-button>
-      <kt-button disabled>Disabled</kt-button>
-    </div>`,
+        <kt-button icon="plus">New entity</kt-button>
+        <kt-button variant="secondary" icon="refresh-cw">Refresh</kt-button>
+        <kt-button variant="dark">Cancel</kt-button>
+        <kt-button variant="danger">Delete</kt-button>
+        <kt-button variant="text">View full history</kt-button>
+        <kt-button icon="trash-2" variant="delete" label="Delete"></kt-button>
+        <kt-button disabled>Disabled</kt-button>
+      </div>
+      <div class="demo-row">
+        <kt-button
+          icon="send"
+          done-label="Sent"
+          @click=${(event: Event) =>
+            void (event.currentTarget as KtButton).run(
+              () => new Promise((done) => setTimeout(done, 900)),
+            )}
+          >Send</kt-button
+        >
+        <kt-button
+          variant="secondary"
+          icon="send"
+          failed-label="Not sent"
+          @click=${(event: Event) =>
+            void (event.currentTarget as KtButton)
+              .run(
+                () => new Promise((_, fail) => setTimeout(() => fail(new Error('offline')), 900)),
+              )
+              .catch(() => undefined)}
+          >Send offline</kt-button
+        >
+        <kt-button
+          variant="secondary"
+          icon="download"
+          done-label="Exported"
+          @click=${(event: Event) =>
+            void (event.currentTarget as KtButton).run(
+              () => new Promise((done) => setTimeout(done, 900)),
+            )}
+          >Export</kt-button
+        >
+      </div>`,
 
   'kt-split-button': () =>
     html`<div class="demo-row">

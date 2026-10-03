@@ -31,6 +31,26 @@ accessible name of its own, so `label` is required:
 <kt-button icon="x" label="Close" variant="secondary-no-bg"></kt-button>
 ```
 
+## Running an action
+
+`run()` takes an async action and shows how it went: busy while it runs —
+clicks ignored, the focus kept — then a tick, or a shake and an alert if it
+throws. Two seconds later the button is back at rest. `done-label` and
+`failed-label` replace the label meanwhile, and are announced.
+
+```html
+<kt-button id="send" icon="send" done-label="Sent" failed-label="Not sent">Send</kt-button>
+<script>
+  send.addEventListener('click', () => send.run(() => api.send(message)));
+</script>
+```
+
+It resolves with what the action resolved with and rejects with what it threw,
+so the caller still handles the error. A second call while one runs gets the
+same promise. Some icons leave in their own way — a `send` plane flies off to
+the top right — and the rest fade; under reduced motion only the label and
+icon change.
+
 ## Forms
 
 A button inside a shadow root is invisible to the enclosing form, so

@@ -1,7 +1,9 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { KtElement, defineElement } from '#internal/kt-element';
+import { play } from '#internal/motion';
+import { ARRIVE, SHAKE, flightOf } from './flights.js';
 import '../kt-icon/kt-icon.js';
 
 export type KtButtonVariant =
@@ -19,6 +21,9 @@ export type KtButtonVariant =
 export type KtButtonSize = 'small' | 'medium' | 'large';
 export type KtButtonType = 'button' | 'submit' | 'reset';
 
+/** Where `run()` is: at rest, running, its icon flying off, done, or failed. */
+type Phase = 'idle' | 'busy' | 'leaving' | 'done' | 'failed';
+
 /** Icon size per button size, so the glyph stays optically balanced. */
 const ICON_SIZE: Record<KtButtonSize, number> = { small: 16, medium: 20, large: 24 };
 
@@ -33,6 +38,11 @@ const ICON_SIZE: Record<KtButtonSize, number> = { small: 16, medium: 20, large: 
  * Setting `icon` with no slotted text produces a square icon-only button,
  * which then requires a `label`.
  *
+ * `run(action)` runs an async action and shows how it went: busy while it
+ * runs, then a tick — and `done-label`, if given — or, if it throws, a shake,
+ * an alert and `failed-label`; back to rest two seconds later. Some icons
+ * leave in their own way: a `send` plane flies off to the top right.
+ *
  * @element kt-button
  *
  * @slot - The button label.
@@ -45,6 +55,10 @@ const ICON_SIZE: Record<KtButtonSize, number> = { small: 16, medium: 20, large: 
  * <kt-button icon="plus">New entity</kt-button>
  * <kt-button variant="secondary" icon="refresh-cw">Refresh</kt-button>
  * <kt-button variant="danger">Delete</kt-button>
+ * <kt-button icon="send" done-label="Sent">Send</kt-button>
+ * <script>
+ *   send.addEventListener('click', () => send.run(() => api.send(message)));
+ * </script>
  * ```
  */
 export class KtButton extends KtElement {
@@ -216,6 +230,38 @@ export class KtButton extends KtElement {
         outline: var(--outline-width) solid var(--color-primary-base);
         outline-offset: 2px;
       }
+
+      /* === RUN ===
+         Busy is shown, not disabled: the button keeps its colour and the
+         focus, and ignores clicks. */
+      button[aria-busy='true'] {
+        cursor: progress;
+      }
+      .spin {
+        animation: kt-button-spin calc(var(--duration-slow) * 2) linear infinite;
+      }
+      .hover {
+        animation: kt-button-hover calc(var(--duration-slow) * 2) var(--easing-standard) infinite
+          alternate;
+      }
+      @keyframes kt-button-spin {
+        to {
+          rotate: 1turn;
+        }
+      }
+      @keyframes kt-button-hover {
+        to {
+          translate: 0.08em -0.12em;
+        }
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
     `,
   ];
 
@@ -269,6 +315,101 @@ export class KtButton extends KtElement {
   @property({ type: String })
   value = '';
 
+  /** Shown in place of the label once `run()` succeeds. Empty keeps the label. */
+  @property({ type: String, attribute: 'done-label' })
+  doneLabel = '';
+
+  /** Shown in place of the label when `run()` fails. Empty keeps the label. */
+  @property({ type: String, attribute: 'failed-label' })
+  failedLabel = '';
+
+  /** How long the done or failed state stays before the button rests again. */
+  static DONE_MS = 2000;
+
+  @state() private phase: Phase = 'idle';
+  private running: Promise<unknown> | null = null;
+  private restTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The button's width before a label change, to move from. */
+  private widthBefore = 0;
+
+  /**
+   * Runs `action` and shows how it went. A second call while it runs gets the
+   * same promise rather than a second run. Resolves with what the action
+   * resolved with; rejects with what it threw, after showing it failed.
+   */
+  run<T>(action: () => Promise<T>): Promise<T> {
+    if (this.running) return this.running as Promise<T>;
+    clearTimeout(this.restTimer);
+    this.phase = 'busy';
+    const running = (async () => {
+      try {
+        const result = await action();
+        await this.finish('done');
+        return result;
+      } catch (error) {
+        await this.finish('failed');
+        throw error;
+      } finally {
+        this.running = null;
+      }
+    })();
+    this.running = running;
+    return running;
+  }
+
+  private async finish(phase: 'done' | 'failed'): Promise<void> {
+    if (phase === 'done') {
+      // The icon leaves first, in its own way; then the tick comes in.
+      this.phase = 'leaving';
+      await this.updateComplete;
+      const icon = this.renderRoot.querySelector('[part="icon"]');
+      const leaving = icon
+        ? play(icon, flightOf(this.icon).leave, '--duration-slow', 'kt-button-leave')
+        : null;
+      await leaving?.finished.catch(() => undefined);
+    }
+    this.widthBefore = this.getBoundingClientRect().width;
+    this.phase = phase;
+    this.restTimer = setTimeout(() => {
+      this.widthBefore = this.getBoundingClientRect().width;
+      this.phase = 'idle';
+    }, KtButton.DONE_MS);
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    clearTimeout(this.restTimer);
+    if (!this.running) this.phase = 'idle';
+  }
+
+  // `phase` is private, so the map is read untyped.
+  override updated(changed: PropertyValues): void {
+    super.updated(changed);
+    const was = changed.get('phase') as Phase | undefined;
+    if (was === undefined || !changed.has('phase')) return;
+    const icon = this.renderRoot.querySelector('[part="icon"]');
+    const button = this.renderRoot.querySelector('button')!;
+
+    if (this.phase === 'done' || this.phase === 'failed') {
+      if (icon) play(icon, ARRIVE, '--duration-normal', 'kt-button-arrive');
+      if (this.phase === 'failed') play(button, SHAKE, '--duration-slow', 'kt-button-shake');
+    }
+    if (this.phase === 'idle' && (was === 'done' || was === 'failed') && icon) {
+      play(icon, flightOf(this.icon).back, '--duration-normal', 'kt-button-back');
+    }
+    // A label that changed length: the width follows instead of jumping.
+    const width = this.getBoundingClientRect().width;
+    if (this.widthBefore && Math.abs(width - this.widthBefore) > 0.5) {
+      play(
+        this,
+        [{ width: `${this.widthBefore}px` }, { width: `${width}px` }],
+        '--duration-normal',
+        'kt-button-resize',
+      );
+    }
+    this.widthBefore = 0;
+  }
+
   /** Moves focus to the button. */
   override focus(options?: FocusOptions): void {
     this.shadowRoot?.querySelector('button')?.focus(options);
@@ -304,7 +445,7 @@ export class KtButton extends KtElement {
   }
 
   private onClick(event: MouseEvent): void {
-    if (this.disabled) {
+    if (this.disabled || this.phase !== 'idle') {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -312,30 +453,60 @@ export class KtButton extends KtElement {
     if (this.type !== 'button') this.submitEnclosingForm();
   }
 
+  /** The icon for where `run()` is, and how it moves while busy. */
+  private get shownIcon(): { name: string; motion: string } | null {
+    const flight = flightOf(this.icon);
+    switch (this.phase) {
+      case 'busy':
+        return this.icon && flight.waiting
+          ? { name: this.icon, motion: flight.waiting }
+          : { name: 'loader-circle', motion: 'spin' };
+      case 'done':
+        return { name: 'check', motion: '' };
+      case 'failed':
+        return { name: 'circle-alert', motion: '' };
+      default:
+        return this.icon ? { name: this.icon, motion: '' } : null;
+    }
+  }
+
   override render(): TemplateResult {
     const iconOnly = Boolean(this.icon) && !this.hasLabelText;
-    const icon = this.icon
-      ? html`<kt-icon part="icon" name=${this.icon} size=${ICON_SIZE[this.size]}></kt-icon>`
+    const shown = this.shownIcon;
+    const icon = shown
+      ? html`<kt-icon
+          part="icon"
+          class=${shown.motion || nothing}
+          name=${shown.name}
+          size=${ICON_SIZE[this.size]}
+        ></kt-icon>`
       : nothing;
+    const replaced =
+      this.phase === 'done' ? this.doneLabel : this.phase === 'failed' ? this.failedLabel : '';
+    const busy = this.phase === 'busy' || this.phase === 'leaving';
 
     return html`<button
-      part="button"
-      class=${classMap({
-        [this.variant]: true,
-        [this.size]: true,
-        'icon-only': iconOnly,
-      })}
-      type=${this.type}
-      ?disabled=${this.disabled}
-      aria-label=${this.label || nothing}
-      aria-haspopup=${this.popup ?? nothing}
-      aria-expanded=${this.expanded === undefined ? nothing : String(this.expanded)}
-      @click=${this.onClick}
-    >
-      ${this.iconPosition === 'left' ? icon : nothing}
-      <slot></slot>
-      ${this.iconPosition === 'right' ? icon : nothing}
-    </button>`;
+        part="button"
+        class=${classMap({
+          [this.variant]: true,
+          [this.size]: true,
+          'icon-only': iconOnly,
+        })}
+        type=${this.type}
+        ?disabled=${this.disabled}
+        aria-label=${this.label || nothing}
+        aria-haspopup=${this.popup ?? nothing}
+        aria-expanded=${this.expanded === undefined ? nothing : String(this.expanded)}
+        aria-busy=${busy ? 'true' : nothing}
+        aria-disabled=${this.phase === 'idle' ? nothing : 'true'}
+        @click=${this.onClick}
+      >
+        ${this.iconPosition === 'left' ? icon : nothing}
+        ${replaced && !iconOnly ? html`<span>${replaced}</span>` : nothing}
+        <slot ?hidden=${Boolean(replaced) && !iconOnly}></slot>
+        ${this.iconPosition === 'right' ? icon : nothing}
+      </button>
+      <span class="visually-hidden" role="status">${replaced}</span>`;
   }
 }
 

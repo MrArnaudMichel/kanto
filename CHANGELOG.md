@@ -7,6 +7,16 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [1.9.0] — 2026-10-03
 
+### Added
+
+- **`kt-button` runs an action and shows how it went.** `run(action)` keeps
+  the button busy while the action runs, then shows a tick — and
+  `done-label` — or, if it throws, a shake, an alert and `failed-label`, and
+  rests again two seconds later. It hands back what the action resolved or
+  threw, and a second call while one runs gets the same promise. A `send`
+  plane hovers while it waits and flies off to the top right when done;
+  other icons fade.
+
 ### Changed
 
 Motion where something changes, and nowhere else: nothing moves when a page

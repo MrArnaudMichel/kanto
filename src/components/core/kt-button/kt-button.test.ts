@@ -101,3 +101,121 @@ describe('kt-button', () => {
     expect(el.shadowRoot!.activeElement).toBe(nativeButton(el));
   });
 });
+
+describe('kt-button run()', () => {
+  const icon = (el: KtButton) =>
+    el.shadowRoot!.querySelector('[part="icon"]')?.getAttribute('name');
+  const status = (el: KtButton) =>
+    el.shadowRoot!.querySelector('[role="status"]')!.textContent!.trim();
+  /** The label on show: the replacement, or the slotted text when it is not hidden. */
+  const shown = (el: KtButton) => {
+    const replaced = el.shadowRoot!.querySelector('button > span');
+    if (replaced) return replaced.textContent!.trim();
+    expect(el.shadowRoot!.querySelector('slot')!.hidden).toBe(false);
+    return el.textContent!.trim();
+  };
+  /** Resolves or rejects when told to. */
+  function deferred<T>() {
+    let resolve!: (value: T) => void;
+    let reject!: (error: unknown) => void;
+    const promise = new Promise<T>((yes, no) => {
+      resolve = yes;
+      reject = no;
+    });
+    return { promise, resolve, reject };
+  }
+
+  it('runs the action once, busy until it settles, and returns its result', async () => {
+    const el = await fixture<KtButton>('<kt-button icon="send">Send</kt-button>');
+    const job = deferred<string>();
+    const action = vi.fn(() => job.promise);
+    const first = el.run(action);
+    const second = el.run(action);
+    await settle(el);
+    expect(action).toHaveBeenCalledOnce();
+    expect(nativeButton(el).getAttribute('aria-busy')).toBe('true');
+    expect(nativeButton(el).getAttribute('aria-disabled')).toBe('true');
+
+    job.resolve('ok');
+    expect(await first).toBe('ok');
+    expect(await second).toBe('ok');
+  });
+
+  it('says it is done — the done label and a tick — then goes back', async () => {
+    vi.useFakeTimers();
+    try {
+      const el = await fixture<KtButton>(
+        '<kt-button icon="send" done-label="Sent">Send</kt-button>',
+      );
+      await el.run(() => Promise.resolve());
+      await settle(el);
+      expect(icon(el)).toBe('check');
+      expect(shown(el)).toBe('Sent');
+      expect(status(el)).toBe('Sent');
+
+      await vi.advanceTimersByTimeAsync(KtButtonClass().DONE_MS);
+      await settle(el);
+      expect(icon(el)).toBe('send');
+      expect(shown(el)).toBe('Send');
+      expect(status(el)).toBe('');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('keeps its own label without a done label, and still shows the tick', async () => {
+    const el = await fixture<KtButton>('<kt-button icon="send">Send</kt-button>');
+    await el.run(() => Promise.resolve());
+    await settle(el);
+    expect(icon(el)).toBe('check');
+    expect(shown(el)).toBe('Send');
+  });
+
+  it('says it failed, hands the error back, and can be run again after', async () => {
+    vi.useFakeTimers();
+    try {
+      const el = await fixture<KtButton>(
+        '<kt-button icon="send" failed-label="Not sent">Send</kt-button>',
+      );
+      const error = new Error('offline');
+      await expect(el.run(() => Promise.reject(error))).rejects.toBe(error);
+      await settle(el);
+      expect(icon(el)).toBe('circle-alert');
+      expect(shown(el)).toBe('Not sent');
+      expect(status(el)).toBe('Not sent');
+
+      await vi.advanceTimersByTimeAsync(KtButtonClass().DONE_MS);
+      await settle(el);
+      expect(icon(el)).toBe('send');
+      const action = vi.fn(() => Promise.resolve(1));
+      expect(await el.run(action)).toBe(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('ignores clicks while busy', async () => {
+    const el = await fixture<KtButton>('<kt-button>Send</kt-button>');
+    const job = deferred<void>();
+    void el.run(() => job.promise);
+    await settle(el);
+    const clicked = vi.fn();
+    el.addEventListener('click', clicked);
+    nativeButton(el).click();
+    expect(clicked).not.toHaveBeenCalled();
+    job.resolve();
+  });
+
+  it('shows a spinner while busy for an icon with no flight of its own', async () => {
+    const el = await fixture<KtButton>('<kt-button icon="download">Export</kt-button>');
+    const job = deferred<void>();
+    void el.run(() => job.promise);
+    await settle(el);
+    expect(icon(el)).toBe('loader-circle');
+    job.resolve();
+  });
+});
+
+function KtButtonClass() {
+  return customElements.get('kt-button') as unknown as { DONE_MS: number };
+}
