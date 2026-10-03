@@ -179,7 +179,7 @@ export function stage({
               >
             </section>
           </div>
-          <section class="stage-panel">
+          <section class="stage-panel stage-table">
             <h3>Recent invoices</h3>
             <kt-table
               .columns=${COLUMNS}

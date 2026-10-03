@@ -99,6 +99,16 @@
   margin-top: 64px;
 }
 
+.stage-caption {
+  margin: 20px 0 0;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  text-align: center;
+}
+.stage-caption a {
+  color: var(--color-primary-text);
+}
+
 .stage-colours {
   display: flex;
   flex-wrap: wrap;
@@ -237,6 +247,8 @@
 }
 .stage-send {
   display: grid;
+  /* One column no wider than the panel, whatever a field would like. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   align-content: start;
 }
@@ -410,6 +422,12 @@
   gap: 12px 16px;
   align-items: center;
   justify-content: space-between;
+}
+/* On a phone the presets scroll sideways rather than run off the edge. */
+.showcase-bar kt-segmented-control {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 .showcase-caption {
   color: var(--text-muted);
@@ -594,14 +612,20 @@
   border-radius: var(--radius-modal);
   transition: border-color var(--duration-fast);
 }
-/* The page at desktop width, shrunk to the thumbnail. */
+/* The page at a laptop's width, shrunk to the thumbnail: a template is one
+   screen, read best a little closer; an app wants its whole width. */
 .home-preview-view iframe {
-  width: 400%;
-  height: 400%;
+  width: 250%;
+  height: 250%;
   border: 0;
-  transform: scale(0.25);
+  transform: scale(0.4);
   transform-origin: 0 0;
   pointer-events: none;
+}
+.home-previews-apps .home-preview-view iframe {
+  width: 400%;
+  height: 400%;
+  transform: scale(0.25);
 }
 .home-preview:hover .home-preview-view {
   border-color: var(--color-primary-base);
@@ -796,7 +820,8 @@
   .stage-stats {
     grid-template-columns: minmax(0, 1fr);
   }
-  .stage-search {
+  .stage-search,
+  .stage-table {
     display: none;
   }
   .stage-main {

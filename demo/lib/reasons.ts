@@ -33,6 +33,9 @@ function motion(rerender: () => void): TemplateResult {
   };
   return html`<div class="reason-motion">
     <kt-steps label="Invoice" .steps=${STEPS} current=${STEPS[step]!.id}></kt-steps>
+    <kt-label-input label="Seats — press + or −, or the arrows">
+      <kt-number-input value="12" min="1" max="99"></kt-number-input>
+    </kt-label-input>
     <div class="reason-row">
       <kt-button variant="secondary" ?disabled=${step === 0} @click=${() => move(-1)}
         >Back</kt-button

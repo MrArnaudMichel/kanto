@@ -177,7 +177,13 @@ export function homePage({
           >
         </div>
       </div>
-      <div class="home-stage">${stage({ siteAccent: appearance.accent, rerender })}</div>
+      <div class="home-stage">
+        ${stage({ siteAccent: appearance.accent, rerender })}
+        <p class="stage-caption">
+          Every part of it is Kanto, live — and
+          <a href="#/templates/dashboard">a screen like it</a> is ready to copy.
+        </p>
+      </div>
     </section>
 
     <section class="home-band home-reasons" aria-labelledby="home-why">

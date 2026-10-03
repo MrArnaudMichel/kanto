@@ -75,6 +75,32 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
   });
 });
 
+describe('the stage, on a phone', () => {
+  it('keeps every control inside its panel', async () => {
+    await page.viewport(390, 800);
+    const host = document.body.appendChild(document.createElement('main'));
+    host.className = 'home-main';
+    render(
+      homePage({ appearance: KT_DEFAULT_APPEARANCE, onUse: () => {}, rerender: () => {} }),
+      host,
+    );
+    await Promise.all(
+      [...host.querySelectorAll('*')]
+        .filter((el) => el.localName.startsWith('kt-'))
+        .map((el) => settle(el)),
+    );
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    for (const panel of host.querySelectorAll('.stage-panel')) {
+      const box = panel.getBoundingClientRect();
+      for (const child of panel.querySelectorAll(':scope > *, kt-label-input > *')) {
+        const inner = child.getBoundingClientRect();
+        expect(inner.right, child.localName).toBeLessThanOrEqual(box.right + 0.5);
+      }
+    }
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+  });
+});
+
 describe('the Customise invitation', () => {
   it('stays inside the page beside a right-hand button', () => {
     const bar = document.body.appendChild(document.createElement('div'));
