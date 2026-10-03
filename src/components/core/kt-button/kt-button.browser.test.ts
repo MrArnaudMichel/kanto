@@ -184,7 +184,9 @@ describe('kt-button run(), in motion', () => {
         });
       }
       expect(shapes.length).toBeGreaterThan(5);
-      expect(worst).toBeLessThan(1.5);
+      // The morph moves a point at most ~0.65 units a frame; a snap between
+      // plane and ring would be ~9. The margin is for a stutter under load.
+      expect(worst).toBeLessThan(2.5);
       await running;
     });
   }
