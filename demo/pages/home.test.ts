@@ -4,7 +4,7 @@ import { resetStage } from '../lib/stage.js';
 import { KT_ACCENTS, KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
 import { TEMPLATES } from '../templates/index.js';
-import { homePage } from './home.js';
+import { homeFooter, homePage } from './home.js';
 
 function mount() {
   const host = document.body.appendChild(document.createElement('main'));
@@ -227,23 +227,47 @@ describe('the questions', () => {
 });
 
 describe('the way in', () => {
+  it('says it is built for AI agents before anything else, and leads to the guide', () => {
+    const hero = mount().querySelector('.home-hero')!;
+    const flag = hero.querySelector<HTMLAnchorElement>('a.home-flag')!;
+    expect(flag.getAttribute('href')).toBe('#/guide/ai-agents');
+    expect(flag.textContent).toMatch(/AI agents/);
+    // Above the headline.
+    expect(
+      flag.compareDocumentPosition(hero.querySelector('h1')!) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it('shows the agents section right after the hero', () => {
+    const host = mount();
+    const bands = [...host.querySelectorAll('.home > section')];
+    expect(bands[0]!.classList.contains('home-hero')).toBe(true);
+    expect(bands[1]!.classList.contains('home-agents')).toBe(true);
+  });
+
   it('reassures under the hero: free, open, any framework', () => {
     const note = mount().querySelector('.home-hero .home-note')!.textContent!;
     expect(note).toMatch(/MIT/);
     expect(note).toMatch(/React/);
   });
 
-  it('ends on one clear action, the command beside it, and three steps', () => {
+  it('ends on one clear action and the three steps, in Kanto’s own card and code', () => {
     const end = mount().querySelector('.home-cta')!;
+    expect(end.localName).toBe('kt-card');
     const primary = end.querySelector('kt-button:not([variant])')!;
     expect(primary.textContent!.trim()).toBe('Get started');
-    expect(end.querySelector('.home-install')!.textContent).toContain('npm install kanto-ds');
-    expect(end.querySelectorAll('.home-steps li')).toHaveLength(3);
+    const blocks = [...end.querySelectorAll('kt-code')];
+    expect(blocks).toHaveLength(3);
+    expect(blocks[0]!.textContent).toContain('npm install kanto-ds');
   });
 
-  it('closes with a footer that leads everywhere, agents included', () => {
-    const footer = mount().querySelector('footer.home-footer')!;
-    const hrefs = [...footer.querySelectorAll('a')].map((link) => link.getAttribute('href'));
+  it('closes with Kanto’s footer, leading everywhere, agents included', () => {
+    const host = document.body.appendChild(document.createElement('div'));
+    render(homeFooter(), host);
+    const footer = host.querySelector<HTMLElement & { columns: { links: { href: string }[] }[] }>(
+      'kt-footer.home-footer',
+    )!;
+    const hrefs = footer.columns.flatMap((column) => column.links.map((link) => link.href));
     for (const href of [
       '#/guide/installation',
       '#/components/kt-button',
@@ -253,8 +277,8 @@ describe('the way in', () => {
     ]) {
       expect(hrefs, href).toContain(href);
     }
-    expect(hrefs.some((href) => href?.includes('github.com'))).toBe(true);
-    expect(hrefs.some((href) => href?.includes('npmjs.com'))).toBe(true);
+    expect(hrefs.some((href) => href.includes('github.com'))).toBe(true);
+    expect(hrefs.some((href) => href.includes('npmjs.com'))).toBe(true);
   });
 });
 

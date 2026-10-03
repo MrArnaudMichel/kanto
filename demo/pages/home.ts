@@ -3,7 +3,7 @@
  * of swatches — then three reasons, each shown working; the wall of screens;
  * whole pages to start from; and the way in. No code until someone asks.
  */
-import { html, nothing, type TemplateResult } from 'lit';
+import { html, type TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 import { toaster } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
@@ -18,6 +18,7 @@ import { NPM_URL, REPO_URL, VERSION, VERSION_TAG } from '../lib/project.js';
 import { openInStackBlitz, stackblitzProject } from '../lib/stackblitz.js';
 
 const INSTALL = 'npm install kanto-ds';
+const IMPORTS = "import 'kanto-ds';\nimport 'kanto-ds/styles.css';";
 const USE = '<kt-button>Save</kt-button>';
 
 const FRAMEWORKS = {
@@ -190,6 +191,10 @@ export function homePage({
   return html`<div class="home">
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero-text">
+        <a class="home-flag" href="#/guide/ai-agents">
+          <kt-badge tone="primary" icon="sparkles">New</kt-badge>
+          <span>Built for AI agents: Claude Code, Cursor and Copilot write it right</span>
+        </a>
         <h1 id="home-title">Ship the product, not the design system.</h1>
         <p class="home-lead">
           ${COMPONENTS.length} components for dashboards, admin tools and forms. They work in any
@@ -210,7 +215,8 @@ export function homePage({
           >
         </div>
         <p class="home-note">
-          MIT licensed and free. React, Vue, Angular, Svelte or plain HTML — one implementation.
+          MIT licensed and free. React, Vue, Angular, Svelte or plain HTML, and ready for your AI
+          agent.
         </p>
       </div>
       <div class="home-stage">
@@ -220,6 +226,49 @@ export function homePage({
           <a href="#/templates/dashboard">a screen like it</a> is ready to copy.
         </p>
       </div>
+    </section>
+
+    <section class="home-band home-agents" aria-labelledby="home-agents">
+      <div class="home-agents-text">
+        <h2 id="home-agents">Your AI agent builds with it, right the first time</h2>
+        <p>
+          Kanto ships its own instructions for agents: the rules that make code right, the mistakes
+          they make and the fix, and every component's page. One line points Claude Code, Cursor,
+          Copilot or Codex at them.
+        </p>
+        <ul class="home-agents-links">
+          <li><a href="#/guide/ai-agents">Set up your agent</a></li>
+          <li><a href="llms.txt">llms.txt</a></li>
+          <li><a href="llms-full.txt">llms-full.txt, every page in one file</a></li>
+        </ul>
+      </div>
+      <kt-card class="home-agents-setup"
+        ><div class="home-agents-body">
+          <kt-tabs
+            label="Agent"
+            .tabs=${AGENT_SETUPS.map((setup) => ({ value: setup.id, label: setup.name }))}
+            .value=${agent}
+            @kt-change=${(event: CustomEvent<{ value: string }>) => {
+              agent = event.detail.value;
+              rerender();
+            }}
+          ></kt-tabs>
+          ${(() => {
+            const setup = AGENT_SETUPS.find((candidate) => candidate.id === agent)!;
+            return html`<p class="home-agents-file">
+                <kt-icon name="file-text" size="16"></kt-icon>${setup.file}
+              </p>
+              ${code(setup.snippet, 'markdown')}`;
+          })()}
+          <figure class="home-agents-prompt">
+            <figcaption>Then ask for the screen</figcaption>
+            <blockquote>
+              Build a settings page with Kanto: a profile form, notification toggles, and a danger
+              zone that asks before deleting the account.
+            </blockquote>
+          </figure>
+        </div></kt-card
+      >
     </section>
 
     <section class="home-band home-reasons" aria-labelledby="home-why">
@@ -326,47 +375,6 @@ export function homePage({
       </div>
     </section>
 
-    <section class="home-band home-agents" aria-labelledby="home-agents">
-      <div class="home-agents-text">
-        <h2 id="home-agents">Your AI agent builds with it, right the first time</h2>
-        <p>
-          Kanto ships its own instructions for agents: the rules that make code right, the mistakes
-          they make and the fix, and every component's page. One line points Claude Code, Cursor,
-          Copilot or Codex at them.
-        </p>
-        <ul class="home-agents-links">
-          <li><a href="#/guide/ai-agents">Set up your agent</a></li>
-          <li><a href="llms.txt">llms.txt</a></li>
-          <li><a href="llms-full.txt">llms-full.txt, every page in one file</a></li>
-        </ul>
-      </div>
-      <div class="home-agents-setup">
-        <kt-tabs
-          label="Agent"
-          .tabs=${AGENT_SETUPS.map((setup) => ({ value: setup.id, label: setup.name }))}
-          .value=${agent}
-          @kt-change=${(event: CustomEvent<{ value: string }>) => {
-            agent = event.detail.value;
-            rerender();
-          }}
-        ></kt-tabs>
-        ${(() => {
-          const setup = AGENT_SETUPS.find((candidate) => candidate.id === agent)!;
-          return html`<p class="home-agents-file">
-              <kt-icon name="file-text" size="16"></kt-icon>${setup.file}
-            </p>
-            ${code(setup.snippet, 'markdown')}`;
-        })()}
-        <figure class="home-agents-prompt">
-          <figcaption>Then ask for the screen</figcaption>
-          <blockquote>
-            Build a settings page with Kanto: a profile form, notification toggles, and a danger
-            zone that asks before deleting the account.
-          </blockquote>
-        </figure>
-      </div>
-    </section>
-
     <section class="home-band home-faq" aria-labelledby="home-faq">
       <h2 id="home-faq">Before you ask</h2>
       ${QUESTIONS.map(
@@ -377,68 +385,54 @@ export function homePage({
       )}
     </section>
 
-    <section class="home-cta" aria-labelledby="home-start">
-      <div class="home-cta-pitch">
-        <h2 id="home-start">Your next screen, in Kanto.</h2>
-        <p>Install it, import it once, and build. Free, and in your colours from the first line.</p>
-        <div class="home-actions">
+    <section class="home-band" aria-labelledby="home-start">
+      <kt-card class="home-cta">
+        <div slot="header" class="home-cta-head">
+          <h2 id="home-start">Your next screen, in Kanto.</h2>
+          <p>Install it, import it once, and build — in your colours from the first line.</p>
+        </div>
+        <ol class="home-steps">
+          <li>
+            <span>Install</span>
+            ${code(INSTALL, 'bash')}
+          </li>
+          <li>
+            <span>Import it once, at the root</span>
+            ${code(IMPORTS, 'js')}
+          </li>
+          <li>
+            <span>Use it</span>
+            ${code(USE, 'html')}
+          </li>
+        </ol>
+        <div slot="footer" class="home-cta-actions">
           <kt-button size="large" @click=${() => (location.hash = '#/guide/installation')}
             >Get started</kt-button
           >
-          ${install}
+          <kt-button size="large" variant="secondary" icon="external-link" @click=${stackblitz}
+            >Open in StackBlitz</kt-button
+          >
+          <a class="home-link" href="#/guide/installation#no-build-step"
+            >No bundler? One script tag.</a
+          >
         </div>
-        <p class="home-cta-more">
-          <a href="#/guide/installation#no-build-step">No bundler? One script tag.</a>
-          <button type="button" class="home-link" @click=${stackblitz}>
-            Open a live project on StackBlitz
-          </button>
-        </p>
-      </div>
-      <ol class="home-steps">
-        <li>
-          <span class="home-step-what">Install</span>
-          <code>${INSTALL}</code>
-        </li>
-        <li>
-          <span class="home-step-what">Import it once, at the root</span>
-          <code>import 'kanto-ds';</code>
-          <code>import 'kanto-ds/styles.css';</code>
-        </li>
-        <li>
-          <span class="home-step-what">Use it</span>
-          <code>${USE}</code>
-        </li>
-      </ol>
+      </kt-card>
     </section>
+  </div>`;
+}
 
-    <footer class="home-footer">
-      <div class="home-footer-brand">
-        <a class="wordmark" href="#/">KANTO <span>DS</span></a>
-        <p>Accessible web components for dashboards, admin tools and forms.</p>
-        <p class="home-footer-meta">${VERSION_TAG}, MIT licence.</p>
-      </div>
-      <nav class="home-footer-links" aria-label="Site">
-        ${FOOTER.map(
-          (column) =>
-            html`<div>
-              <h2>${column.heading}</h2>
-              <ul>
-                ${column.links.map(
-                  (link) =>
-                    html`<li>
-                      <a
-                        href=${link.href}
-                        target=${link.href.startsWith('http') ? '_blank' : nothing}
-                        rel=${link.href.startsWith('http') ? 'noopener' : nothing}
-                        >${link.label}</a
-                      >
-                    </li>`,
-                )}
-              </ul>
-            </div>`,
-        )}
-      </nav>
-    </footer>
+/**
+ * The site's footer, under the home page. Outside \`<main>\`, where a
+ * contentinfo landmark belongs: the shell draws it after the page.
+ */
+export function homeFooter(): TemplateResult {
+  return html`<div class="home-footer-wrap">
+    <kt-footer class="home-footer" label="Site" .columns=${FOOTER}>
+      <a slot="brand" class="wordmark" href="#/">KANTO <span>DS</span></a>
+      Accessible web components for dashboards, admin tools and forms.
+      <span slot="legal">${VERSION_TAG}, MIT licence.</span>
+      <span slot="legal">Made with Kanto, down to this footer.</span>
+    </kt-footer>
   </div>`;
 }
 

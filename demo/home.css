@@ -12,7 +12,7 @@
 .home {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 88px 24px 96px;
+  padding: 88px 24px 24px;
 }
 
 .visually-hidden {
@@ -33,6 +33,34 @@
   margin: 0 auto;
   text-align: center;
 }
+/* Above the headline: what sets Kanto apart, and the way to it. */
+.home-flag {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  max-width: 100%;
+  margin-bottom: 28px;
+  padding: 4px 14px 4px 4px;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  text-decoration: none;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  transition: border-color var(--duration-instant);
+}
+.home-flag:hover {
+  color: var(--text-body);
+  text-decoration: none;
+  border-color: var(--border-field);
+}
+.home-flag:focus-visible {
+  outline: var(--outline-width) solid var(--color-primary-base);
+  outline-offset: 2px;
+}
+.home-flag span {
+  min-width: 0;
+}
+
 .home-hero h1 {
   margin: 0;
   color: var(--text-body);
@@ -774,13 +802,12 @@
   font: var(--font-normal-medium);
 }
 .home-agents-setup {
+  min-width: 0;
+}
+.home-agents-body {
   display: grid;
   gap: 14px;
   min-width: 0;
-  padding: 24px;
-  background: var(--surface-card);
-  border: var(--border-width) solid var(--border-subtle);
-  border-radius: calc(var(--radius-modal) + 4px);
 }
 .home-agents-setup kt-code {
   display: block;
@@ -834,102 +861,46 @@
   font: var(--font-code-regular);
 }
 
-/* === The end: one action, the command beside it, the steps opposite === */
+/* === The end: a Kanto card — the pitch, the three steps, the actions === */
 
-.home-cta {
-  display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-  gap: 56px;
-  align-items: center;
-  margin-top: 160px;
-  padding: 64px;
-  background: var(--surface-card);
-  border: var(--border-width) solid var(--border-subtle);
-  border-radius: calc(var(--radius-modal) + 8px);
-  /* The accent's light behind it, as under the stage at the top. */
-  box-shadow: 0 48px 120px -64px color-mix(in srgb, var(--color-primary-base) 50%, transparent);
-}
-.home-cta h2 {
+.home-cta-head h2 {
   margin: 0;
   color: var(--text-body);
-  font: 600 clamp(32px, 4.4vw, 54px) / 1.05 var(--font-family-display);
-  letter-spacing: -0.03em;
-  text-wrap: balance;
+  font: 600 clamp(30px, 3.6vw, 44px) / 1.1 var(--font-family-display);
+  letter-spacing: -0.025em;
 }
-.home-cta-pitch > p:not(.home-cta-more) {
-  max-width: 46ch;
-  margin: 16px 0 0;
+.home-cta-head p {
+  margin: 10px 0 0;
   color: var(--text-muted);
-  font: 400 18px / 1.6 var(--font-family-body);
+  font: 400 17px / 1.6 var(--font-family-body);
 }
-.home-cta .home-actions {
-  justify-content: flex-start;
-  margin-top: 28px;
-}
-.home-cta-more {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-  margin: 20px 0 0;
-  font: var(--font-normal-regular);
-}
-.home-cta-more a,
-.home-cta-more .home-link {
-  padding: 0;
-  color: var(--color-primary-text);
-  font: inherit;
-  text-decoration: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.home-cta-more a:hover,
-.home-cta-more .home-link:hover {
-  text-decoration: underline;
-}
-
-/* A real sequence, so it is numbered: one step a row, its code under it. */
 .home-steps {
   display: grid;
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-card);
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: step;
 }
 .home-steps li {
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: 6px 14px;
-  align-items: start;
-  counter-increment: step;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
 }
-.home-steps li::before {
-  display: grid;
-  grid-row: span 3;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  color: var(--color-primary-text);
-  font: 600 14px / 1 var(--font-family-display);
-  background: var(--color-primary-soft);
-  border-radius: 50%;
-  content: counter(step);
+.home-steps span {
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
 }
-.home-step-what {
-  padding-top: 6px;
-  color: var(--text-body);
-  font: var(--font-normal-medium);
+.home-steps kt-code {
+  display: block;
+  min-width: 0;
 }
-.home-steps code {
-  overflow-x: auto;
-  padding: 8px 12px;
-  color: var(--text-body);
-  font: var(--font-code-regular);
-  white-space: nowrap;
-  background: var(--surface-code);
-  border: var(--border-width) solid var(--border-code);
-  border-radius: var(--radius-input);
+.home-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
 }
 
 /* Under the hero's actions: what it costs and where it runs. */
@@ -939,49 +910,15 @@
   font: var(--font-normal-regular);
 }
 
-/* === Footer === */
+/* === Footer: Kanto's own, lined up with the page === */
 
+.home-footer-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
 .home-footer {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  gap: 48px;
-  margin-top: 120px;
-  padding-top: 40px;
-  border-top: var(--border-width) solid var(--border-subtle);
-}
-.home-footer-brand p {
-  max-width: 34ch;
-  margin: 12px 0 0;
-  color: var(--text-muted);
-  font: var(--font-normal-regular);
-}
-.home-footer-brand .home-footer-meta {
-  font: var(--font-normal-small);
-}
-.home-footer-links {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-}
-.home-footer-links h2 {
-  margin: 0 0 12px;
-  color: var(--text-body);
-  font: var(--font-normal-medium);
-}
-.home-footer-links ul {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.home-footer-links a {
-  color: var(--text-muted);
-  font: var(--font-normal-regular);
-  text-decoration: none;
-}
-.home-footer-links a:hover {
-  color: var(--text-body);
+  --kt-footer-padding-inline: 0;
 }
 
 /* === Narrower screens === */
@@ -1017,16 +954,17 @@
   .home-previews {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .home-cta,
-  .home-footer {
+  .home-steps {
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
   }
 }
 
 @media (max-width: 720px) {
   .home {
-    padding: 48px 16px 80px;
+    padding: 48px 16px 16px;
+  }
+  .home-footer-wrap {
+    padding: 0 16px;
   }
   .home-band {
     margin-top: 96px;
@@ -1062,12 +1000,5 @@
   }
   .home-preview-view {
     display: none;
-  }
-  .home-cta {
-    margin-top: 112px;
-    padding: 40px 20px;
-  }
-  .home-footer-links {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

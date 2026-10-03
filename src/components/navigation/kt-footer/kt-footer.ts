@@ -60,6 +60,8 @@ function heading(level: number, text: string): TemplateResult {
  * @csspart bottom - The legal row.
  *
  * @cssproperty --kt-footer-max-width - How wide the content runs. None by default.
+ * @cssproperty --kt-footer-padding-inline - The space at its sides. The card padding by default;
+ *   zero lines it up with a page's content when the page already has its own.
  *
  * @example
  * ```html
@@ -84,6 +86,7 @@ export class KtFooter extends KtElement {
         display: block;
         container-type: inline-size;
         --kt-footer-max-width: none;
+        --kt-footer-padding-inline: var(--padding-card);
       }
 
       footer {
@@ -98,7 +101,7 @@ export class KtFooter extends KtElement {
       .inner {
         max-width: var(--kt-footer-max-width);
         margin: 0 auto;
-        padding: calc(var(--padding-card) * 2) var(--padding-card);
+        padding: calc(var(--padding-card) * 2) var(--kt-footer-padding-inline);
       }
 
       /* Stacked by default — a phone, a narrow panel — and side by side once

@@ -19,7 +19,7 @@ import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
 import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
-import { homePage } from './pages/home.js';
+import { homeFooter, homePage } from './pages/home.js';
 import { templatePage, templateScreen } from './pages/template.js';
 import type { SettingsSection } from './apps/console/settings.js';
 import { TEMPLATES } from './templates/index.js';
@@ -657,8 +657,9 @@ function shell(): TemplateResult {
     ${
       route.section === 'home'
         ? html`<main class="home-main">
-            ${homePage({ appearance, onUse: useAppearance, rerender: update })}
-          </main>`
+              ${homePage({ appearance, onUse: useAppearance, rerender: update })}
+            </main>
+            ${homeFooter()}`
         : html`<div class="layout">
             ${
               isDoc

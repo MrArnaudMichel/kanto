@@ -77,14 +77,19 @@ kt-footer {
 }
 ```
 
+Set `--kt-footer-padding-inline: 0` to line the footer up with the content of
+a page that already has its own margins.
+
 `bordered`, on by default, draws a rule along the top; turn it off where the
 footer sits on a surface of its own.
 
 ## Accessibility
 
 A `<footer role="contentinfo">`, named by `label` when the page has more than
-one; the columns are one `<nav>` with the same name, a heading over each list.
-Links keep the theme's focus ring and read 4.5:1 in both themes.
+one. Put it outside `<main>` — beside it, at the end of the page — since a
+contentinfo landmark must not sit inside another. The columns are one `<nav>`
+with the same name, a heading over each list. Links keep the theme's focus ring
+and read 4.5:1 in both themes.
 
 ## API
 
@@ -104,6 +109,7 @@ Links keep the theme's focus ring and read 4.5:1 in both themes.
 | `column`  | One column                          |
 | `bottom`  | The legal row                       |
 
-| CSS property            | Default |
-| ----------------------- | ------- |
-| `--kt-footer-max-width` | `none`  |
+| CSS property                 | Default               |
+| ---------------------------- | --------------------- |
+| `--kt-footer-max-width`      | `none`                |
+| `--kt-footer-padding-inline` | `var(--padding-card)` |

@@ -11,7 +11,7 @@ import 'kanto-ds/styles.css';
 import '../shell.css';
 import '../home.css';
 import { KT_DEFAULT_APPEARANCE } from 'kanto-ds';
-import { homePage } from './home.js';
+import { homeFooter, homePage } from './home.js';
 import { TEMPLATES } from '../templates/index.js';
 
 afterEach(() => {
@@ -31,12 +31,16 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
         host,
       );
     draw();
+    // The site's footer, after <main> as the shell draws it.
+    const after = document.body.appendChild(document.createElement('div'));
+    after.style.background = 'var(--surface-page)';
+    render(homeFooter(), after);
     await Promise.all(
-      [...host.querySelectorAll('*')]
+      [...document.body.querySelectorAll('*')]
         .filter((el) => el.localName.startsWith('kt-'))
         .map((el) => settle(el)),
     );
-    const results = await axe.run(host, {
+    const results = await axe.run(document.body, {
       resultTypes: ['violations'],
       rules: { region: { enabled: false } },
     });

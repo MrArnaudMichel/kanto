@@ -43,4 +43,10 @@ describe('kt-footer layout', () => {
     expect(new Set(links.map((rect) => Math.round(rect.top))).size).toBe(1);
     expect(el.shadowRoot!.querySelector<HTMLElement>('.heading')!.offsetParent).toBeNull();
   });
+
+  it('lines up with the page when its side padding is zero', async () => {
+    const el = await mount(1100);
+    el.style.setProperty('--kt-footer-padding-inline', '0px');
+    expect(Math.abs(box(el, 'brand').left - el.getBoundingClientRect().left)).toBeLessThan(1);
+  });
 });
