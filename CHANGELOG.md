@@ -29,8 +29,9 @@ stops under `prefers-reduced-motion`.
   jumping. `toasts` lists only the ones not on their way out.
 - `kt-steps` fills the line to the next step as one is completed, and empties
   it going back; the tick of a step just completed comes in with it.
-- `kt-collapsible` opens its content to its height and folds it back, where
-  the browser has `::details-content`; elsewhere it opens at once, as before.
+- `kt-collapsible` unfolds its content to its height, fading in, and folds it
+  away before it closes — in every browser. A click half-way turns back from
+  where it is.
 - `kt-meter` moves its fill to a new value, as `kt-progress-bar` does.
 - `kt-tabs` has one underline that slides from tab to tab, and
   `kt-segmented-control` one surface that slides from segment to segment,

@@ -34,13 +34,14 @@ const APP_ROUTES = [
 describe('the full-bleed applications', () => {
   let app: HTMLElement;
 
+  // It imports and draws the whole site, which a loaded machine takes a while over.
   beforeAll(async () => {
     document.body.innerHTML = '<div id="app"></div>';
     location.hash = '#/app/console/home';
     await import('./main.js');
     app = document.querySelector<HTMLElement>('#app')!;
     await new Promise((resolve) => setTimeout(resolve, 0));
-  });
+  }, 30_000);
 
   const show = async (hash: string) => {
     location.hash = hash;

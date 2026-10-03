@@ -1,60 +1,142 @@
 /**
- * The content opening and closing: a height transition only a browser runs.
+ * The content opening and closing, in every browser: the height animated
+ * from script, the details kept open until the fold is done.
  */
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { fixture, settle } from '#test/fixture';
 import '../../../styles.css';
 import './kt-collapsible.js';
 import type { KtCollapsible } from 'kanto-ds';
 
+const TOKENS = ['--duration-instant', '--duration-fast', '--duration-normal', '--duration-slow'];
+afterEach(() => {
+  for (const token of TOKENS) document.documentElement.style.removeProperty(token);
+});
+
 async function mount(open = false): Promise<KtCollapsible> {
   const el = await fixture<KtCollapsible>(
-    `<kt-collapsible heading="Shipping" ${open ? 'open' : ''}><p>Three to five days.</p></kt-collapsible>`,
+    `<kt-collapsible heading="Shipping" ${open ? 'open' : ''}><p>Three to five days, tracked all the way.</p></kt-collapsible>`,
   );
   await new Promise((resolve) => requestAnimationFrame(resolve));
   return el;
 }
 
 const details = (el: KtCollapsible) => el.shadowRoot!.querySelector('details')!;
-const height = (el: KtCollapsible) => details(el).getBoundingClientRect().height;
-const summary = (el: KtCollapsible) =>
-  el.shadowRoot!.querySelector('summary')!.getBoundingClientRect().height;
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-/** Past the theme's --duration-normal. */
-const ENDED = 400;
+const content = (el: KtCollapsible) => el.shadowRoot!.querySelector<HTMLElement>('.content')!;
+const fold = (el: KtCollapsible) =>
+  content(el)
+    .getAnimations()
+    .find((a) => a.id === 'kt-collapsible-fold');
+const frames = (animation: Animation) => (animation.effect as KeyframeEffect).getKeyframes();
 
-// The height moves on ::details-content, which getAnimations() does not
-// report, and sampling it mid-flight is at the mercy of a loaded machine: the
-// set-up that makes it move is read instead, then where it ends.
 describe('kt-collapsible motion', () => {
-  it('transitions the content height, to and from auto', async () => {
+  it('unfolds the content from nothing to its height, fading in', async () => {
     const el = await mount();
-    const content = getComputedStyle(details(el), '::details-content');
-    expect(content.transitionProperty).toContain('block-size');
-    expect(parseFloat(content.transitionDuration)).toBeGreaterThan(0);
-    expect(getComputedStyle(details(el)).getPropertyValue('interpolate-size')).toBe(
-      'allow-keywords',
-    );
-    expect(content.blockSize).toBe('0px');
+    await userEvent.click(el.shadowRoot!.querySelector('summary')!);
+    await settle(el);
+    const animation = fold(el)!;
+    expect(animation).toBeDefined();
+    const [from, to] = [frames(animation)[0]!, frames(animation).at(-1)!];
+    expect(from.height).toBe('0px');
+    expect(Number(from.opacity)).toBe(0);
+    expect(parseFloat(String(to.height))).toBeGreaterThan(10);
+    expect(el.open).toBe(true);
+    await animation.finished;
+    expect(content(el).style.height).toBe('');
   });
 
-  it('ends open at the content height, and closed at the summary height', async () => {
+  it('folds it away before the details close, and says so once', async () => {
+    const el = await mount(true);
+    let toggles = 0;
+    el.addEventListener('kt-toggle', () => (toggles += 1));
+    await userEvent.click(el.shadowRoot!.querySelector('summary')!);
+    await settle(el);
+    expect(el.open).toBe(false);
+    // Still drawn while it folds.
+    expect(details(el).open).toBe(true);
+    const animation = fold(el)!;
+    expect(frames(animation).at(-1)!.height).toBe('0px');
+    await animation.finished;
+    await settle(el);
+    expect(details(el).open).toBe(false);
+    expect(toggles).toBe(1);
+  });
+
+  it('turns back from where it is when clicked again half-way', async () => {
     const el = await mount();
-    el.open = true;
+    const summary = el.shadowRoot!.querySelector('summary')!;
+    summary.click();
     await settle(el);
-    await wait(ENDED);
-    expect(height(el)).toBeGreaterThan(summary(el) + 10);
-    el.open = false;
+    const opening = fold(el)!;
+    opening.pause();
+    opening.currentTime = (opening.effect!.getComputedTiming().duration as number) / 2;
+    const halfway = content(el).getBoundingClientRect().height;
+    summary.click();
     await settle(el);
-    await wait(ENDED);
-    expect(Math.abs(height(el) - summary(el))).toBeLessThanOrEqual(1);
+    const closing = fold(el)!;
+    expect(closing).not.toBe(opening);
+    expect(parseFloat(String(frames(closing)[0]!.height))).toBeCloseTo(halfway, 0);
+    await closing.finished;
+    await settle(el);
+    expect(details(el).open).toBe(false);
   });
 
   it('is open at once when it first appears open', async () => {
     const el = await mount(true);
-    const now = height(el);
-    await wait(ENDED);
-    expect(height(el)).toBe(now);
-    expect(now).toBeGreaterThan(summary(el) + 10);
+    expect(fold(el)).toBeUndefined();
+    expect(content(el).getBoundingClientRect().height).toBeGreaterThan(10);
+  });
+
+  it('opens and closes at once when the theme says no motion', async () => {
+    for (const token of TOKENS) document.documentElement.style.setProperty(token, '0s');
+    const el = await mount();
+    const summary = el.shadowRoot!.querySelector('summary')!;
+    summary.click();
+    await settle(el);
+    expect(fold(el)).toBeUndefined();
+    expect(details(el).open).toBe(true);
+    summary.click();
+    await settle(el);
+    expect(details(el).open).toBe(false);
+  });
+
+  it('opens from the keyboard the same way', async () => {
+    const el = await mount();
+    el.shadowRoot!.querySelector<HTMLElement>('summary')!.focus();
+    await userEvent.keyboard('{Enter}');
+    await settle(el);
+    expect(el.open).toBe(true);
+    expect(fold(el)).toBeDefined();
+  });
+
+  it('moves smoothly from nothing to the full height and back, without a jump at either end', async () => {
+    const el = await mount();
+    const summary = el.shadowRoot!.querySelector('summary')!;
+    const box = () => content(el).getBoundingClientRect().height;
+    const trace = async () => {
+      const heights: number[] = [];
+      const animation = fold(el)!;
+      while (animation.playState === 'running') {
+        heights.push(box());
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      heights.push(box());
+      return heights;
+    };
+
+    summary.click();
+    await settle(el);
+    const opening = await trace();
+    expect(opening[0]).toBeLessThanOrEqual(1);
+    const full = opening.at(-1)!;
+    expect(Math.max(...opening)).toBeLessThanOrEqual(full + 0.5);
+
+    summary.click();
+    await settle(el);
+    const closing = await trace();
+    expect(Math.min(...closing.slice(0, -1))).toBeLessThanOrEqual(1);
+    expect(Math.max(...closing)).toBeLessThanOrEqual(full + 0.5);
   });
 });

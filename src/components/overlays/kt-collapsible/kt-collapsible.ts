@@ -1,7 +1,8 @@
-import { css, html, nothing, type TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
+import { css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { emit } from '#internal/events';
+import { durationOf, play } from '#internal/motion';
 import '../../core/kt-icon/kt-icon.js';
 
 /**
@@ -10,6 +11,11 @@ import '../../core/kt-icon/kt-icon.js';
  * Built on `<details>`, which means it works before the JavaScript loads,
  * survives find-in-page — the browser opens a closed section to reveal a match —
  * and needs no ARIA of its own.
+ *
+ * Opening unfolds the content to its height and closing folds it away, in
+ * every browser: the details stays open until the fold is done, and a click
+ * half-way turns back from where it is. Not on the first render, and not
+ * under reduced motion.
  *
  * @element kt-collapsible
  *
@@ -39,22 +45,6 @@ export class KtCollapsible extends KtElement {
 
       details {
         border-bottom: var(--border-width) solid var(--border-subtle);
-        /* Lets the height below run to and from auto. */
-        interpolate-size: allow-keywords;
-      }
-
-      /* The content opens to its height and folds back. Where the browser
-         has no ::details-content, it opens at once, as before. */
-      details::details-content {
-        block-size: 0;
-        overflow: clip;
-        transition:
-          block-size var(--duration-normal) var(--easing-standard),
-          content-visibility var(--duration-normal) allow-discrete;
-      }
-      details[open]::details-content {
-        block-size: auto;
-      }
 
       :host([plain]) details {
         border-bottom: none;
@@ -102,9 +92,13 @@ export class KtCollapsible extends KtElement {
         min-width: 0;
       }
 
+      /* The fold animates .content, which has no padding of its own: the
+         space sits inside it, so a height of nothing is nothing. */
       .content {
-        padding: 0 0 16px;
         color: var(--text-muted);
+      }
+      .inner {
+        padding: 0 0 16px;
       }
     `,
   ];
@@ -119,21 +113,90 @@ export class KtCollapsible extends KtElement {
   @property({ type: Boolean, reflect: true })
   plain = false;
 
+  /** Closing, with the details kept open until the content has folded away. */
+  @state() private folding = false;
+  private fold: Animation | null = null;
+
+  /** The summary opens and closes it here, so a close can wait for the fold. */
+  private onSummaryClick(event: MouseEvent): void {
+    event.preventDefault();
+    this.open = !this.open;
+    emit(this, 'kt-toggle', { open: this.open });
+  }
+
+  override willUpdate(changed: PropertyValues<this>): void {
+    // A close that will be animated keeps the details open meanwhile.
+    if (
+      changed.has('open') &&
+      this.hasUpdated &&
+      !this.open &&
+      durationOf(this, '--duration-normal') > 0
+    ) {
+      this.folding = true;
+    }
+  }
+
+  override updated(changed: PropertyValues<this>): void {
+    if (changed.has('open') && changed.get('open') !== undefined) this.animateFold(this.open);
+  }
+
+  /** Moves the content's height to its own (opening) or to nothing (closing), from where it is. */
+  private animateFold(opening: boolean): void {
+    const content = this.renderRoot.querySelector<HTMLElement>('.content');
+    if (!content) return;
+    const running = this.fold;
+    // Half-way through a fold, start from the height and fade it has reached.
+    const height = running ? content.getBoundingClientRect().height : opening ? 0 : null;
+    const opacity = running ? Number(getComputedStyle(content).opacity) : opening ? 0 : 1;
+    running?.cancel();
+    const natural = content.getBoundingClientRect().height;
+    const from = height ?? natural;
+    const to = opening ? natural : 0;
+
+    const animation = play(
+      content,
+      [
+        { height: `${from}px`, opacity, overflow: 'clip' },
+        { height: `${to}px`, opacity: opening ? 1 : 0, overflow: 'clip' },
+      ],
+      '--duration-normal',
+      'kt-collapsible-fold',
+    );
+    this.fold = animation;
+    if (!animation) {
+      this.folding = false;
+      return;
+    }
+    void animation.finished.then(
+      () => {
+        if (this.fold !== animation) return;
+        this.fold = null;
+        if (!opening) this.folding = false;
+      },
+      () => undefined,
+    );
+  }
+
   private onToggle(event: Event): void {
     const details = event.target as HTMLDetailsElement;
-    if (details.open === this.open) return;
+    // The toggle of what this element drew — opened, or kept open to fold —
+    // arrives a task late, maybe after another click; only a change the
+    // browser made itself, such as find-in-page opening it, is news.
+    if (details.open === (this.open || this.folding)) return;
 
     this.open = details.open;
     emit(this, 'kt-toggle', { open: this.open });
   }
 
   override render(): TemplateResult {
-    return html`<details part="base" ?open=${this.open} @toggle=${this.onToggle}>
-      <summary part="summary">
+    return html`<details part="base" ?open=${this.open || this.folding} @toggle=${this.onToggle}>
+      <summary part="summary" @click=${this.onSummaryClick}>
         <span class="chevron"><kt-icon name="chevron-right" size="16"></kt-icon></span>
         <span class="label"><slot name="summary">${this.heading || nothing}</slot></span>
       </summary>
-      <div part="content" class="content"><slot></slot></div>
+      <div part="content" class="content">
+        <div class="inner"><slot></slot></div>
+      </div>
     </details>`;
   }
 }

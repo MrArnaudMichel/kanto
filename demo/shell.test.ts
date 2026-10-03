@@ -11,13 +11,14 @@ import { VERSION_TAG } from './lib/project.js';
 describe('the documentation shell', () => {
   let app: HTMLElement;
 
+  // It imports and draws the whole site, which a loaded machine takes a while over.
   beforeAll(async () => {
     document.body.innerHTML = '<div id="app"></div>';
     location.hash = '#/components/kt-button';
     await import('./main.js');
     app = document.querySelector<HTMLElement>('#app')!;
     await new Promise((resolve) => setTimeout(resolve, 0));
-  });
+  }, 30_000);
 
   it('renders a header, a sidebar, a main column and a table of contents', () => {
     expect(app.querySelector('kt-header')).not.toBeNull();
