@@ -5,7 +5,7 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.8.0] — 2026-10-02
+## [1.8.0] — 2026-10-03
 
 ### Added
 
@@ -39,10 +39,12 @@ With React wrappers, React 19 JSX and Vue typings.
 
 **`kt-steps`** — the steps of a flow and where the reader is in it.
 
-- Steps before `current` are complete, `current` is ringed, the rest are to
-  come; a step with `error` shows where to go back to.
+- Each step is a filled circle — a tick once done, its number otherwise —
+  and steps before `current` are complete, the rest to come; a step with
+  `error` shows where to go back to.
+- Across, the steps share the width, each label centred under its circle;
+  down a rail with `orientation="vertical"`, beside it.
 - With `navigable`, completed steps are buttons back to them — never forward.
-- Across, or down a rail with `orientation="vertical"`.
 - An ordered list with `aria-current="step"`, each state said in words.
 
 With React wrappers, React 19 JSX and Vue typings.
@@ -69,6 +71,8 @@ With React wrappers, React 19 JSX and Vue typings.
 - The axe suite waits for transitions inside shadow roots before it measures;
   dialogs were audited before their entrance had styled them.
 - The docs console runs its Cmd+K on `kt-command-palette`.
+- The docs site loads each demo app the first time it is opened, and offers
+  to try again if the load fails.
 
 ## [1.7.0] — 2026-10-02
 
