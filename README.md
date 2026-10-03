@@ -214,10 +214,16 @@ editor data generated from it, so plain HTML gets completion and hover docs:
 
 - **Storybook** and API-docs generators take `kanto-ds/custom-elements.json`.
 
-**AI assistants** read [`llms.txt`](https://kanto.arnaudmichel.fr/llms.txt): the
-rules that make code right the first time and a link to every component's
-page. In a project, each page also ships at
-`node_modules/kanto-ds/dist/docs/<tag>.md`.
+**AI agents** get instructions of their own: the package ships
+`dist/AGENTS.md` — the rules that make code right the first time, the mistakes
+agents make and the fix, every component in a line. One line points Claude
+Code, Cursor, Copilot or Codex at it; the
+[AI agents guide](https://kanto.arnaudmichel.fr/#/guide/ai-agents) has each.
+Each component's page ships at `node_modules/kanto-ds/dist/docs/<tag>.md`, and
+a chat that cannot read your project takes
+[`llms.txt`](https://kanto.arnaudmichel.fr/llms.txt) or
+[`llms-full.txt`](https://kanto.arnaudmichel.fr/llms-full.txt), every page in
+one file.
 
 ## Accessibility
 

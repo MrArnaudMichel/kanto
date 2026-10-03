@@ -18,6 +18,14 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   turning arc — then back into the plane, which flies off to the top right;
   other icons give way to a spinner, and fade.
 
+- **Instructions for AI agents.** The package ships `dist/AGENTS.md`: the
+  rules that make code right the first time, the mistakes agents make and
+  the fix, and every component in a line. One line points Claude Code
+  (`@node_modules/kanto-ds/dist/AGENTS.md` in `CLAUDE.md`), Cursor, Copilot
+  or Codex at it. The docs site serves it as `agents.md`, beside a new
+  `llms-full.txt` — every component page in one file — and a guide page for
+  setting each agent up.
+
 ### Changed
 
 Motion where something changes, and nowhere else: nothing moves when a page
