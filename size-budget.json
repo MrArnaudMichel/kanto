@@ -24,7 +24,7 @@
   "./components/feedback/kt-progress-bar": 3600,
   "./components/feedback/kt-skeleton": 2600,
   "./components/feedback/kt-toast": 6400,
-  "./components/feedback/kt-toast-container": 6500,
+  "./components/feedback/kt-toast-container": 7800,
   "./components/feedback/kt-tooltip": 4200,
   "./components/forms/kt-calendar": 9300,
   "./components/forms/kt-checkbox": 4900,
@@ -42,9 +42,9 @@
   "./components/navigation/kt-breadcrumb": 4000,
   "./components/navigation/kt-header": 6000,
   "./components/navigation/kt-page-header": 2600,
-  "./components/navigation/kt-segmented-control": 5400,
+  "./components/navigation/kt-segmented-control": 6300,
   "./components/navigation/kt-sub-menu-navigation": 6800,
-  "./components/navigation/kt-tabs": 5400,
+  "./components/navigation/kt-tabs": 6200,
   "./components/navigation/kt-toggle-button": 4700,
   "./components/navigation/kt-toggle-button-group": 5700,
   "./components/overlays/kt-collapsible": 4000,
@@ -56,6 +56,6 @@
   "./components/forms/kt-time-input": 6700,
   "./components/overlays/kt-command-palette": 7100,
   "./components/forms/kt-slider": 4100,
-  "./components/navigation/kt-steps": 5000,
+  "./components/navigation/kt-steps": 5900,
   "./components/forms/kt-number-input": 6100
 }

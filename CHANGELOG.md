@@ -5,6 +5,26 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+Motion where something changes, and nowhere else: nothing moves when a page
+first appears, every duration comes from the theme's tokens, and all of it
+stops under `prefers-reduced-motion`.
+
+- A toast slides in from the screen edge and, closed, fades and folds away;
+  the rest of the stack moves to make room or close the gap instead of
+  jumping. `toasts` lists only the ones not on their way out.
+- `kt-steps` fills the line to the next step as one is completed, and empties
+  it going back; the tick of a step just completed comes in with it.
+- `kt-collapsible` opens its content to its height and folds it back, where
+  the browser has `::details-content`; elsewhere it opens at once, as before.
+- `kt-meter` moves its fill to a new value, as `kt-progress-bar` does.
+- `kt-tabs` has one underline that slides from tab to tab, and
+  `kt-segmented-control` one surface that slides from segment to segment,
+  across or down.
+
 ## [1.8.0] — 2026-10-03
 
 ### Added
