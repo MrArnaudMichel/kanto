@@ -22,7 +22,8 @@ body {
 }
 
 .wordmark span {
-  color: var(--color-primary-base);
+  /* The text shade of the accent: the base is for fills, and read 3.4:1 here. */
+  color: var(--color-primary-text);
 }
 
 .wordmark:hover {

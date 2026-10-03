@@ -194,6 +194,27 @@ describe('whole screens', () => {
   });
 });
 
+describe('for AI agents', () => {
+  it('shows each agent the one line it needs, and leads to the guide', async () => {
+    const host = mount();
+    const section = host.querySelector('.home-agents')!;
+    expect(section.querySelector('h2')!.textContent).toMatch(/agent/i);
+    const tabs = section.querySelector<HTMLElement & { tabs: { label: string }[] }>('kt-tabs')!;
+    expect(tabs.tabs.map((tab) => tab.label)).toEqual([
+      'Claude Code',
+      'Cursor',
+      'GitHub Copilot',
+      'Any agent',
+    ]);
+    expect(section.textContent).toContain('@node_modules/kanto-ds/dist/AGENTS.md');
+    tabs.dispatchEvent(new CustomEvent('kt-change', { detail: { value: 'cursor' } }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(section.textContent).toContain('.cursor/rules/kanto.mdc');
+    expect(section.querySelector('a[href="#/guide/ai-agents"]')).not.toBeNull();
+    expect(section.querySelector('a[href$="llms-full.txt"]')).not.toBeNull();
+  });
+});
+
 describe('the questions', () => {
   it('answers the usual objections, each in a fold of its own', () => {
     const folds = [...mount().querySelectorAll('.home-faq kt-collapsible')];
@@ -205,11 +226,43 @@ describe('the questions', () => {
   });
 });
 
+describe('the way in', () => {
+  it('reassures under the hero: free, open, any framework', () => {
+    const note = mount().querySelector('.home-hero .home-note')!.textContent!;
+    expect(note).toMatch(/MIT/);
+    expect(note).toMatch(/React/);
+  });
+
+  it('ends on one clear action, the command beside it, and three steps', () => {
+    const end = mount().querySelector('.home-cta')!;
+    const primary = end.querySelector('kt-button:not([variant])')!;
+    expect(primary.textContent!.trim()).toBe('Get started');
+    expect(end.querySelector('.home-install')!.textContent).toContain('npm install kanto-ds');
+    expect(end.querySelectorAll('.home-steps li')).toHaveLength(3);
+  });
+
+  it('closes with a footer that leads everywhere, agents included', () => {
+    const footer = mount().querySelector('footer.home-footer')!;
+    const hrefs = [...footer.querySelectorAll('a')].map((link) => link.getAttribute('href'));
+    for (const href of [
+      '#/guide/installation',
+      '#/components/kt-button',
+      '#/guide/ai-agents',
+      'llms.txt',
+      '#/release/releases',
+    ]) {
+      expect(hrefs, href).toContain(href);
+    }
+    expect(hrefs.some((href) => href?.includes('github.com'))).toBe(true);
+    expect(hrefs.some((href) => href?.includes('npmjs.com'))).toBe(true);
+  });
+});
+
 describe('the end of the page', () => {
   it('closes on a way to start: the command, StackBlitz and the guide', () => {
     const end = mount().querySelector('.home-cta')!;
     expect(end.textContent).toContain('npm install kanto-ds');
     expect(end.textContent).toContain('StackBlitz');
-    expect(end.textContent).toContain('guide');
+    expect(end.textContent).toContain('Get started');
   });
 });

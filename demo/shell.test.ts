@@ -116,6 +116,22 @@ describe('the documentation shell', () => {
     expect(checked!.getAttribute('data-accent-id')).toBe('violet');
   });
 
+  it('has a page for AI agents, with the line each one needs', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/guide/ai-agents';
+    await tick();
+    const page = app.querySelector('main')!;
+    expect(page.querySelector('h1')!.textContent).toContain('AI agents');
+    const text = page.textContent!;
+    expect(text).toContain('@node_modules/kanto-ds/dist/AGENTS.md');
+    for (const agent of ['Claude Code', 'Cursor', 'GitHub Copilot', 'Codex']) {
+      expect(text, agent).toContain(agent);
+    }
+    expect(text).toContain('llms-full.txt');
+    const nav = [...app.querySelectorAll('a')].map((link) => link.getAttribute('href'));
+    expect(nav).toContain('#/guide/ai-agents');
+  });
+
   it('names each page in the tab title, and the home page by what Kanto is', async () => {
     const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
     location.hash = '#/components/kt-date-picker';

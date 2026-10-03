@@ -1,4 +1,5 @@
 /** Short guide pages, written here rather than pulled from a repo README. */
+import { agentSetupsMarkdown } from '../lib/agents.js';
 
 export const INTRODUCTION = `# Introduction
 
@@ -206,27 +207,59 @@ overrides the input instead. The same goes for colour tokens under
 \`data-accent\`.
 `;
 
-export const TOOLS = `# AI assistants and editors
+export const AI_AGENTS = `# AI agents
 
-Kanto describes itself to the tools you write code with, so the first suggestion is the right one.
+Kanto is written down for the agents that write code with you — Claude Code, Cursor, GitHub Copilot, Codex — so the first screen they build is made of Kanto, used the right way.
 
-## AI assistants
+## Give your agent the instructions
 
-Point an assistant at the index, written for them:
+The package ships \`AGENTS.md\`: what Kanto is, the rules that make code right the first time, the mistakes agents make and their fix, and every component in a line. Point your agent at it once.
+
+${agentSetupsMarkdown()}
+
+## Every component page, where the agent looks
+
+Each component's documentation is in the package, at \`node_modules/kanto-ds/dist/docs/<tag>.md\` — the properties, the events, what a screen reader hears and when not to use it. \`AGENTS.md\` tells the agent to read a component's page before using it, as you would.
+
+## For a chat that cannot read your project
+
+Give it one of these, by link or pasted:
+
+- [\`llms.txt\`](https://kanto.arnaudmichel.fr/llms.txt) — what Kanto is, the rules, and a link to every page.
+- [\`llms-full.txt\`](https://kanto.arnaudmichel.fr/llms-full.txt) — the same, then every component page in full, in one file.
+- [\`agents.md\`](https://kanto.arnaudmichel.fr/agents.md) — the instructions above, without a project.
+
+## Prompts that work
+
+Ask for the screen and name the system; the agent finds the components.
 
 \`\`\`text
-https://kanto.arnaudmichel.fr/llms.txt
+Build a settings page with Kanto: a profile form, notification toggles,
+and a danger zone that asks for confirmation before deleting the account.
 \`\`\`
 
-It holds what Kanto is, the rules that make code right the first time — data as properties, \`kt-\` events, tokens rather than colours, the appearance attributes — and a link to every component's page.
+\`\`\`text
+Turn this table into a kt-table with sortable columns, a status badge
+per row and a search above it. Keep the data as it is.
+\`\`\`
 
-Inside a project the pages are already there: each component's documentation ships in the package, at \`node_modules/kanto-ds/dist/docs/<tag>.md\`. Tell your assistant to read the page of a component before using it, as you would.
+\`\`\`text
+Give the whole app a teal accent, rounder corners and a compact density,
+without touching any component's CSS.
+\`\`\`
 
-Working in this repository with Claude Code, the \`SKILL.md\` at its root is a skill: the design guidelines, the tokens and the components, read before building.
+## Working in this repository
 
-## Editors
+The \`SKILL.md\` at the repository's root is a Claude Code skill: the design guidelines, the tokens and the components, read before building in Kanto itself.
+`;
 
-The package ships a [Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/) and editor data generated from it, so plain HTML and templates get completion and hover docs for every \`kt-*\` tag, attribute and event.
+export const TOOLS = `# Editors
+
+Kanto describes itself to your editor, so plain HTML and templates get completion and hover docs for every \`kt-*\` tag, attribute and event. For AI assistants, see [AI agents](#/guide/ai-agents).
+
+## Completion and hover docs
+
+The package ships a [Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/) and editor data generated from it.
 
 - **WebStorm and other JetBrains IDEs** read \`web-types.json\` from the package on their own.
 - **VS Code** needs pointing at it once, in \`.vscode/settings.json\`:

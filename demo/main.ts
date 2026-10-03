@@ -17,7 +17,7 @@ import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
 import { releasePage } from './pages/release.js';
-import { APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
+import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { homePage } from './pages/home.js';
 import { templatePage, templateScreen } from './pages/template.js';
@@ -151,8 +151,15 @@ const GUIDE: Route[] = [
   },
   {
     section: 'guide',
+    slug: 'ai-agents',
+    label: 'AI agents',
+    group: 'Get started',
+    page: () => markdownPage(AI_AGENTS, 'demo/pages/guide.ts'),
+  },
+  {
+    section: 'guide',
     slug: 'tools',
-    label: 'AI and editors',
+    label: 'Editors',
     group: 'Get started',
     page: () => markdownPage(TOOLS, 'demo/pages/guide.ts'),
   },

@@ -1,13 +1,13 @@
 /**
  * Checks the built docs site, not its sources: every icon the docs register
- * must be in the production bundle.
+ * must be in the production bundle, and the files for AI agents served.
  *
  * The dev server bundles nothing away, so a module imported only for its side
  * effects — the docs' icon set — works there and can vanish from the
  * production build, leaving every docs icon blank on the live site. Runs
  * after `npm run build:demo`.
  */
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -49,3 +49,13 @@ if (!entry || entryCode.includes('Operations console')) {
 console.log(
   `ok   the demo apps load on their own (${(entryCode.length / 1024).toFixed(0)} kB entry)`,
 );
+
+// What AI agents are pointed at: the index, every page in one file, and the
+// instructions for a project — all at the site's root.
+const forAgents = ['llms.txt', 'llms-full.txt', 'agents.md'];
+const absent = forAgents.filter((file) => !existsSync(join(root, 'dist-demo', file)));
+if (absent.length) {
+  console.error(`\n✗ The docs site does not serve ${absent.join(', ')} for AI agents.\n`);
+  process.exit(1);
+}
+console.log(`ok   the docs site serves ${forAgents.join(', ')}`);

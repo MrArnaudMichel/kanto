@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { componentDocs, docForPackage, llmsTxt } from './llms.js';
+import { agentsMd, componentDocs, docForPackage, llmsFullTxt, llmsTxt, rules } from './llms.js';
 
 const root = process.cwd();
 const groups = readdirSync(join(root, 'src/components'), { withFileTypes: true })
@@ -27,6 +27,34 @@ describe('llms.txt', () => {
     expect(text).toContain('npm install kanto-ds');
     expect(text).toContain('properties, not attributes');
     expect(text).toContain('setAppearance');
+  });
+});
+
+describe('AGENTS.md', () => {
+  it('is what the generator writes — run node scripts/llms.js', () => {
+    expect(readFileSync(join(root, 'demo/public/agents.md'), 'utf8')).toBe(agentsMd());
+  });
+
+  it('gives an agent the same rules as llms.txt, word for word', () => {
+    expect(agentsMd()).toContain(rules());
+    expect(llmsTxt()).toContain(rules());
+  });
+
+  it('tells it where the pages are and to read one before using a component', () => {
+    const text = agentsMd();
+    expect(text).toContain('node_modules/kanto-ds/dist/docs/');
+    expect(text).toMatch(/read .*page.* before/i);
+    for (const tag of tags) expect(text, tag).toContain(tag);
+  });
+});
+
+describe('llms-full.txt', () => {
+  it('is the index, then every component page whole', () => {
+    const text = llmsFullTxt();
+    expect(text.startsWith(llmsTxt())).toBe(true);
+    for (const doc of componentDocs()) {
+      expect(text, doc.tag).toContain(docForPackage(doc).trim());
+    }
   });
 });
 

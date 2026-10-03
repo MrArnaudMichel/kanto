@@ -10,3 +10,4 @@ coverage/
 *.log
 npm-debug.log*
 dist-demo/
+demo/public/llms-full.txt

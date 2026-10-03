@@ -741,6 +741,76 @@
   min-width: 0;
 }
 
+/* === For AI agents: the words beside the line to paste === */
+
+.home-agents {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 64px;
+  align-items: start;
+}
+.home-agents-text h2 {
+  margin: 0;
+  color: var(--text-body);
+  font: 600 clamp(30px, 3.6vw, 44px) / 1.1 var(--font-family-display);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.home-agents-text p {
+  max-width: 48ch;
+  margin: 14px 0 20px;
+  color: var(--text-muted);
+  font: 400 17px / 1.6 var(--font-family-body);
+}
+.home-agents-links {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.home-agents-links a {
+  color: var(--color-primary-text);
+  font: var(--font-normal-medium);
+}
+.home-agents-setup {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 24px;
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: calc(var(--radius-modal) + 4px);
+}
+.home-agents-setup kt-code {
+  display: block;
+  min-width: 0;
+}
+.home-agents-file {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font: var(--font-code-regular);
+}
+.home-agents-prompt {
+  margin: 6px 0 0;
+}
+.home-agents-prompt figcaption {
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+}
+.home-agents-prompt blockquote {
+  margin: 8px 0 0;
+  padding: 12px 16px;
+  color: var(--text-body);
+  font: 400 15px / 1.6 var(--font-family-body);
+  background: var(--surface-page);
+  border-left: 2px solid var(--color-primary-base);
+  border-radius: 0 var(--radius-input) var(--radius-input) 0;
+}
+
 /* === Questions === */
 
 .home-faq {
@@ -764,77 +834,154 @@
   font: var(--font-code-regular);
 }
 
-/* === The end: the way in, centred and wide === */
+/* === The end: one action, the command beside it, the steps opposite === */
 
 .home-cta {
   display: grid;
-  justify-items: center;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: 56px;
+  align-items: center;
   margin-top: 160px;
-  padding: 80px 40px;
-  text-align: center;
+  padding: 64px;
   background: var(--surface-card);
   border: var(--border-width) solid var(--border-subtle);
   border-radius: calc(var(--radius-modal) + 8px);
+  /* The accent's light behind it, as under the stage at the top. */
+  box-shadow: 0 48px 120px -64px color-mix(in srgb, var(--color-primary-base) 50%, transparent);
 }
 .home-cta h2 {
   margin: 0;
   color: var(--text-body);
-  font: 600 clamp(32px, 4.6vw, 56px) / 1.05 var(--font-family-display);
+  font: 600 clamp(32px, 4.4vw, 54px) / 1.05 var(--font-family-display);
   letter-spacing: -0.03em;
   text-wrap: balance;
 }
-.home-cta > p {
+.home-cta-pitch > p:not(.home-cta-more) {
+  max-width: 46ch;
   margin: 16px 0 0;
   color: var(--text-muted);
   font: 400 18px / 1.6 var(--font-family-body);
 }
-.home-cta .home-steps {
-  width: min(960px, 100%);
-  text-align: start;
-}
 .home-cta .home-actions {
-  margin-top: 8px;
+  justify-content: flex-start;
+  margin-top: 28px;
+}
+.home-cta-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 20px 0 0;
+  font: var(--font-normal-regular);
+}
+.home-cta-more a,
+.home-cta-more .home-link {
+  padding: 0;
+  color: var(--color-primary-text);
+  font: inherit;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.home-cta-more a:hover,
+.home-cta-more .home-link:hover {
+  text-decoration: underline;
 }
 
-/* === Steps === */
-
+/* A real sequence, so it is numbered: one step a row, its code under it. */
 .home-steps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  margin: 28px 0;
+  gap: 18px;
+  margin: 0;
   padding: 0;
   list-style: none;
   counter-reset: step;
 }
 .home-steps li {
   display: grid;
-  gap: 10px;
-  align-content: start;
-  min-width: 0;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 6px 14px;
+  align-items: start;
   counter-increment: step;
 }
-/* A code block takes its column's width and scrolls inside it, never the page. */
-.home-steps kt-code,
-.home-band > kt-code {
-  display: block;
-  min-width: 0;
-  max-width: 100%;
+.home-steps li::before {
+  display: grid;
+  grid-row: span 3;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary-text);
+  font: 600 14px / 1 var(--font-family-display);
+  background: var(--color-primary-soft);
+  border-radius: 50%;
+  content: counter(step);
 }
-.home-steps p {
-  margin: 0;
+.home-step-what {
+  padding-top: 6px;
   color: var(--text-body);
   font: var(--font-normal-medium);
 }
+.home-steps code {
+  overflow-x: auto;
+  padding: 8px 12px;
+  color: var(--text-body);
+  font: var(--font-code-regular);
+  white-space: nowrap;
+  background: var(--surface-code);
+  border: var(--border-width) solid var(--border-code);
+  border-radius: var(--radius-input);
+}
 
-/* The no-build path, one line under the steps. */
-.home-alt {
-  margin: 0 0 24px;
+/* Under the hero's actions: what it costs and where it runs. */
+.home-note {
+  margin: 20px 0 0;
   color: var(--text-muted);
   font: var(--font-normal-regular);
 }
-.home-alt a {
-  color: var(--color-primary-text);
+
+/* === Footer === */
+
+.home-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 48px;
+  margin-top: 120px;
+  padding-top: 40px;
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+.home-footer-brand p {
+  max-width: 34ch;
+  margin: 12px 0 0;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+}
+.home-footer-brand .home-footer-meta {
+  font: var(--font-normal-small);
+}
+.home-footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.home-footer-links h2 {
+  margin: 0 0 12px;
+  color: var(--text-body);
+  font: var(--font-normal-medium);
+}
+.home-footer-links ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.home-footer-links a {
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  text-decoration: none;
+}
+.home-footer-links a:hover {
+  color: var(--text-body);
 }
 
 /* === Narrower screens === */
@@ -856,7 +1003,8 @@
     width: auto;
   }
   .home-reason,
-  .home-stack {
+  .home-stack,
+  .home-agents {
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
   }
@@ -869,8 +1017,10 @@
   .home-previews {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .home-steps {
+  .home-cta,
+  .home-footer {
     grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
   }
 }
 
@@ -915,6 +1065,9 @@
   }
   .home-cta {
     margin-top: 112px;
-    padding: 48px 20px;
+    padding: 40px 20px;
+  }
+  .home-footer-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

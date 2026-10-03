@@ -3,21 +3,21 @@
  * of swatches — then three reasons, each shown working; the wall of screens;
  * whole pages to start from; and the way in. No code until someone asks.
  */
-import { html, type TemplateResult } from 'lit';
+import { html, nothing, type TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 import { toaster } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
 import { SCREEN_COUNT, showcase } from '../lib/showcase.js';
 import { stage } from '../lib/stage.js';
 import { REASONS } from '../lib/reasons.js';
+import { AGENT_SETUPS } from '../lib/agents.js';
 import { TEMPLATES } from '../templates/index.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
-import { REPO_URL, VERSION } from '../lib/project.js';
+import { NPM_URL, REPO_URL, VERSION, VERSION_TAG } from '../lib/project.js';
 import { openInStackBlitz, stackblitzProject } from '../lib/stackblitz.js';
 
 const INSTALL = 'npm install kanto-ds';
-const IMPORTS = "import 'kanto-ds';\nimport 'kanto-ds/styles.css';";
 const USE = '<kt-button>Save</kt-button>';
 
 const FRAMEWORKS = {
@@ -67,6 +67,39 @@ const APPS = [
 ];
 
 let framework: keyof typeof FRAMEWORKS = 'react';
+
+/** The footer: every way out of the home page, agents' files among them. */
+const FOOTER: { heading: string; links: { label: string; href: string }[] }[] = [
+  {
+    heading: 'Documentation',
+    links: [
+      { label: 'Introduction', href: '#/guide/introduction' },
+      { label: 'Installation', href: '#/guide/installation' },
+      { label: 'Components', href: '#/components/kt-button' },
+      { label: 'Templates', href: '#/templates' },
+      { label: 'Appearance', href: '#/guide/appearance' },
+    ],
+  },
+  {
+    heading: 'For AI agents',
+    links: [
+      { label: 'Set up your agent', href: '#/guide/ai-agents' },
+      { label: 'llms.txt', href: 'llms.txt' },
+      { label: 'llms-full.txt', href: 'llms-full.txt' },
+      { label: 'agents.md', href: 'agents.md' },
+    ],
+  },
+  {
+    heading: 'Project',
+    links: [
+      { label: 'GitHub', href: REPO_URL },
+      { label: 'npm', href: NPM_URL },
+      { label: 'Releases', href: '#/release/releases' },
+      { label: 'Editors', href: '#/guide/tools' },
+    ],
+  },
+];
+let agent = AGENT_SETUPS[0]!.id;
 
 /** The library's families, in the order the sidebar lists them. */
 const FAMILIES = ['Core', 'Forms', 'Navigation', 'Feedback', 'Overlays', 'Data'];
@@ -176,6 +209,9 @@ export function homePage({
             >Try it live</kt-button
           >
         </div>
+        <p class="home-note">
+          MIT licensed and free. React, Vue, Angular, Svelte or plain HTML — one implementation.
+        </p>
       </div>
       <div class="home-stage">
         ${stage({ siteAccent: appearance.accent, rerender })}
@@ -290,6 +326,47 @@ export function homePage({
       </div>
     </section>
 
+    <section class="home-band home-agents" aria-labelledby="home-agents">
+      <div class="home-agents-text">
+        <h2 id="home-agents">Your AI agent builds with it, right the first time</h2>
+        <p>
+          Kanto ships its own instructions for agents: the rules that make code right, the mistakes
+          they make and the fix, and every component's page. One line points Claude Code, Cursor,
+          Copilot or Codex at them.
+        </p>
+        <ul class="home-agents-links">
+          <li><a href="#/guide/ai-agents">Set up your agent</a></li>
+          <li><a href="llms.txt">llms.txt</a></li>
+          <li><a href="llms-full.txt">llms-full.txt, every page in one file</a></li>
+        </ul>
+      </div>
+      <div class="home-agents-setup">
+        <kt-tabs
+          label="Agent"
+          .tabs=${AGENT_SETUPS.map((setup) => ({ value: setup.id, label: setup.name }))}
+          .value=${agent}
+          @kt-change=${(event: CustomEvent<{ value: string }>) => {
+            agent = event.detail.value;
+            rerender();
+          }}
+        ></kt-tabs>
+        ${(() => {
+          const setup = AGENT_SETUPS.find((candidate) => candidate.id === agent)!;
+          return html`<p class="home-agents-file">
+              <kt-icon name="file-text" size="16"></kt-icon>${setup.file}
+            </p>
+            ${code(setup.snippet, 'markdown')}`;
+        })()}
+        <figure class="home-agents-prompt">
+          <figcaption>Then ask for the screen</figcaption>
+          <blockquote>
+            Build a settings page with Kanto: a profile form, notification toggles, and a danger
+            zone that asks before deleting the account.
+          </blockquote>
+        </figure>
+      </div>
+    </section>
+
     <section class="home-band home-faq" aria-labelledby="home-faq">
       <h2 id="home-faq">Before you ask</h2>
       ${QUESTIONS.map(
@@ -301,28 +378,67 @@ export function homePage({
     </section>
 
     <section class="home-cta" aria-labelledby="home-start">
-      <h2 id="home-start">Your next screen, in Kanto.</h2>
-      <p>Install it, import it once, use it.</p>
-      <ol class="home-steps">
-        <li>${code(INSTALL, 'bash')}</li>
-        <li>${code(IMPORTS, 'js')}</li>
-        <li>${code(USE, 'html')}</li>
-      </ol>
-      <div class="home-actions">
-        <kt-button size="large" @click=${() => (location.hash = '#/guide/installation')}
-          >Read the guide</kt-button
-        >
-        <kt-button size="large" variant="secondary" icon="external-link" @click=${stackblitz}
-          >Open in StackBlitz</kt-button
-        >
-        <a class="home-link" href=${REPO_URL} target="_blank" rel="noopener">Star it on GitHub</a>
+      <div class="home-cta-pitch">
+        <h2 id="home-start">Your next screen, in Kanto.</h2>
+        <p>Install it, import it once, and build. Free, and in your colours from the first line.</p>
+        <div class="home-actions">
+          <kt-button size="large" @click=${() => (location.hash = '#/guide/installation')}
+            >Get started</kt-button
+          >
+          ${install}
+        </div>
+        <p class="home-cta-more">
+          <a href="#/guide/installation#no-build-step">No bundler? One script tag.</a>
+          <button type="button" class="home-link" @click=${stackblitz}>
+            Open a live project on StackBlitz
+          </button>
+        </p>
       </div>
-      <p class="home-alt">
-        No bundler?
-        <a href="#/guide/installation#no-build-step">One stylesheet and one script tag</a>
-        do it.
-      </p>
+      <ol class="home-steps">
+        <li>
+          <span class="home-step-what">Install</span>
+          <code>${INSTALL}</code>
+        </li>
+        <li>
+          <span class="home-step-what">Import it once, at the root</span>
+          <code>import 'kanto-ds';</code>
+          <code>import 'kanto-ds/styles.css';</code>
+        </li>
+        <li>
+          <span class="home-step-what">Use it</span>
+          <code>${USE}</code>
+        </li>
+      </ol>
     </section>
+
+    <footer class="home-footer">
+      <div class="home-footer-brand">
+        <a class="wordmark" href="#/">KANTO <span>DS</span></a>
+        <p>Accessible web components for dashboards, admin tools and forms.</p>
+        <p class="home-footer-meta">${VERSION_TAG}, MIT licence.</p>
+      </div>
+      <nav class="home-footer-links" aria-label="Site">
+        ${FOOTER.map(
+          (column) =>
+            html`<div>
+              <h2>${column.heading}</h2>
+              <ul>
+                ${column.links.map(
+                  (link) =>
+                    html`<li>
+                      <a
+                        href=${link.href}
+                        target=${link.href.startsWith('http') ? '_blank' : nothing}
+                        rel=${link.href.startsWith('http') ? 'noopener' : nothing}
+                        >${link.label}</a
+                      >
+                    </li>`,
+                )}
+              </ul>
+            </div>`,
+        )}
+      </nav>
+    </footer>
   </div>`;
 }
 
