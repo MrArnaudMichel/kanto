@@ -240,35 +240,9 @@ export class KtButton extends KtElement {
       .spin {
         animation: kt-button-spin calc(var(--duration-slow) * 2) linear infinite;
       }
-      /* Waiting to fly: the plane lifts a little, easing into it, then
-         breathes — a slow rise and fall. On its own layer, so it moves by
-         fractions of a pixel instead of snapping between whole ones. */
-      .hover {
-        will-change: translate, transform;
-        animation:
-          kt-button-lift var(--duration-slow) cubic-bezier(0.2, 0, 0.2, 1) forwards,
-          kt-button-breathe calc(var(--duration-slow) * 3) ease-in-out var(--duration-slow) infinite
-            alternate;
-      }
       @keyframes kt-button-spin {
         to {
           rotate: 1turn;
-        }
-      }
-      @keyframes kt-button-lift {
-        from {
-          translate: 0 0;
-        }
-        to {
-          translate: 0.1em -0.1em;
-        }
-      }
-      @keyframes kt-button-breathe {
-        from {
-          transform: translateY(0);
-        }
-        to {
-          transform: translateY(-0.12em);
         }
       }
       .visually-hidden {
@@ -376,26 +350,16 @@ export class KtButton extends KtElement {
 
   private async finish(phase: 'done' | 'failed'): Promise<void> {
     if (phase === 'done') {
-      // The icon leaves first, in its own way, from wherever its waiting
-      // motion had taken it; then the tick comes in.
+      // The icon leaves first, in its own way; then the tick comes in.
       const icon = this.renderRoot.querySelector('[part="icon"]');
-      const at = icon ? getComputedStyle(icon) : null;
-      const from = at?.translate ?? 'none';
-      const breathing = at?.transform ?? 'none';
       this.phase = 'leaving';
       await this.updateComplete;
       const flight = flightOf(this.icon);
       const leaving = icon
-        ? play(
-            icon,
-            flight.leave(from === 'none' ? '0 0' : from, breathing),
-            '--duration-slow',
-            'kt-button-leave',
-            {
-              easing: 'linear',
-              scale: flight.leaveScale ?? 1,
-            },
-          )
+        ? play(icon, flight.leave, '--duration-slow', 'kt-button-leave', {
+            easing: 'linear',
+            scale: flight.leaveScale ?? 1,
+          })
         : null;
       await leaving?.finished.catch(() => undefined);
     }
@@ -489,8 +453,9 @@ export class KtButton extends KtElement {
     const flight = flightOf(this.icon);
     switch (this.phase) {
       case 'busy':
-        return this.icon && flight.waiting
-          ? { name: this.icon, motion: flight.waiting }
+        // An icon with a flight of its own waits still, ready to go.
+        return this.icon && flight.waitsStill
+          ? { name: this.icon, motion: '' }
           : { name: 'loader-circle', motion: 'spin' };
       case 'done':
         return { name: 'check', motion: '' };

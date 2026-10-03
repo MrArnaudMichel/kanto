@@ -80,27 +80,6 @@ describe('kt-button run(), in motion', () => {
     expect(el.shadowRoot!.querySelector('[part="icon"]')!.getAttribute('name')).toBe('check');
   });
 
-  it('takes off from where the plane is hovering, without a jump', async () => {
-    const el = await mount();
-    let land!: () => void;
-    const running = el.run(() => new Promise<void>((resolve) => (land = resolve)));
-    await settle(el);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const icon = el.shadowRoot!.querySelector('[part="icon"]')!;
-    const hovering = getComputedStyle(icon).translate;
-    expect(hovering).not.toBe('none');
-
-    land();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    const leave = played(el).get('kt-button-leave')!;
-    expect(leave).toBeDefined();
-    const start = String(keyframes(leave)[0]!.translate).split(' ').map(parseFloat);
-    const was = hovering.split(' ').map(parseFloat);
-    expect(Math.abs(start[0]! - was[0]!)).toBeLessThanOrEqual(0.5);
-    expect(Math.abs((start[1] ?? 0) - (was[1] ?? 0))).toBeLessThanOrEqual(0.5);
-    await running;
-  });
-
   it('eases each leg of the flight on its own: back slowing, off speeding up', async () => {
     const el = await mount();
     const running = el.run(() => Promise.resolve());
@@ -115,43 +94,23 @@ describe('kt-button run(), in motion', () => {
     await running;
   });
 
-  it('lifts the plane gently when it starts waiting, then breathes, on its own layer', async () => {
+  it('keeps the plane still while it waits, then flies it from where it rests', async () => {
     const el = await mount();
     let land!: () => void;
     const running = el.run(() => new Promise<void>((resolve) => (land = resolve)));
     await settle(el);
+    await new Promise((resolve) => setTimeout(resolve, 200));
     const icon = el.shadowRoot!.querySelector('[part="icon"]')!;
-    const style = getComputedStyle(icon);
-    // Drawn on the compositor: moved by fractions of a pixel, not snapped to whole ones.
-    expect(style.willChange).toContain('translate');
-    const names = icon
-      .getAnimations()
-      .filter((a): a is CSSAnimation => a instanceof CSSAnimation)
-      .map((a) => a.animationName);
-    expect(names).toEqual(['kt-button-lift', 'kt-button-breathe']);
-    // The lift starts where the plane rests: no jump on the click.
-    const lift = icon
-      .getAnimations()
-      .find((a) => (a as CSSAnimation).animationName === 'kt-button-lift')!;
-    expect(String(keyframes(lift)[0]?.translate ?? '0px').startsWith('0')).toBe(true);
-    land();
-    await running;
-  });
+    expect(icon.getAttribute('name')).toBe('send');
+    expect(icon.getAnimations()).toHaveLength(0);
+    expect(getComputedStyle(icon).translate).toBe('none');
 
-  it('leaves from where the breathing had taken it, too', async () => {
-    const el = await mount();
-    let land!: () => void;
-    const running = el.run(() => new Promise<void>((resolve) => (land = resolve)));
-    await settle(el);
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    const icon = el.shadowRoot!.querySelector('[part="icon"]')!;
-    const breathing = getComputedStyle(icon).transform;
-    expect(breathing).not.toBe('none');
     land();
     await new Promise((resolve) => setTimeout(resolve, 0));
     const leave = played(el).get('kt-button-leave')!;
-    expect(keyframes(leave)[0]!.transform).toBe(breathing);
-    expect(keyframes(leave).at(-1)!.transform).toBe('none');
+    // `0 0` comes back as `0px`: a missing y is zero.
+    const [x, y = 0] = String(keyframes(leave)[0]!.translate).split(' ').map(parseFloat);
+    expect([x, y]).toEqual([0, 0]);
     await running;
   });
 });
