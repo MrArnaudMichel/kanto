@@ -39,6 +39,21 @@ export class KtCollapsible extends KtElement {
 
       details {
         border-bottom: var(--border-width) solid var(--border-subtle);
+        /* Lets the height below run to and from auto. */
+        interpolate-size: allow-keywords;
+      }
+
+      /* The content opens to its height and folds back. Where the browser
+         has no ::details-content, it opens at once, as before. */
+      details::details-content {
+        block-size: 0;
+        overflow: clip;
+        transition:
+          block-size var(--duration-normal) var(--easing-standard),
+          content-visibility var(--duration-normal) allow-discrete;
+      }
+      details[open]::details-content {
+        block-size: auto;
       }
 
       :host([plain]) details {
