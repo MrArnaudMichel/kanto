@@ -485,22 +485,32 @@ export class KtButton extends KtElement {
     if (this.phase === 'idle' && (was === 'done' || was === 'failed') && icon) {
       play(icon, flightOf(this.icon).back, '--duration-normal', 'kt-button-back');
     }
-    // A label that changed length: the width follows instead of jumping.
-    const width = this.getBoundingClientRect().width;
-    if (this.widthBefore && Math.abs(width - this.widthBefore) > 0.5) {
-      play(
-        this,
-        [
-          // Clipped while it moves: a label wider than the button so far is
-          // cut at its edge, not spilled past it.
-          { width: `${this.widthBefore}px`, overflow: 'clip' },
-          { width: `${width}px`, overflow: 'clip' },
-        ],
-        '--duration-normal',
-        'kt-button-resize',
-      );
-    }
+    const before = this.widthBefore;
     this.widthBefore = 0;
+    if (before) void this.followWidth(before, icon);
+  }
+
+  /**
+   * A label that changed length: the width follows instead of jumping. A new
+   * icon draws in its own update, after this one, so it is waited for — the
+   * button measured before it would be an icon short, and shrink to that
+   * before snapping back. The wait ends before the frame is painted.
+   */
+  private async followWidth(before: number, icon: Element | null): Promise<void> {
+    if (icon instanceof KtElement) await icon.updateComplete;
+    const width = this.getBoundingClientRect().width;
+    if (Math.abs(width - before) <= 0.5) return;
+    play(
+      this,
+      [
+        // Clipped while it moves: a label wider than the button so far is
+        // cut at its edge, not spilled past it.
+        { width: `${before}px`, overflow: 'clip' },
+        { width: `${width}px`, overflow: 'clip' },
+      ],
+      '--duration-normal',
+      'kt-button-resize',
+    );
   }
 
   /** Moves focus to the button. */

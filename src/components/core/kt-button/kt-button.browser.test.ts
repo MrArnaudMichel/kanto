@@ -262,4 +262,46 @@ describe('kt-button run(), in motion', () => {
       }
     });
   }
+
+  it('keeps its width when only the icon changes — no shrink while the new one draws', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      const el = await fixture<KtButton>('<kt-button icon="send">Send</kt-button>');
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const width = el.getBoundingClientRect().width;
+      const widths: number[] = [];
+      let on = true;
+      const watch = () => {
+        widths.push(el.getBoundingClientRect().width);
+        if (on) requestAnimationFrame(watch);
+      };
+      watch();
+      await el.run(() => Promise.resolve());
+      await settle(el);
+      expect(played(el).has('kt-button-resize')).toBe(false);
+      await vi.advanceTimersByTimeAsync(2000);
+      await settle(el);
+      expect(played(el).has('kt-button-resize')).toBe(false);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      on = false;
+      for (const seen of widths) expect(Math.abs(seen - width)).toBeLessThanOrEqual(0.5);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('moves to the width the new label and icon end at, not short of it', async () => {
+    const el = await fixture<KtButton>(
+      '<kt-button icon="send" done-label="Sent to the team">Send</kt-button>',
+    );
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await el.run(() => Promise.resolve());
+    await settle(el);
+    const resize = played(el).get('kt-button-resize')!;
+    const target = parseFloat(
+      String((resize.effect as KeyframeEffect).getKeyframes().at(-1)!.width),
+    );
+    resize.finish();
+    expect(Math.abs(el.getBoundingClientRect().width - target)).toBeLessThanOrEqual(0.5);
+  });
 });
