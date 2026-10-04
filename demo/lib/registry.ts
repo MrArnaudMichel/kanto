@@ -1419,6 +1419,16 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <p slot="end">Next: <a href="#/components/kt-blog-post">Anatomy of a component</a></p>
     </kt-blog-post>`,
 
+  'kt-newsletter': () =>
+    html`<kt-newsletter
+      heading="Notes, monthly"
+      lead="What we shipped, what we learned, and the components on the way."
+      @kt-subscribe=${(event: CustomEvent<{ wait: (sending: Promise<unknown>) => void }>) =>
+        event.detail.wait(new Promise((resolve) => setTimeout(resolve, 1200)))}
+    >
+      <span slot="note">One email a month. Unsubscribe in one click.</span>
+    </kt-newsletter>`,
+
   'kt-footer': () => {
     const columns = [
       {

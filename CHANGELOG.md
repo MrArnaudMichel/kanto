@@ -272,6 +272,17 @@ when, a cover, and the body in a measure an eye can follow.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-newsletter`** — a way to hear from you again: a heading, a line, an
+email field and the button that subscribes it.
+
+- Checks the address, then `kt-subscribe` carries it with
+  `wait(promise)`: the button runs the request, and the block thanks the
+  reader once it resolves — or says why not on the field.
+- On a tinted `panel` or `plain`; the field under the words or `inline`
+  beside them.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

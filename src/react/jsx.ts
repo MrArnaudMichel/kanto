@@ -24,6 +24,7 @@ import type {
   KtAuthMode,
   KtAuthSubmitDetail,
   KtBilling,
+  KtSubscribeDetail,
   KtTreeItem,
   KtUserMenuItem,
   KtAvatar,
@@ -60,6 +61,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtNewsletter,
   KtBlogPost,
   KtPostGrid,
   KtFaq,
@@ -248,6 +250,7 @@ declare module 'react' {
       'kt-faq': KtProps<KtFaq>;
       'kt-post-grid': KtProps<KtPostGrid>;
       'kt-blog-post': KtProps<KtBlogPost>;
+      'kt-newsletter': KtProps<KtNewsletter, { 'kt-subscribe': KtSubscribeDetail }>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

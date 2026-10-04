@@ -520,6 +520,15 @@ const CASES: Record<string, Case> = {
       (el as KtBlogPost).tags = ['Finance'];
     },
   },
+  'kt-newsletter': {
+    markup: `<kt-newsletter heading="Notes, monthly" lead="What we shipped.">
+      <span slot="note">One email a month.</span>
+    </kt-newsletter>`,
+  },
+  'kt-newsletter inline': {
+    markup:
+      '<kt-newsletter heading="Notes, monthly" layout="inline" variant="plain" align="start"></kt-newsletter>',
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

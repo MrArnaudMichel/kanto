@@ -27,6 +27,7 @@ import type {
   KtAuthMode,
   KtAuthSubmitDetail,
 } from '../components/blocks/kt-auth-form/kt-auth-form.js';
+import type { KtSubscribeDetail } from '../components/blocks/kt-newsletter/kt-newsletter.js';
 import type { KtBilling } from '../components/blocks/kt-pricing-table/kt-pricing-table.js';
 import type { KtPromptSubmitDetail } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
 
@@ -109,6 +110,7 @@ import { KtLogoCloud as KtLogoCloudElement } from '../components/blocks/kt-logo-
 import { KtFaq as KtFaqElement } from '../components/blocks/kt-faq/kt-faq.js';
 import { KtPostGrid as KtPostGridElement } from '../components/blocks/kt-post-grid/kt-post-grid.js';
 import { KtBlogPost as KtBlogPostElement } from '../components/blocks/kt-blog-post/kt-blog-post.js';
+import { KtNewsletter as KtNewsletterElement } from '../components/blocks/kt-newsletter/kt-newsletter.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -731,4 +733,13 @@ export const KtBlogPost = createComponent({
   tagName: 'kt-blog-post',
   elementClass: KtBlogPostElement,
   react: React,
+});
+
+export const KtNewsletter = createComponent({
+  tagName: 'kt-newsletter',
+  elementClass: KtNewsletterElement,
+  react: React,
+  events: {
+    onKtSubscribe: 'kt-subscribe' as Kt<KtSubscribeDetail>,
+  },
 });

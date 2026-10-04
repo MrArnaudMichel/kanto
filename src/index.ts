@@ -145,6 +145,13 @@ export { KtPostGrid } from './components/blocks/kt-post-grid/kt-post-grid.js';
 export type { KtPost, KtPostGridLayout } from './components/blocks/kt-post-grid/kt-post-grid.js';
 export { KtBlogPost } from './components/blocks/kt-blog-post/kt-blog-post.js';
 export type { KtBlogPostTexts } from './components/blocks/kt-blog-post/kt-blog-post.js';
+export { KtNewsletter } from './components/blocks/kt-newsletter/kt-newsletter.js';
+export type {
+  KtNewsletterLayout,
+  KtNewsletterTexts,
+  KtNewsletterVariant,
+  KtSubscribeDetail,
+} from './components/blocks/kt-newsletter/kt-newsletter.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

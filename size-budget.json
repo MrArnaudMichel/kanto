@@ -79,6 +79,7 @@
   "./components/blocks/kt-feature-grid": 5300,
   "./components/blocks/kt-hero": 3900,
   "./components/blocks/kt-logo-cloud": 3300,
+  "./components/blocks/kt-newsletter": 19500,
   "./components/blocks/kt-post-grid": 7500,
   "./components/blocks/kt-pricing-table": 14800,
   "./components/blocks/kt-testimonials": 6600

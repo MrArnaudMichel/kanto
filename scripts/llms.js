@@ -96,7 +96,7 @@ export function llmsTxt() {
 
   return `# Kanto
 
-> Seventy-seven accessible web components for dashboards, admin tools and forms,
+> Seventy-eight accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same \`<kt-button>\` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 

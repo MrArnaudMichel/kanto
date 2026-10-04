@@ -1,7 +1,7 @@
 {
   "name": "kanto-ds",
   "version": "1.8.0",
-  "description": "Seventy-seven accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
+  "description": "Seventy-eight accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
     "web-components",
@@ -385,6 +385,10 @@
     "./components/blocks/kt-logo-cloud": {
       "types": "./dist/components/blocks/kt-logo-cloud/kt-logo-cloud.d.ts",
       "default": "./dist/components/blocks/kt-logo-cloud/kt-logo-cloud.js"
+    },
+    "./components/blocks/kt-newsletter": {
+      "types": "./dist/components/blocks/kt-newsletter/kt-newsletter.d.ts",
+      "default": "./dist/components/blocks/kt-newsletter/kt-newsletter.js"
     },
     "./components/blocks/kt-post-grid": {
       "types": "./dist/components/blocks/kt-post-grid/kt-post-grid.d.ts",

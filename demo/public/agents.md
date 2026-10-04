@@ -144,6 +144,7 @@ writing a control of your own.
 - `kt-feature-grid` — What the product does, a feature at a time: an icon, a title and a line, in a grid.
 - `kt-hero` — The top of a page: what the product is, in a heading and a line, and the way in.
 - `kt-logo-cloud` — Who uses it, in their logos: a line of marks under a caption.
+- `kt-newsletter` — A way to hear from you again: a heading, a line, an email field and the button that subscribes it.
 - `kt-post-grid` — The latest posts, each a card that leads to it: a cover, a title, a line, and who wrote it when.
 - `kt-pricing-table` — The plans, side by side: what each costs, what it includes, and the way in — with a switch between monthly and yearly prices when the plans have both.
 - `kt-testimonials` — What the people who use it say: a quote, and who said it.
