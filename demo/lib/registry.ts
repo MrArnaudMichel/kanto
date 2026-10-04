@@ -922,6 +922,41 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-chat-message name="Northwind AI" thinking></kt-chat-message>
     </div>`,
 
+  'kt-tree': () =>
+    html`<kt-tree
+      label="Files"
+      style="max-width:320px"
+      selected="button"
+      .expanded=${['src', 'components']}
+      .items=${[
+        {
+          id: 'src',
+          label: 'src',
+          icon: 'folder',
+          children: [
+            {
+              id: 'components',
+              label: 'components',
+              icon: 'folder',
+              children: [
+                { id: 'button', label: 'kt-button.ts', icon: 'file' },
+                { id: 'input', label: 'kt-input.ts', icon: 'file' },
+              ],
+            },
+            {
+              id: 'tokens',
+              label: 'tokens',
+              icon: 'folder',
+              children: [{ id: 'base', label: 'base.css', icon: 'file' }],
+            },
+            { id: 'index', label: 'index.ts', icon: 'file' },
+          ],
+        },
+        { id: 'readme', label: 'README.md', icon: 'file-text' },
+        { id: 'package', label: 'package.json', icon: 'file' },
+      ]}
+    ></kt-tree>`,
+
   'kt-user-menu': () =>
     html`<div class="demo-row" style="gap:24px;justify-content:flex-end">
       <kt-user-menu

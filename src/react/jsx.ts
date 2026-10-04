@@ -21,6 +21,7 @@
 import type * as React from 'react';
 import type {
   KtPromptSubmitDetail,
+  KtTreeItem,
   KtUserMenuItem,
   KtAvatar,
   KtBadge,
@@ -56,6 +57,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtTree,
   KtUserMenu,
   KtAccordion,
   KtOtpInput,
@@ -196,6 +198,13 @@ declare module 'react' {
       'kt-user-menu': KtProps<
         KtUserMenu,
         { 'kt-select': { id: string; item: KtUserMenuItem }; 'kt-open': never; 'kt-close': never }
+      >;
+      'kt-tree': KtProps<
+        KtTree,
+        {
+          'kt-select': { id: string; item: KtTreeItem };
+          'kt-toggle': { id: string; expanded: boolean };
+        }
       >;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;

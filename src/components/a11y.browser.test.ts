@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtTree,
   KtUserMenu,
   KtAvatarGroup,
   KtDescriptionList,
@@ -338,6 +339,21 @@ const CASES: Record<string, Case> = {
         { id: 'signout', label: 'Sign out', separator: true, danger: true },
       ];
       (el as KtUserMenu).show();
+    },
+  },
+  'kt-tree': {
+    markup: '<kt-tree label="Files" selected="index"></kt-tree>',
+    setup: (el) => {
+      (el as KtTree).items = [
+        {
+          id: 'src',
+          label: 'src',
+          icon: 'folder',
+          children: [{ id: 'index', label: 'index.ts', icon: 'file' }],
+        },
+        { id: 'readme', label: 'README.md', icon: 'file-text' },
+      ];
+      (el as KtTree).expanded = ['src'];
     },
   },
   'kt-footer': {

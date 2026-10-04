@@ -23,6 +23,7 @@
   "./components/data/kt-stat": 7000,
   "./components/data/kt-table": 12200,
   "./components/data/kt-timeline": 5000,
+  "./components/data/kt-tree": 5300,
   "./components/feedback/kt-alert": 4500,
   "./components/feedback/kt-empty-state": 3800,
   "./components/feedback/kt-progress-bar": 3600,

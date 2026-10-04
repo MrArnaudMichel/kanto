@@ -130,6 +130,7 @@ writing a control of your own.
 - `kt-stat` — One headline figure: a label, a value, and how it moved.
 - `kt-table` — A data table: tri-state sorting, single or multiple selection, paging.
 - `kt-timeline` — An ordered run of events on a rail.
+- `kt-tree` — Things inside things — folders and files, an organisation's teams, nested pages — as a tree to open and walk.
 
 ## More
 

@@ -46,6 +46,16 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-tree`** — things inside things, as a tree to open and walk.
+
+- The nodes are data, as deep as they go; `expanded` and `selected` are
+  yours to set. A click selects, the chevron opens and closes.
+- The WAI-ARIA tree view: one tab stop, the arrows through the visible
+  nodes, Right and Left to open, close, enter and leave; each node says its
+  level and place.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-user-menu`** — the account menu at the end of a header.
 
 - The avatar names the button; the panel shows who is signed in, then items

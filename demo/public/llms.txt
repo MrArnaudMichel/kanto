@@ -1,6 +1,6 @@
 # Kanto
 
-> Sixty-three accessible web components for dashboards, admin tools and forms,
+> Sixty-four accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -117,3 +117,4 @@ In a project, every page below is also at
 - [kt-stat](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-stat/kt-stat.md): One headline figure: a label, a value, and how it moved.
 - [kt-table](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-table/kt-table.md): A data table: tri-state sorting, single or multiple selection, paging.
 - [kt-timeline](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-timeline/kt-timeline.md): An ordered run of events on a rail.
+- [kt-tree](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-tree/kt-tree.md): Things inside things — folders and files, an organisation's teams, nested pages — as a tree to open and walk.

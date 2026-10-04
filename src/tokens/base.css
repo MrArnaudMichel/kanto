@@ -150,6 +150,7 @@ pre {
   kt-toggle-button,
   kt-toggle-button-group,
   kt-tooltip,
+  kt-tree,
   kt-user-menu
 ):not(:defined) {
   visibility: hidden;

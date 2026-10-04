@@ -99,6 +99,8 @@ export type { KtOtpInputType } from './components/forms/kt-otp-input/kt-otp-inpu
 export { KtAccordion } from './components/overlays/kt-accordion/kt-accordion.js';
 export { KtUserMenu } from './components/navigation/kt-user-menu/kt-user-menu.js';
 export type { KtUserMenuItem } from './components/navigation/kt-user-menu/kt-user-menu.js';
+export { KtTree } from './components/data/kt-tree/kt-tree.js';
+export type { KtTreeItem } from './components/data/kt-tree/kt-tree.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,
