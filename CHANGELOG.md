@@ -197,6 +197,16 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-feature-grid`** — what the product does, a feature at a time: an
+icon, a title and a line, in a grid.
+
+- The features are data; one with an `href` links from its title, and the
+  whole feature answers it.
+- `columns` (2, 3 or 4) where there is room, fewer where there is not;
+  `variant="card"` puts each on a card.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

@@ -80,7 +80,18 @@ describe('what the pages and the index say', () => {
 
   it('counts the components it claims, wherever the count is written', () => {
     const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-    const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty'];
+    const tens = [
+      '',
+      '',
+      'twenty',
+      'thirty',
+      'forty',
+      'fifty',
+      'sixty',
+      'seventy',
+      'eighty',
+      'ninety',
+    ];
     const n = tags.length;
     const word = n % 10 ? `${tens[Math.floor(n / 10)]}-${words[n % 10]}` : tens[n / 10]!;
     for (const file of [
@@ -93,7 +104,7 @@ describe('what the pages and the index say', () => {
       const text = readFileSync(join(root, file), 'utf8').toLowerCase();
       const claims = [
         ...text.matchAll(
-          /\b((?:twenty|thirty|forty|fifty|sixty)-[a-z]+) (?:accessible )?(?:web |custom )?(?:components|elements)\b/g,
+          /\b((?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:-[a-z]+)?) (?:accessible )?(?:web |custom )?(?:components|elements)\b/g,
         ),
       ];
       for (const claim of claims) expect(claim[1], file).toBe(word);

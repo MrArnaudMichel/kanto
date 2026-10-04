@@ -62,7 +62,7 @@ const PRICING = {
 const FEATURES = [
   {
     icon: 'component',
-    title: 'Sixty-nine elements',
+    title: 'Seventy elements',
     body: 'Buttons through tables, each one a standard custom element with its own tests and page.',
   },
   {
@@ -133,8 +133,8 @@ export function landingPage(): TemplateResult {
       <kt-badge tone="primary">v${VERSION_MINOR} is out</kt-badge>
       <h1>A design system for tools people work in all day</h1>
       <p>
-        Data-dense and framework-agnostic. Sixty-nine custom elements that run anywhere, built on
-        one token layer that carries both themes.
+        Data-dense and framework-agnostic. Seventy custom elements that run anywhere, built on one
+        token layer that carries both themes.
       </p>
       <div class="row" style="justify-content:center">
         <kt-button

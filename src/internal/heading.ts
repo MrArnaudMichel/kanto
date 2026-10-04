@@ -6,7 +6,12 @@ import { html, type TemplateResult } from 'lit';
  * this draws that level, kept between 1 and 6, `fallback` when it is not a
  * number.
  */
-export function heading(level: number, text: string, className = '', fallback = 2): TemplateResult {
+export function heading(
+  level: number,
+  text: string | TemplateResult,
+  className = '',
+  fallback = 2,
+): TemplateResult {
   const at = Number.isFinite(level) ? Math.min(6, Math.max(1, Math.round(level))) : fallback;
   switch (at) {
     case 1:

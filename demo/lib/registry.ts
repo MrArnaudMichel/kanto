@@ -1126,6 +1126,31 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <span slot="note">Free for three months. No card needed.</span>
     </kt-hero>`,
 
+  'kt-feature-grid': () => {
+    const features = [
+      {
+        icon: 'send',
+        title: 'Sent in a second',
+        description: 'From the quote to the inbox in one click, with the PDF attached.',
+      },
+      {
+        icon: 'refresh-cw',
+        title: 'Chased for you',
+        description: 'Polite reminders go out on the schedule you set, and stop when it is paid.',
+      },
+      {
+        icon: 'check',
+        title: 'Reconciled',
+        description: 'Payments are matched to their invoices as they land in the bank.',
+      },
+    ];
+    return html`<kt-feature-grid
+      heading="Why teams switch"
+      lead="Less chasing, more paid — and the books close themselves."
+      .features=${features}
+    ></kt-feature-grid>`;
+  },
+
   'kt-footer': () => {
     const columns = [
       {

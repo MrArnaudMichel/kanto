@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtFeatureGrid,
   KtAuthForm,
   KtTour,
   KtTree,
@@ -402,6 +403,16 @@ const CASES: Record<string, Case> = {
       <kt-button slot="actions">Start free</kt-button>
       <span slot="note">No card needed.</span>
     </kt-hero>`,
+  },
+  'kt-feature-grid': {
+    markup:
+      '<kt-feature-grid heading="Why teams switch" lead="Less chasing." variant="card"></kt-feature-grid>',
+    setup: (el) => {
+      (el as KtFeatureGrid).features = [
+        { icon: 'send', title: 'Sent in a second', description: 'From the quote.' },
+        { title: 'Reconciled', description: 'Matched to the bank.', href: '#' },
+      ];
+    },
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">

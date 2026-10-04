@@ -119,6 +119,11 @@ export type {
 } from './components/blocks/kt-error-page/kt-error-page.js';
 export { KtHero } from './components/blocks/kt-hero/kt-hero.js';
 export type { KtHeroLayout } from './components/blocks/kt-hero/kt-hero.js';
+export { KtFeatureGrid } from './components/blocks/kt-feature-grid/kt-feature-grid.js';
+export type {
+  KtFeature,
+  KtFeatureGridVariant,
+} from './components/blocks/kt-feature-grid/kt-feature-grid.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

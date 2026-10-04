@@ -100,6 +100,7 @@ import { KtTour as KtTourElement } from '../components/overlays/kt-tour/kt-tour.
 import { KtAuthForm as KtAuthFormElement } from '../components/blocks/kt-auth-form/kt-auth-form.js';
 import { KtErrorPage as KtErrorPageElement } from '../components/blocks/kt-error-page/kt-error-page.js';
 import { KtHero as KtHeroElement } from '../components/blocks/kt-hero/kt-hero.js';
+import { KtFeatureGrid as KtFeatureGridElement } from '../components/blocks/kt-feature-grid/kt-feature-grid.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -669,5 +670,11 @@ export const KtErrorPage = createComponent({
 export const KtHero = createComponent({
   tagName: 'kt-hero',
   elementClass: KtHeroElement,
+  react: React,
+});
+
+export const KtFeatureGrid = createComponent({
+  tagName: 'kt-feature-grid',
+  elementClass: KtFeatureGridElement,
   react: React,
 });

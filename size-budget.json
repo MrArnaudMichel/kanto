@@ -73,5 +73,6 @@
   "./components/overlays/kt-tour": 10900,
   "./components/blocks/kt-auth-form": 23900,
   "./components/blocks/kt-error-page": 9900,
+  "./components/blocks/kt-feature-grid": 5300,
   "./components/blocks/kt-hero": 3900
 }
