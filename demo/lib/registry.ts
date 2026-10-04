@@ -1112,6 +1112,20 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       >
     </div>`,
 
+  'kt-hero': () =>
+    html`<kt-hero
+      heading="Invoices that pay themselves"
+      lead="Send, chase and reconcile in one place — and get paid on the day you said."
+      heading-level="2"
+    >
+      <a slot="announcement" href="#/components/kt-hero"
+        ><kt-badge tone="primary">New</kt-badge> Recurring invoices</a
+      >
+      <kt-button slot="actions" size="large">Start free</kt-button>
+      <kt-button slot="actions" size="large" variant="secondary">Book a demo</kt-button>
+      <span slot="note">Free for three months. No card needed.</span>
+    </kt-hero>`,
+
   'kt-footer': () => {
     const columns = [
       {

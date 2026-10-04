@@ -99,6 +99,7 @@ import { KtColorPicker as KtColorPickerElement } from '../components/forms/kt-co
 import { KtTour as KtTourElement } from '../components/overlays/kt-tour/kt-tour.js';
 import { KtAuthForm as KtAuthFormElement } from '../components/blocks/kt-auth-form/kt-auth-form.js';
 import { KtErrorPage as KtErrorPageElement } from '../components/blocks/kt-error-page/kt-error-page.js';
+import { KtHero as KtHeroElement } from '../components/blocks/kt-hero/kt-hero.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -663,4 +664,10 @@ export const KtErrorPage = createComponent({
   events: {
     onKtRetry: 'kt-retry' as Kt<never>,
   },
+});
+
+export const KtHero = createComponent({
+  tagName: 'kt-hero',
+  elementClass: KtHeroElement,
+  react: React,
 });

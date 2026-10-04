@@ -396,6 +396,13 @@ const CASES: Record<string, Case> = {
     markup:
       '<kt-error-page kind="error" heading-level="2"><span>Request id: 7f3a9c</span></kt-error-page>',
   },
+  'kt-hero': {
+    markup: `<kt-hero heading="Invoices that pay themselves" lead="Send, chase and reconcile." layout="split">
+      <a slot="announcement" href="#">New: recurring invoices</a>
+      <kt-button slot="actions">Start free</kt-button>
+      <span slot="note">No card needed.</span>
+    </kt-hero>`,
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

@@ -188,6 +188,15 @@ With React wrappers, React 19 JSX and Vue typings.
   `llms-full.txt` — every component page in one file — and a guide page for
   setting each agent up.
 
+**`kt-hero`** — the top of a page: a heading, a line and the way in.
+
+- `stacked` puts the media under the words, `split` beside them where the
+  hero is wide enough; `align` centres them or keeps them at the start.
+- Slots for an announcement, actions, a note and media; an empty one takes
+  no room.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

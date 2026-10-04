@@ -138,6 +138,7 @@ writing a control of your own.
 
 - `kt-auth-form` — The way into a product: signing in, creating an account, resetting a password, entering a code — one block, four modes.
 - `kt-error-page` — The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.
+- `kt-hero` — The top of a page: what the product is, in a heading and a line, and the way in.
 
 ## More
 

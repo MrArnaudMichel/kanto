@@ -59,6 +59,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtHero,
   KtErrorPage,
   KtAuthForm,
   KtTour,
@@ -226,6 +227,7 @@ declare module 'react' {
         }
       >;
       'kt-error-page': KtProps<KtErrorPage, { 'kt-retry': never }>;
+      'kt-hero': KtProps<KtHero>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<
