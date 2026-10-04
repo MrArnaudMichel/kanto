@@ -1097,6 +1097,21 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       </kt-prompt-input>
     </div>`,
 
+  'kt-error-page': () =>
+    html`<div class="demo-errors">
+      <kt-error-page heading-level="2" home-href="#/components/kt-error-page"></kt-error-page>
+      <kt-error-page
+        kind="error"
+        heading-level="2"
+        home-href="#/components/kt-error-page"
+        @kt-retry=${(event: Event) => {
+          event.preventDefault();
+          toaster.info('Retrying…');
+        }}
+        ><span>Request id: 7f3a9c</span></kt-error-page
+      >
+    </div>`,
+
   'kt-footer': () => {
     const columns = [
       {

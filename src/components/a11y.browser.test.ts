@@ -389,6 +389,13 @@ const CASES: Record<string, Case> = {
   'kt-auth-form, a code': {
     markup: '<kt-auth-form mode="code" heading-level="2"></kt-auth-form>',
   },
+  'kt-error-page': {
+    markup: '<kt-error-page></kt-error-page>',
+  },
+  'kt-error-page, an error': {
+    markup:
+      '<kt-error-page kind="error" heading-level="2"><span>Request id: 7f3a9c</span></kt-error-page>',
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

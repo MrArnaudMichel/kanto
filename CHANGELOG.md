@@ -25,6 +25,15 @@ they cost the other components nothing.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-error-page`** — not found, broken, or down for maintenance, said
+plainly with the way on.
+
+- `not-found` leads home, `error` offers to try again — `kt-retry`, which
+  reloads unless cancelled — and `maintenance` offers nothing it cannot do;
+  `code`, an `actions` slot, `fill`, `texts`.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-avatar-group`** — the people on something, as avatars overlapping in a
 row.
 

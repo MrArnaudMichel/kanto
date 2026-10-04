@@ -1320,3 +1320,14 @@ kt-app-shell[collapsed] .demo-shell-nav span {
   gap: 24px;
   align-items: start;
 }
+
+/* The kt-error-page example: two pages side by side, each framed. */
+.demo-errors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+.demo-errors kt-error-page {
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-modal);
+}

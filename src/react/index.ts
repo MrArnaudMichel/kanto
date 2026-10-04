@@ -98,6 +98,7 @@ import { KtTree as KtTreeElement } from '../components/data/kt-tree/kt-tree.js';
 import { KtColorPicker as KtColorPickerElement } from '../components/forms/kt-color-picker/kt-color-picker.js';
 import { KtTour as KtTourElement } from '../components/overlays/kt-tour/kt-tour.js';
 import { KtAuthForm as KtAuthFormElement } from '../components/blocks/kt-auth-form/kt-auth-form.js';
+import { KtErrorPage as KtErrorPageElement } from '../components/blocks/kt-error-page/kt-error-page.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -652,5 +653,14 @@ export const KtAuthForm = createComponent({
     onKtSubmit: 'kt-submit' as Kt<KtAuthSubmitDetail>,
     onKtMode: 'kt-mode' as Kt<{ mode: KtAuthMode }>,
     onKtProvider: 'kt-provider' as Kt<{ id: string }>,
+  },
+});
+
+export const KtErrorPage = createComponent({
+  tagName: 'kt-error-page',
+  elementClass: KtErrorPageElement,
+  react: React,
+  events: {
+    onKtRetry: 'kt-retry' as Kt<never>,
   },
 });

@@ -137,6 +137,7 @@ writing a control of your own.
 ### Blocks
 
 - `kt-auth-form` — The way into a product: signing in, creating an account, resetting a password, entering a code — one block, four modes.
+- `kt-error-page` — The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.
 
 ## More
 

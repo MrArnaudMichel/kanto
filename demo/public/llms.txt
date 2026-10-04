@@ -1,6 +1,6 @@
 # Kanto
 
-> Sixty-seven accessible web components for dashboards, admin tools and forms,
+> Sixty-eight accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -124,3 +124,4 @@ In a project, every page below is also at
 ### Blocks
 
 - [kt-auth-form](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-auth-form/kt-auth-form.md): The way into a product: signing in, creating an account, resetting a password, entering a code — one block, four modes.
+- [kt-error-page](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-error-page/kt-error-page.md): The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.

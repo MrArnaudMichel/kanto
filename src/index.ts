@@ -112,6 +112,11 @@ export type {
   KtAuthSubmitDetail,
   KtAuthTexts,
 } from './components/blocks/kt-auth-form/kt-auth-form.js';
+export { KtErrorPage } from './components/blocks/kt-error-page/kt-error-page.js';
+export type {
+  KtErrorPageKind,
+  KtErrorPageTexts,
+} from './components/blocks/kt-error-page/kt-error-page.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,
