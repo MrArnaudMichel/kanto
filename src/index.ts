@@ -126,6 +126,13 @@ export type {
 } from './components/blocks/kt-feature-grid/kt-feature-grid.js';
 export { KtCta } from './components/blocks/kt-cta/kt-cta.js';
 export type { KtCtaLayout, KtCtaVariant } from './components/blocks/kt-cta/kt-cta.js';
+export { KtPricingTable } from './components/blocks/kt-pricing-table/kt-pricing-table.js';
+export type {
+  KtBilling,
+  KtPlan,
+  KtPlanPrice,
+  KtPricingTableTexts,
+} from './components/blocks/kt-pricing-table/kt-pricing-table.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

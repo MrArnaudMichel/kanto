@@ -23,6 +23,7 @@ import type {
   KtPromptSubmitDetail,
   KtAuthMode,
   KtAuthSubmitDetail,
+  KtBilling,
   KtTreeItem,
   KtUserMenuItem,
   KtAvatar,
@@ -59,6 +60,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtPricingTable,
   KtCta,
   KtFeatureGrid,
   KtHero,
@@ -232,6 +234,10 @@ declare module 'react' {
       'kt-hero': KtProps<KtHero>;
       'kt-feature-grid': KtProps<KtFeatureGrid>;
       'kt-cta': KtProps<KtCta>;
+      'kt-pricing-table': KtProps<
+        KtPricingTable,
+        { 'kt-billing': { billing: KtBilling }; 'kt-plan': { id: string; billing: KtBilling } }
+      >;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

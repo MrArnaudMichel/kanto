@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtPricingTable,
   KtFeatureGrid,
   KtAuthForm,
   KtTour,
@@ -424,6 +425,35 @@ const CASES: Record<string, Case> = {
     markup: `<kt-cta heading="Start sending invoices" layout="inline" variant="plain" align="start">
       <kt-button slot="actions">Start free</kt-button>
     </kt-cta>`,
+  },
+  'kt-pricing-table': {
+    markup: '<kt-pricing-table heading="Pricing" yearly-note="Two months free"></kt-pricing-table>',
+    setup: (el) => {
+      (el as KtPricingTable).plans = [
+        {
+          id: 'starter',
+          name: 'Starter',
+          price: { monthly: 0, yearly: 0 },
+          features: ['10 invoices'],
+        },
+        {
+          id: 'team',
+          name: 'Team',
+          description: 'For a team.',
+          price: { monthly: 29, yearly: 290 },
+          features: ['Unlimited'],
+          featured: true,
+        },
+        {
+          id: 'scale',
+          name: 'Scale',
+          price: 'Custom',
+          features: ['SSO'],
+          href: '#',
+          action: 'Talk to sales',
+        },
+      ];
+    },
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">

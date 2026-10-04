@@ -1,6 +1,6 @@
 # Kanto
 
-> Seventy-one accessible web components for dashboards, admin tools and forms,
+> Seventy-two accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -128,3 +128,4 @@ In a project, every page below is also at
 - [kt-error-page](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-error-page/kt-error-page.md): The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.
 - [kt-feature-grid](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-feature-grid/kt-feature-grid.md): What the product does, a feature at a time: an icon, a title and a line, in a grid.
 - [kt-hero](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-hero/kt-hero.md): The top of a page: what the product is, in a heading and a line, and the way in.
+- [kt-pricing-table](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-pricing-table/kt-pricing-table.md): The plans, side by side: what each costs, what it includes, and the way in — with a switch between monthly and yearly prices when the plans have both.

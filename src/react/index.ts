@@ -27,6 +27,7 @@ import type {
   KtAuthMode,
   KtAuthSubmitDetail,
 } from '../components/blocks/kt-auth-form/kt-auth-form.js';
+import type { KtBilling } from '../components/blocks/kt-pricing-table/kt-pricing-table.js';
 import type { KtPromptSubmitDetail } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
 
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
@@ -102,6 +103,7 @@ import { KtErrorPage as KtErrorPageElement } from '../components/blocks/kt-error
 import { KtHero as KtHeroElement } from '../components/blocks/kt-hero/kt-hero.js';
 import { KtFeatureGrid as KtFeatureGridElement } from '../components/blocks/kt-feature-grid/kt-feature-grid.js';
 import { KtCta as KtCtaElement } from '../components/blocks/kt-cta/kt-cta.js';
+import { KtPricingTable as KtPricingTableElement } from '../components/blocks/kt-pricing-table/kt-pricing-table.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -684,4 +686,14 @@ export const KtCta = createComponent({
   tagName: 'kt-cta',
   elementClass: KtCtaElement,
   react: React,
+});
+
+export const KtPricingTable = createComponent({
+  tagName: 'kt-pricing-table',
+  elementClass: KtPricingTableElement,
+  react: React,
+  events: {
+    onKtBilling: 'kt-billing' as Kt<{ billing: KtBilling }>,
+    onKtPlan: 'kt-plan' as Kt<{ id: string; billing: KtBilling }>,
+  },
 });

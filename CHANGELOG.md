@@ -215,6 +215,18 @@ button that acts on them.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-pricing-table`** — the plans side by side: what each costs, what
+it includes, and the way in.
+
+- A switch between monthly and yearly prices when the plans have both, with
+  a note on what yearly saves; `kt-billing` says when it changes.
+- Prices formatted in `currency` and `locale`, or written as given —
+  "Custom".
+- A featured plan is outlined and badged; a plan's button fires `kt-plan`,
+  or is a link.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

@@ -1161,6 +1161,47 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <span slot="note">Free for three months. No card needed.</span>
     </kt-cta>`,
 
+  'kt-pricing-table': () => {
+    const plans = [
+      {
+        id: 'starter',
+        name: 'Starter',
+        description: 'For one person getting paid.',
+        price: { monthly: 0, yearly: 0 },
+        features: ['10 invoices a month', 'Email reminders', 'Card payments'],
+      },
+      {
+        id: 'team',
+        name: 'Team',
+        description: 'For a team that bills every week.',
+        price: { monthly: 29, yearly: 290 },
+        features: [
+          'Unlimited invoices',
+          'Reminders on your schedule',
+          'Bank reconciliation',
+          'Five seats',
+        ],
+        featured: true,
+        action: 'Start a trial',
+      },
+      {
+        id: 'scale',
+        name: 'Scale',
+        description: 'For finance teams with rules.',
+        price: 'Custom',
+        features: ['Everything in Team', 'Approvals', 'SSO and audit log'],
+        href: '#/components/kt-pricing-table',
+        action: 'Talk to sales',
+      },
+    ];
+    return html`<kt-pricing-table
+      heading="Pricing"
+      lead="Start free. Pay when it pays for itself."
+      yearly-note="Two months free"
+      .plans=${plans}
+    ></kt-pricing-table>`;
+  },
+
   'kt-footer': () => {
     const columns = [
       {

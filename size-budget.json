@@ -1,5 +1,5 @@
 {
-  ".": 113400,
+  ".": 125400,
   "./icons": 800,
   "./strings": 1600,
   "./react": 115200,
@@ -75,5 +75,6 @@
   "./components/blocks/kt-cta": 3800,
   "./components/blocks/kt-error-page": 9900,
   "./components/blocks/kt-feature-grid": 5300,
-  "./components/blocks/kt-hero": 3900
+  "./components/blocks/kt-hero": 3900,
+  "./components/blocks/kt-pricing-table": 14800
 }
