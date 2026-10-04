@@ -5,34 +5,9 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.9.0] — 2026-10-03
+## [1.9.0] — 2026-10-05
 
 ### Added
-
-**Blocks** — a new family: whole sections of a page, built from the
-components, as ready to use as they are. Their words are their own — English
-until given others through `texts` — rather than in the shared strings, so
-they cost the other components nothing.
-
-**`kt-auth-form`** — the way into a product, in four modes: `sign-in`,
-`sign-up`, `forgot` and `code`.
-
-- Checks what it can before sending and says so on the field; then
-  `kt-submit` carries the mode, the values and `wait(promise)` — the button
-  runs the request, and a rejection's message is shown above the fields.
-- Sign-in `providers`, a "keep me signed in" box, links between the modes
-  (`kt-mode`), the `autocomplete` a password manager looks for.
-
-With React wrappers, React 19 JSX and Vue typings.
-
-**`kt-error-page`** — not found, broken, or down for maintenance, said
-plainly with the way on.
-
-- `not-found` leads home, `error` offers to try again — `kt-retry`, which
-  reloads unless cancelled — and `maintenance` offers nothing it cannot do;
-  `code`, an `actions` slot, `fill`, `texts`.
-
-With React wrappers, React 19 JSX and Vue typings.
 
 **`kt-avatar-group`** — the people on something, as avatars overlapping in a
 row.
@@ -187,6 +162,31 @@ With React wrappers, React 19 JSX and Vue typings.
   or Codex at it. The docs site serves it as `agents.md`, beside a new
   `llms-full.txt` — every component page in one file — and a guide page for
   setting each agent up.
+
+**Blocks** — a new family: whole sections of a page, built from the
+components, as ready to use as they are. Their words are their own — English
+until given others through `texts` — rather than in the shared strings, so
+they cost the other components nothing.
+
+**`kt-auth-form`** — the way into a product, in four modes: `sign-in`,
+`sign-up`, `forgot` and `code`.
+
+- Checks what it can before sending and says so on the field; then
+  `kt-submit` carries the mode, the values and `wait(promise)` — the button
+  runs the request, and a rejection's message is shown above the fields.
+- Sign-in `providers`, a "keep me signed in" box, links between the modes
+  (`kt-mode`), the `autocomplete` a password manager looks for.
+
+With React wrappers, React 19 JSX and Vue typings.
+
+**`kt-error-page`** — not found, broken, or down for maintenance, said
+plainly with the way on.
+
+- `not-found` leads home, `error` offers to try again — `kt-retry`, which
+  reloads unless cancelled — and `maintenance` offers nothing it cannot do;
+  `code`, an `actions` slot, `fill`, `texts`.
+
+With React wrappers, React 19 JSX and Vue typings.
 
 **`kt-hero`** — the top of a page: a heading, a line and the way in.
 
