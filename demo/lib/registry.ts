@@ -793,6 +793,28 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button slot="actions" size="small" variant="dark" icon="search">Search</kt-button>
     </kt-header>`,
 
+  'kt-avatar-group': () => {
+    const people = [
+      'Dana Whitfield',
+      'Hank Scorpio',
+      'Bill Lumbergh',
+      'Gavin Belson',
+      'Alice Abernathy',
+      'Ron Swanson',
+      'Leslie Knope',
+    ].map((name) => ({ name }));
+    return html`<div class="demo-row" style="gap:32px">
+      <kt-avatar-group label="Project members" size="small" .people=${people}></kt-avatar-group>
+      <kt-avatar-group label="Project members" .people=${people}></kt-avatar-group>
+      <kt-avatar-group
+        label="Project members"
+        size="large"
+        max="3"
+        .people=${people}
+      ></kt-avatar-group>
+    </div>`;
+  },
+
   'kt-description-list': () => {
     const items = [
       { term: 'Invoice', detail: 'INV-2041' },

@@ -55,6 +55,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtAvatarGroup,
   KtDescriptionList,
   KtAppShell,
   KtChatMessage,
@@ -180,6 +181,7 @@ declare module 'react' {
       'kt-chat-message': KtProps<KtChatMessage>;
       'kt-app-shell': KtProps<KtAppShell, { 'kt-sidebar-toggle': { open: boolean } }>;
       'kt-description-list': KtProps<KtDescriptionList>;
+      'kt-avatar-group': KtProps<KtAvatarGroup>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

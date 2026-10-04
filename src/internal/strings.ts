@@ -175,6 +175,8 @@ export interface KtStrings {
   thinking: string;
   /** The app shell's side area. */
   sidebar: string;
+  /** An avatar group's sum of the people it does not show. */
+  moreCount: (count: number) => string;
 }
 
 export const defaultStrings: Readonly<KtStrings> = Object.freeze({
@@ -294,6 +296,7 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   message: 'Message',
   thinking: 'Thinking…',
   sidebar: 'Sidebar',
+  moreCount: (count: number) => `${count} more`,
 });
 
 let current: KtStrings = { ...defaultStrings };

@@ -53,6 +53,7 @@ writing a control of your own.
 ### Core
 
 - `kt-avatar` — A person or an organisation, as a picture or as their initials.
+- `kt-avatar-group` — The people on something — a project's members, a document's editors — as avatars overlapping in a row, the rest summed up as "+N".
 - `kt-badge` — A compact label: a pill `tag`, a monospaced `code` token, a `category` tinted with a colour of your choosing, or a `count`.
 - `kt-button` — The Kanto action button.
 - `kt-card` — The system's content surface: 12px radius, a 1px `--border-subtle` border, 24px of padding, 20px between its rows.

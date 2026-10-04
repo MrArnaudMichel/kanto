@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtAvatarGroup,
   KtDescriptionList,
   KtFooter,
   KtSteps,
@@ -285,6 +286,18 @@ const CASES: Record<string, Case> = {
         { term: 'Customer', detail: 'Acme Corp' },
         { term: 'Purchase order', detail: '' },
       ];
+    },
+  },
+  'kt-avatar-group': {
+    markup: '<kt-avatar-group label="Project members" max="3"></kt-avatar-group>',
+    setup: (el) => {
+      (el as KtAvatarGroup).people = [
+        'Dana Whitfield',
+        'Hank Scorpio',
+        'Bill Lumbergh',
+        'Gavin Belson',
+        'Alice Abernathy',
+      ].map((name) => ({ name }));
     },
   },
   'kt-footer': {

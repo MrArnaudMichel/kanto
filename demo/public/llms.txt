@@ -1,6 +1,6 @@
 # Kanto
 
-> Fifty-eight accessible web components for dashboards, admin tools and forms,
+> Fifty-nine accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -40,6 +40,7 @@ In a project, every page below is also at
 ### Core
 
 - [kt-avatar](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-avatar/kt-avatar.md): A person or an organisation, as a picture or as their initials.
+- [kt-avatar-group](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-avatar-group/kt-avatar-group.md): The people on something — a project's members, a document's editors — as avatars overlapping in a row, the rest summed up as "+N".
 - [kt-badge](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-badge/kt-badge.md): A compact label: a pill `tag`, a monospaced `code` token, a `category` tinted with a colour of your choosing, or a `count`.
 - [kt-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-button/kt-button.md): The Kanto action button.
 - [kt-card](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-card/kt-card.md): The system's content surface: 12px radius, a 1px `--border-subtle` border, 24px of padding, 20px between its rows.

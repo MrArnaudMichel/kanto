@@ -6,6 +6,7 @@
   "./react/jsx": 100,
   "./vue": 103200,
   "./components/core/kt-avatar": 4800,
+  "./components/core/kt-avatar-group": 5500,
   "./components/core/kt-badge": 5300,
   "./components/core/kt-button": 7900,
   "./components/core/kt-split-button": 12700,

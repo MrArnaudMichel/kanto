@@ -9,6 +9,14 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+**`kt-avatar-group`** — the people on something, as avatars overlapping in a
+row.
+
+- `people` is data; `max` shows that many and sums the rest up as "+N", said
+  as "N more"; `size` sizes them all.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-description-list`** — terms and their details, the body of a detail
 page.
 

@@ -83,6 +83,7 @@ import { KtPromptInput as KtPromptInputElement } from '../components/forms/kt-pr
 import { KtChatMessage as KtChatMessageElement } from '../components/data/kt-chat-message/kt-chat-message.js';
 import { KtAppShell as KtAppShellElement } from '../components/navigation/kt-app-shell/kt-app-shell.js';
 import { KtDescriptionList as KtDescriptionListElement } from '../components/data/kt-description-list/kt-description-list.js';
+import { KtAvatarGroup as KtAvatarGroupElement } from '../components/core/kt-avatar-group/kt-avatar-group.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -551,5 +552,11 @@ export const KtAppShell = createComponent({
 export const KtDescriptionList = createComponent({
   tagName: 'kt-description-list',
   elementClass: KtDescriptionListElement,
+  react: React,
+});
+
+export const KtAvatarGroup = createComponent({
+  tagName: 'kt-avatar-group',
+  elementClass: KtAvatarGroupElement,
   react: React,
 });
