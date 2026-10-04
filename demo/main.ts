@@ -20,9 +20,8 @@ import { releasePage } from './pages/release.js';
 import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { homeFooter, homePage } from './pages/home.js';
-import { templatePage, templateScreen } from './pages/template.js';
+import { blocksPage } from './pages/blocks.js';
 import type { SettingsSection } from './apps/console/settings.js';
-import { TEMPLATES } from './templates/index.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetStage } from './lib/stage.js';
 import { resetReasons } from './lib/reasons.js';
@@ -44,7 +43,7 @@ registerDocsIcons();
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'home' | 'guide' | 'components' | 'templates' | 'apps' | 'release';
+type Section = 'home' | 'guide' | 'components' | 'blocks' | 'apps' | 'release';
 
 interface Route {
   readonly section: Section;
@@ -222,22 +221,15 @@ const HOME: Route = {
   page: () => html``,
 };
 
-const TEMPLATE_ROUTES: Route[] = TEMPLATES.map((template) => ({
-  section: 'templates' as const,
-  slug: template.slug,
-  label: template.name,
-  group: 'Templates',
-  page: () => templatePage(template, update),
-}));
+const BLOCKS: Route = {
+  section: 'blocks',
+  slug: 'all',
+  label: 'Blocks',
+  group: 'Blocks',
+  page: blocksPage,
+};
 
-const ROUTES: Route[] = [
-  HOME,
-  ...GUIDE,
-  ...COMPONENT_ROUTES,
-  ...TEMPLATE_ROUTES,
-  ...APP_ROUTES,
-  ...RELEASE,
-];
+const ROUTES: Route[] = [HOME, ...GUIDE, ...COMPONENT_ROUTES, BLOCKS, ...APP_ROUTES, ...RELEASE];
 
 /**
  * Components flagged "New" in the navigation: introduced under Added in a
@@ -249,7 +241,7 @@ const NEW_COMPONENTS = newComponents(parseChangelog(changelogDoc), new Date());
 const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
-  { id: 'templates', label: 'Templates', icon: 'layout-template' },
+  { id: 'blocks', label: 'Blocks', icon: 'layout-template' },
   { id: 'apps', label: 'Apps', icon: 'app-window' },
   { id: 'release', label: 'Release', icon: 'tag' },
 ];
@@ -296,11 +288,6 @@ const apps = lazyLoader(APPS, () => update());
 
 /** `#/app/<path>` — anything under it renders without the docs chrome. */
 function currentApp(): (() => TemplateResult) | null {
-  // `#/template/<slug>`: a template alone, as it would be in a product.
-  const screen = /^#\/template\/([a-z-]+)$/.exec(location.hash);
-  const template = screen && TEMPLATES.find((candidate) => candidate.slug === screen[1]);
-  if (template) return () => templateScreen(template);
-
   const path = /^#\/app\/(.+)$/.exec(location.hash)?.[1];
   const app = path ? apps(path) : null;
   if (!path || !app) return null;
@@ -334,6 +321,8 @@ function currentRoute(): Route {
   // `#/guide/installation#no-build-step`: the route, then a heading on it.
   const [section, slug] = location.hash.replace(/^#\/?/, '').split('#')[0]!.split('/');
   if (!section || section === 'home') return HOME;
+  // The templates gave way to the blocks: an old link lands on them.
+  if (section === 'templates') return BLOCKS;
   return (
     ROUTES.find((route) => route.section === section && route.slug === slug) ??
     ROUTES.find((route) => route.section === section) ??

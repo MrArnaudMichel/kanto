@@ -1267,24 +1267,6 @@ section > h6 {
   border-radius: 5px;
 }
 
-/* A template's page: actions beside the preview's heading, room above the code. */
-.template-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.template-code {
-  margin-top: 40px;
-}
-.template-code > kt-tabs {
-  display: block;
-  margin-bottom: 16px;
-}
-/* A whole page of code scrolls inside its block rather than down the page. */
-.template-code kt-code::part(pre) {
-  max-height: 560px;
-}
-
 /* The kt-app-shell example's navigation: a label beside each icon, and the
    icons alone once the shell is collapsed to a rail. */
 .demo-shell-nav {
@@ -1337,4 +1319,45 @@ kt-app-shell[collapsed] .demo-shell-nav span {
   display: grid;
   gap: 40px;
   width: 100%;
+}
+
+/* The blocks page: each kind of page, then its blocks, live. */
+.blocks-category + .blocks-category {
+  margin-top: 72px;
+}
+.blocks-category > h2 {
+  margin: 0 0 8px;
+  color: var(--text-body);
+  font: var(--font-title-h4);
+  scroll-margin-top: 96px;
+}
+.blocks-lead {
+  max-width: 64ch;
+  margin: 0;
+  color: var(--text-muted);
+}
+.blocks-item {
+  margin-top: 36px;
+}
+.blocks-item-head {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.blocks-item-head h3 {
+  margin: 0;
+  font: var(--font-title-h6);
+  scroll-margin-top: 96px;
+}
+.blocks-item-head h3 a {
+  color: var(--text-body);
+  text-decoration: none;
+}
+.blocks-item-head h3 a:hover {
+  color: var(--color-primary-text);
+}
+.blocks-item-head p {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--text-muted);
 }

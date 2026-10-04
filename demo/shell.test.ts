@@ -29,7 +29,7 @@ describe('the documentation shell', () => {
 
   it('puts the top-level sections in the header', () => {
     const labels = [...app.querySelectorAll('.top-nav a')].map((a) => a.textContent!.trim());
-    expect(labels).toEqual(['Guide', 'Components', 'Templates', 'Apps', 'Release']);
+    expect(labels).toEqual(['Guide', 'Components', 'Blocks', 'Apps', 'Release']);
   });
 
   it('lists the components in the sidebar, grouped', () => {
@@ -152,32 +152,38 @@ describe('the documentation shell', () => {
     expect(app.querySelector('#no-build-step')).not.toBeNull();
   });
 
-  it('gives each template a page, and the template a screen of its own', async () => {
+  it('shows every block live on one page, each linked to its documentation', async () => {
+    const { COMPONENTS } = await import('./lib/registry.js');
     const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/templates/dashboard';
+    location.hash = '#/blocks';
     await tick();
-    expect(document.title).toBe('Dashboard — Kanto');
-    expect(app.querySelector('.app-preview-frame')!.getAttribute('src')).toContain(
-      '#/template/dashboard',
-    );
-    expect(app.querySelector('kt-code')).not.toBeNull();
-
-    location.hash = '#/template/dashboard';
-    await tick();
-    expect(app.querySelector('kt-header')).toBeNull();
-    expect(app.querySelector('#orders')).not.toBeNull();
-    expect((app.querySelector('#orders') as HTMLElement & { data: unknown[] }).data.length).toBe(5);
+    expect(document.title).toBe('Blocks — Kanto');
+    const blocks = COMPONENTS.filter((entry) => entry.group === 'Blocks');
+    expect(blocks.length).toBeGreaterThanOrEqual(14);
+    const gallery = app.querySelector('.blocks-gallery')!;
+    for (const block of blocks) {
+      expect(
+        gallery.querySelector(`a[href="#/components/${block.slug}"]`),
+        block.slug,
+      ).not.toBeNull();
+      expect(gallery.querySelector(block.slug), block.slug).not.toBeNull();
+    }
   });
 
-  it('runs the script of each template when moving from one to the next', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/template/dashboard';
-    await tick();
-    location.hash = '#/template/onboarding';
-    await tick();
-    await tick();
-    expect((app.querySelector('#steps') as HTMLElement & { steps: unknown[] }).steps.length).toBe(
-      3,
+  it('groups the blocks by what they are for, in the sidebar too', async () => {
+    location.hash = '#/blocks';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const headings = [...app.querySelectorAll('.blocks-gallery h2')].map((h) =>
+      h.textContent!.trim(),
     );
+    expect(headings).toEqual(['Marketing', 'Blog', 'Application']);
+    const sidebar = [...app.querySelectorAll('.sidebar a')].map((a) => a.textContent!.trim());
+    expect(sidebar).toEqual(expect.arrayContaining(['Marketing', 'Blog', 'Application']));
+  });
+
+  it('sends an old link to the templates to the blocks', async () => {
+    location.hash = '#/templates/dashboard';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(document.title).toBe('Blocks — Kanto');
   });
 });

@@ -330,8 +330,13 @@ With React wrappers, React 19 JSX and Vue typings.
   their tick in.
 - The docs site opens on a new home page: a live product screen under the
   headline, re-coloured from a row of swatches; three reasons, each shown
-  working; the wall of screens; every template and app as a live miniature;
-  and the way in at the end. No code until it is asked for.
+  working; the wall of screens; the blocks, by kind of page; every app as a
+  live miniature; and the way in at the end. No code until it is asked for.
+- The docs site's Templates section is now Blocks: every block live on one
+  page, grouped by the kind of page it belongs to — marketing, blog,
+  application — each leading to its documentation. The five template
+  screens it held are gone, the blocks do their work; an old link to them
+  lands on the blocks.
 
 ### Fixed
 

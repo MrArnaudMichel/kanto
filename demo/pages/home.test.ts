@@ -4,7 +4,7 @@ import { resetStage } from '../lib/stage.js';
 import { resetChat } from '../lib/chat-demo.js';
 import { KT_ACCENTS, KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
-import { TEMPLATES } from '../templates/index.js';
+import { BLOCK_CATEGORIES } from './blocks.js';
 import { homeFooter, homePage } from './home.js';
 
 function mount() {
@@ -192,14 +192,20 @@ describe('the gallery', () => {
   });
 });
 
-describe('whole screens', () => {
-  it('shows every template, linked to its page', () => {
-    const links = [
-      ...mount().querySelectorAll<HTMLAnchorElement>('.home-screens a[href^="#/templates/"]'),
-    ];
-    expect(links.map((link) => link.getAttribute('href'))).toEqual(
-      TEMPLATES.map((template) => `#/templates/${template.slug}`),
+describe('blocks', () => {
+  it('leads to the blocks, by kind of page, and to each block', () => {
+    const section = mount().querySelector('.home-blocks')!;
+    const kinds = [...section.querySelectorAll<HTMLAnchorElement>('a[href^="#/blocks"]')];
+    expect(kinds.map((link) => link.getAttribute('href'))).toEqual(
+      BLOCK_CATEGORIES.map((category) => `#/blocks#${category.id}`),
     );
+    for (const slug of BLOCK_CATEGORIES.flatMap((category) => category.slugs)) {
+      expect(section.querySelector(`a[href="#/components/${slug}"]`), slug).not.toBeNull();
+    }
+  });
+
+  it('no longer leads to the templates', () => {
+    expect(mount().querySelector('a[href^="#/templates"], a[href^="#/template/"]')).toBeNull();
   });
 });
 

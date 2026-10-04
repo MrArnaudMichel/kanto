@@ -12,7 +12,6 @@ import '../shell.css';
 import '../home.css';
 import { KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { homeFooter, homePage } from './home.js';
-import { TEMPLATES } from '../templates/index.js';
 
 afterEach(() => {
   delete document.documentElement.dataset['theme'];
@@ -60,8 +59,8 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
       host,
     );
     const frames = [...host.querySelectorAll('iframe')];
-    // Every template, then the four apps.
-    expect(frames.length).toBe(TEMPLATES.length + 4);
+    // The four apps.
+    expect(frames.length).toBe(4);
     for (const frame of frames) {
       expect(frame.hasAttribute('inert')).toBe(true);
       expect(frame.getAttribute('tabindex')).toBe('-1');
@@ -72,7 +71,7 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
 
     frames[0]!.scrollIntoView();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(frames[0]!.getAttribute('src')).toContain('#/template/');
+    expect(frames[0]!.getAttribute('src')).toContain('#/app/');
     frames.at(-1)!.scrollIntoView();
     await new Promise((resolve) => setTimeout(resolve, 300));
     expect(frames.at(-1)!.getAttribute('src')).toContain('#/app/');

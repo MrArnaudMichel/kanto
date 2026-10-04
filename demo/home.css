@@ -387,11 +387,6 @@
   color: var(--text-muted);
   font: 400 17px / 1.6 var(--font-family-body);
 }
-.home-subhead {
-  margin: 56px 0 20px;
-  color: var(--text-body);
-  font: 600 20px / 1.2 var(--font-family-display);
-}
 
 /* === Reasons: words on one side, the thing working on the other === */
 
@@ -673,7 +668,59 @@
   text-decoration: underline;
 }
 
-/* === Whole screens: templates and apps, small and live === */
+/* === Blocks: the kinds of page, and the blocks each is made of === */
+
+.home-block-kinds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.home-block-kinds li {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 24px;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+.home-block-kinds p {
+  margin: 0;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  line-height: 1.6;
+}
+.home-block-kind {
+  justify-self: start;
+  color: var(--text-body);
+  font: 600 20px / 1.2 var(--font-family-display);
+  text-decoration: none;
+}
+.home-block-kind:hover {
+  color: var(--color-primary-text);
+}
+.home-block-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.home-block-names a {
+  color: var(--color-primary-text);
+  font: var(--font-normal-regular);
+  text-decoration: none;
+}
+.home-block-names a:hover {
+  text-decoration: underline;
+}
+@media (max-width: 860px) {
+  .home-block-kinds {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* === Whole apps, small and live === */
 
 .home-previews {
   display: grid;

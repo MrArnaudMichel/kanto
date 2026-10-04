@@ -12,10 +12,10 @@ colours, in any framework.**
 colour, a font and a density, watch a real screen change, and copy the one
 line that does it in your project — or open it on StackBlitz.
 
-Or start from a whole screen: the site's
-**[templates](https://kanto.arnaudmichel.fr/#/templates/dashboard)** — sign-in,
-dashboard, settings, onboarding, pricing — are ready to copy or to run on
-StackBlitz.
+Or build a page from whole sections: the site's
+**[blocks](https://kanto.arnaudmichel.fr/#/blocks)** — a hero, pricing, a blog
+post, a sign-in form, a settings section and more — are live, each with its
+own documentation.
 
 They are standard custom elements, so the same `<kt-button>` runs in React,
 Vue, Angular, Svelte and plain HTML. Two complete themes, every element audited by axe in both and driven

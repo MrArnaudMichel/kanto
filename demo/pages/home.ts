@@ -1,7 +1,7 @@
 /**
  * The front door. A product first — one live screen, re-coloured from a row
  * of swatches — then three reasons, each shown working; the wall of screens;
- * whole pages to start from; and the way in. No code until someone asks.
+ * the blocks pages are built from, and whole apps; and the way in. No code until someone asks.
  */
 import { html, type TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
@@ -12,7 +12,7 @@ import { stage } from '../lib/stage.js';
 import { REASONS } from '../lib/reasons.js';
 import { AGENT_SETUPS } from '../lib/agents.js';
 import { chatDemo } from '../lib/chat-demo.js';
-import { TEMPLATES } from '../templates/index.js';
+import { BLOCK_CATEGORIES } from './blocks.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
 import { NPM_URL, REPO_URL, VERSION, VERSION_TAG } from '../lib/project.js';
@@ -78,7 +78,7 @@ const FOOTER: { heading: string; links: { label: string; href: string }[] }[] = 
       { label: 'Introduction', href: '#/guide/introduction' },
       { label: 'Installation', href: '#/guide/installation' },
       { label: 'Components', href: '#/components/kt-button' },
-      { label: 'Templates', href: '#/templates' },
+      { label: 'Blocks', href: '#/blocks' },
       { label: 'Appearance', href: '#/guide/appearance' },
     ],
   },
@@ -224,7 +224,7 @@ export function homePage({
         ${stage({ siteAccent: appearance.accent, rerender })}
         <p class="stage-caption">
           Every part of it is Kanto, live — and
-          <a href="#/templates/dashboard">a screen like it</a> is ready to copy.
+          <a href="#/app/console/home">the whole app</a> is one click away.
         </p>
       </div>
     </section>
@@ -327,20 +327,31 @@ export function homePage({
       </ul>
     </section>
 
-    <section class="home-band home-screens" aria-labelledby="home-templates">
-      <h2 id="home-templates">Start from a whole screen</h2>
-      <p>Pages to copy into a product — the markup, its styles and a few lines of script.</p>
-      <ul class="home-previews">
-        ${TEMPLATES.map((template) =>
-          preview({
-            href: `#/templates/${template.slug}`,
-            src: `${location.pathname}#/template/${template.slug}`,
-            name: template.name,
-            note: template.description,
-          }),
+    <section class="home-band home-blocks" aria-labelledby="home-blocks">
+      <h2 id="home-blocks">Build a page from blocks</h2>
+      <p>
+        Whole sections — a hero, pricing, a blog post, a settings section — that take their words
+        and data as properties and fit the page they are put in.
+      </p>
+      <ul class="home-block-kinds">
+        ${BLOCK_CATEGORIES.map(
+          (category) =>
+            html`<li>
+              <a class="home-block-kind" href=${`#/blocks#${category.id}`}>${category.label}</a>
+              <p>${category.lead}</p>
+              <div class="home-block-names">
+                ${category.slugs.map(
+                  (slug) => html`<a href=${`#/components/${slug}`}>${slug.replace(/^kt-/, '')}</a>`,
+                )}
+              </div>
+            </li>`,
         )}
       </ul>
-      <h3 class="home-subhead">And whole apps</h3>
+    </section>
+
+    <section class="home-band home-screens" aria-labelledby="home-apps">
+      <h2 id="home-apps">And whole apps</h2>
+      <p>Products built from Kanto end to end — open one and use it.</p>
       <ul class="home-previews home-previews-apps">
         ${APPS.map((app) =>
           preview({
