@@ -1151,6 +1151,16 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     ></kt-feature-grid>`;
   },
 
+  'kt-cta': () =>
+    html`<kt-cta
+      heading="Start sending invoices"
+      lead="Your first invoice goes out in two minutes — the rest chase themselves."
+    >
+      <kt-button slot="actions" size="large">Start free</kt-button>
+      <kt-button slot="actions" size="large" variant="secondary">Talk to sales</kt-button>
+      <span slot="note">Free for three months. No card needed.</span>
+    </kt-cta>`,
+
   'kt-footer': () => {
     const columns = [
       {

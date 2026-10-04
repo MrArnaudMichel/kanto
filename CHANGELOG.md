@@ -207,6 +207,14 @@ icon, a title and a line, in a grid.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-cta`** — the ask at the end of a page: a heading, a line and the
+button that acts on them.
+
+- On a tinted `panel` by default, or `plain`; the actions under the words,
+  or `inline` beside them where the block is wide enough.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

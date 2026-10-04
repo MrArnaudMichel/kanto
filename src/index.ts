@@ -124,6 +124,8 @@ export type {
   KtFeature,
   KtFeatureGridVariant,
 } from './components/blocks/kt-feature-grid/kt-feature-grid.js';
+export { KtCta } from './components/blocks/kt-cta/kt-cta.js';
+export type { KtCtaLayout, KtCtaVariant } from './components/blocks/kt-cta/kt-cta.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

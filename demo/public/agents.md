@@ -137,6 +137,7 @@ writing a control of your own.
 ### Blocks
 
 - `kt-auth-form` — The way into a product: signing in, creating an account, resetting a password, entering a code — one block, four modes.
+- `kt-cta` — The ask at the end of a page: a heading, a line, and the button that acts on them.
 - `kt-error-page` — The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.
 - `kt-feature-grid` — What the product does, a feature at a time: an icon, a title and a line, in a grid.
 - `kt-hero` — The top of a page: what the product is, in a heading and a line, and the way in.

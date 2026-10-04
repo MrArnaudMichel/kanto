@@ -414,6 +414,17 @@ const CASES: Record<string, Case> = {
       ];
     },
   },
+  'kt-cta': {
+    markup: `<kt-cta heading="Start sending invoices" lead="Your first invoice goes out in two minutes.">
+      <kt-button slot="actions">Start free</kt-button>
+      <span slot="note">No card needed.</span>
+    </kt-cta>`,
+  },
+  'kt-cta inline': {
+    markup: `<kt-cta heading="Start sending invoices" layout="inline" variant="plain" align="start">
+      <kt-button slot="actions">Start free</kt-button>
+    </kt-cta>`,
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

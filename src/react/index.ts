@@ -101,6 +101,7 @@ import { KtAuthForm as KtAuthFormElement } from '../components/blocks/kt-auth-fo
 import { KtErrorPage as KtErrorPageElement } from '../components/blocks/kt-error-page/kt-error-page.js';
 import { KtHero as KtHeroElement } from '../components/blocks/kt-hero/kt-hero.js';
 import { KtFeatureGrid as KtFeatureGridElement } from '../components/blocks/kt-feature-grid/kt-feature-grid.js';
+import { KtCta as KtCtaElement } from '../components/blocks/kt-cta/kt-cta.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -676,5 +677,11 @@ export const KtHero = createComponent({
 export const KtFeatureGrid = createComponent({
   tagName: 'kt-feature-grid',
   elementClass: KtFeatureGridElement,
+  react: React,
+});
+
+export const KtCta = createComponent({
+  tagName: 'kt-cta',
+  elementClass: KtCtaElement,
   react: React,
 });
