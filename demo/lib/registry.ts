@@ -1233,6 +1233,88 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     ></kt-testimonials>`;
   },
 
+  'kt-logo-cloud': () =>
+    html`<kt-logo-cloud heading="Trusted by finance teams at">
+      <svg role="img" aria-label="Northwind" viewBox="0 0 151 28">
+        <circle cx="12" cy="14" r="10" fill="currentColor" />
+        <text
+          x="30"
+          y="20"
+          fill="currentColor"
+          font-family="system-ui, sans-serif"
+          font-size="18"
+          font-weight="700"
+        >
+          Northwind
+        </text>
+      </svg>
+      <svg role="img" aria-label="Kiln" viewBox="0 0 86 28">
+        <circle cx="12" cy="14" r="10" fill="currentColor" />
+        <text
+          x="30"
+          y="20"
+          fill="currentColor"
+          font-family="system-ui, sans-serif"
+          font-size="18"
+          font-weight="700"
+        >
+          Kiln
+        </text>
+      </svg>
+      <svg role="img" aria-label="Sato" viewBox="0 0 86 28">
+        <circle cx="12" cy="14" r="10" fill="currentColor" />
+        <text
+          x="30"
+          y="20"
+          fill="currentColor"
+          font-family="system-ui, sans-serif"
+          font-size="18"
+          font-weight="700"
+        >
+          Sato
+        </text>
+      </svg>
+      <svg role="img" aria-label="Halcyon" viewBox="0 0 125 28">
+        <circle cx="12" cy="14" r="10" fill="currentColor" />
+        <text
+          x="30"
+          y="20"
+          fill="currentColor"
+          font-family="system-ui, sans-serif"
+          font-size="18"
+          font-weight="700"
+        >
+          Halcyon
+        </text>
+      </svg>
+      <svg role="img" aria-label="Orbital" viewBox="0 0 138 28">
+        <circle cx="12" cy="14" r="10" fill="currentColor" />
+        <text
+          x="30"
+          y="20"
+          fill="currentColor"
+          font-family="system-ui, sans-serif"
+          font-size="18"
+          font-weight="700"
+        >
+          Orbit&amp;Co
+        </text>
+      </svg>
+      <svg role="img" aria-label="Fieldnote" viewBox="0 0 151 28">
+        <circle cx="12" cy="14" r="10" fill="currentColor" />
+        <text
+          x="30"
+          y="20"
+          fill="currentColor"
+          font-family="system-ui, sans-serif"
+          font-size="18"
+          font-weight="700"
+        >
+          Fieldnote
+        </text>
+      </svg>
+    </kt-logo-cloud>`,
+
   'kt-footer': () => {
     const columns = [
       {

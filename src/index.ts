@@ -138,6 +138,7 @@ export type {
   KtTestimonial,
   KtTestimonialsLayout,
 } from './components/blocks/kt-testimonials/kt-testimonials.js';
+export { KtLogoCloud } from './components/blocks/kt-logo-cloud/kt-logo-cloud.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

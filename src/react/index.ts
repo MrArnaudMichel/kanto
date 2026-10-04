@@ -105,6 +105,7 @@ import { KtFeatureGrid as KtFeatureGridElement } from '../components/blocks/kt-f
 import { KtCta as KtCtaElement } from '../components/blocks/kt-cta/kt-cta.js';
 import { KtPricingTable as KtPricingTableElement } from '../components/blocks/kt-pricing-table/kt-pricing-table.js';
 import { KtTestimonials as KtTestimonialsElement } from '../components/blocks/kt-testimonials/kt-testimonials.js';
+import { KtLogoCloud as KtLogoCloudElement } from '../components/blocks/kt-logo-cloud/kt-logo-cloud.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -702,5 +703,11 @@ export const KtPricingTable = createComponent({
 export const KtTestimonials = createComponent({
   tagName: 'kt-testimonials',
   elementClass: KtTestimonialsElement,
+  react: React,
+});
+
+export const KtLogoCloud = createComponent({
+  tagName: 'kt-logo-cloud',
+  elementClass: KtLogoCloudElement,
   react: React,
 });

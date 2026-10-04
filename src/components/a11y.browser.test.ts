@@ -473,6 +473,12 @@ const CASES: Record<string, Case> = {
       ];
     },
   },
+  'kt-logo-cloud': {
+    markup: `<kt-logo-cloud heading="Trusted by finance teams at">
+      <svg role="img" aria-label="Northwind" viewBox="0 0 120 28"><circle cx="12" cy="14" r="10" /></svg>
+      <img alt="Kiln" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
+    </kt-logo-cloud>`,
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

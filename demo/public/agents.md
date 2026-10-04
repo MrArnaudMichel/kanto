@@ -141,6 +141,7 @@ writing a control of your own.
 - `kt-error-page` — The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.
 - `kt-feature-grid` — What the product does, a feature at a time: an icon, a title and a line, in a grid.
 - `kt-hero` — The top of a page: what the product is, in a heading and a line, and the way in.
+- `kt-logo-cloud` — Who uses it, in their logos: a line of marks under a caption.
 - `kt-pricing-table` — The plans, side by side: what each costs, what it includes, and the way in — with a switch between monthly and yearly prices when the plans have both.
 - `kt-testimonials` — What the people who use it say: a quote, and who said it.
 

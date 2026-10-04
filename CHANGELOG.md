@@ -236,6 +236,14 @@ said it.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-logo-cloud`** — who uses it, in their logos: a line of marks under
+a caption.
+
+- Images or inline SVGs, slotted, at one height and grey until hovered —
+  `colour` keeps their colours.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which
