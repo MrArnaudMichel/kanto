@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtBlogPost,
   KtPostGrid,
   KtFaq,
   KtTestimonials,
@@ -506,6 +507,17 @@ const CASES: Record<string, Case> = {
         },
         { title: 'Reminders that get paid', href: '#', date: '2026-08-02' },
       ];
+    },
+  },
+  'kt-blog-post': {
+    markup: `<kt-blog-post heading="Closing the month in a day" lead="What changed." author="Ada Park" author-role="CFO" date="2026-09-14" back-href="#" heading-level="2">
+      <p>For years, the first week of every month was the close.</p>
+      <h3>What we changed</h3>
+      <p>We let the bank feed match itself.</p>
+      <p slot="end">Filed under Finance.</p>
+    </kt-blog-post>`,
+    setup: (el) => {
+      (el as KtBlogPost).tags = ['Finance'];
     },
   },
   'kt-footer': {

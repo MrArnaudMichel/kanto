@@ -26,7 +26,7 @@ select.addEventListener('kt-change', (e) => console.log(e.detail.value));
 
 ## What is in the box
 
-Seventy-six elements across six groups, a token layer that drives all of them, and a light theme that costs no component-specific CSS.
+Seventy-seven elements across six groups, a token layer that drives all of them, and a light theme that costs no component-specific CSS.
 
 This site is built with those elements and no framework. If a component breaks, its own documentation breaks with it.
 `;

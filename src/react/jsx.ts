@@ -60,6 +60,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtBlogPost,
   KtPostGrid,
   KtFaq,
   KtLogoCloud,
@@ -246,6 +247,7 @@ declare module 'react' {
       'kt-logo-cloud': KtProps<KtLogoCloud>;
       'kt-faq': KtProps<KtFaq>;
       'kt-post-grid': KtProps<KtPostGrid>;
+      'kt-blog-post': KtProps<KtBlogPost>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

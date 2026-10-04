@@ -262,6 +262,16 @@ cover, a title, a line, and who wrote it when.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-blog-post`** — a post, set to be read: its title, who wrote it and
+when, a cover, and the body in a measure an eye can follow.
+
+- The body's paragraphs, headings, lists, quotes, code and figures set as
+  prose, in a 68-character column.
+- The reading time counted from the body; the date written for people and
+  kept in `<time>`; tags and a link back to every post.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

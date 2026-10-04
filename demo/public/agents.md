@@ -137,6 +137,7 @@ writing a control of your own.
 ### Blocks
 
 - `kt-auth-form` — The way into a product: signing in, creating an account, resetting a password, entering a code — one block, four modes.
+- `kt-blog-post` — A post, set to be read: its title, who wrote it and when, a cover, and the body in a measure an eye can follow.
 - `kt-cta` — The ask at the end of a page: a heading, a line, and the button that acts on them.
 - `kt-error-page` — The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.
 - `kt-faq` — The questions people ask before they sign up, answered: an accordion under a heading, one answer open at a time.

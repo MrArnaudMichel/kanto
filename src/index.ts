@@ -143,6 +143,8 @@ export { KtFaq } from './components/blocks/kt-faq/kt-faq.js';
 export type { KtFaqItem, KtFaqLayout } from './components/blocks/kt-faq/kt-faq.js';
 export { KtPostGrid } from './components/blocks/kt-post-grid/kt-post-grid.js';
 export type { KtPost, KtPostGridLayout } from './components/blocks/kt-post-grid/kt-post-grid.js';
+export { KtBlogPost } from './components/blocks/kt-blog-post/kt-blog-post.js';
+export type { KtBlogPostTexts } from './components/blocks/kt-blog-post/kt-blog-post.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

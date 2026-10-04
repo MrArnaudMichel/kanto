@@ -1388,6 +1388,37 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     </kt-post-grid>`;
   },
 
+  'kt-blog-post': () =>
+    html`<kt-blog-post
+      heading="A dashboard in an afternoon"
+      lead="Charts, stats and a table: from an empty page to a screen the team opens every morning."
+      author="Ada Park"
+      author-role="Design engineer"
+      date="2026-09-28"
+      back-href="#/components/kt-post-grid"
+      heading-level="2"
+      .tags=${['Guide']}
+    >
+      <img slot="cover" src="./dashboard.png" alt="" />
+      <p>
+        Most dashboards start as a request in a meeting and end as a spreadsheet nobody opens. This
+        one took an afternoon, and the team still uses it.
+      </p>
+      <h3>Start with the question</h3>
+      <p>
+        Before a single chart, write down what someone opening the page wants to know. Ours was
+        short: are we getting paid on time, and who is late?
+      </p>
+      <blockquote>A dashboard answers one question well, or several badly.</blockquote>
+      <ul>
+        <li>Three stats across the top: billed, paid, overdue.</li>
+        <li>One chart under them: paid against billed, by week.</li>
+        <li>A table of what is late, sorted by how late.</li>
+      </ul>
+      <p>Everything else waited for someone to ask for it. Nobody did.</p>
+      <p slot="end">Next: <a href="#/components/kt-blog-post">Anatomy of a component</a></p>
+    </kt-blog-post>`,
+
   'kt-footer': () => {
     const columns = [
       {
