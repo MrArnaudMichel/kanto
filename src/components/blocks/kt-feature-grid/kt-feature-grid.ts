@@ -81,6 +81,7 @@ export class KtFeatureGrid extends KtElement {
         align-content: start;
         gap: 8px;
         min-width: 0;
+        text-align: start;
       }
       :host([variant='card']) .feature {
         padding: var(--padding-card);

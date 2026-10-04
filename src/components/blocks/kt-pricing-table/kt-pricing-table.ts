@@ -101,7 +101,7 @@ export class KtPricingTable extends KtElement {
 
       .plans {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 248px), 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
         gap: var(--gap-card);
         align-items: stretch;
         margin: 0;
@@ -114,6 +114,7 @@ export class KtPricingTable extends KtElement {
         flex-direction: column;
         gap: var(--gap-card);
         min-width: 0;
+        text-align: start;
         padding: calc(var(--padding-card) * 1.25);
         border: var(--border-width) solid var(--border-subtle);
         border-radius: var(--border-radius-card);
@@ -133,6 +134,7 @@ export class KtPricingTable extends KtElement {
         gap: 8px;
         align-items: center;
         justify-content: space-between;
+        min-height: 28px;
       }
       .plan-name {
         margin: 0;
@@ -326,7 +328,7 @@ export class KtPricingTable extends KtElement {
           ${heading(this.headingLevel + 1, plan.name, 'plan-name', 3)}
           ${
             plan.featured
-              ? html`<kt-badge class="badge" tone="primary">${t.featured}</kt-badge>`
+              ? html`<kt-badge class="badge" tone="primary" size="small">${t.featured}</kt-badge>`
               : nothing
           }
         </div>
