@@ -181,6 +181,10 @@ export interface KtStrings {
   otpCharacter: (place: number, length: number) => string;
   /** A required one-time code, not yet whole. */
   otpRequired: string;
+  /** The colour picker's free colour, beside its swatches. */
+  customColour: string;
+  /** The colour picker's hex field. */
+  hexColour: string;
 }
 
 export const defaultStrings: Readonly<KtStrings> = Object.freeze({
@@ -303,6 +307,8 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   moreCount: (count: number) => `${count} more`,
   otpCharacter: (place: number, length: number) => `Character ${place} of ${length}`,
   otpRequired: 'Enter the whole code.',
+  customColour: 'Custom colour',
+  hexColour: 'Hex code',
 });
 
 let current: KtStrings = { ...defaultStrings };

@@ -101,6 +101,8 @@ export { KtUserMenu } from './components/navigation/kt-user-menu/kt-user-menu.js
 export type { KtUserMenuItem } from './components/navigation/kt-user-menu/kt-user-menu.js';
 export { KtTree } from './components/data/kt-tree/kt-tree.js';
 export type { KtTreeItem } from './components/data/kt-tree/kt-tree.js';
+export { KtColorPicker } from './components/forms/kt-color-picker/kt-color-picker.js';
+export type { KtColorSwatch } from './components/forms/kt-color-picker/kt-color-picker.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

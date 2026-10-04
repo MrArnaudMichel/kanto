@@ -91,6 +91,15 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-color-picker`** — a colour, from swatches or set freely.
+
+- The swatches are a radio group — Kanto's accents until `swatches` gives
+  others — and beside them the system picker and a hex field; `no-custom`
+  keeps to the swatches.
+- A form control submitting `#rrggbb`; each swatch named by its colour.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-otp-input`** — a one-time code, one box per character.
 
 - Typing moves on, Backspace steps back, the arrows move between boxes, a

@@ -67,6 +67,7 @@ writing a control of your own.
 
 - `kt-calendar` — A month calendar to pick a day or a period from, shown in the page.
 - `kt-checkbox` — A checkbox: a choice that applies when the form is submitted.
+- `kt-color-picker` — A colour, chosen from swatches or set freely: a label's colour, a theme's accent, a chart series.
 - `kt-date-input` — A date typed into its parts — day, month and year, each its own segment.
 - `kt-date-picker` — A date field with a calendar, for one day or a period.
 - `kt-drag-drop` — A file drop zone.

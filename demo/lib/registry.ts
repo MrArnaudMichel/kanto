@@ -973,6 +973,27 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-user-menu>
     </div>`,
 
+  'kt-color-picker': () =>
+    html`<div style="display:grid;gap:24px">
+      <kt-color-picker
+        label="Label colour"
+        value="#1f6feb"
+        @kt-change=${(event: CustomEvent<{ value: string }>) =>
+          toaster.info(`Colour ${event.detail.value}`)}
+      ></kt-color-picker>
+      <kt-color-picker
+        label="Status colour"
+        no-custom
+        value="#10b981"
+        .swatches=${[
+          { value: '#e11d48', label: 'Rose' },
+          { value: '#f59e0b', label: 'Amber' },
+          { value: '#10b981', label: 'Emerald' },
+          { value: '#64748b', label: 'Slate' },
+        ]}
+      ></kt-color-picker>
+    </div>`,
+
   'kt-otp-input': () =>
     html`<div style="display:grid;gap:24px">
       <kt-label-input label="Verification code">

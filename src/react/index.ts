@@ -91,6 +91,7 @@ import { KtOtpInput as KtOtpInputElement } from '../components/forms/kt-otp-inpu
 import { KtAccordion as KtAccordionElement } from '../components/overlays/kt-accordion/kt-accordion.js';
 import { KtUserMenu as KtUserMenuElement } from '../components/navigation/kt-user-menu/kt-user-menu.js';
 import { KtTree as KtTreeElement } from '../components/data/kt-tree/kt-tree.js';
+import { KtColorPicker as KtColorPickerElement } from '../components/forms/kt-color-picker/kt-color-picker.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -614,5 +615,14 @@ export const KtTree = createComponent({
   events: {
     onKtSelect: 'kt-select' as Kt<{ id: string; item: KtTreeItem }>,
     onKtToggle: 'kt-toggle' as Kt<{ id: string; expanded: boolean }>,
+  },
+});
+
+export const KtColorPicker = createComponent({
+  tagName: 'kt-color-picker',
+  elementClass: KtColorPickerElement,
+  react: React,
+  events: {
+    onKtChange: 'kt-change' as Kt<{ value: string }>,
   },
 });

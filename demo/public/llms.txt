@@ -1,6 +1,6 @@
 # Kanto
 
-> Sixty-four accessible web components for dashboards, admin tools and forms,
+> Sixty-five accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -54,6 +54,7 @@ In a project, every page below is also at
 
 - [kt-calendar](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-calendar/kt-calendar.md): A month calendar to pick a day or a period from, shown in the page.
 - [kt-checkbox](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-checkbox/kt-checkbox.md): A checkbox: a choice that applies when the form is submitted.
+- [kt-color-picker](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-color-picker/kt-color-picker.md): A colour, chosen from swatches or set freely: a label's colour, a theme's accent, a chart series.
 - [kt-date-input](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-date-input/kt-date-input.md): A date typed into its parts — day, month and year, each its own segment.
 - [kt-date-picker](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-date-picker/kt-date-picker.md): A date field with a calendar, for one day or a period.
 - [kt-drag-drop](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/forms/kt-drag-drop/kt-drag-drop.md): A file drop zone.

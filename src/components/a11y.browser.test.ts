@@ -356,6 +356,12 @@ const CASES: Record<string, Case> = {
       (el as KtTree).expanded = ['src'];
     },
   },
+  'kt-color-picker': {
+    markup: '<kt-color-picker label="Label colour" value="#1f6feb"></kt-color-picker>',
+  },
+  'kt-color-picker, a free colour': {
+    markup: '<kt-color-picker label="Label colour" value="#e11d48"></kt-color-picker>',
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

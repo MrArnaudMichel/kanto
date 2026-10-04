@@ -1,7 +1,7 @@
 {
   "name": "kanto-ds",
   "version": "1.8.0",
-  "description": "Sixty-four accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
+  "description": "Sixty-five accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
     "web-components",
@@ -201,6 +201,10 @@
     "./components/forms/kt-checkbox": {
       "types": "./dist/components/forms/kt-checkbox/kt-checkbox.d.ts",
       "default": "./dist/components/forms/kt-checkbox/kt-checkbox.js"
+    },
+    "./components/forms/kt-color-picker": {
+      "types": "./dist/components/forms/kt-color-picker/kt-color-picker.d.ts",
+      "default": "./dist/components/forms/kt-color-picker/kt-color-picker.js"
     },
     "./components/forms/kt-date-input": {
       "types": "./dist/components/forms/kt-date-input/kt-date-input.d.ts",
