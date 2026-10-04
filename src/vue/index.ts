@@ -67,6 +67,7 @@ import type { KtSegmentedControl } from 'kanto-ds';
 import type { KtSubMenuNavigation } from 'kanto-ds';
 import type { KtTabs } from 'kanto-ds';
 import type { KtHeader } from 'kanto-ds';
+import type { KtTestimonials } from 'kanto-ds';
 import type { KtPricingTable } from 'kanto-ds';
 import type { KtCta } from 'kanto-ds';
 import type { KtFeatureGrid } from 'kanto-ds';
@@ -163,6 +164,7 @@ declare module 'vue' {
     'kt-sub-menu-navigation': KtProps<KtSubMenuNavigation>;
     'kt-tabs': KtProps<KtTabs>;
     'kt-header': KtProps<KtHeader>;
+    'kt-testimonials': KtProps<KtTestimonials>;
     'kt-pricing-table': KtProps<KtPricingTable>;
     'kt-cta': KtProps<KtCta>;
     'kt-feature-grid': KtProps<KtFeatureGrid>;

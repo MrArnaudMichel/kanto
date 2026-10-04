@@ -60,6 +60,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtTestimonials,
   KtPricingTable,
   KtCta,
   KtFeatureGrid,
@@ -238,6 +239,7 @@ declare module 'react' {
         KtPricingTable,
         { 'kt-billing': { billing: KtBilling }; 'kt-plan': { id: string; billing: KtBilling } }
       >;
+      'kt-testimonials': KtProps<KtTestimonials>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

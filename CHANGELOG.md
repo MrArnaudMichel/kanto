@@ -227,6 +227,15 @@ it includes, and the way in.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-testimonials`** — what the people who use it say: a quote, and who
+said it.
+
+- In packed columns, or `single`: each the page's width, in larger type.
+- Each a `<figure>` with its `<blockquote>`, and an avatar that falls back
+  to initials.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

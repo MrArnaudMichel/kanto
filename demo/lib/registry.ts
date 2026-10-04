@@ -1202,6 +1202,37 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     ></kt-pricing-table>`;
   },
 
+  'kt-testimonials': () => {
+    const testimonials = [
+      {
+        quote: 'We closed September in a day. It used to take the whole first week of October.',
+        name: 'Ada Park',
+        role: 'CFO, Northwind',
+      },
+      {
+        quote: 'Reminders I never have to write, and clients who pay on time.',
+        name: 'Sam Ortiz',
+        role: 'Founder, Ortiz Studio',
+      },
+      {
+        quote: 'The bank feed matches itself. I check it on Fridays out of habit.',
+        name: 'Lena Brandt',
+        role: 'Bookkeeper',
+      },
+      { quote: 'We switched in an afternoon.', name: 'Tom Achterberg', role: 'Ops lead, Kiln' },
+      {
+        quote: 'Our customers say the invoices look better than our website.',
+        name: 'Mira Sato',
+        role: 'Owner, Sato Ceramics',
+      },
+    ];
+    return html`<kt-testimonials
+      heading="What teams say"
+      lead="From one-person studios to finance teams."
+      .testimonials=${testimonials}
+    ></kt-testimonials>`;
+  },
+
   'kt-footer': () => {
     const columns = [
       {

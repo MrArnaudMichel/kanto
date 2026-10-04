@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtTestimonials,
   KtPricingTable,
   KtFeatureGrid,
   KtAuthForm,
@@ -452,6 +453,23 @@ const CASES: Record<string, Case> = {
           href: '#',
           action: 'Talk to sales',
         },
+      ];
+    },
+  },
+  'kt-testimonials': {
+    markup: '<kt-testimonials heading="What teams say"></kt-testimonials>',
+    setup: (el) => {
+      (el as KtTestimonials).testimonials = [
+        { quote: 'We closed the month in a day.', name: 'Ada Park', role: 'CFO, Northwind' },
+        { quote: 'Reminders I never have to write.', name: 'Sam Ortiz' },
+      ];
+    },
+  },
+  'kt-testimonials single': {
+    markup: '<kt-testimonials layout="single"></kt-testimonials>',
+    setup: (el) => {
+      (el as KtTestimonials).testimonials = [
+        { quote: 'We closed the month in a day.', name: 'Ada Park', role: 'CFO, Northwind' },
       ];
     },
   },

@@ -104,6 +104,7 @@ import { KtHero as KtHeroElement } from '../components/blocks/kt-hero/kt-hero.js
 import { KtFeatureGrid as KtFeatureGridElement } from '../components/blocks/kt-feature-grid/kt-feature-grid.js';
 import { KtCta as KtCtaElement } from '../components/blocks/kt-cta/kt-cta.js';
 import { KtPricingTable as KtPricingTableElement } from '../components/blocks/kt-pricing-table/kt-pricing-table.js';
+import { KtTestimonials as KtTestimonialsElement } from '../components/blocks/kt-testimonials/kt-testimonials.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -696,4 +697,10 @@ export const KtPricingTable = createComponent({
     onKtBilling: 'kt-billing' as Kt<{ billing: KtBilling }>,
     onKtPlan: 'kt-plan' as Kt<{ id: string; billing: KtBilling }>,
   },
+});
+
+export const KtTestimonials = createComponent({
+  tagName: 'kt-testimonials',
+  elementClass: KtTestimonialsElement,
+  react: React,
 });

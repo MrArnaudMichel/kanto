@@ -133,6 +133,11 @@ export type {
   KtPlanPrice,
   KtPricingTableTexts,
 } from './components/blocks/kt-pricing-table/kt-pricing-table.js';
+export { KtTestimonials } from './components/blocks/kt-testimonials/kt-testimonials.js';
+export type {
+  KtTestimonial,
+  KtTestimonialsLayout,
+} from './components/blocks/kt-testimonials/kt-testimonials.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,
