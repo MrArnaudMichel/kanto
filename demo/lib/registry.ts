@@ -1349,6 +1349,45 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     </kt-faq>`;
   },
 
+  'kt-post-grid': () => {
+    const posts = [
+      {
+        title: 'A dashboard in an afternoon',
+        href: '#/components/kt-post-grid',
+        excerpt: 'Charts, stats and a table, from an empty page to a screen the team uses.',
+        date: '2026-09-28',
+        image: './dashboard.png',
+        author: { name: 'Ada Park' },
+        tags: ['Guide'],
+      },
+      {
+        title: 'Anatomy of a component',
+        href: '#/components/kt-post-grid',
+        excerpt: 'What goes into a button that works with a mouse, a keyboard and a screen reader.',
+        date: '2026-09-14',
+        image: './component.png',
+        author: { name: 'Sam Ortiz' },
+        tags: ['Accessibility'],
+      },
+      {
+        title: 'Your brand in one line',
+        href: '#/components/kt-post-grid',
+        excerpt: 'A colour, a font and a density: how the tokens carry them everywhere.',
+        date: '2026-08-30',
+        image: './guide.png',
+        author: { name: 'Lena Brandt' },
+        tags: ['Theming'],
+      },
+    ];
+    return html`<kt-post-grid
+      heading="From the blog"
+      lead="Notes on building interfaces with Kanto."
+      .posts=${posts}
+    >
+      <a slot="more" href="#/components/kt-post-grid">Every post</a>
+    </kt-post-grid>`;
+  },
+
   'kt-footer': () => {
     const columns = [
       {

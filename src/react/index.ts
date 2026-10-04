@@ -107,6 +107,7 @@ import { KtPricingTable as KtPricingTableElement } from '../components/blocks/kt
 import { KtTestimonials as KtTestimonialsElement } from '../components/blocks/kt-testimonials/kt-testimonials.js';
 import { KtLogoCloud as KtLogoCloudElement } from '../components/blocks/kt-logo-cloud/kt-logo-cloud.js';
 import { KtFaq as KtFaqElement } from '../components/blocks/kt-faq/kt-faq.js';
+import { KtPostGrid as KtPostGridElement } from '../components/blocks/kt-post-grid/kt-post-grid.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -716,5 +717,11 @@ export const KtLogoCloud = createComponent({
 export const KtFaq = createComponent({
   tagName: 'kt-faq',
   elementClass: KtFaqElement,
+  react: React,
+});
+
+export const KtPostGrid = createComponent({
+  tagName: 'kt-post-grid',
+  elementClass: KtPostGridElement,
   react: React,
 });

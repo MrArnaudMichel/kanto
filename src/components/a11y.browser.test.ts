@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtPostGrid,
   KtFaq,
   KtTestimonials,
   KtPricingTable,
@@ -487,6 +488,23 @@ const CASES: Record<string, Case> = {
       (el as KtFaq).items = [
         { question: 'Can I cancel any time?', answer: 'Yes, from Settings.' },
         { question: 'Do you take card payments?', answer: 'Cards and bank transfers.' },
+      ];
+    },
+  },
+  'kt-post-grid': {
+    markup:
+      '<kt-post-grid heading="From the blog"><a slot="more" href="#">Every post</a></kt-post-grid>',
+    setup: (el) => {
+      (el as KtPostGrid).posts = [
+        {
+          title: 'Closing the month in a day',
+          href: '#',
+          excerpt: 'What changed.',
+          date: '2026-09-14',
+          author: { name: 'Ada Park' },
+          tags: ['Finance'],
+        },
+        { title: 'Reminders that get paid', href: '#', date: '2026-08-02' },
       ];
     },
   },

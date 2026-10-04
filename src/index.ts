@@ -141,6 +141,8 @@ export type {
 export { KtLogoCloud } from './components/blocks/kt-logo-cloud/kt-logo-cloud.js';
 export { KtFaq } from './components/blocks/kt-faq/kt-faq.js';
 export type { KtFaqItem, KtFaqLayout } from './components/blocks/kt-faq/kt-faq.js';
+export { KtPostGrid } from './components/blocks/kt-post-grid/kt-post-grid.js';
+export type { KtPost, KtPostGridLayout } from './components/blocks/kt-post-grid/kt-post-grid.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

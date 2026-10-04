@@ -73,3 +73,17 @@ export function blockHead({
     ${lead ? html`<p class="block-lead">${lead}</p>` : nothing}
   </div>`;
 }
+
+/**
+ * A date for people — "Sep 14, 2026" — in `locale`, the page's language when
+ * empty. A date alone, `2026-09-14`, is read as that day where the reader is,
+ * not as midnight in London.
+ */
+export function formatDate(iso: string, locale = ''): string {
+  const day = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  const date = day ? new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3])) : new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  return new Intl.DateTimeFormat(locale || document.documentElement.lang || undefined, {
+    dateStyle: 'medium',
+  }).format(date);
+}

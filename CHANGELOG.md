@@ -253,6 +253,15 @@ accordion under a heading, one answer open at a time.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-post-grid`** — the latest posts, each a card that leads to it: a
+cover, a title, a line, and who wrote it when.
+
+- In `columns` where there is room, or a `list` with the cover beside the
+  words; a `more` slot for a link to every post.
+- Dates written for people in `locale`, kept for machines in `<time>`.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which
