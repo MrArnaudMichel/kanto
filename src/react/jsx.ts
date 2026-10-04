@@ -20,6 +20,7 @@
  */
 import type * as React from 'react';
 import type {
+  KtPromptSubmitDetail,
   KtAvatar,
   KtBadge,
   KtButton,
@@ -54,6 +55,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtPromptInput,
   KtFooter,
   KtToggleButton,
   KtToggleButtonGroup,
@@ -168,6 +170,10 @@ declare module 'react' {
         { 'kt-change': { value: string | number } }
       >;
       'kt-tabs': KtProps<KtTabs, { 'kt-change': { value: string | number } }>;
+      'kt-prompt-input': KtProps<
+        KtPromptInput,
+        { 'kt-input': { value: string }; 'kt-submit': KtPromptSubmitDetail }
+      >;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

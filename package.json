@@ -1,7 +1,7 @@
 {
   "name": "kanto-ds",
   "version": "1.8.0",
-  "description": "Fifty-four accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
+  "description": "Fifty-five accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
     "web-components",
@@ -217,6 +217,10 @@
     "./components/forms/kt-number-input": {
       "types": "./dist/components/forms/kt-number-input/kt-number-input.d.ts",
       "default": "./dist/components/forms/kt-number-input/kt-number-input.js"
+    },
+    "./components/forms/kt-prompt-input": {
+      "types": "./dist/components/forms/kt-prompt-input/kt-prompt-input.d.ts",
+      "default": "./dist/components/forms/kt-prompt-input/kt-prompt-input.js"
     },
     "./components/forms/kt-radio-group": {
       "types": "./dist/components/forms/kt-radio-group/kt-radio-group.d.ts",

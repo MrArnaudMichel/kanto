@@ -21,6 +21,7 @@ import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';
 import type { KtOption } from '../internal/listbox.js';
 import type { KtCommand } from '../internal/command-search.js';
+import type { KtPromptSubmitDetail } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
 
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
 import { KtBadge as KtBadgeElement } from '../components/core/kt-badge/kt-badge.js';
@@ -78,6 +79,7 @@ import { KtMeter as KtMeterElement } from '../components/data/kt-meter/kt-meter.
 import { KtPagination as KtPaginationElement } from '../components/data/kt-pagination/kt-pagination.js';
 import { KtStat as KtStatElement } from '../components/data/kt-stat/kt-stat.js';
 import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.js';
+import { KtPromptInput as KtPromptInputElement } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -516,4 +518,14 @@ export const KtTimelineItem = createComponent({
   tagName: 'kt-timeline-item',
   elementClass: KtTimelineItemElement,
   react: React,
+});
+
+export const KtPromptInput = createComponent({
+  tagName: 'kt-prompt-input',
+  elementClass: KtPromptInputElement,
+  react: React,
+  events: {
+    onKtInput: 'kt-input' as Kt<{ value: string }>,
+    onKtSubmit: 'kt-submit' as Kt<KtPromptSubmitDetail>,
+  },
 });

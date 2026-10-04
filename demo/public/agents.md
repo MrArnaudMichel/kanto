@@ -74,6 +74,7 @@ writing a control of your own.
 - `kt-label-input` — A label above a form control, with a red asterisk when it is required.
 - `kt-multi-select` — Several choices from a list: type to narrow it, pick as many as you need.
 - `kt-number-input` — A number field with − and + beside it: a quantity, a seat count, an amount.
+- `kt-prompt-input` — The field a person writes to an assistant in: it grows with what is written, sends on Enter, and shows the sending on its own send button.
 - `kt-radio-group` — One choice among a few, all visible at once.
 - `kt-select` — A single-choice dropdown.
 - `kt-slider` — A value picked by sliding along a range: a volume, a threshold, or with `range`, a price between two ends.

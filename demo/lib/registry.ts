@@ -793,6 +793,26 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button slot="actions" size="small" variant="dark" icon="search">Search</kt-button>
     </kt-header>`,
 
+  'kt-prompt-input': () =>
+    html`<div style="display:grid;gap:16px;max-width:640px">
+      <kt-prompt-input
+        placeholder="Ask Northwind anything"
+        @kt-submit=${(event: CustomEvent<{ value: string; wait: (p: Promise<unknown>) => void }>) =>
+          event.detail.wait(new Promise((done) => setTimeout(done, 1400)))}
+      >
+        <kt-button
+          slot="actions"
+          size="small"
+          variant="secondary-no-bg"
+          icon="paperclip"
+          label="Attach a file"
+        ></kt-button>
+      </kt-prompt-input>
+      <kt-prompt-input submit-on="mod-enter" placeholder="Write a long reply — Cmd+Enter sends">
+        <kt-badge slot="attachments" icon="file">q3-report.pdf</kt-badge>
+      </kt-prompt-input>
+    </div>`,
+
   'kt-footer': () => {
     const columns = [
       {

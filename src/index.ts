@@ -78,6 +78,11 @@ export { KtSteps } from './components/navigation/kt-steps/kt-steps.js';
 export type { KtStep, KtStepsOrientation } from './components/navigation/kt-steps/kt-steps.js';
 export type { KtTab } from './components/navigation/kt-tabs/kt-tabs.js';
 export { KtHeader } from './components/navigation/kt-header/kt-header.js';
+export { KtPromptInput } from './components/forms/kt-prompt-input/kt-prompt-input.js';
+export type {
+  KtPromptInputSubmitOn,
+  KtPromptSubmitDetail,
+} from './components/forms/kt-prompt-input/kt-prompt-input.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

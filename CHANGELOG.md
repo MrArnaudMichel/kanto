@@ -9,6 +9,17 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+**`kt-prompt-input`** — the field a person writes to an assistant in.
+
+- Grows with what is written, up to `max-rows`, then scrolls; Enter sends and
+  Shift+Enter starts a line, or `submit-on="mod-enter"` for Cmd or Ctrl+Enter.
+- `kt-submit` carries the text and `wait(promise)`: the send button runs the
+  request — its plane turning into the spinner and flying off — while the
+  field holds the text, emptied on success, kept on failure.
+- Slots for attachments above the text and actions beside the button.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-footer`** — the site footer: the brand, columns of links and a legal
 line.
 

@@ -165,6 +165,16 @@ export interface KtStrings {
 
   // --- Identity ---
   avatar: string;
+
+  // --- Conversation and layout ---
+  /** The prompt input's send button. */
+  send: string;
+  /** The prompt input's field, when it is given no label. */
+  message: string;
+  /** Said while a chat message is being thought out, before its first word. */
+  thinking: string;
+  /** The app shell's side area. */
+  sidebar: string;
 }
 
 export const defaultStrings: Readonly<KtStrings> = Object.freeze({
@@ -279,6 +289,11 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   details: 'Details',
 
   avatar: 'Avatar',
+
+  send: 'Send',
+  message: 'Message',
+  thinking: 'Thinking…',
+  sidebar: 'Sidebar',
 });
 
 let current: KtStrings = { ...defaultStrings };

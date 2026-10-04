@@ -229,6 +229,13 @@ const CASES: Record<string, Case> = {
       <nav aria-label="Main"><a href="/docs">Docs</a></nav>
     </kt-header>`,
   },
+  'kt-prompt-input': {
+    markup:
+      '<kt-prompt-input placeholder="Ask anything" value="Summarise this week"></kt-prompt-input>',
+  },
+  'kt-prompt-input, disabled': {
+    markup: '<kt-prompt-input disabled placeholder="Ask anything"></kt-prompt-input>',
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>
