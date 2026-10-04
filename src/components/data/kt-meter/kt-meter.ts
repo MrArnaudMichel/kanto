@@ -60,7 +60,7 @@ export class KtMeter extends KtElement {
 
       .label {
         color: var(--text-body);
-        font: var(--font-medium-regular);
+        font: var(--font-normal-medium);
       }
 
       .caption {

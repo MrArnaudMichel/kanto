@@ -221,6 +221,12 @@ With React wrappers, React 19 JSX and Vue typings.
 
 ### Fixed
 
+- Four components read a custom property that does not exist, which made
+  the whole declaration invalid without a word: `kt-meter`'s and
+  `kt-timeline`'s labels and `kt-page-header`'s section heading fell back
+  to the inherited font, and `kt-sub-menu-navigation`'s chevron turned with
+  no easing. A test now holds every `var()` a component reads to a token or
+  to a property it sets itself.
 - Links in the page took the accent's fill shade, 3.4:1 on the dark theme:
   `a` now takes `--color-primary-text`, made for text, and reads 4.5:1 in
   both themes.

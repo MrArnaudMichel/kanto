@@ -220,7 +220,7 @@ export class KtTimelineItem extends KtElement {
 
       .heading {
         color: var(--text-body);
-        font: var(--font-medium-regular);
+        font: var(--font-normal-medium);
       }
 
       .time {

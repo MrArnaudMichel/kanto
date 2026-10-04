@@ -73,7 +73,7 @@ export class KtPageHeader extends KtElement {
       h2 {
         margin: 0;
         color: var(--text-body);
-        font: var(--font-title-h5);
+        font: var(--font-title-h4);
       }
 
       .description {

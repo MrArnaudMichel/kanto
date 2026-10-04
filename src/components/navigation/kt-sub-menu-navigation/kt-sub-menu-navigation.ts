@@ -193,7 +193,7 @@ export class KtSubMenuNavigation extends KtElement {
       .chevron {
         flex: none;
         color: var(--text-muted);
-        transition: transform var(--duration-fast) var(--ease-standard);
+        transition: transform var(--duration-fast) var(--easing-standard);
       }
 
       .chevron.open {

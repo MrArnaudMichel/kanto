@@ -96,7 +96,7 @@ export class KtErrorPage extends KtElement {
       .heading {
         margin: 0;
         color: var(--text-body);
-        font: var(--font-title-h3);
+        font: var(--font-title-h4);
         text-wrap: balance;
       }
       .lead {
