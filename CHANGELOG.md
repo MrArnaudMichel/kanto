@@ -244,6 +244,15 @@ a caption.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-faq`** — the questions people ask before they sign up, answered: an
+accordion under a heading, one answer open at a time.
+
+- `multiple` lets each open on its own; `open-first` opens the first.
+- The head over the questions, or `split` beside them and held while they
+  scroll; a `note` slot for where to ask the rest.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

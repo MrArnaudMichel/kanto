@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtFaq,
   KtTestimonials,
   KtPricingTable,
   KtFeatureGrid,
@@ -478,6 +479,16 @@ const CASES: Record<string, Case> = {
       <svg role="img" aria-label="Northwind" viewBox="0 0 120 28"><circle cx="12" cy="14" r="10" /></svg>
       <img alt="Kiln" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
     </kt-logo-cloud>`,
+  },
+  'kt-faq': {
+    markup:
+      '<kt-faq heading="Questions" layout="split" open-first><span slot="note">Something else? <a href="#">Ask us</a>.</span></kt-faq>',
+    setup: (el) => {
+      (el as KtFaq).items = [
+        { question: 'Can I cancel any time?', answer: 'Yes, from Settings.' },
+        { question: 'Do you take card payments?', answer: 'Cards and bank transfers.' },
+      ];
+    },
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">

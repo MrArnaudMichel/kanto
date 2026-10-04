@@ -106,6 +106,7 @@ import { KtCta as KtCtaElement } from '../components/blocks/kt-cta/kt-cta.js';
 import { KtPricingTable as KtPricingTableElement } from '../components/blocks/kt-pricing-table/kt-pricing-table.js';
 import { KtTestimonials as KtTestimonialsElement } from '../components/blocks/kt-testimonials/kt-testimonials.js';
 import { KtLogoCloud as KtLogoCloudElement } from '../components/blocks/kt-logo-cloud/kt-logo-cloud.js';
+import { KtFaq as KtFaqElement } from '../components/blocks/kt-faq/kt-faq.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -709,5 +710,11 @@ export const KtTestimonials = createComponent({
 export const KtLogoCloud = createComponent({
   tagName: 'kt-logo-cloud',
   elementClass: KtLogoCloudElement,
+  react: React,
+});
+
+export const KtFaq = createComponent({
+  tagName: 'kt-faq',
+  elementClass: KtFaqElement,
   react: React,
 });

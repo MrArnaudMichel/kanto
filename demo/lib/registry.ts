@@ -1297,7 +1297,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
           font-size="18"
           font-weight="700"
         >
-          Orbit&amp;Co
+          Orbital
         </text>
       </svg>
       <svg role="img" aria-label="Fieldnote" viewBox="0 0 151 28">
@@ -1314,6 +1314,40 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
         </text>
       </svg>
     </kt-logo-cloud>`,
+
+  'kt-faq': () => {
+    const items = [
+      {
+        question: 'Can I cancel any time?',
+        answer:
+          'Yes, from Settings, in two clicks. You keep every invoice you sent, and can export them all.',
+      },
+      {
+        question: 'Do you take card payments?',
+        answer:
+          'Cards, bank transfers and direct debits, in 34 currencies. The money lands in your account in two days.',
+      },
+      {
+        question: 'Can my accountant get in?',
+        answer:
+          'Invite them as a guest: they see the books and the exports, and cannot send anything.',
+      },
+      {
+        question: 'Is there a contract?',
+        answer:
+          'No. Monthly plans run month to month; yearly plans are paid up front and refunded pro rata.',
+      },
+    ];
+    return html`<kt-faq
+      heading="Questions"
+      lead="What teams ask before they switch."
+      layout="split"
+      open-first
+      .items=${items}
+    >
+      <span slot="note">Something else? <a href="#/components/kt-faq">Ask us</a>.</span>
+    </kt-faq>`;
+  },
 
   'kt-footer': () => {
     const columns = [
