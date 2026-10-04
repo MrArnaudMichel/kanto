@@ -39,6 +39,17 @@ not there. `narrow` is reflected while it applies.
 with `detail.open`. Set `no-toggle` when the header brings its own control, and
 call `toggleSidebar()` from it.
 
+## Inside a page
+
+A shell shown inside a page that has its own landmarks — a preview, a demo, a
+screenshot of the product on its marketing page — would put a second `<main>`
+inside the first. `no-landmarks` draws the sidebar and the content as plain
+boxes instead; everything else is the same.
+
+```html
+<kt-app-shell no-landmarks style="height: 420px">…</kt-app-shell>
+```
+
 ## Sizes
 
 | CSS property                   | Default |
@@ -63,6 +74,7 @@ expanded" or "collapsed" rather than as a picture of a panel.
 | `sidebarOpen` | `sidebar-open` | `boolean` | `false` |
 | `breakpoint`  | `breakpoint`   | `number`  | `900`   |
 | `noToggle`    | `no-toggle`    | `boolean` | `false` |
+| `noLandmarks` | `no-landmarks` | `boolean` | `false` |
 | `label`       | `label`        | `string`  | `''`    |
 
 | Event               | Detail              |

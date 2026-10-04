@@ -1,6 +1,7 @@
 import { render } from 'lit';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { resetStage } from '../lib/stage.js';
+import { resetChat } from '../lib/chat-demo.js';
 import { KT_ACCENTS, KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
 import { TEMPLATES } from '../templates/index.js';
@@ -17,6 +18,7 @@ function mount() {
 afterEach(() => {
   document.body.replaceChildren();
   resetStage();
+  resetChat();
 });
 
 describe('the home page hero', () => {
@@ -24,6 +26,13 @@ describe('the home page hero', () => {
     const hero = mount().querySelector('.home-hero')!;
     expect(hero.querySelector('kt-code, pre, code')).toBeNull();
     expect(hero.querySelector('h1')!.textContent).toMatch(/\S/);
+  });
+
+  it('frames that screen with kt-app-shell: header, sidebar, content', () => {
+    const shell = mount().querySelector('.stage kt-app-shell')!;
+    expect(shell).not.toBeNull();
+    expect(shell.querySelector('[slot="sidebar"].stage-nav')).not.toBeNull();
+    expect(shell.querySelector('[slot="header"]')).not.toBeNull();
   });
 
   it('opens on a live product screen built from Kanto', () => {
@@ -212,6 +221,48 @@ describe('for AI agents', () => {
     expect(section.textContent).toContain('.cursor/rules/kanto.mdc');
     expect(section.querySelector('a[href="#/guide/ai-agents"]')).not.toBeNull();
     expect(section.querySelector('a[href$="llms-full.txt"]')).not.toBeNull();
+  });
+});
+
+describe('the assistant demo', () => {
+  it('shows a conversation and the field to carry it on', () => {
+    const chat = mount().querySelector('.home-agents .home-chat')!;
+    expect(chat.querySelectorAll('kt-chat-message').length).toBeGreaterThanOrEqual(2);
+    expect(chat.querySelector('kt-prompt-input')).not.toBeNull();
+  });
+
+  it('adds what is asked, thinks, then answers', async () => {
+    vi.useFakeTimers();
+    try {
+      const host = mount();
+      const chat = host.querySelector('.home-chat')!;
+      const before = chat.querySelectorAll('kt-chat-message').length;
+      const prompt = chat.querySelector('kt-prompt-input')!;
+      let waited: Promise<unknown> | null = null;
+      prompt.dispatchEvent(
+        new CustomEvent('kt-submit', {
+          detail: {
+            value: 'Which invoices are overdue?',
+            wait: (p: Promise<unknown>) => (waited = p),
+          },
+        }),
+      );
+      await vi.advanceTimersByTimeAsync(0);
+      const messages = () => [
+        ...chat.querySelectorAll<HTMLElement & { thinking: boolean }>('kt-chat-message'),
+      ];
+      expect(messages()).toHaveLength(before + 2);
+      expect(messages().at(-2)!.getAttribute('from')).toBe('user');
+      expect(messages().at(-2)!.textContent).toContain('Which invoices are overdue?');
+      expect(messages().at(-1)!.thinking).toBe(true);
+      expect(waited).not.toBeNull();
+
+      await vi.advanceTimersByTimeAsync(10_000);
+      expect(messages().at(-1)!.thinking).toBe(false);
+      expect(messages().at(-1)!.textContent!.trim().length).toBeGreaterThan(20);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

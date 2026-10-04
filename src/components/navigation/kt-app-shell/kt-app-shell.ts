@@ -91,7 +91,7 @@ export class KtAppShell extends KtElement {
         min-width: 0;
       }
 
-      aside {
+      .sidebar {
         grid-area: sidebar;
         min-width: 0;
         overflow: hidden auto;
@@ -100,7 +100,7 @@ export class KtAppShell extends KtElement {
         outline: none;
       }
 
-      main {
+      .main {
         grid-area: main;
         min-width: 0;
         overflow: auto;
@@ -117,7 +117,7 @@ export class KtAppShell extends KtElement {
           'main' minmax(0, 1fr)
           / minmax(0, 1fr);
       }
-      :host([narrow]) aside {
+      :host([narrow]) .sidebar {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -131,7 +131,7 @@ export class KtAppShell extends KtElement {
           translate var(--duration-normal) var(--easing-standard),
           visibility 0s linear var(--duration-normal);
       }
-      :host([narrow][sidebar-open]) aside {
+      :host([narrow][sidebar-open]) .sidebar {
         translate: 0 0;
         visibility: visible;
         transition: translate var(--duration-normal) var(--easing-standard);
@@ -162,6 +162,14 @@ export class KtAppShell extends KtElement {
   @property({ type: Boolean, attribute: 'no-toggle' })
   noToggle = false;
 
+  /**
+   * Draws the sidebar and the content as plain boxes rather than an \`<aside>\`
+   * and a \`<main>\` — for a shell shown inside a page that has its own, a
+   * preview or a demo, where a second main landmark would be wrong.
+   */
+  @property({ type: Boolean, attribute: 'no-landmarks' })
+  noLandmarks = false;
+
   /** Accessible name for the sidebar. Defaults to the translated "Sidebar". */
   @property({ type: String })
   label = '';
@@ -169,7 +177,7 @@ export class KtAppShell extends KtElement {
   /** Narrower than `breakpoint`: reflected as the `narrow` attribute, for styling. */
   @state() private narrow = false;
 
-  @query('aside') private aside!: HTMLElement;
+  @query('.sidebar') private aside!: HTMLElement;
   @query('.toggle') private toggle?: HTMLElement;
 
   private readonly sidebarId = uniqueId('kt-app-shell-sidebar');
@@ -260,17 +268,34 @@ export class KtAppShell extends KtElement {
         }
         <div class="header-content"><slot name="header"></slot></div>
       </div>
-      <aside
-        part="sidebar"
-        id=${this.sidebarId}
-        aria-label=${label}
-        tabindex="-1"
-        ?inert=${this.narrow && !this.sidebarOpen}
-      >
-        <slot name="sidebar"></slot>
-      </aside>
+      ${
+        this.noLandmarks
+          ? html`<div
+              part="sidebar"
+              class="sidebar"
+              id=${this.sidebarId}
+              tabindex="-1"
+              ?inert=${this.narrow && !this.sidebarOpen}
+            >
+              <slot name="sidebar"></slot>
+            </div>`
+          : html`<aside
+              part="sidebar"
+              class="sidebar"
+              id=${this.sidebarId}
+              aria-label=${label}
+              tabindex="-1"
+              ?inert=${this.narrow && !this.sidebarOpen}
+            >
+              <slot name="sidebar"></slot>
+            </aside>`
+      }
       <div class="backdrop" @click=${() => this.closeDrawer()}></div>
-      <main part="main"><slot></slot></main>
+      ${
+        this.noLandmarks
+          ? html`<div part="main" class="main"><slot></slot></div>`
+          : html`<main part="main" class="main"><slot></slot></main>`
+      }
     </div>`;
   }
 }

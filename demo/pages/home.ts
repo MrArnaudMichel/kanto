@@ -11,6 +11,7 @@ import { SCREEN_COUNT, showcase } from '../lib/showcase.js';
 import { stage } from '../lib/stage.js';
 import { REASONS } from '../lib/reasons.js';
 import { AGENT_SETUPS } from '../lib/agents.js';
+import { chatDemo } from '../lib/chat-demo.js';
 import { TEMPLATES } from '../templates/index.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
@@ -269,6 +270,19 @@ export function homePage({
           </figure>
         </div></kt-card
       >
+      <div class="home-chat">
+        <div class="home-chat-text">
+          <h3>And build the assistant itself</h3>
+          <p>
+            <code>kt-prompt-input</code> and <code>kt-chat-message</code> are the field and the
+            messages of a chat — thinking, streaming and the send button included. Ask this one
+            something.
+          </p>
+        </div>
+        <kt-card class="home-chat-card"
+          ><div class="home-chat-body">${chatDemo(rerender)}</div></kt-card
+        >
+      </div>
     </section>
 
     <section class="home-band home-reasons" aria-labelledby="home-why">

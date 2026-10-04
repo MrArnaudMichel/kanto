@@ -52,4 +52,15 @@ describe('kt-app-shell', () => {
     const el = await fixture<KtAppShell>('<kt-app-shell no-toggle></kt-app-shell>');
     expect(root(el).querySelector('.toggle')).toBeNull();
   });
+
+  it('draws no landmarks with no-landmarks, for a shell shown inside a page', async () => {
+    const el = await fixture<KtAppShell>('<kt-app-shell no-landmarks></kt-app-shell>');
+    expect(root(el).querySelector('main')).toBeNull();
+    expect(root(el).querySelector('aside')).toBeNull();
+    expect(root(el).querySelector('[part="main"]')!.localName).toBe('div');
+    const sidebar = root(el).querySelector('[part="sidebar"]')!;
+    expect(sidebar.localName).toBe('div');
+    expect(sidebar.hasAttribute('aria-label')).toBe(false);
+    expect(toggle(el).getAttribute('aria-controls')).toBe(sidebar.id);
+  });
 });

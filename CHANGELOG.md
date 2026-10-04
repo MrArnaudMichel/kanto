@@ -18,7 +18,8 @@ the content, which scrolls on its own.
   outside, inert while closed.
 - The sidebar is an `<aside>` and the content a `<main>`; the toggle is
   named after the sidebar, with `aria-expanded`.
-- Sizes as custom properties; `no-toggle` for a header with its own control.
+- Sizes as custom properties; `no-toggle` for a header with its own control,
+  `no-landmarks` for a shell shown inside a page that has its own.
 
 With React wrappers, React 19 JSX and Vue typings.
 

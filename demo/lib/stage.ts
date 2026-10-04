@@ -428,9 +428,12 @@ export function stage({
         if (element instanceof HTMLElement) setAppearance({ accent: shown }, element);
       })}
     >
-      <div class="stage-bar">
-        <span class="stage-brand"><kt-icon name="layers" size="18"></kt-icon>Northwind</span>
+      <kt-app-shell class="stage-shell" label="Northwind" no-landmarks>
+        <span slot="header" class="stage-brand"
+          ><kt-icon name="layers" size="18"></kt-icon>Northwind</span
+        >
         <kt-input
+          slot="header"
           class="stage-search"
           size="small"
           placeholder="Search invoices"
@@ -447,10 +450,8 @@ export function stage({
             rerender();
           }}
         ></kt-input>
-        <kt-avatar name="Dana Whitfield" size="small"></kt-avatar>
-      </div>
-      <div class="stage-body">
-        <nav class="stage-nav" aria-label="Northwind">
+        <kt-avatar slot="header" class="stage-me" name="Dana Whitfield" size="small"></kt-avatar>
+        <nav slot="sidebar" class="stage-nav" aria-label="Pages">
           ${NAV.map(
             (item) =>
               html`<a
@@ -461,11 +462,12 @@ export function stage({
                   rerender();
                 }}
                 aria-current=${item.label === view ? 'page' : 'false'}
-                ><kt-icon name=${item.icon} size="16"></kt-icon>${item.label}</a
+                title=${item.label}
+                ><kt-icon name=${item.icon} size="16"></kt-icon><span>${item.label}</span></a
               >`,
           )}
         </nav>
         <div class="stage-main">${VIEWS[view](rerender)}</div>
-      </div>
+      </kt-app-shell>
     </div>`;
 }

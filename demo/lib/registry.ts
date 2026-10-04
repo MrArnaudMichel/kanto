@@ -796,6 +796,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
   'kt-app-shell': () =>
     html`<kt-app-shell
       breakpoint="640"
+      no-landmarks
       style="height:420px;border:var(--border-width) solid var(--border-subtle);border-radius:var(--radius-modal);overflow:hidden"
     >
       <strong slot="header">Northwind</strong>

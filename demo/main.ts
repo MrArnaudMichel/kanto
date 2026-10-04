@@ -26,6 +26,7 @@ import { TEMPLATES } from './templates/index.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetStage } from './lib/stage.js';
 import { resetReasons } from './lib/reasons.js';
+import { resetChat } from './lib/chat-demo.js';
 import {
   applyDocsAppearance,
   customiseMenu,
@@ -759,6 +760,7 @@ window.addEventListener('hashchange', () => {
   if (currentRoute().section !== 'home') {
     resetStage();
     resetReasons();
+    resetChat();
   }
   filter = '';
   activeHeading = '';
