@@ -88,6 +88,17 @@ describe('kt-segmented-control thumb', () => {
     expect(sliding(el)).toHaveLength(0);
   });
 
+  it('follows its segment growing — a font arriving — without sliding', async () => {
+    const el = await mount();
+    await wait(50);
+    // The label widens in place, as when the brand font replaces the fallback.
+    (option(el, 1) as HTMLElement).style.paddingInline = '40px';
+    await frame();
+    await frame();
+    expect(sliding(el)).toHaveLength(0);
+    expectOn(el, 1);
+  });
+
   it('slides to the segment chosen next, across or down', async () => {
     for (const orientation of ['horizontal', 'vertical']) {
       const el = await mount(orientation);

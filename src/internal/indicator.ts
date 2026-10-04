@@ -11,6 +11,10 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
  * is selected, `placed` once the mark is under the item, `ready` a frame
  * later. A component transitions the mark only when `ready`, so a page opens
  * with the mark in place, not sliding in from the corner.
+ *
+ * It slides only when the selection moves to another item. When the same item
+ * changes size — the brand font replacing the fallback, a label rewritten —
+ * the mark follows at once: growing towards its item would read as a glitch.
  */
 export interface IndicatorOptions {
   readonly container: () => HTMLElement | null | undefined;
@@ -21,6 +25,7 @@ export class IndicatorController implements ReactiveController {
   private observer: ResizeObserver | null = null;
   private observed: HTMLElement[] = [];
   private frame = 0;
+  private placed: { item: HTMLElement; box: string } | null = null;
 
   constructor(
     host: ReactiveControllerHost,
@@ -38,6 +43,7 @@ export class IndicatorController implements ReactiveController {
   hostDisconnected(): void {
     this.observer?.disconnect();
     this.observed = [];
+    this.placed = null;
     cancelAnimationFrame(this.frame);
   }
 
@@ -53,15 +59,28 @@ export class IndicatorController implements ReactiveController {
 
     if (!selected) {
       delete container.dataset.indicator;
+      this.placed = null;
       return;
     }
-    const style = container.style;
-    style.setProperty('--kt-indicator-x', `${selected.offsetLeft}px`);
-    style.setProperty('--kt-indicator-y', `${selected.offsetTop}px`);
-    style.setProperty('--kt-indicator-width', `${selected.offsetWidth}px`);
-    style.setProperty('--kt-indicator-height', `${selected.offsetHeight}px`);
+    const box = [
+      selected.offsetLeft,
+      selected.offsetTop,
+      selected.offsetWidth,
+      selected.offsetHeight,
+    ];
+    const key = box.join(' ');
+    if (this.placed?.item === selected && this.placed.box === key) return;
+    // The same item, a new size: follow it without sliding.
+    const resized = this.placed?.item === selected;
+    this.placed = { item: selected, box: key };
 
-    if (!container.dataset.indicator) {
+    const style = container.style;
+    style.setProperty('--kt-indicator-x', `${box[0]}px`);
+    style.setProperty('--kt-indicator-y', `${box[1]}px`);
+    style.setProperty('--kt-indicator-width', `${box[2]}px`);
+    style.setProperty('--kt-indicator-height', `${box[3]}px`);
+
+    if (!container.dataset.indicator || resized) {
       container.dataset.indicator = 'placed';
       cancelAnimationFrame(this.frame);
       this.frame = requestAnimationFrame(() => {
