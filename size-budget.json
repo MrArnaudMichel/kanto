@@ -74,6 +74,7 @@
   "./components/blocks/kt-auth-form": 23900,
   "./components/blocks/kt-blog-post": 7700,
   "./components/blocks/kt-cta": 3800,
+  "./components/blocks/kt-empty-page": 11900,
   "./components/blocks/kt-error-page": 9900,
   "./components/blocks/kt-faq": 7300,
   "./components/blocks/kt-feature-grid": 5300,

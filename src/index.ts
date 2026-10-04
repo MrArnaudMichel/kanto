@@ -154,6 +154,11 @@ export type {
 } from './components/blocks/kt-newsletter/kt-newsletter.js';
 export { KtSettingsSection } from './components/blocks/kt-settings-section/kt-settings-section.js';
 export type { KtSettingsSectionLayout } from './components/blocks/kt-settings-section/kt-settings-section.js';
+export { KtEmptyPage } from './components/blocks/kt-empty-page/kt-empty-page.js';
+export type {
+  KtEmptyPageTexts,
+  KtFirstStep,
+} from './components/blocks/kt-empty-page/kt-empty-page.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

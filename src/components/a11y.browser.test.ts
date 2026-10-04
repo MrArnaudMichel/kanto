@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtEmptyPage,
   KtBlogPost,
   KtPostGrid,
   KtFaq,
@@ -540,6 +541,17 @@ const CASES: Record<string, Case> = {
         <kt-button slot="actions" variant="delete">Delete workspace</kt-button>
       </kt-settings-section>
     </div>`,
+  },
+  'kt-empty-page': {
+    markup:
+      '<kt-empty-page heading="Welcome, Ada" lead="Three steps."><a slot="actions" href="#">Skip for now</a></kt-empty-page>',
+    setup: (el) => {
+      (el as KtEmptyPage).steps = [
+        { id: 'company', title: 'Add your company', description: 'Name and logo.', done: true },
+        { id: 'customer', title: 'Add a customer', action: 'Add customer' },
+        { id: 'invoice', title: 'Send your first invoice', action: 'New invoice', href: '#' },
+      ];
+    },
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">

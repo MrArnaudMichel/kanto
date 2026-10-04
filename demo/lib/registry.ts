@@ -1454,6 +1454,44 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       </kt-settings-section>
     </div>`,
 
+  'kt-empty-page': () => {
+    const steps = [
+      {
+        id: 'company',
+        title: 'Add your company',
+        description: 'Name, address and logo, for the top of every invoice.',
+        done: true,
+      },
+      {
+        id: 'customer',
+        title: 'Add a customer',
+        description: 'Who you bill, and where the invoice goes.',
+        action: 'Add customer',
+      },
+      {
+        id: 'invoice',
+        title: 'Send your first invoice',
+        description: 'From a quote, or from scratch.',
+        action: 'New invoice',
+      },
+      {
+        id: 'bank',
+        title: 'Connect your bank',
+        description: 'So payments match their invoices by themselves.',
+        action: 'Connect',
+        href: '#/components/kt-empty-page',
+      },
+    ];
+    return html`<kt-empty-page
+      heading="Welcome, Ada"
+      lead="Four steps, and Northwind is sending invoices."
+      heading-level="2"
+      .steps=${steps}
+    >
+      <a slot="actions" href="#/components/kt-empty-page">Skip for now</a>
+    </kt-empty-page>`;
+  },
+
   'kt-footer': () => {
     const columns = [
       {

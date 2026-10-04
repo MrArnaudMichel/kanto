@@ -293,6 +293,15 @@ the fields that change it, and the button that saves them.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-empty-page`** — the page a new account lands on, before there is
+anything in it: a welcome, and the first steps that fill it.
+
+- Numbered steps with how far along it is; the next one's action is the
+  primary button, a done one is ticked and read as done.
+- A step's action fires `kt-step`, or is a link.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

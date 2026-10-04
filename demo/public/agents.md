@@ -139,6 +139,7 @@ writing a control of your own.
 - `kt-auth-form` — The way into a product: signing in, creating an account, resetting a password, entering a code — one block, four modes.
 - `kt-blog-post` — A post, set to be read: its title, who wrote it and when, a cover, and the body in a measure an eye can follow.
 - `kt-cta` — The ask at the end of a page: a heading, a line, and the button that acts on them.
+- `kt-empty-page` — The page a new account lands on, before there is anything in it: a welcome, and the first steps that fill it — what is done, what is next, and the way to each.
 - `kt-error-page` — The page a person lands on when the one they wanted is not there: not found, broken, or down for maintenance — said plainly, with the way on.
 - `kt-faq` — The questions people ask before they sign up, answered: an accordion under a heading, one answer open at a time.
 - `kt-feature-grid` — What the product does, a feature at a time: an icon, a title and a line, in a grid.

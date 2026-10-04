@@ -112,6 +112,7 @@ import { KtPostGrid as KtPostGridElement } from '../components/blocks/kt-post-gr
 import { KtBlogPost as KtBlogPostElement } from '../components/blocks/kt-blog-post/kt-blog-post.js';
 import { KtNewsletter as KtNewsletterElement } from '../components/blocks/kt-newsletter/kt-newsletter.js';
 import { KtSettingsSection as KtSettingsSectionElement } from '../components/blocks/kt-settings-section/kt-settings-section.js';
+import { KtEmptyPage as KtEmptyPageElement } from '../components/blocks/kt-empty-page/kt-empty-page.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -749,4 +750,13 @@ export const KtSettingsSection = createComponent({
   tagName: 'kt-settings-section',
   elementClass: KtSettingsSectionElement,
   react: React,
+});
+
+export const KtEmptyPage = createComponent({
+  tagName: 'kt-empty-page',
+  elementClass: KtEmptyPageElement,
+  react: React,
+  events: {
+    onKtStep: 'kt-step' as Kt<{ id: string }>,
+  },
 });
