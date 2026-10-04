@@ -1,7 +1,7 @@
 {
   "name": "kanto-ds",
   "version": "1.8.0",
-  "description": "Fifty-nine accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
+  "description": "Sixty accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
     "web-components",
@@ -105,6 +105,10 @@
     "./components/core/kt-button": {
       "types": "./dist/components/core/kt-button/kt-button.d.ts",
       "default": "./dist/components/core/kt-button/kt-button.js"
+    },
+    "./components/core/kt-copy-button": {
+      "types": "./dist/components/core/kt-copy-button/kt-copy-button.d.ts",
+      "default": "./dist/components/core/kt-copy-button/kt-copy-button.js"
     },
     "./components/core/kt-split-button": {
       "types": "./dist/components/core/kt-split-button/kt-split-button.d.ts",

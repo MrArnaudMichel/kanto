@@ -1,6 +1,6 @@
 # Kanto
 
-> Fifty-nine accessible web components for dashboards, admin tools and forms,
+> Sixty accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -45,6 +45,7 @@ In a project, every page below is also at
 - [kt-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-button/kt-button.md): The Kanto action button.
 - [kt-card](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-card/kt-card.md): The system's content surface: 12px radius, a 1px `--border-subtle` border, 24px of padding, 20px between its rows.
 - [kt-code](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-code/kt-code.md): A block of code on a recessed surface, with its language and a copy button.
+- [kt-copy-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-copy-button/kt-copy-button.md): Copies a value to the clipboard and says it did: an API key, an install command, a share link.
 - [kt-icon](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-icon/kt-icon.md): A [Lucide](https://lucide.dev)
 - [kt-kbd](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-kbd/kt-kbd.md): A keyboard shortcut, rendered per platform.
 - [kt-split-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/core/kt-split-button/kt-split-button.md): One button carrying a menu of related actions.

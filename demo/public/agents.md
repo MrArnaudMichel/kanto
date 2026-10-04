@@ -58,6 +58,7 @@ writing a control of your own.
 - `kt-button` — The Kanto action button.
 - `kt-card` — The system's content surface: 12px radius, a 1px `--border-subtle` border, 24px of padding, 20px between its rows.
 - `kt-code` — A block of code on a recessed surface, with its language and a copy button.
+- `kt-copy-button` — Copies a value to the clipboard and says it did: an API key, an install command, a share link.
 - `kt-icon` — A [Lucide](https://lucide.dev)
 - `kt-kbd` — A keyboard shortcut, rendered per platform.
 - `kt-split-button` — One button carrying a menu of related actions.

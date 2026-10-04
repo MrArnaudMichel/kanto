@@ -84,6 +84,7 @@ import { KtChatMessage as KtChatMessageElement } from '../components/data/kt-cha
 import { KtAppShell as KtAppShellElement } from '../components/navigation/kt-app-shell/kt-app-shell.js';
 import { KtDescriptionList as KtDescriptionListElement } from '../components/data/kt-description-list/kt-description-list.js';
 import { KtAvatarGroup as KtAvatarGroupElement } from '../components/core/kt-avatar-group/kt-avatar-group.js';
+import { KtCopyButton as KtCopyButtonElement } from '../components/core/kt-copy-button/kt-copy-button.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -559,4 +560,13 @@ export const KtAvatarGroup = createComponent({
   tagName: 'kt-avatar-group',
   elementClass: KtAvatarGroupElement,
   react: React,
+});
+
+export const KtCopyButton = createComponent({
+  tagName: 'kt-copy-button',
+  elementClass: KtCopyButtonElement,
+  react: React,
+  events: {
+    onKtCopy: 'kt-copy' as Kt<{ value: string }>,
+  },
 });

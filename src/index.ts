@@ -93,6 +93,7 @@ export type {
 } from './components/data/kt-description-list/kt-description-list.js';
 export { KtAvatarGroup } from './components/core/kt-avatar-group/kt-avatar-group.js';
 export type { KtAvatarGroupPerson } from './components/core/kt-avatar-group/kt-avatar-group.js';
+export { KtCopyButton } from './components/core/kt-copy-button/kt-copy-button.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

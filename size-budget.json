@@ -9,6 +9,7 @@
   "./components/core/kt-avatar-group": 5500,
   "./components/core/kt-badge": 5300,
   "./components/core/kt-button": 7900,
+  "./components/core/kt-copy-button": 8600,
   "./components/core/kt-split-button": 12700,
   "./components/core/kt-card": 4100,
   "./components/core/kt-code": 5000,

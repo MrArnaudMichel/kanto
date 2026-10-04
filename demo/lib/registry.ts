@@ -815,6 +815,23 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     </div>`;
   },
 
+  'kt-copy-button': () =>
+    html`<div class="demo-row" style="gap:16px">
+      <kt-copy-button value="npm install kanto-ds"></kt-copy-button>
+      <kt-copy-button
+        value="https://kanto.arnaudmichel.fr"
+        variant="primary"
+        label="Copy link"
+        copied-label="Link copied"
+      ></kt-copy-button>
+      <kt-copy-button
+        value="sk_live_51H8xKanto"
+        icon-only
+        variant="secondary-no-bg"
+        label="Copy the API key"
+      ></kt-copy-button>
+    </div>`,
+
   'kt-description-list': () => {
     const items = [
       { term: 'Invoice', detail: 'INV-2041' },

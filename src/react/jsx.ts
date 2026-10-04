@@ -55,6 +55,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtCopyButton,
   KtAvatarGroup,
   KtDescriptionList,
   KtAppShell,
@@ -182,6 +183,7 @@ declare module 'react' {
       'kt-app-shell': KtProps<KtAppShell, { 'kt-sidebar-toggle': { open: boolean } }>;
       'kt-description-list': KtProps<KtDescriptionList>;
       'kt-avatar-group': KtProps<KtAvatarGroup>;
+      'kt-copy-button': KtProps<KtCopyButton, { 'kt-copy': { value: string } }>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

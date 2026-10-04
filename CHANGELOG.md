@@ -17,6 +17,15 @@ row.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-copy-button`** — copies a value and says it did.
+
+- Built on `kt-button`'s `run()`: the tick and "Copied" on success,
+  announced; a shake, and no `kt-copy`, when the browser refuses.
+- `icon-only`, its own `label` and `copied-label`, the button's `variant` and
+  `size`; `copy()` from script.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-description-list`** — terms and their details, the body of a detail
 page.
 
