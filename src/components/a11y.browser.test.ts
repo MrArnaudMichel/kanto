@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtUserMenu,
   KtAvatarGroup,
   KtDescriptionList,
   KtFooter,
@@ -318,6 +319,26 @@ const CASES: Record<string, Case> = {
       <kt-collapsible heading="Shipping" open>Three to five days.</kt-collapsible>
       <kt-collapsible heading="Returns">Thirty days.</kt-collapsible>
     </kt-accordion>`,
+  },
+  'kt-user-menu': {
+    markup:
+      '<kt-user-menu name="Dana Whitfield" email="dana@northwind.io" show-name></kt-user-menu>',
+    setup: (el) => {
+      (el as KtUserMenu).items = [
+        { id: 'profile', label: 'Profile', icon: 'user' },
+        { id: 'signout', label: 'Sign out', separator: true, danger: true },
+      ];
+    },
+  },
+  'kt-user-menu (open)': {
+    markup: '<kt-user-menu name="Dana Whitfield" email="dana@northwind.io"></kt-user-menu>',
+    setup: (el) => {
+      (el as KtUserMenu).items = [
+        { id: 'profile', label: 'Profile', icon: 'user' },
+        { id: 'signout', label: 'Sign out', separator: true, danger: true },
+      ];
+      (el as KtUserMenu).show();
+    },
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">

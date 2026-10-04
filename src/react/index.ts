@@ -21,6 +21,7 @@ import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';
 import type { KtOption } from '../internal/listbox.js';
 import type { KtCommand } from '../internal/command-search.js';
+import type { KtUserMenuItem } from '../components/navigation/kt-user-menu/kt-user-menu.js';
 import type { KtPromptSubmitDetail } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
 
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
@@ -87,6 +88,7 @@ import { KtAvatarGroup as KtAvatarGroupElement } from '../components/core/kt-ava
 import { KtCopyButton as KtCopyButtonElement } from '../components/core/kt-copy-button/kt-copy-button.js';
 import { KtOtpInput as KtOtpInputElement } from '../components/forms/kt-otp-input/kt-otp-input.js';
 import { KtAccordion as KtAccordionElement } from '../components/overlays/kt-accordion/kt-accordion.js';
+import { KtUserMenu as KtUserMenuElement } from '../components/navigation/kt-user-menu/kt-user-menu.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -589,5 +591,16 @@ export const KtAccordion = createComponent({
   react: React,
   events: {
     onKtChange: 'kt-change' as Kt<{ open: number[] }>,
+  },
+});
+
+export const KtUserMenu = createComponent({
+  tagName: 'kt-user-menu',
+  elementClass: KtUserMenuElement,
+  react: React,
+  events: {
+    onKtSelect: 'kt-select' as Kt<{ id: string; item: KtUserMenuItem }>,
+    onKtOpen: 'kt-open' as Kt<never>,
+    onKtClose: 'kt-close' as Kt<never>,
   },
 });

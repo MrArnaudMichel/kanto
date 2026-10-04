@@ -97,6 +97,8 @@ export { KtCopyButton } from './components/core/kt-copy-button/kt-copy-button.js
 export { KtOtpInput } from './components/forms/kt-otp-input/kt-otp-input.js';
 export type { KtOtpInputType } from './components/forms/kt-otp-input/kt-otp-input.js';
 export { KtAccordion } from './components/overlays/kt-accordion/kt-accordion.js';
+export { KtUserMenu } from './components/navigation/kt-user-menu/kt-user-menu.js';
+export type { KtUserMenuItem } from './components/navigation/kt-user-menu/kt-user-menu.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

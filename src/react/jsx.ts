@@ -21,6 +21,7 @@
 import type * as React from 'react';
 import type {
   KtPromptSubmitDetail,
+  KtUserMenuItem,
   KtAvatar,
   KtBadge,
   KtButton,
@@ -55,6 +56,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtUserMenu,
   KtAccordion,
   KtOtpInput,
   KtCopyButton,
@@ -191,6 +193,10 @@ declare module 'react' {
         { 'kt-change': { value: string }; 'kt-complete': { value: string } }
       >;
       'kt-accordion': KtProps<KtAccordion, { 'kt-change': { open: number[] } }>;
+      'kt-user-menu': KtProps<
+        KtUserMenu,
+        { 'kt-select': { id: string; item: KtUserMenuItem }; 'kt-open': never; 'kt-close': never }
+      >;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

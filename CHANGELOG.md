@@ -46,6 +46,16 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-user-menu`** — the account menu at the end of a header.
+
+- The avatar names the button; the panel shows who is signed in, then items
+  with icons, separators and a danger colour, and a slot under them.
+- A menu button as WAI-ARIA describes it: the arrows, Home and End move
+  between items; Escape closes and gives the focus back; Tab and a click
+  outside close. Drawn in the top layer.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-app-shell`** — the frame of an application: a header, a sidebar and
 the content, which scrolls on its own.
 

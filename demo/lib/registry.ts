@@ -922,6 +922,22 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-chat-message name="Northwind AI" thinking></kt-chat-message>
     </div>`,
 
+  'kt-user-menu': () =>
+    html`<div class="demo-row" style="gap:24px;justify-content:flex-end">
+      <kt-user-menu
+        name="Dana Whitfield"
+        email="dana@northwind.io"
+        show-name
+        .items=${[
+          { id: 'profile', label: 'Profile', icon: 'user' },
+          { id: 'settings', label: 'Settings', icon: 'settings' },
+          { id: 'billing', label: 'Billing', icon: 'credit-card' },
+          { id: 'signout', label: 'Sign out', separator: true, danger: true },
+        ]}
+        @kt-select=${(event: CustomEvent<{ id: string }>) => toaster.info(`Chose ${event.detail.id}`)}
+      ></kt-user-menu>
+    </div>`,
+
   'kt-otp-input': () =>
     html`<div style="display:grid;gap:24px">
       <kt-label-input label="Verification code">

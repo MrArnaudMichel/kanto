@@ -98,6 +98,7 @@ writing a control of your own.
 - `kt-tabs` — An underlined tab bar.
 - `kt-toggle-button` — A button that stays pressed.
 - `kt-toggle-button-group` — Joins `<kt-toggle-button>`s into one bar and owns their selection.
+- `kt-user-menu` — The account menu at the end of an application's header: the person's avatar, and under it who is signed in and what they can do.
 
 ### Feedback
 

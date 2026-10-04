@@ -1,6 +1,6 @@
 # Kanto
 
-> Sixty-two accessible web components for dashboards, admin tools and forms,
+> Sixty-three accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -85,6 +85,7 @@ In a project, every page below is also at
 - [kt-tabs](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-tabs/kt-tabs.md): An underlined tab bar.
 - [kt-toggle-button](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-toggle-button/kt-toggle-button.md): A button that stays pressed.
 - [kt-toggle-button-group](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-toggle-button-group/kt-toggle-button-group.md): Joins `<kt-toggle-button>`s into one bar and owns their selection.
+- [kt-user-menu](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/navigation/kt-user-menu/kt-user-menu.md): The account menu at the end of an application's header: the person's avatar, and under it who is signed in and what they can do.
 
 ### Feedback
 

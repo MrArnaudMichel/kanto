@@ -149,7 +149,8 @@ pre {
   kt-toggle,
   kt-toggle-button,
   kt-toggle-button-group,
-  kt-tooltip
+  kt-tooltip,
+  kt-user-menu
 ):not(:defined) {
   visibility: hidden;
 }
