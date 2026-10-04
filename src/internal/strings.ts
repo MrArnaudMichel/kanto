@@ -185,6 +185,10 @@ export interface KtStrings {
   customColour: string;
   /** The colour picker's hex field. */
   hexColour: string;
+  /** A tour's place: "Step 2 of 4". */
+  stepOf: (step: number, total: number) => string;
+  /** A tour's last button. */
+  done: string;
 }
 
 export const defaultStrings: Readonly<KtStrings> = Object.freeze({
@@ -309,6 +313,8 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   otpRequired: 'Enter the whole code.',
   customColour: 'Custom colour',
   hexColour: 'Hex code',
+  stepOf: (step: number, total: number) => `Step ${step} of ${total}`,
+  done: 'Done',
 });
 
 let current: KtStrings = { ...defaultStrings };

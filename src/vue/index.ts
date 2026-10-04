@@ -67,6 +67,7 @@ import type { KtSegmentedControl } from 'kanto-ds';
 import type { KtSubMenuNavigation } from 'kanto-ds';
 import type { KtTabs } from 'kanto-ds';
 import type { KtHeader } from 'kanto-ds';
+import type { KtTour } from 'kanto-ds';
 import type { KtColorPicker } from 'kanto-ds';
 import type { KtTree } from 'kanto-ds';
 import type { KtUserMenu } from 'kanto-ds';
@@ -156,6 +157,7 @@ declare module 'vue' {
     'kt-sub-menu-navigation': KtProps<KtSubMenuNavigation>;
     'kt-tabs': KtProps<KtTabs>;
     'kt-header': KtProps<KtHeader>;
+    'kt-tour': KtProps<KtTour>;
     'kt-color-picker': KtProps<KtColorPicker>;
     'kt-tree': KtProps<KtTree>;
     'kt-user-menu': KtProps<KtUserMenu>;

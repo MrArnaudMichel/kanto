@@ -57,6 +57,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtTour,
   KtColorPicker,
   KtTree,
   KtUserMenu,
@@ -208,6 +209,10 @@ declare module 'react' {
         }
       >;
       'kt-color-picker': KtProps<KtColorPicker, { 'kt-change': { value: string } }>;
+      'kt-tour': KtProps<
+        KtTour,
+        { 'kt-step': { index: number }; 'kt-finish': never; 'kt-close': never }
+      >;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

@@ -922,6 +922,41 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-chat-message name="Northwind AI" thinking></kt-chat-message>
     </div>`,
 
+  'kt-tour': () =>
+    html`<div class="demo-row" style="gap:16px">
+      <kt-input
+        id="tour-search"
+        placeholder="Search invoices"
+        icon="search"
+        style="width:240px"
+      ></kt-input>
+      <kt-button id="tour-new" icon="plus">New invoice</kt-button>
+      <kt-button
+        variant="secondary"
+        @click=${(event: Event) => {
+          const tour = (event.currentTarget as HTMLElement).parentElement!.querySelector(
+            'kt-tour',
+          )!;
+          tour.steps = [
+            {
+              target: '#tour-search',
+              title: 'Search everything',
+              body: 'Find any invoice or customer from here.',
+            },
+            {
+              target: '#tour-new',
+              title: 'Send an invoice',
+              body: 'Pick a customer and an amount, then send.',
+            },
+            { title: 'You are set', body: 'This tour can start again from the help menu.' },
+          ];
+          tour.start();
+        }}
+        >Start the tour</kt-button
+      >
+      <kt-tour></kt-tour>
+    </div>`,
+
   'kt-tree': () =>
     html`<kt-tree
       label="Files"

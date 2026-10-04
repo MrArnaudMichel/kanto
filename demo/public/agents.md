@@ -120,6 +120,7 @@ writing a control of your own.
 - `kt-dropdown` — A panel anchored to a trigger.
 - `kt-modal` — A centred dialog for anything that is not a yes/no question.
 - `kt-side-panel` — A drawer sliding in from the right, for viewing or editing one record without losing the list behind it.
+- `kt-tour` — A guided tour: a few steps, each pointing at a part of the page with a word about it — a product's first run, a new feature.
 
 ### Data
 

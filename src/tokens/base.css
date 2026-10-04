@@ -151,6 +151,7 @@ pre {
   kt-toggle-button,
   kt-toggle-button-group,
   kt-tooltip,
+  kt-tour,
   kt-tree,
   kt-user-menu
 ):not(:defined) {

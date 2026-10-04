@@ -27,7 +27,7 @@
   "./components/feedback/kt-alert": 4500,
   "./components/feedback/kt-empty-state": 3800,
   "./components/feedback/kt-progress-bar": 3600,
-  "./components/feedback/kt-skeleton": 2600,
+  "./components/feedback/kt-skeleton": 2900,
   "./components/feedback/kt-toast": 6400,
   "./components/feedback/kt-toast-container": 7800,
   "./components/feedback/kt-tooltip": 4200,
@@ -41,7 +41,7 @@
   "./components/forms/kt-input": 11900,
   "./components/forms/kt-input-menu": 8300,
   "./components/forms/kt-multi-select": 9800,
-  "./components/forms/kt-label-input": 2400,
+  "./components/forms/kt-label-input": 2700,
   "./components/forms/kt-number-input": 6800,
   "./components/forms/kt-otp-input": 4300,
   "./components/forms/kt-prompt-input": 9600,
@@ -69,5 +69,6 @@
   "./components/overlays/kt-dropdown": 5500,
   "./components/overlays/kt-command-palette": 7100,
   "./components/overlays/kt-modal": 9700,
-  "./components/overlays/kt-side-panel": 9200
+  "./components/overlays/kt-side-panel": 9200,
+  "./components/overlays/kt-tour": 10900
 }

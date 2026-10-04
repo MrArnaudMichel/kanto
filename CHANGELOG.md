@@ -36,6 +36,16 @@ page.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-tour`** — a guided tour, a step at a time.
+
+- Each step lights its target, dims the rest, scrolls it into view and sets
+  a card beside it — title, words, "Step 2 of 4", Previous, Next, Done; a
+  step with no target centres its card.
+- Escape or the close button end it; `kt-step`, `kt-finish` and `kt-close`
+  report it. The card is a dialog named by its title and takes the focus.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-accordion`** — `kt-collapsible` sections that open one at a time.
 
 - Opening one folds the one that was open, with the collapsible's own

@@ -92,6 +92,7 @@ import { KtAccordion as KtAccordionElement } from '../components/overlays/kt-acc
 import { KtUserMenu as KtUserMenuElement } from '../components/navigation/kt-user-menu/kt-user-menu.js';
 import { KtTree as KtTreeElement } from '../components/data/kt-tree/kt-tree.js';
 import { KtColorPicker as KtColorPickerElement } from '../components/forms/kt-color-picker/kt-color-picker.js';
+import { KtTour as KtTourElement } from '../components/overlays/kt-tour/kt-tour.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -624,5 +625,16 @@ export const KtColorPicker = createComponent({
   react: React,
   events: {
     onKtChange: 'kt-change' as Kt<{ value: string }>,
+  },
+});
+
+export const KtTour = createComponent({
+  tagName: 'kt-tour',
+  elementClass: KtTourElement,
+  react: React,
+  events: {
+    onKtStep: 'kt-step' as Kt<{ index: number }>,
+    onKtFinish: 'kt-finish' as Kt<never>,
+    onKtClose: 'kt-close' as Kt<never>,
   },
 });

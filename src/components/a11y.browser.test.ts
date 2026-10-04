@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtTour,
   KtTree,
   KtUserMenu,
   KtAvatarGroup,
@@ -361,6 +362,16 @@ const CASES: Record<string, Case> = {
   },
   'kt-color-picker, a free colour': {
     markup: '<kt-color-picker label="Label colour" value="#e11d48"></kt-color-picker>',
+  },
+  'kt-tour (started)': {
+    markup: '<kt-tour></kt-tour>',
+    setup: (el) => {
+      (el as KtTour).steps = [
+        { title: 'Search everything', body: 'Find any invoice or customer.' },
+        { title: 'Invite your team', body: 'Work on invoices together.' },
+      ];
+      (el as KtTour).start();
+    },
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">

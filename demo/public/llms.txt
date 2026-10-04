@@ -1,6 +1,6 @@
 # Kanto
 
-> Sixty-five accessible web components for dashboards, admin tools and forms,
+> Sixty-six accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -107,6 +107,7 @@ In a project, every page below is also at
 - [kt-dropdown](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-dropdown/kt-dropdown.md): A panel anchored to a trigger.
 - [kt-modal](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-modal/kt-modal.md): A centred dialog for anything that is not a yes/no question.
 - [kt-side-panel](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-side-panel/kt-side-panel.md): A drawer sliding in from the right, for viewing or editing one record without losing the list behind it.
+- [kt-tour](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/overlays/kt-tour/kt-tour.md): A guided tour: a few steps, each pointing at a part of the page with a word about it — a product's first run, a new feature.
 
 ### Data
 

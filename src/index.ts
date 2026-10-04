@@ -103,6 +103,8 @@ export { KtTree } from './components/data/kt-tree/kt-tree.js';
 export type { KtTreeItem } from './components/data/kt-tree/kt-tree.js';
 export { KtColorPicker } from './components/forms/kt-color-picker/kt-color-picker.js';
 export type { KtColorSwatch } from './components/forms/kt-color-picker/kt-color-picker.js';
+export { KtTour } from './components/overlays/kt-tour/kt-tour.js';
+export type { KtTourStep } from './components/overlays/kt-tour/kt-tour.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,
