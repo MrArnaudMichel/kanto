@@ -151,4 +151,48 @@ describe('kt-collapsible motion', () => {
     expect(Math.min(...closing.slice(0, -1))).toBeLessThanOrEqual(1);
     expect(Math.max(...closing)).toBeLessThanOrEqual(full + 0.5);
   });
+
+  describe('the chevron', () => {
+    const chevron = (el: KtCollapsible) => el.shadowRoot!.querySelector('.chevron')!;
+    const turning = (el: KtCollapsible) =>
+      chevron(el)
+        .getAnimations()
+        .filter((a) => a instanceof CSSTransition && a.transitionProperty === 'transform');
+
+    it('turns as soon as it is closed, alongside the fold, not after it', async () => {
+      const el = await mount(true);
+      el.shadowRoot!.querySelector('summary')!.click();
+      await settle(el);
+      // Still folding: the details is open, and the chevron already on its way back.
+      expect(details(el).open).toBe(true);
+      expect(turning(el)).toHaveLength(1);
+      const timing = turning(el)[0]!.effect!.getComputedTiming();
+      expect(timing.duration).toBe(fold(el)!.effect!.getComputedTiming().duration);
+    });
+
+    it('turns on opening, with a little overshoot', async () => {
+      const el = await mount();
+      el.shadowRoot!.querySelector('summary')!.click();
+      await settle(el);
+      expect(turning(el)).toHaveLength(1);
+      expect(getComputedStyle(chevron(el)).transitionTimingFunction).toMatch(
+        /cubic-bezier\(.*1\.[0-9]/,
+      );
+    });
+
+    it('is already turned, and still, when it first appears open', async () => {
+      const el = await mount(true);
+      expect(turning(el)).toHaveLength(0);
+      expect(getComputedStyle(chevron(el)).transform).not.toBe('none');
+    });
+  });
+
+  it('drops its rule when plain, and keeps it otherwise', async () => {
+    const ruled = await mount();
+    expect(getComputedStyle(details(ruled)).borderBottomStyle).toBe('solid');
+    const plain = await fixture<KtCollapsible>(
+      '<kt-collapsible heading="x" plain>y</kt-collapsible>',
+    );
+    expect(getComputedStyle(details(plain)).borderBottomStyle).toBe('none');
+  });
 });

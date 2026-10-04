@@ -45,6 +45,7 @@ export class KtCollapsible extends KtElement {
 
       details {
         border-bottom: var(--border-width) solid var(--border-subtle);
+      }
 
       :host([plain]) details {
         border-bottom: none;
@@ -80,10 +81,14 @@ export class KtCollapsible extends KtElement {
         display: inline-flex;
         flex: none;
         color: var(--text-muted);
-        transition: transform var(--duration-fast) var(--easing-standard);
+        /* Turns with the fold, as long, overshooting a touch before it
+           settles — so it reads as moving, not as swapped. */
+        transition: transform var(--duration-normal) cubic-bezier(0.34, 1.4, 0.64, 1);
       }
 
-      details[open] .chevron {
+      /* Follows what was asked, not the details, which stays open while
+         the content folds: the chevron turns back at the click. */
+      :host([open]) .chevron {
         transform: rotate(90deg);
       }
 
