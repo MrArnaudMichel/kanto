@@ -251,6 +251,20 @@ const CASES: Record<string, Case> = {
       <kt-chat-message name="Northwind AI" streaming>Revenue rose</kt-chat-message>
     </div>`,
   },
+  'kt-app-shell': {
+    markup: `<kt-app-shell style="height: 320px">
+      <strong slot="header">Northwind</strong>
+      <nav slot="sidebar" aria-label="Pages"><a href="#">Overview</a></nav>
+      <h1>Overview</h1>
+    </kt-app-shell>`,
+  },
+  'kt-app-shell, narrow with the drawer open': {
+    markup: `<kt-app-shell sidebar-open style="height: 320px; width: 500px">
+      <strong slot="header">Northwind</strong>
+      <nav slot="sidebar" aria-label="Pages"><a href="#">Overview</a></nav>
+      <h1>Overview</h1>
+    </kt-app-shell>`,
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

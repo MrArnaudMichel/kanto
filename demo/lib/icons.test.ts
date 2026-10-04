@@ -22,13 +22,16 @@ function files(dir: string): string[] {
   });
 }
 
-/** Names written as an icon: icon="…", name="…" on kt-icon, icon: '…'. */
+/** Names written as an icon: icon="…", name="…" (not a slot's), icon: '…'. */
 function iconNames(): Set<string> {
   const names = new Set<string>();
   const root = process.cwd();
   for (const path of [...files(join(root, 'demo')), ...files(join(root, 'src/components'))]) {
     const text = readFileSync(path, 'utf8');
-    for (const match of text.matchAll(/(?:icon|name)=\\?["']([a-z0-9-]+)|icon: ?'([a-z0-9-]+)'/g)) {
+    // A <slot name="…"> names a slot, even when the name is also an icon's.
+    for (const match of text.matchAll(
+      /(?<!<slot\s)(?:icon|name)=\\?["']([a-z0-9-]+)|icon: ?'([a-z0-9-]+)'/g,
+    )) {
       const name = match[1] ?? match[2]!;
       if (LUCIDE.has(name)) names.add(name);
     }

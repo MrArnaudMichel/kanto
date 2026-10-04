@@ -84,6 +84,7 @@ writing a control of your own.
 
 ### Navigation
 
+- `kt-app-shell` — The frame of an application: a header along the top, a sidebar down the side, and the content, which scrolls on its own.
 - `kt-breadcrumb` — A trail showing where the current page sits.
 - `kt-footer` — The site footer: a contentinfo landmark holding the brand and a word about the product, columns of links, actions, and a legal line under them.
 - `kt-header` — The application header: a banner landmark holding the brand, the primary navigation and a row of actions.

@@ -1284,3 +1284,31 @@ section > h6 {
 .template-code kt-code::part(pre) {
   max-height: 560px;
 }
+
+/* The kt-app-shell example's navigation: a label beside each icon, and the
+   icons alone once the shell is collapsed to a rail. */
+.demo-shell-nav {
+  display: grid;
+  gap: 2px;
+  padding: 12px;
+}
+.demo-shell-nav a {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  color: var(--text-muted);
+  border-radius: var(--radius-input);
+}
+.demo-shell-nav a:hover {
+  color: var(--text-body);
+  text-decoration: none;
+  background: var(--surface-hover);
+}
+.demo-shell-nav a[aria-current='page'] {
+  color: var(--color-primary-text);
+  background: var(--color-primary-soft);
+}
+kt-app-shell[collapsed] .demo-shell-nav span {
+  display: none;
+}

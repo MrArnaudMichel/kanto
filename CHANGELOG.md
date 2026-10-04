@@ -9,6 +9,19 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+**`kt-app-shell`** — the frame of an application: a header, a sidebar and
+the content, which scrolls on its own.
+
+- Wide, the sidebar sits beside the content and its toggle narrows it to a
+  rail (`collapsed`); narrower than `breakpoint`, measured on the shell
+  itself, it becomes a drawer over the content, closed by Escape or a click
+  outside, inert while closed.
+- The sidebar is an `<aside>` and the content a `<main>`; the toggle is
+  named after the sidebar, with `aria-expanded`.
+- Sizes as custom properties; `no-toggle` for a header with its own control.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-chat-message`** — one message of a conversation with an assistant.
 
 - An assistant's reply beside its avatar, as text on the page; a person's
@@ -65,9 +78,12 @@ With React wrappers, React 19 JSX and Vue typings.
 
 ### Changed
 
-Motion where something changes, and nowhere else: nothing moves when a page
-first appears, every duration comes from the theme's tokens, and all of it
-stops under `prefers-reduced-motion`.
+- The default icons include `send` and `panel-left`, which
+  `kt-prompt-input` and `kt-app-shell` draw; a test now reads every icon the
+  components draw from their sources and holds the defaults to them.
+  Motion where something changes, and nowhere else: nothing moves when a page
+  first appears, every duration comes from the theme's tokens, and all of it
+  stops under `prefers-reduced-motion`.
 
 - A toast slides in from the screen edge and, closed, fades and folds away;
   the rest of the stack moves to make room or close the gap instead of

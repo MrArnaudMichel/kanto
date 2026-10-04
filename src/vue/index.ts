@@ -67,6 +67,7 @@ import type { KtSegmentedControl } from 'kanto-ds';
 import type { KtSubMenuNavigation } from 'kanto-ds';
 import type { KtTabs } from 'kanto-ds';
 import type { KtHeader } from 'kanto-ds';
+import type { KtAppShell } from 'kanto-ds';
 import type { KtChatMessage } from 'kanto-ds';
 import type { KtPromptInput } from 'kanto-ds';
 import type { KtFooter } from 'kanto-ds';
@@ -147,6 +148,7 @@ declare module 'vue' {
     'kt-sub-menu-navigation': KtProps<KtSubMenuNavigation>;
     'kt-tabs': KtProps<KtTabs>;
     'kt-header': KtProps<KtHeader>;
+    'kt-app-shell': KtProps<KtAppShell>;
     'kt-chat-message': KtProps<KtChatMessage>;
     'kt-prompt-input': KtProps<KtPromptInput>;
     'kt-footer': KtProps<KtFooter>;

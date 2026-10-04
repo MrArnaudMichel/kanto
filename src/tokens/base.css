@@ -87,6 +87,7 @@ pre {
    element on the page. */
 :is(
   kt-alert,
+  kt-app-shell,
   kt-avatar,
   kt-badge,
   kt-breadcrumb,

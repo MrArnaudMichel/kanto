@@ -793,6 +793,47 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button slot="actions" size="small" variant="dark" icon="search">Search</kt-button>
     </kt-header>`,
 
+  'kt-app-shell': () =>
+    html`<kt-app-shell
+      breakpoint="640"
+      style="height:420px;border:var(--border-width) solid var(--border-subtle);border-radius:var(--radius-modal);overflow:hidden"
+    >
+      <strong slot="header">Northwind</strong>
+      <kt-input
+        slot="header"
+        size="small"
+        placeholder="Search"
+        icon="search"
+        style="max-width:280px;margin-left:auto"
+      ></kt-input>
+      <kt-avatar slot="header" name="Dana Whitfield" size="small"></kt-avatar>
+      <nav slot="sidebar" class="demo-shell-nav" aria-label="Northwind">
+        <a href="#/components/kt-app-shell" aria-current="page"
+          ><kt-icon name="layout-dashboard" size="16"></kt-icon><span>Overview</span></a
+        >
+        <a href="#/components/kt-app-shell"
+          ><kt-icon name="file-text" size="16"></kt-icon><span>Invoices</span></a
+        >
+        <a href="#/components/kt-app-shell"
+          ><kt-icon name="users" size="16"></kt-icon><span>Customers</span></a
+        >
+        <a href="#/components/kt-app-shell"
+          ><kt-icon name="settings" size="16"></kt-icon><span>Settings</span></a
+        >
+      </nav>
+      <div style="padding:24px;display:grid;gap:16px">
+        <h2 style="margin:0;font:var(--font-title-h5)">Overview</h2>
+        <div class="demo-row">
+          <kt-stat label="Revenue" value="$48,210" delta="+12%" trend="up"></kt-stat>
+          <kt-stat label="Invoices sent" value="214" delta="+8%" trend="up"></kt-stat>
+        </div>
+        <p class="muted">
+          Press the panel button to collapse the sidebar to a rail; narrow the window to see it
+          become a drawer.
+        </p>
+      </div>
+    </kt-app-shell>`,
+
   'kt-chat-message': () =>
     html`<div style="display:grid;gap:20px;max-width:680px">
       <kt-chat-message from="user" name="Dana">What changed in revenue this week?</kt-chat-message>
