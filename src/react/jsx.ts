@@ -61,6 +61,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtSettingsSection,
   KtNewsletter,
   KtBlogPost,
   KtPostGrid,
@@ -251,6 +252,7 @@ declare module 'react' {
       'kt-post-grid': KtProps<KtPostGrid>;
       'kt-blog-post': KtProps<KtBlogPost>;
       'kt-newsletter': KtProps<KtNewsletter, { 'kt-subscribe': KtSubscribeDetail }>;
+      'kt-settings-section': KtProps<KtSettingsSection>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

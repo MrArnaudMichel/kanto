@@ -283,6 +283,16 @@ email field and the button that subscribes it.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-settings-section`** — one part of a settings page: what it is about,
+the fields that change it, and the button that saves them.
+
+- The heading and description beside the fields where there is room, or
+  `stacked` over them; a footer for the actions and a note, shown only when
+  given.
+- `danger` for the section that deletes things.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 ### Changed
 
 - The default icons include `send` and `panel-left`, which

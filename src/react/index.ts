@@ -111,6 +111,7 @@ import { KtFaq as KtFaqElement } from '../components/blocks/kt-faq/kt-faq.js';
 import { KtPostGrid as KtPostGridElement } from '../components/blocks/kt-post-grid/kt-post-grid.js';
 import { KtBlogPost as KtBlogPostElement } from '../components/blocks/kt-blog-post/kt-blog-post.js';
 import { KtNewsletter as KtNewsletterElement } from '../components/blocks/kt-newsletter/kt-newsletter.js';
+import { KtSettingsSection as KtSettingsSectionElement } from '../components/blocks/kt-settings-section/kt-settings-section.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -742,4 +743,10 @@ export const KtNewsletter = createComponent({
   events: {
     onKtSubscribe: 'kt-subscribe' as Kt<KtSubscribeDetail>,
   },
+});
+
+export const KtSettingsSection = createComponent({
+  tagName: 'kt-settings-section',
+  elementClass: KtSettingsSectionElement,
+  react: React,
 });

@@ -1331,3 +1331,10 @@ kt-app-shell[collapsed] .demo-shell-nav span {
   border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--radius-modal);
 }
+
+/* Settings sections, one under another as on a settings page. */
+.demo-settings {
+  display: grid;
+  gap: 40px;
+  width: 100%;
+}

@@ -529,6 +529,18 @@ const CASES: Record<string, Case> = {
     markup:
       '<kt-newsletter heading="Notes, monthly" layout="inline" variant="plain" align="start"></kt-newsletter>',
   },
+  'kt-settings-section': {
+    markup: `<div>
+      <kt-settings-section heading="Profile" description="How others see you.">
+        <kt-label-input label="Name"><kt-input value="Ada Park"></kt-input></kt-label-input>
+        <span slot="note">Saved 2 minutes ago</span>
+        <kt-button slot="actions">Save</kt-button>
+      </kt-settings-section>
+      <kt-settings-section danger heading="Delete workspace" description="Everything in it goes.">
+        <kt-button slot="actions" variant="delete">Delete workspace</kt-button>
+      </kt-settings-section>
+    </div>`,
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

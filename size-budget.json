@@ -82,5 +82,6 @@
   "./components/blocks/kt-newsletter": 19500,
   "./components/blocks/kt-post-grid": 7500,
   "./components/blocks/kt-pricing-table": 14800,
+  "./components/blocks/kt-settings-section": 3900,
   "./components/blocks/kt-testimonials": 6600
 }

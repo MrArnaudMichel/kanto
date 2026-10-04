@@ -1429,6 +1429,31 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <span slot="note">One email a month. Unsubscribe in one click.</span>
     </kt-newsletter>`,
 
+  'kt-settings-section': () =>
+    html`<div class="demo-settings">
+      <kt-settings-section heading="Profile" description="How others see you in the workspace.">
+        <kt-label-input label="Name"><kt-input value="Ada Park"></kt-input></kt-label-input>
+        <kt-label-input label="Email"
+          ><kt-input type="email" value="ada@northwind.com"></kt-input
+        ></kt-label-input>
+        <span slot="note">Saved 2 minutes ago</span>
+        <kt-button slot="actions" variant="secondary">Cancel</kt-button>
+        <kt-button slot="actions">Save</kt-button>
+      </kt-settings-section>
+      <kt-settings-section heading="Notifications" description="What we email you about, and when.">
+        <kt-toggle checked>Email me when an invoice is paid</kt-toggle>
+        <kt-toggle>Email me a weekly digest</kt-toggle>
+        <kt-button slot="actions">Save</kt-button>
+      </kt-settings-section>
+      <kt-settings-section
+        danger
+        heading="Delete workspace"
+        description="Every invoice, customer and file in it goes, for good."
+      >
+        <kt-button slot="actions" variant="delete">Delete workspace</kt-button>
+      </kt-settings-section>
+    </div>`,
+
   'kt-footer': () => {
     const columns = [
       {

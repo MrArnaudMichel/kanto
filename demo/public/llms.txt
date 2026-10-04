@@ -1,6 +1,6 @@
 # Kanto
 
-> Seventy-eight accessible web components for dashboards, admin tools and forms,
+> Seventy-nine accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -134,4 +134,5 @@ In a project, every page below is also at
 - [kt-newsletter](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-newsletter/kt-newsletter.md): A way to hear from you again: a heading, a line, an email field and the button that subscribes it.
 - [kt-post-grid](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-post-grid/kt-post-grid.md): The latest posts, each a card that leads to it: a cover, a title, a line, and who wrote it when.
 - [kt-pricing-table](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-pricing-table/kt-pricing-table.md): The plans, side by side: what each costs, what it includes, and the way in — with a switch between monthly and yearly prices when the plans have both.
+- [kt-settings-section](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-settings-section/kt-settings-section.md): One part of a settings page: what it is about, the fields that change it, and the button that saves them.
 - [kt-testimonials](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/blocks/kt-testimonials/kt-testimonials.md): What the people who use it say: a quote, and who said it.

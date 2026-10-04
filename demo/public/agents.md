@@ -147,6 +147,7 @@ writing a control of your own.
 - `kt-newsletter` — A way to hear from you again: a heading, a line, an email field and the button that subscribes it.
 - `kt-post-grid` — The latest posts, each a card that leads to it: a cover, a title, a line, and who wrote it when.
 - `kt-pricing-table` — The plans, side by side: what each costs, what it includes, and the way in — with a switch between monthly and yearly prices when the plans have both.
+- `kt-settings-section` — One part of a settings page: what it is about, the fields that change it, and the button that saves them.
 - `kt-testimonials` — What the people who use it say: a quote, and who said it.
 
 ## More
