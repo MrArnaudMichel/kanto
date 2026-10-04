@@ -82,6 +82,7 @@ import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.
 import { KtPromptInput as KtPromptInputElement } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
 import { KtChatMessage as KtChatMessageElement } from '../components/data/kt-chat-message/kt-chat-message.js';
 import { KtAppShell as KtAppShellElement } from '../components/navigation/kt-app-shell/kt-app-shell.js';
+import { KtDescriptionList as KtDescriptionListElement } from '../components/data/kt-description-list/kt-description-list.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -545,4 +546,10 @@ export const KtAppShell = createComponent({
   events: {
     onKtSidebarToggle: 'kt-sidebar-toggle' as Kt<{ open: boolean }>,
   },
+});
+
+export const KtDescriptionList = createComponent({
+  tagName: 'kt-description-list',
+  elementClass: KtDescriptionListElement,
+  react: React,
 });

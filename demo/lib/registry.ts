@@ -793,6 +793,25 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button slot="actions" size="small" variant="dark" icon="search">Search</kt-button>
     </kt-header>`,
 
+  'kt-description-list': () => {
+    const items = [
+      { term: 'Invoice', detail: 'INV-2041' },
+      { term: 'Customer', detail: 'Acme Corp' },
+      { term: 'Amount', detail: '$1,200.00' },
+      { term: 'Due', detail: 'October 30, 2026' },
+      { term: 'Purchase order', detail: '' },
+    ];
+    return html`<div style="display:grid;gap:32px;max-width:720px">
+      <kt-description-list label="Invoice" bordered .items=${items}></kt-description-list>
+      <kt-description-list
+        label="Invoice, at a glance"
+        layout="stacked"
+        columns="3"
+        .items=${items.slice(0, 3)}
+      ></kt-description-list>
+    </div>`;
+  },
+
   'kt-app-shell': () =>
     html`<kt-app-shell
       breakpoint="640"

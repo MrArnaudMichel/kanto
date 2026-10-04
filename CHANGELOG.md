@@ -9,6 +9,16 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+**`kt-description-list`** — terms and their details, the body of a detail
+page.
+
+- The items are data — `list.items = [{ term, detail }]` — drawn as a real
+  `<dl>`; an empty detail shows a dash.
+- `horizontal`, each term beside its detail, or `stacked`, in up to four
+  `columns`; both follow the list's own width. `bordered` rules each item.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-app-shell`** — the frame of an application: a header, a sidebar and
 the content, which scrolls on its own.
 

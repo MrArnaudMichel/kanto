@@ -119,6 +119,7 @@ writing a control of your own.
 
 - `kt-chart` — A chart, drawn from the token layer: line, area and bar — stacked, sideways or mixed — plus scatter, bubble, pie, doughnut, polar area and radar.
 - `kt-chat-message` — One message of a conversation with an assistant.
+- `kt-description-list` — Terms and their details — an invoice's number, customer and amount; a person's email and role — the body of a detail page.
 - `kt-meter` — How a fixed total is spent: storage by file type, a budget by category, seats by role.
 - `kt-pagination` — Previous / next paging, with the position between them.
 - `kt-stat` — One headline figure: a label, a value, and how it moved.

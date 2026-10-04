@@ -15,6 +15,7 @@
   "./components/core/kt-kbd": 2600,
   "./components/data/kt-chart": 14500,
   "./components/data/kt-chat-message": 6200,
+  "./components/data/kt-description-list": 3000,
   "./components/data/kt-meter": 3300,
   "./components/data/kt-pagination": 8500,
   "./components/data/kt-stat": 7000,

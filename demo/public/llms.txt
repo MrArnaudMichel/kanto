@@ -1,6 +1,6 @@
 # Kanto
 
-> Fifty-seven accessible web components for dashboards, admin tools and forms,
+> Fifty-eight accessible web components for dashboards, admin tools and forms,
 > shipped as standard custom elements: the same `<kt-button>` runs in React,
 > Vue, Angular, Svelte and plain HTML. Two themes, themeable in one line.
 
@@ -106,6 +106,7 @@ In a project, every page below is also at
 
 - [kt-chart](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-chart/kt-chart.md): A chart, drawn from the token layer: line, area and bar — stacked, sideways or mixed — plus scatter, bubble, pie, doughnut, polar area and radar.
 - [kt-chat-message](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-chat-message/kt-chat-message.md): One message of a conversation with an assistant.
+- [kt-description-list](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-description-list/kt-description-list.md): Terms and their details — an invoice's number, customer and amount; a person's email and role — the body of a detail page.
 - [kt-meter](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-meter/kt-meter.md): How a fixed total is spent: storage by file type, a budget by category, seats by role.
 - [kt-pagination](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-pagination/kt-pagination.md): Previous / next paging, with the position between them.
 - [kt-stat](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/components/data/kt-stat/kt-stat.md): One headline figure: a label, a value, and how it moved.

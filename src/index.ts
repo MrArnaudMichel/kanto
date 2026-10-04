@@ -86,6 +86,11 @@ export type {
 export { KtChatMessage } from './components/data/kt-chat-message/kt-chat-message.js';
 export type { KtChatMessageFrom } from './components/data/kt-chat-message/kt-chat-message.js';
 export { KtAppShell } from './components/navigation/kt-app-shell/kt-app-shell.js';
+export { KtDescriptionList } from './components/data/kt-description-list/kt-description-list.js';
+export type {
+  KtDescriptionItem,
+  KtDescriptionListLayout,
+} from './components/data/kt-description-list/kt-description-list.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

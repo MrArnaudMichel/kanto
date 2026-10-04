@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtDescriptionList,
   KtFooter,
   KtSteps,
   KtCommandPalette,
@@ -264,6 +265,27 @@ const CASES: Record<string, Case> = {
       <nav slot="sidebar" aria-label="Pages"><a href="#">Overview</a></nav>
       <h1>Overview</h1>
     </kt-app-shell>`,
+  },
+  'kt-description-list': {
+    markup: '<kt-description-list label="Invoice" bordered></kt-description-list>',
+    setup: (el) => {
+      (el as KtDescriptionList).items = [
+        { term: 'Invoice', detail: 'INV-2041' },
+        { term: 'Customer', detail: 'Acme Corp' },
+        { term: 'Purchase order', detail: '' },
+      ];
+    },
+  },
+  'kt-description-list, stacked': {
+    markup:
+      '<kt-description-list label="Invoice" layout="stacked" columns="3"></kt-description-list>',
+    setup: (el) => {
+      (el as KtDescriptionList).items = [
+        { term: 'Invoice', detail: 'INV-2041' },
+        { term: 'Customer', detail: 'Acme Corp' },
+        { term: 'Purchase order', detail: '' },
+      ];
+    },
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">
