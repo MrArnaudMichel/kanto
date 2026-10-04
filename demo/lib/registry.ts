@@ -793,6 +793,21 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       <kt-button slot="actions" size="small" variant="dark" icon="search">Search</kt-button>
     </kt-header>`,
 
+  'kt-chat-message': () =>
+    html`<div style="display:grid;gap:20px;max-width:680px">
+      <kt-chat-message from="user" name="Dana">What changed in revenue this week?</kt-chat-message>
+      <kt-chat-message name="Northwind AI" time="09:41">
+        <p>Revenue rose <strong>12%</strong> to $48,210, led by three new Team plans.</p>
+        <p>Overdue invoices fell from five to three.</p>
+        <kt-button slot="actions" size="small" variant="text" icon="copy">Copy</kt-button>
+        <kt-button slot="actions" size="small" variant="text" icon="refresh-cw">Retry</kt-button>
+      </kt-chat-message>
+      <kt-chat-message from="user" name="Dana"
+        >Draft a reminder for the overdue ones.</kt-chat-message
+      >
+      <kt-chat-message name="Northwind AI" thinking></kt-chat-message>
+    </div>`,
+
   'kt-prompt-input': () =>
     html`<div style="display:grid;gap:16px;max-width:640px">
       <kt-prompt-input

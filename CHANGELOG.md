@@ -9,6 +9,17 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+**`kt-chat-message`** — one message of a conversation with an assistant.
+
+- An assistant's reply beside its avatar, as text on the page; a person's
+  message in a bubble on the far side.
+- `thinking` shows three dots — and says so in words — until the reply has a
+  word; `streaming` marks the end of a reply still arriving. Both set
+  `aria-busy`, and hold still under reduced motion.
+- `name`, `avatar`, `time` and `datetime`; slots for the avatar and actions.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-prompt-input`** — the field a person writes to an assistant in.
 
 - Grows with what is written, up to `max-rows`, then scrolls; Enter sends and

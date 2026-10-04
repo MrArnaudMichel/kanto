@@ -236,6 +236,21 @@ const CASES: Record<string, Case> = {
   'kt-prompt-input, disabled': {
     markup: '<kt-prompt-input disabled placeholder="Ask anything"></kt-prompt-input>',
   },
+  'kt-chat-message': {
+    markup: `<div>
+      <kt-chat-message from="user" name="Dana">What changed this week?</kt-chat-message>
+      <kt-chat-message name="Northwind AI" time="09:41" datetime="2026-10-04T09:41">
+        <p>Revenue rose 12%.</p>
+        <kt-button slot="actions" size="small" variant="text" icon="copy">Copy</kt-button>
+      </kt-chat-message>
+    </div>`,
+  },
+  'kt-chat-message, thinking and streaming': {
+    markup: `<div>
+      <kt-chat-message name="Northwind AI" thinking></kt-chat-message>
+      <kt-chat-message name="Northwind AI" streaming>Revenue rose</kt-chat-message>
+    </div>`,
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

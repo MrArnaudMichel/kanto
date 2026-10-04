@@ -80,6 +80,7 @@ import { KtPagination as KtPaginationElement } from '../components/data/kt-pagin
 import { KtStat as KtStatElement } from '../components/data/kt-stat/kt-stat.js';
 import { KtTable as KtTableElement } from '../components/data/kt-table/kt-table.js';
 import { KtPromptInput as KtPromptInputElement } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
+import { KtChatMessage as KtChatMessageElement } from '../components/data/kt-chat-message/kt-chat-message.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -528,4 +529,10 @@ export const KtPromptInput = createComponent({
     onKtInput: 'kt-input' as Kt<{ value: string }>,
     onKtSubmit: 'kt-submit' as Kt<KtPromptSubmitDetail>,
   },
+});
+
+export const KtChatMessage = createComponent({
+  tagName: 'kt-chat-message',
+  elementClass: KtChatMessageElement,
+  react: React,
 });

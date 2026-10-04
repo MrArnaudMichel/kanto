@@ -55,6 +55,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtChatMessage,
   KtPromptInput,
   KtFooter,
   KtToggleButton,
@@ -174,6 +175,7 @@ declare module 'react' {
         KtPromptInput,
         { 'kt-input': { value: string }; 'kt-submit': KtPromptSubmitDetail }
       >;
+      'kt-chat-message': KtProps<KtChatMessage>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<
