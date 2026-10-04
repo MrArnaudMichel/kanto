@@ -38,7 +38,7 @@ const PACE = 230;
  * @csspart header - The title, the lead and who wrote it.
  * @csspart body - The body's column.
  *
- * @cssproperty --kt-post-measure - The body's width. 68ch.
+ * @cssproperty --kt-post-measure - The column's width. 700px.
  *
  * @example
  * ```html
@@ -53,7 +53,7 @@ export class KtBlogPost extends KtElement {
     KtElement.styles,
     css`
       :host {
-        --kt-post-measure: 68ch;
+        --kt-post-measure: 700px;
         display: block;
         container-type: inline-size;
       }

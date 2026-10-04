@@ -26,7 +26,8 @@ body in a measure an eye can follow.
 
 The body is the default slot, and its elements are set as prose: paragraphs,
 `<h2>` and `<h3>`, lists, quotes, `<pre>` and `<kt-code>`, images, figures and
-rules — in a column `--kt-post-measure` wide, 68 characters by default. What
+rules — in a column `--kt-post-measure` wide — 700px, about 70 characters, shared
+with the header so the two line up. What
 is inside them — links, emphasis, code — takes the page's own styles.
 
 ## Who and when

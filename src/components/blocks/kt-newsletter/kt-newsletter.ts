@@ -130,8 +130,13 @@ export class KtNewsletter extends KtElement {
         color: var(--text-body);
         font: var(--font-normal-medium);
       }
-      .done:empty {
-        display: none;
+      /* Out of the flow while empty, but kept: a live region must be there before it speaks. */
+      .done.empty {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
       }
       .done kt-icon {
         color: var(--color-success-text);
@@ -141,7 +146,7 @@ export class KtNewsletter extends KtElement {
         color: var(--text-muted);
         font: var(--font-normal-small);
       }
-      .empty,
+      .note.empty,
       [hidden] {
         display: none;
       }
@@ -288,7 +293,7 @@ export class KtNewsletter extends KtElement {
             ></kt-input>
             <kt-button @click=${() => this.subscribe()}>${t.subscribe}</kt-button>
           </form>
-          <p class="done" role="status">
+          <p class=${this.subscribed ? 'done' : 'done empty'} role="status">
             ${
               this.subscribed
                 ? html`<kt-icon name="circle-check" size="18" aria-hidden="true"></kt-icon
