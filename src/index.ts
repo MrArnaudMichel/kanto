@@ -94,6 +94,8 @@ export type {
 export { KtAvatarGroup } from './components/core/kt-avatar-group/kt-avatar-group.js';
 export type { KtAvatarGroupPerson } from './components/core/kt-avatar-group/kt-avatar-group.js';
 export { KtCopyButton } from './components/core/kt-copy-button/kt-copy-button.js';
+export { KtOtpInput } from './components/forms/kt-otp-input/kt-otp-input.js';
+export type { KtOtpInputType } from './components/forms/kt-otp-input/kt-otp-input.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

@@ -55,6 +55,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtOtpInput,
   KtCopyButton,
   KtAvatarGroup,
   KtDescriptionList,
@@ -184,6 +185,10 @@ declare module 'react' {
       'kt-description-list': KtProps<KtDescriptionList>;
       'kt-avatar-group': KtProps<KtAvatarGroup>;
       'kt-copy-button': KtProps<KtCopyButton, { 'kt-copy': { value: string } }>;
+      'kt-otp-input': KtProps<
+        KtOtpInput,
+        { 'kt-change': { value: string }; 'kt-complete': { value: string } }
+      >;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

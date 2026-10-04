@@ -177,6 +177,10 @@ export interface KtStrings {
   sidebar: string;
   /** An avatar group's sum of the people it does not show. */
   moreCount: (count: number) => string;
+  /** One box of a one-time code, by its place. */
+  otpCharacter: (place: number, length: number) => string;
+  /** A required one-time code, not yet whole. */
+  otpRequired: string;
 }
 
 export const defaultStrings: Readonly<KtStrings> = Object.freeze({
@@ -297,6 +301,8 @@ export const defaultStrings: Readonly<KtStrings> = Object.freeze({
   thinking: 'Thinking…',
   sidebar: 'Sidebar',
   moreCount: (count: number) => `${count} more`,
+  otpCharacter: (place: number, length: number) => `Character ${place} of ${length}`,
+  otpRequired: 'Enter the whole code.',
 });
 
 let current: KtStrings = { ...defaultStrings };

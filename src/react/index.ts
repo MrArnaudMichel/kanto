@@ -85,6 +85,7 @@ import { KtAppShell as KtAppShellElement } from '../components/navigation/kt-app
 import { KtDescriptionList as KtDescriptionListElement } from '../components/data/kt-description-list/kt-description-list.js';
 import { KtAvatarGroup as KtAvatarGroupElement } from '../components/core/kt-avatar-group/kt-avatar-group.js';
 import { KtCopyButton as KtCopyButtonElement } from '../components/core/kt-copy-button/kt-copy-button.js';
+import { KtOtpInput as KtOtpInputElement } from '../components/forms/kt-otp-input/kt-otp-input.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -568,5 +569,15 @@ export const KtCopyButton = createComponent({
   react: React,
   events: {
     onKtCopy: 'kt-copy' as Kt<{ value: string }>,
+  },
+});
+
+export const KtOtpInput = createComponent({
+  tagName: 'kt-otp-input',
+  elementClass: KtOtpInputElement,
+  react: React,
+  events: {
+    onKtChange: 'kt-change' as Kt<{ value: string }>,
+    onKtComplete: 'kt-complete' as Kt<{ value: string }>,
   },
 });

@@ -1,7 +1,7 @@
 {
   ".": 102800,
   "./icons": 800,
-  "./strings": 1400,
+  "./strings": 1600,
   "./react": 104300,
   "./react/jsx": 100,
   "./vue": 103200,
@@ -41,6 +41,7 @@
   "./components/forms/kt-multi-select": 9800,
   "./components/forms/kt-label-input": 2400,
   "./components/forms/kt-number-input": 6800,
+  "./components/forms/kt-otp-input": 4300,
   "./components/forms/kt-prompt-input": 9600,
   "./components/forms/kt-radio-group": 4300,
   "./components/forms/kt-select": 8200,

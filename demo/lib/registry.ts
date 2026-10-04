@@ -1,6 +1,7 @@
 import { html, type TemplateResult } from 'lit';
 import { code } from './highlight.js';
 import { ref } from 'lit/directives/ref.js';
+import { toaster } from 'kanto-ds';
 import type { KtButton, KtSegmentedControl, KtTable } from 'kanto-ds';
 import { MONTHS, buildEntities, monthlyRevenue, serverPage } from './data.js';
 
@@ -906,6 +907,23 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
         >Draft a reminder for the overdue ones.</kt-chat-message
       >
       <kt-chat-message name="Northwind AI" thinking></kt-chat-message>
+    </div>`,
+
+  'kt-otp-input': () =>
+    html`<div style="display:grid;gap:24px">
+      <kt-label-input label="Verification code">
+        <kt-otp-input
+          label="Verification code"
+          @kt-complete=${(event: CustomEvent<{ value: string }>) =>
+            toaster.success(`Code ${event.detail.value} entered`)}
+        ></kt-otp-input>
+      </kt-label-input>
+      <kt-otp-input label="Recovery code" length="4" type="alphanumeric" value="K7"></kt-otp-input>
+      <kt-otp-input
+        label="Expired code"
+        value="482913"
+        error="That code has expired. Send a new one."
+      ></kt-otp-input>
     </div>`,
 
   'kt-prompt-input': () =>

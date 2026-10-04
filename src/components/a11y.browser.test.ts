@@ -306,6 +306,13 @@ const CASES: Record<string, Case> = {
       <kt-copy-button value="sk_live" icon-only label="Copy the API key"></kt-copy-button>
     </div>`,
   },
+  'kt-otp-input': {
+    markup: '<kt-otp-input label="Verification code" value="482"></kt-otp-input>',
+  },
+  'kt-otp-input in error': {
+    markup:
+      '<kt-otp-input label="Verification code" value="482913" error="That code has expired."></kt-otp-input>',
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

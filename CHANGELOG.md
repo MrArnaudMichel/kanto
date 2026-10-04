@@ -61,6 +61,16 @@ With React wrappers, React 19 JSX and Vue typings.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-otp-input`** — a one-time code, one box per character.
+
+- Typing moves on, Backspace steps back, the arrows move between boxes, a
+  pasted code is cleaned and spread; `one-time-code` lets a texted code fill
+  itself in. `kt-complete` fires when the code is whole.
+- `length`, `numeric` or `alphanumeric`; a form control with `required`,
+  `error` and reset. Each box is named by its place.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-prompt-input`** — the field a person writes to an assistant in.
 
 - Grows with what is written, up to `max-rows`, then scrolls; Enter sends and
