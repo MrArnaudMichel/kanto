@@ -70,5 +70,6 @@
   "./components/overlays/kt-command-palette": 7100,
   "./components/overlays/kt-modal": 9700,
   "./components/overlays/kt-side-panel": 9200,
-  "./components/overlays/kt-tour": 10900
+  "./components/overlays/kt-tour": 10900,
+  "./components/blocks/kt-auth-form": 23900
 }

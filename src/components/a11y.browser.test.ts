@@ -13,6 +13,7 @@ import { fixture, settle } from '#test/fixture';
 import '../styles.css';
 import '../index.js';
 import type {
+  KtAuthForm,
   KtTour,
   KtTree,
   KtUserMenu,
@@ -372,6 +373,21 @@ const CASES: Record<string, Case> = {
       ];
       (el as KtTour).start();
     },
+  },
+  'kt-auth-form': {
+    markup: '<kt-auth-form remember></kt-auth-form>',
+    setup: (el) => {
+      (el as KtAuthForm).providers = [{ id: 'github', label: 'Continue with GitHub' }];
+    },
+  },
+  'kt-auth-form, signing up with an error': {
+    markup: '<kt-auth-form mode="sign-up"></kt-auth-form>',
+    setup: (el) => {
+      (el as KtAuthForm).error = 'That email already has an account.';
+    },
+  },
+  'kt-auth-form, a code': {
+    markup: '<kt-auth-form mode="code" heading-level="2"></kt-auth-form>',
   },
   'kt-footer': {
     markup: `<kt-footer label="Site">

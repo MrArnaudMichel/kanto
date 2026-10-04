@@ -104,7 +104,7 @@ const FOOTER: { heading: string; links: { label: string; href: string }[] }[] = 
 let agent = AGENT_SETUPS[0]!.id;
 
 /** The library's families, in the order the sidebar lists them. */
-const FAMILIES = ['Core', 'Forms', 'Navigation', 'Feedback', 'Overlays', 'Data'];
+const FAMILIES = ['Core', 'Forms', 'Navigation', 'Feedback', 'Overlays', 'Data', 'Blocks'];
 
 /** What people ask before they adopt a design system, answered straight. */
 const QUESTIONS: { heading: string; answer: TemplateResult }[] = [

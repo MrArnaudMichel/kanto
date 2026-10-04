@@ -134,6 +134,10 @@ writing a control of your own.
 - `kt-timeline` — An ordered run of events on a rail.
 - `kt-tree` — Things inside things — folders and files, an organisation's teams, nested pages — as a tree to open and walk.
 
+### Blocks
+
+- `kt-auth-form` — The way into a product: signing in, creating an account, resetting a password, entering a code — one block, four modes.
+
 ## More
 
 - Every page in one file: https://kanto.arnaudmichel.fr/llms-full.txt

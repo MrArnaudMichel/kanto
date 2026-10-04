@@ -2,6 +2,7 @@ import { css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { KtElement, defineElement } from '#internal/kt-element';
 import { hasAssignedContent } from '#internal/slots';
+import { heading } from '#internal/heading';
 import '../../core/kt-icon/kt-icon.js';
 
 export interface KtFooterLink {
@@ -17,22 +18,6 @@ export interface KtFooterColumn {
 }
 
 export type KtFooterVariant = 'columns' | 'simple';
-
-/** A heading at the level the page needs: h2 by default, as a footer's sit under the page's h1. */
-function heading(level: number, text: string): TemplateResult {
-  switch (level) {
-    case 3:
-      return html`<h3 class="heading">${text}</h3>`;
-    case 4:
-      return html`<h4 class="heading">${text}</h4>`;
-    case 5:
-      return html`<h5 class="heading">${text}</h5>`;
-    case 6:
-      return html`<h6 class="heading">${text}</h6>`;
-    default:
-      return html`<h2 class="heading">${text}</h2>`;
-  }
-}
 
 /**
  * The site footer: a contentinfo landmark holding the brand and a word about
@@ -262,7 +247,7 @@ export class KtFooter extends KtElement {
   }
 
   override render(): TemplateResult {
-    const level = Math.min(6, Math.max(2, Math.round(this.headingLevel)));
+    const level = Math.max(2, this.headingLevel);
     return html`<footer part="base" role="contentinfo" aria-label=${this.label || nothing}>
       <div class="inner">
         <div class="top">
@@ -277,7 +262,7 @@ export class KtFooter extends KtElement {
                   ${this.columns.map(
                     (column) =>
                       html`<div part="column">
-                        ${heading(level, column.heading)}
+                        ${heading(level, column.heading, 'heading')}
                         <ul>
                           ${column.links.map((link) => this.link(link))}
                         </ul>

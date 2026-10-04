@@ -23,6 +23,10 @@ import type { KtOption } from '../internal/listbox.js';
 import type { KtCommand } from '../internal/command-search.js';
 import type { KtUserMenuItem } from '../components/navigation/kt-user-menu/kt-user-menu.js';
 import type { KtTreeItem } from '../components/data/kt-tree/kt-tree.js';
+import type {
+  KtAuthMode,
+  KtAuthSubmitDetail,
+} from '../components/blocks/kt-auth-form/kt-auth-form.js';
 import type { KtPromptSubmitDetail } from '../components/forms/kt-prompt-input/kt-prompt-input.js';
 
 import { KtAvatar as KtAvatarElement } from '../components/core/kt-avatar/kt-avatar.js';
@@ -93,6 +97,7 @@ import { KtUserMenu as KtUserMenuElement } from '../components/navigation/kt-use
 import { KtTree as KtTreeElement } from '../components/data/kt-tree/kt-tree.js';
 import { KtColorPicker as KtColorPickerElement } from '../components/forms/kt-color-picker/kt-color-picker.js';
 import { KtTour as KtTourElement } from '../components/overlays/kt-tour/kt-tour.js';
+import { KtAuthForm as KtAuthFormElement } from '../components/blocks/kt-auth-form/kt-auth-form.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -636,5 +641,16 @@ export const KtTour = createComponent({
     onKtStep: 'kt-step' as Kt<{ index: number }>,
     onKtFinish: 'kt-finish' as Kt<never>,
     onKtClose: 'kt-close' as Kt<never>,
+  },
+});
+
+export const KtAuthForm = createComponent({
+  tagName: 'kt-auth-form',
+  elementClass: KtAuthFormElement,
+  react: React,
+  events: {
+    onKtSubmit: 'kt-submit' as Kt<KtAuthSubmitDetail>,
+    onKtMode: 'kt-mode' as Kt<{ mode: KtAuthMode }>,
+    onKtProvider: 'kt-provider' as Kt<{ id: string }>,
   },
 });

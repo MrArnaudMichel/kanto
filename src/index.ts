@@ -105,6 +105,13 @@ export { KtColorPicker } from './components/forms/kt-color-picker/kt-color-picke
 export type { KtColorSwatch } from './components/forms/kt-color-picker/kt-color-picker.js';
 export { KtTour } from './components/overlays/kt-tour/kt-tour.js';
 export type { KtTourStep } from './components/overlays/kt-tour/kt-tour.js';
+export { KtAuthForm } from './components/blocks/kt-auth-form/kt-auth-form.js';
+export type {
+  KtAuthMode,
+  KtAuthProvider,
+  KtAuthSubmitDetail,
+  KtAuthTexts,
+} from './components/blocks/kt-auth-form/kt-auth-form.js';
 export { KtFooter } from './components/navigation/kt-footer/kt-footer.js';
 export type {
   KtFooterColumn,

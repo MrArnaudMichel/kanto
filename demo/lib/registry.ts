@@ -2,7 +2,7 @@ import { html, type TemplateResult } from 'lit';
 import { code } from './highlight.js';
 import { ref } from 'lit/directives/ref.js';
 import { toaster } from 'kanto-ds';
-import type { KtButton, KtSegmentedControl, KtTable } from 'kanto-ds';
+import type { KtAuthSubmitDetail, KtButton, KtSegmentedControl, KtTable } from 'kanto-ds';
 import { MONTHS, buildEntities, monthlyRevenue, serverPage } from './data.js';
 
 /**
@@ -852,6 +852,37 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     </div>`;
   },
 
+  'kt-auth-form': () => {
+    // A pretend back end: any password but "wrong" signs in.
+    const send = (event: CustomEvent<KtAuthSubmitDetail>) => {
+      const { mode, values } = event.detail;
+      event.detail.wait(
+        new Promise<void>((resolve, reject) =>
+          setTimeout(() => {
+            if (mode === 'sign-in' && values.password === 'wrong') {
+              reject(new Error('That email and password do not match.'));
+            } else {
+              resolve();
+              if (mode !== 'forgot') toaster.success('Signed in');
+            }
+          }, 900),
+        ),
+      );
+    };
+    return html`<div class="demo-auth">
+      <kt-auth-form
+        remember
+        .providers=${[{ id: 'github', label: 'Continue with GitHub' }]}
+        @kt-submit=${send}
+      >
+        <strong slot="logo" class="wordmark">Northwind</strong>
+        <span slot="footer">Try the password “wrong” to see an error.</span>
+      </kt-auth-form>
+      <kt-auth-form mode="sign-up" heading-level="2" @kt-submit=${send}></kt-auth-form>
+      <kt-auth-form mode="code" heading-level="2" @kt-submit=${send}></kt-auth-form>
+    </div>`;
+  },
+
   'kt-accordion': () =>
     html`<kt-accordion style="max-width:640px">
       <kt-collapsible heading="How long does shipping take?" open
@@ -1341,10 +1372,11 @@ const GROUP_LABEL: Record<string, string> = {
   feedback: 'Feedback',
   overlays: 'Overlays',
   data: 'Data',
+  blocks: 'Blocks',
 };
 
 /** Order the sidebar follows — roughly "what you reach for first". */
-const GROUP_ORDER = ['core', 'forms', 'navigation', 'feedback', 'overlays', 'data'];
+const GROUP_ORDER = ['core', 'forms', 'navigation', 'feedback', 'overlays', 'data', 'blocks'];
 
 export const COMPONENTS: readonly ComponentEntry[] = Object.entries(docs)
   .map(([path, doc]) => {

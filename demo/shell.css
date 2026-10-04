@@ -1312,3 +1312,11 @@ section > h6 {
 kt-app-shell[collapsed] .demo-shell-nav span {
   display: none;
 }
+
+/* The kt-auth-form example: the modes side by side where they fit. */
+.demo-auth {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  align-items: start;
+}

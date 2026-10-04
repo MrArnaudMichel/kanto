@@ -21,6 +21,8 @@
 import type * as React from 'react';
 import type {
   KtPromptSubmitDetail,
+  KtAuthMode,
+  KtAuthSubmitDetail,
   KtTreeItem,
   KtUserMenuItem,
   KtAvatar,
@@ -57,6 +59,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtAuthForm,
   KtTour,
   KtColorPicker,
   KtTree,
@@ -212,6 +215,14 @@ declare module 'react' {
       'kt-tour': KtProps<
         KtTour,
         { 'kt-step': { index: number }; 'kt-finish': never; 'kt-close': never }
+      >;
+      'kt-auth-form': KtProps<
+        KtAuthForm,
+        {
+          'kt-submit': KtAuthSubmitDetail;
+          'kt-mode': { mode: KtAuthMode };
+          'kt-provider': { id: string };
+        }
       >;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;

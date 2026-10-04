@@ -22,6 +22,7 @@ describe('the component registry', () => {
   it('groups every component under a known heading', () => {
     const groups = new Set(COMPONENTS.map((c) => c.group));
     expect([...groups].sort()).toEqual([
+      'Blocks',
       'Core',
       'Data',
       'Feedback',
