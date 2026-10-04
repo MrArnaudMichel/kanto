@@ -60,6 +60,7 @@
   "./components/navigation/kt-tabs": 6200,
   "./components/navigation/kt-toggle-button": 4700,
   "./components/navigation/kt-toggle-button-group": 5700,
+  "./components/overlays/kt-accordion": 2900,
   "./components/overlays/kt-collapsible": 4900,
   "./components/overlays/kt-confirm-dialog": 9600,
   "./components/overlays/kt-dropdown": 5500,

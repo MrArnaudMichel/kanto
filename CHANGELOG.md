@@ -36,6 +36,16 @@ page.
 
 With React wrappers, React 19 JSX and Vue typings.
 
+**`kt-accordion`** — `kt-collapsible` sections that open one at a time.
+
+- Opening one folds the one that was open, with the collapsible's own
+  animation; `multiple` lets each open on its own. `kt-change` reports the
+  open sections.
+- The arrows, Home and End move between the summaries. `kt-collapsible`
+  gains `focus()`, which focuses its summary.
+
+With React wrappers, React 19 JSX and Vue typings.
+
 **`kt-app-shell`** — the frame of an application: a header, a sidebar and
 the content, which scrolls on its own.
 

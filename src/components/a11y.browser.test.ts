@@ -313,6 +313,12 @@ const CASES: Record<string, Case> = {
     markup:
       '<kt-otp-input label="Verification code" value="482913" error="That code has expired."></kt-otp-input>',
   },
+  'kt-accordion': {
+    markup: `<kt-accordion>
+      <kt-collapsible heading="Shipping" open>Three to five days.</kt-collapsible>
+      <kt-collapsible heading="Returns">Thirty days.</kt-collapsible>
+    </kt-accordion>`,
+  },
   'kt-footer': {
     markup: `<kt-footer label="Site">
       <a slot="brand" href="/">ACME</a>

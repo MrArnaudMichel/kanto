@@ -1,7 +1,7 @@
 {
   "name": "kanto-ds",
   "version": "1.8.0",
-  "description": "Sixty-one accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
+  "description": "Sixty-two accessible web components for dashboards, admin tools and forms — themeable in one line, in React, Vue, Angular, Svelte or plain HTML.",
   "keywords": [
     "design-system",
     "web-components",
@@ -309,6 +309,10 @@
     "./components/navigation/kt-toggle-button-group": {
       "types": "./dist/components/navigation/kt-toggle-button-group/kt-toggle-button-group.d.ts",
       "default": "./dist/components/navigation/kt-toggle-button-group/kt-toggle-button-group.js"
+    },
+    "./components/overlays/kt-accordion": {
+      "types": "./dist/components/overlays/kt-accordion/kt-accordion.d.ts",
+      "default": "./dist/components/overlays/kt-accordion/kt-accordion.js"
     },
     "./components/overlays/kt-collapsible": {
       "types": "./dist/components/overlays/kt-collapsible/kt-collapsible.d.ts",

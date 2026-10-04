@@ -391,12 +391,14 @@ export function homePage({
 
     <section class="home-band home-faq" aria-labelledby="home-faq">
       <h2 id="home-faq">Before you ask</h2>
-      ${QUESTIONS.map(
-        (question) =>
-          html`<kt-collapsible heading=${question.heading}
-            ><p>${question.answer}</p></kt-collapsible
-          >`,
-      )}
+      <kt-accordion>
+        ${QUESTIONS.map(
+          (question) =>
+            html`<kt-collapsible heading=${question.heading}
+              ><p>${question.answer}</p></kt-collapsible
+            >`,
+        )}
+      </kt-accordion>
     </section>
 
     <section class="home-band" aria-labelledby="home-start">

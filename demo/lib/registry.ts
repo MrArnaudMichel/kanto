@@ -852,6 +852,19 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     </div>`;
   },
 
+  'kt-accordion': () =>
+    html`<kt-accordion style="max-width:640px">
+      <kt-collapsible heading="How long does shipping take?" open
+        >Three to five working days, tracked from the warehouse to your door.</kt-collapsible
+      >
+      <kt-collapsible heading="Can I return an order?"
+        >Within thirty days, unused, for a full refund — no questions asked.</kt-collapsible
+      >
+      <kt-collapsible heading="What does the warranty cover?"
+        >Two years, parts and labour, on everything we sell.</kt-collapsible
+      >
+    </kt-accordion>`,
+
   'kt-app-shell': () =>
     html`<kt-app-shell
       breakpoint="640"

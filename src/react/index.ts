@@ -86,6 +86,7 @@ import { KtDescriptionList as KtDescriptionListElement } from '../components/dat
 import { KtAvatarGroup as KtAvatarGroupElement } from '../components/core/kt-avatar-group/kt-avatar-group.js';
 import { KtCopyButton as KtCopyButtonElement } from '../components/core/kt-copy-button/kt-copy-button.js';
 import { KtOtpInput as KtOtpInputElement } from '../components/forms/kt-otp-input/kt-otp-input.js';
+import { KtAccordion as KtAccordionElement } from '../components/overlays/kt-accordion/kt-accordion.js';
 import {
   KtTimeline as KtTimelineElement,
   KtTimelineItem as KtTimelineItemElement,
@@ -579,5 +580,14 @@ export const KtOtpInput = createComponent({
   events: {
     onKtChange: 'kt-change' as Kt<{ value: string }>,
     onKtComplete: 'kt-complete' as Kt<{ value: string }>,
+  },
+});
+
+export const KtAccordion = createComponent({
+  tagName: 'kt-accordion',
+  elementClass: KtAccordionElement,
+  react: React,
+  events: {
+    onKtChange: 'kt-change' as Kt<{ open: number[] }>,
   },
 });

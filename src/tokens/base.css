@@ -86,6 +86,7 @@ pre {
    not shift twice. Scoped to Kanto's own tags, never to every :not(:defined)
    element on the page. */
 :is(
+  kt-accordion,
   kt-alert,
   kt-app-shell,
   kt-avatar,

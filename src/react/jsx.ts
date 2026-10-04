@@ -55,6 +55,7 @@ import type {
   KtSegmentedControl,
   KtTabs,
   KtHeader,
+  KtAccordion,
   KtOtpInput,
   KtCopyButton,
   KtAvatarGroup,
@@ -189,6 +190,7 @@ declare module 'react' {
         KtOtpInput,
         { 'kt-change': { value: string }; 'kt-complete': { value: string } }
       >;
+      'kt-accordion': KtProps<KtAccordion, { 'kt-change': { open: number[] } }>;
       'kt-header': KtProps<KtHeader, { 'kt-menu-toggle': { open: boolean } }>;
       'kt-footer': KtProps<KtFooter>;
       'kt-toggle-button': KtProps<

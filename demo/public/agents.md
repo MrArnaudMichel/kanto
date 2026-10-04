@@ -111,6 +111,7 @@ writing a control of your own.
 
 ### Overlays
 
+- `kt-accordion` — A set of `kt-collapsible` sections that open one at a time: opening one folds the one that was open, so the page stays the length of one answer.
 - `kt-collapsible` — A section that folds away.
 - `kt-command-palette` — The palette a product opens on Cmd+K: every action and page, a few keystrokes away.
 - `kt-confirm-dialog` — A centred yes/no overlay for an action worth stopping to think about.

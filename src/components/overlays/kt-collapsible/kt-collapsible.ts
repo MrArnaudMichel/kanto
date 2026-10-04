@@ -118,6 +118,11 @@ export class KtCollapsible extends KtElement {
   @property({ type: Boolean, reflect: true })
   plain = false;
 
+  /** Moves the focus to the summary, the control a person reaches it by. */
+  override focus(options?: FocusOptions): void {
+    this.shadowRoot?.querySelector('summary')?.focus(options);
+  }
+
   /** Closing, with the details kept open until the content has folded away. */
   @state() private folding = false;
   private fold: Animation | null = null;
