@@ -68,6 +68,17 @@ try {
       console.log(`shot ${screen.file}`);
     }
   }
+  // The showcase's own card: this site's home page.
+  mkdirSync(join(root, 'demo/public/apps'), { recursive: true });
+  const home = await browser.newPage({
+    viewport: { width: 1400, height: 860 },
+    colorScheme: 'dark',
+  });
+  await home.goto(`${base}/#/`);
+  await home.waitForTimeout(2000);
+  await home.screenshot({ path: join(root, 'demo/public/apps/kanto.png') });
+  await home.close();
+  console.log('shot apps/kanto.png');
 } finally {
   await browser.close();
   server.kill();

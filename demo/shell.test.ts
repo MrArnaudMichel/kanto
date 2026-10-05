@@ -213,4 +213,26 @@ describe('the documentation shell', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(document.title).toBe('Templates — Kanto');
   });
+  it('shows products built with Kanto in Apps, and how to add one', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/apps';
+    await tick();
+    expect(document.title).toBe('Showcase — Kanto');
+    const cards = [...app.querySelectorAll('.built-with .built-with-card')];
+    expect(cards.length).toBeGreaterThanOrEqual(2);
+    expect(cards[0]!.querySelector('a[href="https://kanto.arnaudmichel.fr"]')).not.toBeNull();
+    expect(
+      app.querySelector(
+        '.built-with a[href^="https://github.com/MrArnaudMichel/kanto/issues/new?template=showcase.yml"]',
+      ),
+    ).not.toBeNull();
+    // The demos keep their pages until their templates replace them.
+    const groups = [...app.querySelectorAll('.sidebar-group .overline')].map((g) =>
+      g.textContent!.trim(),
+    );
+    expect(groups).toEqual(expect.arrayContaining(['Apps', 'Demos']));
+    location.hash = '#/apps/console-home';
+    await tick();
+    expect(document.title).toBe('Console — Kanto');
+  });
 });

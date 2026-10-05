@@ -1409,3 +1409,51 @@ kt-app-shell[collapsed] .demo-shell-nav span {
   padding: 0;
   list-style: none;
 }
+
+/* === Apps: the showcase === */
+
+.built-with {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.built-with-card {
+  display: grid;
+  align-content: start;
+  overflow: hidden;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+.built-with-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+.built-with-body {
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+}
+.built-with-body h2 {
+  margin: 0;
+  font: var(--font-title-h6);
+}
+.built-with-body h2 a {
+  color: var(--text-body);
+  text-decoration: none;
+}
+.built-with-body p {
+  margin: 0;
+  color: var(--text-muted);
+}
+.built-with-by {
+  font: var(--font-normal-small);
+}
+.built-with-yours {
+  align-content: center;
+  border-style: dashed;
+}

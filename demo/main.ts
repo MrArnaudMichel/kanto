@@ -16,6 +16,7 @@ import { lazyLoader } from './lib/lazy.js';
 import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appPage } from './pages/app.js';
+import { appsPage } from './pages/apps.js';
 import { releasePage } from './pages/release.js';
 import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
@@ -205,11 +206,19 @@ const COMPONENT_ROUTES: Route[] = COMPONENTS.map((entry) => ({
   page: () => componentPage(entry),
 }));
 
+const SHOWCASE_ROUTE: Route = {
+  section: 'apps',
+  slug: 'showcase',
+  label: 'Showcase',
+  group: 'Apps',
+  page: appsPage,
+};
+
 const APP_ROUTES: Route[] = SHOWCASE.map((entry) => ({
   section: 'apps' as const,
   slug: entry.slug.replace(/\//g, '-'),
   label: entry.label,
-  group: 'Applications',
+  group: 'Demos',
   page: () => appPage(entry),
 }));
 
@@ -244,6 +253,7 @@ const ROUTES: Route[] = [
   ...GUIDE,
   ...COMPONENT_ROUTES,
   ...TEMPLATE_ROUTES,
+  SHOWCASE_ROUTE,
   ...APP_ROUTES,
   ...RELEASE,
 ];

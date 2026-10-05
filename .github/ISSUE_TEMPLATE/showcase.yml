@@ -1,0 +1,46 @@
+name: Show what you built
+description: A product built with Kanto, for the showcase on the docs site.
+title: 'Showcase: '
+labels: [showcase]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: What it is called.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Link
+      description: Where people can see it.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: One line
+      description: What it does, for someone who has never seen it.
+    validations:
+      required: true
+  - type: input
+    id: by
+    attributes:
+      label: Made by
+      description: A person or a team, as it should read on the card.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drop an image here. 1400×860 reads best; we can take one too.
+  - type: checkboxes
+    id: kanto
+    attributes:
+      label: Built with Kanto
+      options:
+        - label: Its interface uses Kanto's components.
+          required: true

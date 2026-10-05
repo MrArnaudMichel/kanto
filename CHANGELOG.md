@@ -21,6 +21,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   its screens, the command for each stack and a live demo. The Blocks page it
   replaces sent people to the same blocks as Components does; old links land
   on the first block.
+- The docs site's Apps section is a showcase of products built with Kanto,
+  with a form to add yours. The demo applications keep their pages under
+  Demos until their templates replace them.
 
 ### Fixed
 
