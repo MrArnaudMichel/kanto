@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { KtSubscribeDetail } from 'kanto-ds';
-import { scrollToSection, subscribe } from './actions';
+import { useTemplateRef } from 'vue';
+import type { KtHeader } from 'kanto-ds';
+import { scrollToSection, startTrial, subscribe } from './actions';
 import {
   CTA,
   FEATURES,
@@ -16,6 +18,8 @@ import {
   logoSrc,
 } from './content';
 
+const header = useTemplateRef<KtHeader>('header');
+
 function onSubscribe(event: CustomEvent<KtSubscribeDetail>): void {
   event.detail.wait(subscribe(event.detail.email));
 }
@@ -26,10 +30,15 @@ function talkToSales(): void {
 </script>
 
 <template>
-  <kt-header sticky>
+  <kt-header ref="header" sticky>
     <a slot="brand" class="brand" href="#top">{{ PRODUCT }}</a>
     <nav class="nav">
       <a v-for="link in NAV" :key="link.href" :href="link.href">{{ link.label }}</a>
+    </nav>
+    <nav slot="menu" class="menu" aria-label="Menu">
+      <a v-for="link in NAV" :key="link.href" :href="link.href" @click="header?.closeMenu()">{{
+        link.label
+      }}</a>
     </nav>
     <kt-button slot="actions" @click="scrollToSection('start')">{{ HERO.primary }}</kt-button>
   </kt-header>
@@ -80,7 +89,7 @@ function talkToSales(): void {
       <span slot="note">{{ QUESTIONS.note }} <a :href="QUESTIONS.contact">Ask us</a>.</span>
     </kt-faq>
     <kt-cta id="start" :heading="CTA.heading" :lead="CTA.lead">
-      <kt-button slot="actions" size="large">{{ CTA.primary }}</kt-button>
+      <kt-button slot="actions" size="large" @click="startTrial">{{ CTA.primary }}</kt-button>
       <kt-button slot="actions" size="large" variant="secondary" @click="talkToSales">{{
         CTA.secondary
       }}</kt-button>

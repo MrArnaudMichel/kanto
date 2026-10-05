@@ -162,6 +162,8 @@ describe('the landing content', () => {
     const src = logoSrc('Sato Ceramics');
     expect(src.startsWith('data:image/svg+xml,')).toBe(true);
     expect(decodeURIComponent(src)).toContain('Sato Ceramics');
+    // A name the file's owner will type: an ampersand must not break the image.
+    expect(decodeURIComponent(logoSrc('Smith & Sons'))).toContain('Smith &amp; Sons');
   });
 
   it('subscribes a new address, and says so for one already on the list', async () => {

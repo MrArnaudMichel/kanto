@@ -1,4 +1,6 @@
-import { scrollToSection, subscribe } from './actions';
+import { useRef } from 'react';
+import type { KtHeader } from 'kanto-ds';
+import { scrollToSection, startTrial, subscribe } from './actions';
 import {
   CTA,
   FEATURES,
@@ -15,15 +17,23 @@ import {
 } from './content';
 
 export function App() {
+  const header = useRef<KtHeader>(null);
   return (
     <>
-      <kt-header sticky>
+      <kt-header sticky ref={header}>
         <a slot="brand" className="brand" href="#top">
           {PRODUCT}
         </a>
         <nav className="nav">
           {NAV.map((link) => (
             <a key={link.href} href={link.href}>
+              {link.label}
+            </a>
+          ))}
+        </nav>
+        <nav slot="menu" className="menu" aria-label="Menu">
+          {NAV.map((link) => (
+            <a key={link.href} href={link.href} onClick={() => header.current?.closeMenu()}>
               {link.label}
             </a>
           ))}
@@ -89,7 +99,7 @@ export function App() {
           </span>
         </kt-faq>
         <kt-cta id="start" heading={CTA.heading} lead={CTA.lead}>
-          <kt-button slot="actions" size="large">
+          <kt-button slot="actions" size="large" onClick={startTrial}>
             {CTA.primary}
           </kt-button>
           <kt-button

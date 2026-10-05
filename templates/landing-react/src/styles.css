@@ -24,6 +24,18 @@
   color: var(--text-body);
 }
 
+/* The header's links on a phone, in its menu. */
+.menu {
+  display: grid;
+  gap: 4px;
+  padding: 8px 0;
+}
+.menu a {
+  padding: 10px 4px;
+  color: var(--text-body);
+  text-decoration: none;
+}
+
 /* Anchored sections clear the sticky header. */
 [id] {
   scroll-margin-top: 80px;

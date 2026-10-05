@@ -1,4 +1,5 @@
-/** What the page does: scroll to a section, and sign up for the newsletter. */
+/** What the page does: scroll to a section, start a trial, sign up for the newsletter. */
+import { toaster } from 'kanto-ds';
 
 /** Scrolls to a section by its id, gently unless the reader asked for less motion. */
 export function scrollToSection(id: string): void {
@@ -13,4 +14,11 @@ export function scrollToSection(id: string): void {
 export async function subscribe(email: string): Promise<void> {
   await new Promise<void>((resolve) => setTimeout(resolve, 600));
   if (email.endsWith('@example.com')) throw new Error('That address is on the list already.');
+}
+
+/** Starting a trial, from the closing call to action: point it at your app's sign-up. */
+export function startTrial(): void {
+  toaster.info('Sign-up goes here', {
+    description: 'Point startTrial() in src/actions.ts at your app.',
+  });
 }

@@ -69,5 +69,15 @@ export const SMOKES = {
     await page.locator('kt-newsletter kt-input input').fill('ada@northwind.com');
     await page.locator('kt-newsletter kt-button').click();
     await until(() => document.querySelector('kt-newsletter')?.subscribed === true);
+
+    // The closing call to action does something: here, it says where sign-up goes.
+    await page.locator('kt-cta kt-button').first().click();
+    await until(() => document.querySelectorAll('kt-toast').length > 0);
+
+    // On a phone the header's links are in its menu, and a link closes it.
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.locator('kt-header .menu-button').click();
+    await page.locator('kt-header [slot="menu"] a', { hasText: 'Pricing' }).click();
+    await until(() => location.hash === '#pricing');
   },
 };

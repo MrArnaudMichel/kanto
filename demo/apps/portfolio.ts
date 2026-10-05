@@ -352,7 +352,7 @@ export function portfolioPage(): TemplateResult {
       <nav class="landing-nav">
         <a href="#/app/portfolio">Work</a>
         <a href="#/app/portfolio">Writing</a>
-        <a href="#/app/landing">Kanto</a>
+        <a href="#/">Kanto</a>
       </nav>
       <div slot="actions" class="row">
         <kt-button
@@ -381,7 +381,7 @@ export function portfolioPage(): TemplateResult {
         <p>
           Ten years of product engineering, most of it spent on the unglamorous middle layer —
           design systems, data-dense tools, and the screens teams stare at for eight hours a day.
-          Currently making <a href="#/app/landing">Kanto</a> in the open.
+          Currently making <a href="#/">Kanto</a> in the open.
         </p>
         <div class="row" style="flex-wrap:wrap">
           <kt-button icon="arrow-down" @click=${() => scrollToWork()}>See the work</kt-button>

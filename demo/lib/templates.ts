@@ -173,7 +173,10 @@ the page is yours.`,
     files: [
       { path: 'src/content.ts', what: 'Every word and every price.' },
       { path: 'src/brand.ts', what: 'The brand, in one call.' },
-      { path: 'src/actions.ts', what: 'The newsletter. Call your email provider here.' },
+      {
+        path: 'src/actions.ts',
+        what: 'Sign-up and the newsletter. Call your app and email provider here.',
+      },
     ],
     components: [
       'kt-header',

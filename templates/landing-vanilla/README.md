@@ -11,12 +11,12 @@ npm run dev
 
 ## Where things are
 
-| To change            | Edit                                             |
-| -------------------- | ------------------------------------------------ |
-| Every word and price | `src/content.ts`                                 |
-| The brand            | `src/brand.ts` — one `setAppearance` call        |
-| The newsletter       | `src/actions.ts` — call your email provider here |
-| The page             | `src/main.ts`                                    |
+| To change            | Edit                                                |
+| -------------------- | --------------------------------------------------- |
+| Every word and price | `src/content.ts`                                    |
+| The brand            | `src/brand.ts` — one `setAppearance` call           |
+| Sign-up, newsletter  | `src/actions.ts` — call your app and email provider |
+| The page             | `src/main.ts`                                       |
 
 ## Components used
 

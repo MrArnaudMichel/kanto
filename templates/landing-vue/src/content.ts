@@ -202,6 +202,8 @@ export const FOOTER: { tagline: string; columns: KtFooterColumn[]; legal: string
 /** A company's wordmark, drawn: replace with your customers' real logos. */
 export function logoSrc(name: string): string {
   const width = name.length * 11 + 40;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} 28" width="${width}" height="28"><circle cx="12" cy="14" r="10" fill="#888"/><text x="30" y="20" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#888">${name}</text></svg>`;
+  // The name goes into the SVG's markup: an ampersand or a bracket must not break it.
+  const text = name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} 28" width="${width}" height="28"><circle cx="12" cy="14" r="10" fill="#888"/><text x="30" y="20" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#888">${text}</text></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }

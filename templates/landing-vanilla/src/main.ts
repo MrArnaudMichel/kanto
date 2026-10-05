@@ -5,13 +5,14 @@ import type {
   KtFaq,
   KtFeatureGrid,
   KtFooter,
+  KtHeader,
   KtHero,
   KtNewsletter,
   KtPricingTable,
   KtSubscribeDetail,
   KtTestimonials,
 } from 'kanto-ds';
-import { scrollToSection, subscribe } from './actions';
+import { scrollToSection, startTrial, subscribe } from './actions';
 import { applyBrand } from './brand';
 import {
   CTA,
@@ -35,6 +36,7 @@ app.innerHTML = `
   <kt-header sticky>
     <a slot="brand" class="brand" href="#top"></a>
     <nav class="nav"></nav>
+    <nav slot="menu" class="menu" aria-label="Menu"></nav>
     <kt-button slot="actions" class="start"></kt-button>
   </kt-header>
   <main class="page" id="top">
@@ -77,6 +79,18 @@ $('.nav').replaceChildren(
   ...NAV.map((link) =>
     Object.assign(document.createElement('a'), { href: link.href, textContent: link.label }),
   ),
+);
+// On a phone the same links are in the header's menu, which a chosen link closes.
+const header = $<KtHeader>('kt-header');
+$('.menu').replaceChildren(
+  ...NAV.map((link) => {
+    const anchor = Object.assign(document.createElement('a'), {
+      href: link.href,
+      textContent: link.label,
+    });
+    anchor.addEventListener('click', () => header.closeMenu());
+    return anchor;
+  }),
 );
 text('.start', HERO.primary);
 $('.start').addEventListener('click', () => scrollToSection('start'));
@@ -129,6 +143,7 @@ const cta = $('kt-cta');
 cta.setAttribute('heading', CTA.heading);
 cta.setAttribute('lead', CTA.lead);
 text('.cta-primary', CTA.primary);
+$('.cta-primary').addEventListener('click', startTrial);
 text('.cta-secondary', CTA.secondary);
 text('.cta-note', CTA.note);
 $('.cta-secondary').addEventListener('click', () => location.assign(CTA.secondaryHref));
