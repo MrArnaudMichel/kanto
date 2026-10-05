@@ -59,3 +59,20 @@ if (absent.length) {
   process.exit(1);
 }
 console.log(`ok   the docs site serves ${forAgents.join(', ')}`);
+
+// Each template's live demo, built beside the site from its vanilla stack.
+const demos = readdirSync(join(root, 'templates'))
+  .filter((name) => name.endsWith('-vanilla'))
+  .map((name) => name.replace(/-vanilla$/, ''));
+const missingDemos = demos.filter((id) => {
+  const page = join(root, 'dist-demo/templates', id, 'index.html');
+  return (
+    !existsSync(page) ||
+    !/<script type="module"[^>]+src="\.\/assets\//.test(readFileSync(page, 'utf8'))
+  );
+});
+if (missingDemos.length) {
+  console.error(`\n✗ The site has no live demo for: ${missingDemos.join(', ')}\n`);
+  process.exit(1);
+}
+console.log(`ok   the docs site serves a live demo of ${demos.join(', ')}`);

@@ -433,7 +433,7 @@
     "build:types": "tsc -p tsconfig.build.json",
     "build:static": "node scripts/copy-static.js && node scripts/llms.js --docs",
     "build:manifest": "cem analyze --config custom-elements-manifest.config.js",
-    "build:demo": "vite build --config demo/vite.config.ts",
+    "build:demo": "vite build --config demo/vite.config.ts && node scripts/build-template-demos.js",
     "check:demo": "node scripts/check-demo.js",
     "test": "vitest run",
     "test:watch": "vitest",
