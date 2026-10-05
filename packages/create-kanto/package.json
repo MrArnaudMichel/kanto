@@ -1,0 +1,36 @@
+{
+  "name": "create-kanto",
+  "version": "1.9.0",
+  "description": "Start a project on Kanto: a SaaS app in React, Vue or plain TypeScript, ready to run.",
+  "type": "module",
+  "bin": {
+    "create-kanto": "index.js"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "templates"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepack": "node scripts/bundle.js",
+    "postpack": "node scripts/clean.js"
+  },
+  "keywords": [
+    "kanto",
+    "kanto-ds",
+    "create",
+    "template",
+    "starter",
+    "web-components"
+  ],
+  "homepage": "https://kanto.arnaudmichel.fr/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrArnaudMichel/kanto.git",
+    "directory": "packages/create-kanto"
+  },
+  "license": "MIT"
+}

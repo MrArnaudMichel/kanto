@@ -49,7 +49,7 @@ export default ts.config(
        itself. Type-aware rules here would only ask for casts around
        JSON.parse and around ESLint's own untyped presets, which prove
        nothing. */
-    files: ['scripts/**', 'eslint.config.js'],
+    files: ['scripts/**', 'packages/**', 'eslint.config.js'],
     ...ts.configs.disableTypeChecked,
     languageOptions: {
       // Spread first: disableTypeChecked works by unsetting parserOptions,
@@ -60,6 +60,7 @@ export default ts.config(
         process: 'readonly',
         fetch: 'readonly',
         setTimeout: 'readonly',
+        URL: 'readonly',
       },
     },
     rules: { ...ts.configs.disableTypeChecked.rules, 'no-console': 'off' },

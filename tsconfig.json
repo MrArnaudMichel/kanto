@@ -39,5 +39,5 @@
   },
   /* Everything, so the editor and ESLint understand every file in the repo.
      The published build narrows this down in tsconfig.build.json. */
-  "include": ["src", "demo", "scripts", "*.ts", "*.js"]
+  "include": ["src", "demo", "scripts", "packages", "*.ts", "*.js"]
 }

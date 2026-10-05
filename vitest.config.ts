@@ -28,7 +28,12 @@ export default defineConfig({
              default origin, localhost:3000, they loaded whatever else was
              running on that port. From about:blank there is nothing to load. */
           environmentOptions: { happyDOM: { url: 'about:blank' } },
-          include: ['src/**/*.test.ts', 'demo/**/*.test.ts', 'scripts/**/*.test.ts'],
+          include: [
+            'src/**/*.test.ts',
+            'demo/**/*.test.ts',
+            'scripts/**/*.test.ts',
+            'packages/**/*.test.ts',
+          ],
           exclude: ['**/*.browser.test.ts'],
         },
       },
