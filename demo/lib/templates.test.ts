@@ -22,8 +22,13 @@ describe('the templates catalog', () => {
     );
     expect(new Set(TEMPLATE_CATALOG.map((entry) => entry.id)).size).toBe(TEMPLATE_CATALOG.length);
     for (const entry of TEMPLATE_CATALOG) {
-      expect(entry.demo, entry.id).toMatch(/^\.\/(templates\/[a-z-]+\/)?#\//);
+      expect(entry.demo, entry.id).toMatch(
+        /^\.\/(templates\/[a-z-]+\/(#\/[a-z-]*)?|#\/app\/[a-z/-]+)$/,
+      );
     }
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'landing')!.demo).toBe(
+      './templates/landing/',
+    );
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'saas')!.demo).toBe(
       './templates/saas/#/sign-in',
     );

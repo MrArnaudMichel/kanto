@@ -1,8 +1,8 @@
 # create-kanto
 
 Start a project on [Kanto](https://kanto.arnaudmichel.fr): a SaaS app — sign
-in, a first-run checklist, a dashboard, customers, settings — in React, Vue or
-TypeScript without a framework.
+in, a first-run checklist, a dashboard, customers, settings — or a product's
+landing page, in React, Vue or TypeScript without a framework.
 
 ```bash
 npm create kanto@latest
@@ -16,7 +16,7 @@ npm create kanto@latest my-app -- --template saas --stack react
 
 | Option           | Values                        |
 | ---------------- | ----------------------------- |
-| `-t, --template` | `saas`                        |
+| `-t, --template` | `saas`, `landing`             |
 | `-s, --stack`    | `react`, `vue`, `vanilla`     |
 | `-y, --yes`      | the first choice for the rest |
 

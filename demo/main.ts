@@ -156,6 +156,9 @@ const DEMO_PAGES: Record<string, string> = {
   portfolio: 'portfolio',
 };
 
+/** Full-screen demos, `#/app/<path>`, that became templates' live builds. */
+const RETIRED_DEMOS: Record<string, string> = { landing: 'landing' };
+
 const TEMPLATE_ROUTES: Route[] = [
   {
     section: 'templates',
@@ -229,7 +232,6 @@ const APPS: Record<string, () => Promise<Screen>> = {
   'console/settings/members/roles': settings('roles'),
   'console/settings/notifications': settings('notifications'),
   'console/settings/security': settings('security'),
-  landing: () => import('./apps/landing.js').then((m) => m.landingPage),
   chat: () => import('./apps/chat.js').then((m) => m.chatPage),
   portfolio: () => import('./apps/portfolio.js').then((m) => m.portfolioPage),
 };
@@ -275,7 +277,9 @@ function currentRoute(): Route {
   // The blocks page gave way to the templates; its blocks are in Components.
   if (section === 'blocks') return COMPONENT_ROUTES.find((route) => route.slug === 'kt-hero')!;
   // The demo applications are templates now: their old pages lead there.
-  const moved = section === 'apps' && slug ? DEMO_PAGES[slug] : undefined;
+  const moved =
+    (section === 'apps' && slug ? DEMO_PAGES[slug] : undefined) ??
+    (section === 'app' && slug ? RETIRED_DEMOS[slug] : undefined);
   if (moved) return TEMPLATE_ROUTES.find((route) => route.slug === moved)!;
   return (
     ROUTES.find((route) => route.section === section && route.slug === slug) ??

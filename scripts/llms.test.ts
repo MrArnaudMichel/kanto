@@ -94,13 +94,7 @@ describe('what the pages and the index say', () => {
     ];
     const n = tags.length;
     const word = n % 10 ? `${tens[Math.floor(n / 10)]}-${words[n % 10]}` : tens[n / 10]!;
-    for (const file of [
-      'package.json',
-      'README.md',
-      'demo/index.html',
-      'demo/pages/guide.ts',
-      'demo/apps/landing.ts',
-    ]) {
+    for (const file of ['package.json', 'README.md', 'demo/index.html', 'demo/pages/guide.ts']) {
       const text = readFileSync(join(root, file), 'utf8').toLowerCase();
       const claims = [
         ...text.matchAll(

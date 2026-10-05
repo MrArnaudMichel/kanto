@@ -151,25 +151,46 @@ one shell.`,
     id: 'landing',
     name: 'Landing',
     summary: "A product's marketing page: a hero, features, pricing, questions and the way in.",
-    description: `A marketing page, to check that a system built for data-dense tools can still
-say hello: long measure, generous rhythm, one message per band.`,
-    tryIt: `- The pricing control really swaps the plans.
-- The FAQ is \`<kt-collapsible>\`, a disclosure rather than an accordion —
-  opening one answer does not close the one you were comparing it to.`,
-    demo: './#/app/landing',
-    project: false,
-    routes: [],
-    files: [],
+    description: `Northwind's marketing page — the product of the SaaS template — with every
+section one of Kanto's blocks: a hero, the companies that use it, features,
+what people say, pricing, questions, a newsletter and the way in.
+
+Every word and every price is in one file, \`src/content.ts\`: rewrite it and
+the page is yours.`,
+    tryIt: `- Switch the pricing to yearly: the plans change, with what yearly saves.
+- Subscribe to the newsletter — and try an \`@example.com\` address, which is
+  on the list already.
+- Narrow the window: every block stacks, and the header's links move into its
+  menu.`,
+    demo: './templates/landing/',
+    project: true,
+    routes: [
+      {
+        path: '#features, #pricing, #questions, #start',
+        what: 'The sections, reached from the header.',
+      },
+    ],
+    files: [
+      { path: 'src/content.ts', what: 'Every word and every price.' },
+      { path: 'src/brand.ts', what: 'The brand, in one call.' },
+      { path: 'src/actions.ts', what: 'The newsletter. Call your email provider here.' },
+    ],
     components: [
       'kt-header',
-      'kt-segmented-control',
-      'kt-card',
-      'kt-chart',
-      'kt-collapsible',
-      'kt-input',
-      'kt-button',
+      'kt-hero',
+      'kt-logo-cloud',
+      'kt-feature-grid',
+      'kt-testimonials',
+      'kt-pricing-table',
+      'kt-faq',
+      'kt-cta',
+      'kt-newsletter',
+      'kt-footer',
     ],
-    screens: [{ file: 'landing-home.png', path: '#/app/landing', caption: 'The page' }],
+    screens: [
+      { file: 'landing-top.png', path: 'templates/landing/', caption: 'The top of the page' },
+      { file: 'landing-pricing.png', path: 'templates/landing/#pricing', caption: 'Pricing' },
+    ],
   },
   {
     id: 'chat',
