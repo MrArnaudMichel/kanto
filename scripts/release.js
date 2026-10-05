@@ -19,6 +19,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { bumpTemplates } from './bump-templates.js';
 import { parseRelease } from './changelog.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -103,7 +104,9 @@ step(`Ready: ${tag} on top of ${capture('git', ['rev-parse', '--short', 'HEAD'])
 
 if (dryRun) {
   console.log(`\n${'─'.repeat(72)}\n${notes}\n${'─'.repeat(72)}\n`);
-  console.log('Would then: verify, bump package.json, commit, tag, push, create the release.');
+  console.log(
+    'Would then: verify, bump package.json, create-kanto and the templates, commit, tag, push, create the release.',
+  );
   console.log('The verification chain is not run for a dry run.\n');
   process.exit(0);
 }
@@ -127,6 +130,8 @@ if (current === version) {
   step(`package.json is already ${version}`);
 } else {
   run('npm', ['version', version, '--no-git-tag-version']);
+  // create-kanto takes the same version; each template asks for this minor.
+  const bumped = bumpTemplates(root, version);
   run('git', [
     'commit',
     '-m',
@@ -134,8 +139,11 @@ if (current === version) {
     '--',
     'package.json',
     'package-lock.json',
+    ...bumped,
   ]);
-  step(`Committed chore(release): ${version}`);
+  step(
+    `Committed chore(release): ${version}${bumped.length ? `, with ${bumped.length} template file(s)` : ''}`,
+  );
 }
 
 run('git', ['tag', '-a', tag, '-m', title]);

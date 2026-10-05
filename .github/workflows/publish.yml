@@ -54,6 +54,10 @@ jobs:
             exit 1
           fi
 
+      # A template that does not build would reach people through create-kanto.
+      - name: Check the templates
+        run: npm run build && npm run check:templates
+
       # Prereleases (1.1.0-beta.1) go out under `next`, so `npm install` keeps
       # resolving to the latest stable version.
       - name: Publish
@@ -65,6 +69,20 @@ jobs:
           else
             npm publish
           fi
+
+      # create-kanto follows the library, at the same version. Its first
+      # publish is made by hand (trusted publishing needs the package to exist);
+      # until then this step only says so.
+      - name: Publish create-kanto
+        working-directory: packages/create-kanto
+        env:
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          if ! npm view create-kanto version > /dev/null 2>&1; then
+            echo "::notice::create-kanto is not on npm yet: publish it once by hand, then link it to this workflow."
+            exit 0
+          fi
+          if [ "$PRERELEASE" = "true" ]; then npm publish --tag next; else npm publish; fi
 
       # `cdn.jsdelivr.net/npm/kanto-ds@1` is cached for hours at the edge. Once
       # npm serves the new version — which can take a quarter of an hour — ask

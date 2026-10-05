@@ -63,3 +63,29 @@ jobs:
           name: coverage
           path: coverage/
           retention-days: 7
+
+  templates:
+    name: Templates
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Each template installs its own dependencies from the registry and the
+      # library from the package `npm pack` makes, then builds and is walked
+      # in Chromium (scripts/template-smoke.js).
+      - name: Build the library
+        run: npm run build
+
+      - name: Check every template
+        run: npm run check:templates
