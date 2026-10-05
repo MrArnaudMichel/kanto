@@ -41,7 +41,12 @@ export function templatesPage(): DocPage {
       ${TEMPLATE_CATALOG.map(
         (entry) =>
           html`<li class="template-card">
-            <a class="template-card-shot" href=${`#/templates/${entry.id}`}>
+            <a
+              class="template-card-shot"
+              href=${`#/templates/${entry.id}`}
+              tabindex="-1"
+              aria-hidden="true"
+            >
               <img
                 src=${screenSrc(entry.screens[0]!.file)}
                 alt=""

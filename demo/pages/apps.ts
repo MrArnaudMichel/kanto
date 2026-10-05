@@ -14,7 +14,14 @@ export function appsPage(): DocPage {
       ${BUILT_WITH.map(
         (product) =>
           html`<li class="built-with-card">
-            <a class="built-with-shot" href=${product.url} target="_blank" rel="noopener">
+            <a
+              class="built-with-shot"
+              href=${product.url}
+              target="_blank"
+              rel="noopener"
+              tabindex="-1"
+              aria-hidden="true"
+            >
               <img src=${`./${product.image}`} alt="" loading="lazy" width="1400" height="860" />
             </a>
             <div class="built-with-body">

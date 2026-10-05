@@ -71,6 +71,10 @@ jobs:
       - name: Build the documentation site
         run: npm run build:demo
 
+      # A site whose live demos did not build must not go out.
+      - name: Check the live demos
+        run: node scripts/check-demo.js --demos
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist-demo

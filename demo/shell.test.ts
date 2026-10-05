@@ -235,4 +235,22 @@ describe('the documentation shell', () => {
     await tick();
     expect(document.title).toBe('Console — Kanto');
   });
+
+  it('names every link on the templates and apps pages, or hides it from assistive tech', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    for (const hash of ['#/templates', '#/templates/saas', '#/apps']) {
+      location.hash = hash;
+      await tick();
+      const unnamed = [...app.querySelectorAll<HTMLAnchorElement>('main a')]
+        .filter((link) => link.getAttribute('aria-hidden') !== 'true')
+        .filter(
+          (link) =>
+            !link.textContent!.trim() &&
+            !link.getAttribute('aria-label') &&
+            ![...link.querySelectorAll('img')].some((img) => img.getAttribute('alt')),
+        )
+        .map((link) => link.getAttribute('href'));
+      expect(unnamed, hash).toEqual([]);
+    }
+  });
 });
