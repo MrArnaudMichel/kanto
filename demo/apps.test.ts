@@ -27,7 +27,6 @@ const APP_ROUTES = [
   },
   { hash: '#/app/console/settings/security', marker: '.settings-narrow', label: 'Security' },
   { hash: '#/app/chat', marker: '.chat-transcript', label: null },
-  { hash: '#/app/portfolio', marker: '.portrait', label: null },
 ] as const;
 
 describe('the full-bleed applications', () => {
@@ -106,7 +105,7 @@ describe('the full-bleed applications', () => {
   });
 
   it('previews the running application on its documentation page', async () => {
-    for (const slug of ['console-home', 'chat', 'portfolio']) {
+    for (const slug of ['console-home', 'chat']) {
       await show(`#/apps/${slug}`);
       const frame = app.querySelector<HTMLIFrameElement>('.app-preview-frame');
       expect(frame, slug).not.toBeNull();

@@ -6,6 +6,11 @@ export const TEMPLATES = [
     label: 'Landing page',
     hint: "a product's marketing page, every section a block",
   },
+  {
+    id: 'portfolio',
+    label: 'Portfolio',
+    hint: "a person's work, career, writing and a contact form",
+  },
 ];
 
 export const STACKS = [

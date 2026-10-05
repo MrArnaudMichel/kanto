@@ -225,27 +225,53 @@ model picker.`,
   {
     id: 'portfolio',
     name: 'Portfolio',
-    summary: "A person's work: projects to filter, case studies, a career and a contact form.",
-    description: `Typography rather than density, one thing said at a time: the third kind of
-screen, after the console and the marketing page.`,
-    tryIt: `- Filter the work, then open a case study — the panel carries a
-  \`<kt-timeline>\`, the same element as the career list on the page.
-- The contact form validates before it pretends to send.`,
-    demo: './#/app/portfolio',
-    project: false,
-    routes: [],
-    files: [],
+    summary:
+      "A person's work: projects to filter, case studies, a career, writing and a contact form.",
+    description: `Rowan Ellis's site, on one page: an introduction, a few numbers, selected
+work to filter — each project opening into a case study with its outcomes and
+its phases — a career on a timeline, writing, and a contact form that says what
+is missing before it sends.
+
+Everything it says is in \`src/content.ts\`; the filter and the checks are in
+\`src/work.ts\`.`,
+    tryIt: `- Filter the work by a tag, then back to everything.
+- Open a case study, close it, open another: the panel follows.
+- Send the contact form empty first: each field says what it needs.`,
+    demo: './templates/portfolio/',
+    project: true,
+    routes: [
+      {
+        path: '#work, #career, #writing, #contact',
+        what: 'The sections, reached from the header.',
+      },
+    ],
+    files: [
+      { path: 'src/content.ts', what: 'Everything the site says.' },
+      { path: 'src/brand.ts', what: 'The brand, in one call.' },
+      { path: 'src/actions.ts', what: 'The form and the CV. Call your form service here.' },
+      { path: 'src/work.ts', what: 'The filter and the checks.' },
+    ],
     components: [
       'kt-header',
+      'kt-avatar',
+      'kt-badge',
+      'kt-stat',
       'kt-toggle-button-group',
+      'kt-card',
+      'kt-empty-state',
       'kt-side-panel',
       'kt-timeline',
-      'kt-stat',
-      'kt-form',
+      'kt-post-grid',
+      'kt-label-input',
       'kt-input',
       'kt-textarea',
+      'kt-alert',
+      'kt-footer',
     ],
-    screens: [{ file: 'portfolio-home.png', path: '#/app/portfolio', caption: 'The site' }],
+    screens: [
+      { file: 'portfolio-top.png', path: 'templates/portfolio/', caption: 'The top of the site' },
+      { file: 'portfolio-work.png', path: 'templates/portfolio/#work', caption: 'Selected work' },
+    ],
   },
 ];
 

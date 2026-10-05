@@ -29,6 +29,9 @@ describe('the templates catalog', () => {
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'landing')!.demo).toBe(
       './templates/landing/',
     );
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'portfolio')!.demo).toBe(
+      './templates/portfolio/',
+    );
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'saas')!.demo).toBe(
       './templates/saas/#/sign-in',
     );

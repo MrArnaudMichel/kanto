@@ -1,7 +1,7 @@
 {
   "name": "create-kanto",
   "version": "1.9.0",
-  "description": "Start a project on Kanto: a SaaS app or a landing page, in React, Vue or plain TypeScript, ready to run.",
+  "description": "Start a project on Kanto: a SaaS app, a landing page or a portfolio, in React, Vue or plain TypeScript, ready to run.",
   "type": "module",
   "bin": {
     "create-kanto": "index.js"
