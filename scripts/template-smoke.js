@@ -102,6 +102,21 @@ export const SMOKES = {
       .click();
     await until(() => document.querySelectorAll('kt-card.work-card').length === 4);
 
+    // The filter cannot be emptied: the chosen tag clicked again keeps a tag chosen.
+    const tagButton = (name) =>
+      page.locator('kt-toggle-button-group.work-filter').getByRole('button', { name, exact: true });
+    await tagButton('All').click();
+    await until(
+      () => document.querySelector('kt-toggle-button-group.work-filter')?.value === 'All',
+    );
+    await tagButton('Product').click();
+    await tagButton('Product').click();
+    await until(
+      () =>
+        document.querySelector('kt-toggle-button-group.work-filter')?.value === 'All' &&
+        document.querySelectorAll('kt-card.work-card').length === 4,
+    );
+
     // A case study, then another: the panel follows.
     await page.locator('kt-card.work-card').nth(0).click();
     await until(() => document.querySelector('kt-side-panel')?.open === true);

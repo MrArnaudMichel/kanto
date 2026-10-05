@@ -177,7 +177,10 @@ function showWork(tag: string): void {
 }
 
 filter.addEventListener('kt-change', (event) => {
-  showWork((event as CustomEvent<{ value: string | null }>).detail.value ?? 'All');
+  const value = (event as CustomEvent<{ value: string | null }>).detail.value;
+  // The chosen tag clicked again empties the group: keep a tag chosen — All.
+  if (value === null) (filter as HTMLElement & { value: string | null }).value = 'All';
+  showWork(value ?? 'All');
 });
 showWork('All');
 

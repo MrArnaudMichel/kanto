@@ -73,7 +73,13 @@ export function App() {
               className="work-filter"
               label="Filter by tag"
               value={tag}
-              onkt-change={(event) => setTag((event.detail.value as string | null) ?? 'All')}
+              onkt-change={(event) => {
+                const value = event.detail.value as string | null;
+                // The chosen tag clicked again empties the group: keep a tag chosen — All.
+                if (value === null)
+                  (event.target as HTMLElement & { value: string | null }).value = 'All';
+                setTag(value ?? 'All');
+              }}
             >
               {TAGS.map((name) => (
                 <kt-toggle-button key={name} value={name}>

@@ -14,7 +14,10 @@ const open = ref<string | null>(null);
 const projects = computed(() => projectsTagged(tag.value));
 
 function onFilter(event: CustomEvent<{ value: string | string[] | null }>): void {
-  tag.value = (event.detail.value as string | null) ?? 'All';
+  const value = event.detail.value as string | null;
+  // The chosen tag clicked again empties the group: keep a tag chosen — All.
+  if (value === null) (event.target as HTMLElement & { value: string | null }).value = 'All';
+  tag.value = value ?? 'All';
 }
 </script>
 
