@@ -103,7 +103,8 @@ The section comes back in the top bar, as the gallery of templates:
   tab per stack (`npm create kanto@latest my-app -- --template saas --stack
 react`) and Copy; the `degit` line; the components it uses, each linking to
   its page.
-- **Live demos:** the site's build also builds each template's React stack
+- **Live demos:** the site's build also builds each template's vanilla stack — the lightest build, the
+  site's own way of using Kanto, and Kanto without a framework —
   into `templates/<id>/` beside the docs, so **Live demo** opens the real
   template, signed in with any email. Built in the Pages workflow, which
   already has the network.
