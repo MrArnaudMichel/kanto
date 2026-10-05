@@ -17,6 +17,10 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   project of its own in `templates/`, to scaffold or to fork.
 - Every template is installed against the published package, built and
   walked in a browser in CI and before every release.
+- The docs site's Templates section: a gallery, and a page per template with
+  its screens, the command for each stack and a live demo. The Blocks page it
+  replaces sent people to the same blocks as Components does; old links land
+  on the first block.
 
 ### Fixed
 

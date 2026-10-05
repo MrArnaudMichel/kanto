@@ -29,7 +29,7 @@ describe('the documentation shell', () => {
 
   it('puts the top-level sections in the header', () => {
     const labels = [...app.querySelectorAll('.top-nav a')].map((a) => a.textContent!.trim());
-    expect(labels).toEqual(['Guide', 'Components', 'Blocks', 'Templates', 'Apps', 'Release']);
+    expect(labels).toEqual(['Guide', 'Components', 'Templates', 'Apps', 'Release']);
   });
 
   it('lists the components in the sidebar, grouped', () => {
@@ -152,33 +152,19 @@ describe('the documentation shell', () => {
     expect(app.querySelector('#no-build-step')).not.toBeNull();
   });
 
-  it('shows every block live on one page, each linked to its documentation', async () => {
-    const { COMPONENTS } = await import('./lib/registry.js');
+  it('sends the old blocks page to the first block, and keeps the blocks in Components', async () => {
     const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/blocks';
-    await tick();
-    expect(document.title).toBe('Blocks — Kanto');
-    const blocks = COMPONENTS.filter((entry) => entry.group === 'Blocks');
-    expect(blocks.length).toBeGreaterThanOrEqual(14);
-    const gallery = app.querySelector('.blocks-gallery')!;
-    for (const block of blocks) {
-      expect(
-        gallery.querySelector(`a[href="#/components/${block.slug}"]`),
-        block.slug,
-      ).not.toBeNull();
-      expect(gallery.querySelector(block.slug), block.slug).not.toBeNull();
+    for (const hash of ['#/blocks', '#/blocks#marketing']) {
+      location.hash = hash;
+      await tick();
+      expect(document.title, hash).toBe('hero — Kanto');
     }
-  });
-
-  it('groups the blocks by what they are for, in the sidebar too', async () => {
-    location.hash = '#/blocks';
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    const headings = [...app.querySelectorAll('.blocks-gallery h2')].map((h) =>
-      h.textContent!.trim(),
+    location.hash = '#/components/kt-hero';
+    await tick();
+    const groups = [...app.querySelectorAll('.sidebar-group .overline')].map((g) =>
+      g.textContent!.trim(),
     );
-    expect(headings).toEqual(['Marketing', 'Blog', 'Application']);
-    const sidebar = [...app.querySelectorAll('.sidebar a')].map((a) => a.textContent!.trim());
-    expect(sidebar).toEqual(expect.arrayContaining(['Marketing', 'Blog', 'Application']));
+    expect(groups).toContain('Blocks');
   });
 
   it('shows the templates in a gallery, each with its live demo and its page', async () => {

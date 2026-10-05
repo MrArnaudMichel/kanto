@@ -1,7 +1,7 @@
 /**
  * The front door. A product first — one live screen, re-coloured from a row
  * of swatches — then three reasons, each shown working; the wall of screens;
- * the blocks pages are built from, and whole apps; and the way in. No code until someone asks.
+ * the templates to start from, and whole apps; and the way in. No code until someone asks.
  */
 import { html, type TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
@@ -12,7 +12,7 @@ import { stage } from '../lib/stage.js';
 import { REASONS } from '../lib/reasons.js';
 import { AGENT_SETUPS } from '../lib/agents.js';
 import { chatDemo } from '../lib/chat-demo.js';
-import { BLOCK_CATEGORIES } from './blocks.js';
+import { demoHref, TEMPLATE_CATALOG } from '../lib/templates.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
 import { NPM_URL, REPO_URL, VERSION, VERSION_TAG } from '../lib/project.js';
@@ -78,7 +78,7 @@ const FOOTER: { heading: string; links: { label: string; href: string }[] }[] = 
       { label: 'Introduction', href: '#/guide/introduction' },
       { label: 'Installation', href: '#/guide/installation' },
       { label: 'Components', href: '#/components/kt-button' },
-      { label: 'Blocks', href: '#/blocks' },
+      { label: 'Templates', href: '#/templates' },
       { label: 'Appearance', href: '#/guide/appearance' },
     ],
   },
@@ -327,22 +327,21 @@ export function homePage({
       </ul>
     </section>
 
-    <section class="home-band home-blocks" aria-labelledby="home-blocks">
-      <h2 id="home-blocks">Build a page from blocks</h2>
+    <section class="home-band home-templates" aria-labelledby="home-templates">
+      <h2 id="home-templates">Start from a template</h2>
       <p>
-        Whole sections — a hero, pricing, a blog post, a settings section — that take their words
-        and data as properties and fit the page they are put in.
+        Whole projects — routed, typed and building — in React, Vue or TypeScript without a
+        framework. <a href="#/templates">See every template</a>.
       </p>
-      <ul class="home-block-kinds">
-        ${BLOCK_CATEGORIES.map(
-          (category) =>
+      <ul class="home-template-cards">
+        ${TEMPLATE_CATALOG.map(
+          (entry) =>
             html`<li>
-              <a class="home-block-kind" href=${`#/blocks#${category.id}`}>${category.label}</a>
-              <p>${category.lead}</p>
-              <div class="home-block-names">
-                ${category.slugs.map(
-                  (slug) => html`<a href=${`#/components/${slug}`}>${slug.replace(/^kt-/, '')}</a>`,
-                )}
+              <a class="home-template-name" href=${`#/templates/${entry.id}`}>${entry.name}</a>
+              <p>${entry.summary}</p>
+              <div class="home-template-actions">
+                <a href=${demoHref(entry.id)} target="_blank" rel="noopener">Live demo</a>
+                <a href=${`#/templates/${entry.id}`}>How to start</a>
               </div>
             </li>`,
         )}

@@ -668,9 +668,15 @@
   text-decoration: underline;
 }
 
-/* === Blocks: the kinds of page, and the blocks each is made of === */
+/* === Templates: a card each, the way into the gallery === */
 
-.home-block-kinds {
+/* A link inside a sentence is told apart by more than its colour. */
+.home-templates > p a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.home-template-cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
@@ -678,7 +684,7 @@
   padding: 0;
   list-style: none;
 }
-.home-block-kinds li {
+.home-template-cards li {
   display: grid;
   align-content: start;
   gap: 10px;
@@ -686,36 +692,36 @@
   border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--border-radius-card);
 }
-.home-block-kinds p {
+.home-template-cards p {
   margin: 0;
   color: var(--text-muted);
   font: var(--font-normal-regular);
   line-height: 1.6;
 }
-.home-block-kind {
+.home-template-name {
   justify-self: start;
   color: var(--text-body);
   font: 600 20px / 1.2 var(--font-family-display);
   text-decoration: none;
 }
-.home-block-kind:hover {
+.home-template-name:hover {
   color: var(--color-primary-text);
 }
-.home-block-names {
+.home-template-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 14px;
 }
-.home-block-names a {
+.home-template-actions a {
   color: var(--color-primary-text);
   font: var(--font-normal-regular);
   text-decoration: none;
 }
-.home-block-names a:hover {
+.home-template-actions a:hover {
   text-decoration: underline;
 }
 @media (max-width: 860px) {
-  .home-block-kinds {
+  .home-template-cards {
     grid-template-columns: minmax(0, 1fr);
   }
 }

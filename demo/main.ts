@@ -20,7 +20,6 @@ import { releasePage } from './pages/release.js';
 import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './pages/guide.js';
 import { foundationsPage } from './pages/foundations.js';
 import { homeFooter, homePage } from './pages/home.js';
-import { blocksPage } from './pages/blocks.js';
 import { templatePage, templatesPage } from './pages/templates.js';
 import { TEMPLATE_CATALOG } from './lib/templates.js';
 import type { SettingsSection } from './apps/console/settings.js';
@@ -45,7 +44,7 @@ registerDocsIcons();
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'home' | 'guide' | 'components' | 'blocks' | 'templates' | 'apps' | 'release';
+type Section = 'home' | 'guide' | 'components' | 'templates' | 'apps' | 'release';
 
 interface Route {
   readonly section: Section;
@@ -240,19 +239,10 @@ const TEMPLATE_ROUTES: Route[] = [
   })),
 ];
 
-const BLOCKS: Route = {
-  section: 'blocks',
-  slug: 'all',
-  label: 'Blocks',
-  group: 'Blocks',
-  page: blocksPage,
-};
-
 const ROUTES: Route[] = [
   HOME,
   ...GUIDE,
   ...COMPONENT_ROUTES,
-  BLOCKS,
   ...TEMPLATE_ROUTES,
   ...APP_ROUTES,
   ...RELEASE,
@@ -268,7 +258,6 @@ const NEW_COMPONENTS = newComponents(parseChangelog(changelogDoc), new Date());
 const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
-  { id: 'blocks', label: 'Blocks', icon: 'layout-template' },
   { id: 'templates', label: 'Templates', icon: 'layout-template' },
   { id: 'apps', label: 'Apps', icon: 'app-window' },
   { id: 'release', label: 'Release', icon: 'tag' },
@@ -349,7 +338,8 @@ function currentRoute(): Route {
   // `#/guide/installation#no-build-step`: the route, then a heading on it.
   const [section, slug] = location.hash.replace(/^#\/?/, '').split('#')[0]!.split('/');
   if (!section || section === 'home') return HOME;
-  // The templates gave way to the blocks: an old link lands on them.
+  // The blocks page gave way to the templates; its blocks are in Components.
+  if (section === 'blocks') return COMPONENT_ROUTES.find((route) => route.slug === 'kt-hero')!;
   return (
     ROUTES.find((route) => route.section === section && route.slug === slug) ??
     ROUTES.find((route) => route.section === section) ??

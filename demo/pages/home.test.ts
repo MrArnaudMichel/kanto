@@ -4,7 +4,7 @@ import { resetStage } from '../lib/stage.js';
 import { resetChat } from '../lib/chat-demo.js';
 import { KT_ACCENTS, KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { COMPONENTS } from '../lib/registry.js';
-import { BLOCK_CATEGORIES } from './blocks.js';
+import { TEMPLATE_CATALOG } from '../lib/templates.js';
 import { homeFooter, homePage } from './home.js';
 
 function mount() {
@@ -192,20 +192,18 @@ describe('the gallery', () => {
   });
 });
 
-describe('blocks', () => {
-  it('leads to the blocks, by kind of page, and to each block', () => {
-    const section = mount().querySelector('.home-blocks')!;
-    const kinds = [...section.querySelectorAll<HTMLAnchorElement>('a[href^="#/blocks"]')];
-    expect(kinds.map((link) => link.getAttribute('href'))).toEqual(
-      BLOCK_CATEGORIES.map((category) => `#/blocks#${category.id}`),
-    );
-    for (const slug of BLOCK_CATEGORIES.flatMap((category) => category.slugs)) {
-      expect(section.querySelector(`a[href="#/components/${slug}"]`), slug).not.toBeNull();
+describe('templates', () => {
+  it('leads to the gallery, and to each template and its live demo', () => {
+    const section = mount().querySelector('.home-templates')!;
+    expect(section.querySelector('a[href="#/templates"]')).not.toBeNull();
+    for (const entry of TEMPLATE_CATALOG) {
+      expect(section.querySelector(`a[href="#/templates/${entry.id}"]`), entry.id).not.toBeNull();
+      expect(section.querySelector(`a[href="./templates/${entry.id}/"]`), entry.id).not.toBeNull();
     }
   });
 
-  it('no longer leads to the templates', () => {
-    expect(mount().querySelector('a[href^="#/templates"], a[href^="#/template/"]')).toBeNull();
+  it('no longer leads to the blocks page', () => {
+    expect(mount().querySelector('a[href^="#/blocks"]')).toBeNull();
   });
 });
 
