@@ -54,4 +54,15 @@ describe('the templates catalog', () => {
     );
     expect(demoHref('saas')).toBe('./templates/saas/');
   });
+
+  it('has a screenshot for every screen it shows', () => {
+    for (const entry of TEMPLATE_CATALOG) {
+      expect(entry.screens.length, entry.id).toBeGreaterThan(0);
+      for (const screen of entry.screens) {
+        expect(existsSync(join(root, 'demo/public/templates', screen.file)), screen.file).toBe(
+          true,
+        );
+      }
+    }
+  });
 });
