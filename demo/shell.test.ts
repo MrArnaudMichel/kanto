@@ -29,7 +29,7 @@ describe('the documentation shell', () => {
 
   it('puts the top-level sections in the header', () => {
     const labels = [...app.querySelectorAll('.top-nav a')].map((a) => a.textContent!.trim());
-    expect(labels).toEqual(['Guide', 'Components', 'Blocks', 'Apps', 'Release']);
+    expect(labels).toEqual(['Guide', 'Components', 'Blocks', 'Templates', 'Apps', 'Release']);
   });
 
   it('lists the components in the sidebar, grouped', () => {
@@ -181,9 +181,50 @@ describe('the documentation shell', () => {
     expect(sidebar).toEqual(expect.arrayContaining(['Marketing', 'Blog', 'Application']));
   });
 
-  it('sends an old link to the templates to the blocks', async () => {
+  it('shows the templates in a gallery, each with its live demo and its page', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/templates';
+    await tick();
+    expect(document.title).toBe('Templates — Kanto');
+    const card = app.querySelector('.templates-gallery .template-card')!;
+    expect(card.querySelector('a[href="#/templates/saas"]')).not.toBeNull();
+    const demo = card.querySelector<HTMLAnchorElement>('a.template-demo')!;
+    expect(
+      new URL(
+        demo.getAttribute('href')!,
+        location.href.replace(/^about:blank/, 'https://kanto.arnaudmichel.fr/'),
+      ).pathname,
+    ).toBe('/templates/saas/');
+    expect(card.querySelector('img')!.getAttribute('src')).toBe('./templates/saas-overview.png');
+  });
+
+  it('gives each template a page: screens, the command for each stack, what is inside', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/templates/saas';
+    await tick();
+    expect(document.title).toBe('SaaS — Kanto');
+    expect(app.querySelectorAll('.template-screens img')).toHaveLength(4);
+    // From the template's page too, the demo resolves beside the site, not under the hash.
+    const demo = app.querySelector<HTMLAnchorElement>('a.template-demo')!;
+    expect(
+      new URL(
+        demo.getAttribute('href')!,
+        location.href.replace(/^about:blank/, 'https://kanto.arnaudmichel.fr/'),
+      ).pathname,
+    ).toBe('/templates/saas/');
+    expect(app.querySelector('.template-start kt-code')!.textContent).toContain(
+      'npm create kanto@latest my-app -- --template saas --stack react',
+    );
+    const tabs = app.querySelector('.template-start kt-tabs')!;
+    tabs.dispatchEvent(new CustomEvent('kt-change', { detail: { value: 'vue' } }));
+    await tick();
+    expect(app.querySelector('.template-start kt-code')!.textContent).toContain('--stack vue');
+    expect(app.querySelector('a[href="#/components/kt-auth-form"]')).not.toBeNull();
+  });
+
+  it('sends an old template link to the gallery', async () => {
     location.hash = '#/templates/dashboard';
     await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(document.title).toBe('Blocks — Kanto');
+    expect(document.title).toBe('Templates — Kanto');
   });
 });

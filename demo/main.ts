@@ -21,6 +21,8 @@ import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './page
 import { foundationsPage } from './pages/foundations.js';
 import { homeFooter, homePage } from './pages/home.js';
 import { blocksPage } from './pages/blocks.js';
+import { templatePage, templatesPage } from './pages/templates.js';
+import { TEMPLATE_CATALOG } from './lib/templates.js';
 import type { SettingsSection } from './apps/console/settings.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetStage } from './lib/stage.js';
@@ -43,7 +45,7 @@ registerDocsIcons();
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'home' | 'guide' | 'components' | 'blocks' | 'apps' | 'release';
+type Section = 'home' | 'guide' | 'components' | 'blocks' | 'templates' | 'apps' | 'release';
 
 interface Route {
   readonly section: Section;
@@ -221,6 +223,23 @@ const HOME: Route = {
   page: () => html``,
 };
 
+const TEMPLATE_ROUTES: Route[] = [
+  {
+    section: 'templates',
+    slug: 'all',
+    label: 'Templates',
+    group: 'Templates',
+    page: templatesPage,
+  },
+  ...TEMPLATE_CATALOG.map((entry) => ({
+    section: 'templates' as const,
+    slug: entry.id,
+    label: entry.name,
+    group: 'Templates',
+    page: () => templatePage(entry, update),
+  })),
+];
+
 const BLOCKS: Route = {
   section: 'blocks',
   slug: 'all',
@@ -229,7 +248,15 @@ const BLOCKS: Route = {
   page: blocksPage,
 };
 
-const ROUTES: Route[] = [HOME, ...GUIDE, ...COMPONENT_ROUTES, BLOCKS, ...APP_ROUTES, ...RELEASE];
+const ROUTES: Route[] = [
+  HOME,
+  ...GUIDE,
+  ...COMPONENT_ROUTES,
+  BLOCKS,
+  ...TEMPLATE_ROUTES,
+  ...APP_ROUTES,
+  ...RELEASE,
+];
 
 /**
  * Components flagged "New" in the navigation: introduced under Added in a
@@ -242,6 +269,7 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
   { id: 'blocks', label: 'Blocks', icon: 'layout-template' },
+  { id: 'templates', label: 'Templates', icon: 'layout-template' },
   { id: 'apps', label: 'Apps', icon: 'app-window' },
   { id: 'release', label: 'Release', icon: 'tag' },
 ];
@@ -322,7 +350,6 @@ function currentRoute(): Route {
   const [section, slug] = location.hash.replace(/^#\/?/, '').split('#')[0]!.split('/');
   if (!section || section === 'home') return HOME;
   // The templates gave way to the blocks: an old link lands on them.
-  if (section === 'templates') return BLOCKS;
   return (
     ROUTES.find((route) => route.section === section && route.slug === slug) ??
     ROUTES.find((route) => route.section === section) ??

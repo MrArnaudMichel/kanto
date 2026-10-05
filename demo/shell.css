@@ -1361,3 +1361,92 @@ kt-app-shell[collapsed] .demo-shell-nav span {
   margin: 0;
   color: var(--text-muted);
 }
+
+/* === Templates: the gallery, and a template's page === */
+
+.templates-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.template-card {
+  display: grid;
+  overflow: hidden;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+.template-card-shot img,
+.template-screens img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+.template-card-body {
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+}
+.template-card-body h2 {
+  margin: 0;
+  font: var(--font-title-h6);
+}
+.template-card-body h2 a {
+  color: var(--text-body);
+  text-decoration: none;
+}
+.template-card-body p {
+  margin: 0;
+  color: var(--text-muted);
+}
+.template-stacks {
+  font: var(--font-normal-small);
+}
+.template-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 6px;
+}
+.template-demo {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.template-screens {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+@media (max-width: 760px) {
+  .template-screens {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.template-screens figure {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+.template-screens img {
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+.template-screens figcaption {
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+}
+.template-start kt-tabs {
+  display: block;
+  margin-bottom: 12px;
+}
+.template-components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 0;
+  list-style: none;
+}
