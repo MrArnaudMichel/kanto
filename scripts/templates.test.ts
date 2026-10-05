@@ -30,8 +30,9 @@ const SHARED = [
 const projects = dirs.filter((dir) => existsSync(join(root, 'templates', dir, 'package.json')));
 
 describe('each template', () => {
-  // Turned on by Task 5, once the three stacks are projects.
-  it.todo('is a project for every stack of the SaaS template');
+  it('is a project for every stack of the SaaS template', () => {
+    expect(projects).toEqual(expect.arrayContaining(['saas-react', 'saas-vue', 'saas-vanilla']));
+  });
 
   // A loop, not it.each: until Task 3 there is no project, and that is fine.
   for (const dir of projects)
