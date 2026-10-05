@@ -151,6 +151,89 @@ export const SMOKES = {
     await until(() => location.hash === '#contact');
   },
 
+  async dashboard(page, base) {
+    const until = (check, arg) => page.waitForFunction(check, arg, { timeout: TIMEOUT });
+
+    // Every screen, each by its marker.
+    const screens = [
+      ['/', 'home'],
+      ['/inbox', 'inbox'],
+      ['/customers', 'customers'],
+      ['/files', 'files'],
+      ['/activity', 'activity'],
+      ['/integrations', 'integrations'],
+      ['/settings/general', 'general'],
+      ['/settings/members/people', 'people'],
+      ['/settings/members/roles', 'roles'],
+      ['/settings/notifications', 'notifications'],
+      ['/settings/security', 'security'],
+    ];
+    for (const [path, name] of screens) {
+      await page.goto(`${base}#${path}`);
+      await until((marker) => document.querySelector(`.screen-${marker}`) !== null, name);
+    }
+
+    // The overview: four figures, the latest orders.
+    await page.goto(`${base}#/`);
+    await until(() => document.querySelectorAll('.screen-home kt-stat').length === 4);
+    await until(() => (document.querySelector('.screen-home kt-table')?.data ?? []).length === 5);
+
+    // A deep route opens its branch, and marks its own link.
+    await page.goto(`${base}#/settings/members/roles`);
+    await until(() => {
+      const nav = document.querySelector('kt-sub-menu-navigation');
+      const current = nav?.shadowRoot?.querySelector('[aria-current="page"]');
+      return current?.textContent?.trim() === 'Roles';
+    });
+
+    // Cmd+K from anywhere, a command, and the palette closes on the screen it chose.
+    await page.keyboard.press('Control+k');
+    await until(() => document.querySelector('kt-command-palette')?.open === true);
+    await page.keyboard.type('Customers');
+    await page.keyboard.press('Enter');
+    await until(
+      () => location.hash === '#/customers' && document.querySelector('.screen-customers') !== null,
+    );
+    await until(() => document.querySelector('kt-command-palette')?.open === false);
+
+    // Deleting in bulk asks first; cancelling keeps every row.
+    await until(
+      () => (document.querySelector('.screen-customers kt-table')?.data ?? []).length === 9,
+    );
+    const total = () => document.querySelector('.screen-customers .customer-count')?.textContent;
+    const before = await page.evaluate(total);
+    await page.locator('.screen-customers kt-table tbody tr').first().locator('input').check();
+    await page.locator('.bulk-bar').getByRole('button', { name: 'Delete' }).click();
+    await until(() => document.querySelector('kt-confirm-dialog')?.open === true);
+    await page.keyboard.press('Escape');
+    await until(
+      (count) =>
+        document.querySelector('kt-confirm-dialog')?.open === false &&
+        document.querySelector('.screen-customers .customer-count')?.textContent === count,
+      before,
+    );
+
+    // A page that is not there.
+    await page.goto(`${base}#/no-such-screen`);
+    await until(() => document.querySelector('kt-error-page') !== null);
+
+    // A phone: no sideways scroll, and the sidebar is a drawer a link closes.
+    await page.setViewportSize({ width: 390, height: 800 });
+    for (const path of ['/', '/customers', '/inbox', '/settings/general']) {
+      await page.goto(`${base}#${path}`);
+      await until(() => document.querySelector('.screen') !== null);
+      await until(() => document.documentElement.scrollWidth <= window.innerWidth);
+    }
+    await page.locator('.menu-button').click();
+    await until(() => document.querySelector('.app')?.classList.contains('nav-open') === true);
+    await page.locator('kt-sub-menu-navigation a', { hasText: 'Files' }).click();
+    await until(
+      () =>
+        location.hash === '#/files' &&
+        document.querySelector('.app')?.classList.contains('nav-open') === false,
+    );
+  },
+
   async chat(page, base) {
     const until = (check, arg) => page.waitForFunction(check, arg, { timeout: TIMEOUT });
     const ask = async (question) => {

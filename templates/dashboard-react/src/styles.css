@@ -1,0 +1,873 @@
+/* The console's own layout. Kanto's styles.css already sets the page's colours and type. */
+
+/* === THE SHELL ========================================================== */
+
+.app {
+  display: grid;
+  grid-template-columns: 268px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--surface-page);
+}
+
+.app.collapsed {
+  grid-template-columns: 68px minmax(0, 1fr);
+}
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+  padding: 16px 12px;
+  overflow: hidden auto;
+  background: var(--color-dark-8);
+  border-right: var(--border-width) solid var(--border-subtle);
+  scrollbar-width: thin;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  text-decoration: none;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  color: var(--color-white);
+  background: var(--color-primary-base);
+  border-radius: 10px;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.brand-name {
+  color: var(--text-body);
+  font: var(--font-medium-regular);
+}
+
+.brand-sub {
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.app-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  text-align: left;
+  background: var(--surface-field);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.app-search:hover {
+  color: var(--text-body);
+  border-color: var(--surface-hover);
+}
+
+.app-search span {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-nav {
+  flex: 1;
+}
+
+.app-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+
+.storage {
+  padding: 10px 12px;
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+}
+
+.node-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.node-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--color-success-base);
+  border-radius: var(--radius-full);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.account:hover {
+  background: var(--surface-card);
+}
+
+.account-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.account-name {
+  overflow: hidden;
+  color: var(--text-body);
+  font: var(--font-normal-regular);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.account-mail {
+  overflow: hidden;
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Collapsed: icons only, labels gone rather than clipped. The nav element
+   handles its own rows; this is everything around them. */
+.app.collapsed .brand-copy,
+.app.collapsed .app-search span,
+.app.collapsed .app-search kt-kbd,
+.app.collapsed .account-copy,
+.app.collapsed .node-label {
+  display: none;
+}
+
+.app.collapsed .app-search,
+.app.collapsed .account,
+.app.collapsed .brand,
+.app.collapsed .node-status {
+  justify-content: center;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: var(--surface-page);
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+/* The page title lives in the page, not here: a heading repeated in two places
+   is a heading nobody reads. The bar carries what is true everywhere. */
+.topbar-search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  max-width: 520px;
+  padding: 8px 12px;
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+  text-align: left;
+  background: var(--surface-field);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.topbar-search:hover {
+  color: var(--text-body);
+  border-color: var(--surface-hover);
+}
+
+.topbar-search span {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-topbar-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.bell {
+  position: relative;
+  display: inline-flex;
+}
+
+.bell-count {
+  position: absolute;
+  top: -3px;
+  right: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  color: var(--color-white);
+  font: var(--font-normal-small);
+  font-size: 10px;
+  line-height: 1;
+  background: var(--color-danger-base);
+  border: 2px solid var(--surface-page);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  overflow: hidden;
+}
+
+/* Flex items shrink by default, and a column that overflows the viewport
+   squeezes them. The stat row lost half its height that way — silently,
+   because it clips its own overflow. */
+.app-content > * {
+  flex: none;
+}
+
+.screen-inbox,
+.screen-inbox > .mail {
+  flex: 1;
+  min-height: 520px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* === TILES AND PANELS ==================================================== */
+
+.tile-row,
+.panel-row,
+.integration-grid {
+  display: grid;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* Wide enough that a currency value and its delta stay on one line: one tile
+   wrapping makes the whole row taller, and the extra height reads as a gap
+   rather than as a wrap. */
+.tile-row {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.panel-row {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.integration-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.tile::part(base),
+.panel-row kt-card::part(base),
+.integration-grid kt-card::part(base) {
+  height: 100%;
+}
+
+/* A tile is icon-then-figure, not two stacked blocks: the card's own rhythm is
+   built for prose and leaves a hole here. */
+.tile::part(base) {
+  gap: 14px;
+}
+
+.tile::part(body) {
+  gap: 0;
+}
+
+/* The card already pads the tile. kt-stat's own padding, meant for a stat
+   standing alone, would add a second inset and push the figure right of the
+   icon above it. */
+.tile kt-stat::part(base) {
+  padding: 0;
+}
+
+/* Four across, a currency value and its delta on one line. kt-stat wraps the
+   delta under a long value rather than pushing it off, which is right — but a
+   single wrapped tile makes all four taller, and the extra height reads as a
+   mistake. One step down the scale is enough to keep the row on one line. */
+.tile kt-stat::part(value) {
+  font: var(--font-title-h2);
+}
+
+/* A soft-tinted chip the eye can find a tile by. It carries no meaning on its
+   own — the delta beside the value is what says whether the news is good. */
+.tile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.tile-icon.blue {
+  color: var(--chart-series-1);
+  background: color-mix(in srgb, var(--chart-series-1) 16%, transparent);
+}
+
+.tile-icon.violet {
+  color: var(--color-primary-base);
+  background: var(--color-primary-soft);
+}
+
+.tile-icon.green {
+  color: var(--color-success-base);
+  background: var(--color-success-soft);
+}
+
+.tile-icon.amber {
+  color: var(--color-warning-base);
+  background: var(--color-warning-soft);
+}
+
+.mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mini-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.mini-row + .mini-row {
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+
+.mini-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: var(--text-muted);
+  background: var(--surface-raised);
+  border-radius: 8px;
+}
+
+.mini-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.mini-title {
+  color: var(--text-body);
+  font: var(--font-normal-regular);
+}
+
+.cell-person,
+.cell-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.event-actor {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.cookie-bar {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 40;
+  max-width: 420px;
+}
+
+/* === A SCREEN =========================================================== */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.screen > * {
+  flex: none;
+}
+
+.overline {
+  color: var(--color-text-500);
+  font: var(--font-title-overline);
+  letter-spacing: var(--letter-spacing-overline);
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.small {
+  font: var(--font-normal-small);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grow {
+  flex: 1;
+}
+
+/* A toolbar is a band of controls, not a panel of content: the card's own
+   padding is built for prose and leaves the row swimming. */
+.toolbar-card::part(base) {
+  padding: 12px 14px;
+}
+
+.revenue-figure {
+  font: var(--font-title-h1);
+  line-height: 1.1;
+}
+
+/* The bulk action bar only exists while something is selected. */
+.bulk-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  color: var(--text-body);
+  background: var(--color-primary-soft);
+  border: var(--border-width) solid var(--color-primary-base);
+  border-radius: var(--border-radius);
+}
+
+.table-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 10px;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.card-head {
+  width: 100%;
+}
+
+.integration-name {
+  margin: 0 0 2px;
+}
+
+/* === MAILBOX ============================================================= */
+
+.mail {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 340px minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-card);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+
+.mail-list {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: var(--border-width) solid var(--border-subtle);
+}
+
+.mail-list-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.mail-scroll {
+  flex: 1;
+  min-height: 0;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.mail-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+  cursor: pointer;
+}
+
+.mail-row:hover {
+  background: var(--color-dark-14);
+}
+
+.mail-row.active {
+  background: var(--color-primary-soft);
+}
+
+.mail-row-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mail-row-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mail-from {
+  color: var(--text-muted);
+  font: var(--font-normal-regular);
+}
+
+.mail-from.unread,
+.mail-subject.unread {
+  color: var(--text-body);
+  font-weight: 600;
+}
+
+.mail-time {
+  flex: none;
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.mail-subject,
+.mail-preview {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mail-subject {
+  color: var(--text-muted);
+}
+
+.mail-preview {
+  color: var(--color-text-500);
+  font: var(--font-normal-small);
+}
+
+.mail-reading {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.mail-reading-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.mail-body {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+  color: var(--text-muted);
+  line-height: 1.7;
+  scrollbar-width: thin;
+}
+
+.mail-body p {
+  margin: 0 0 14px;
+}
+
+.mail-reply {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 18px;
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+
+/* === SETTINGS ============================================================ */
+
+.settings-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.settings-narrow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+/* === SMALLER SCREENS ===================================================== */
+
+.menu-button {
+  display: none;
+}
+
+.scrim {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .settings-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mail-reading {
+    border-top: var(--border-width) solid var(--border-subtle);
+  }
+}
+
+/* A phone: the sidebar is a drawer, opened from the top bar. */
+@media (max-width: 767px) {
+  .app,
+  .app.collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    width: min(300px, 85vw);
+    transform: translateX(-100%);
+    transition: transform var(--transition-base, 0.2s) ease;
+  }
+
+  .app.nav-open .app-sidebar {
+    transform: none;
+  }
+
+  .app.nav-open .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    display: block;
+    background: rgb(0 0 0 / 40%);
+  }
+
+  .menu-button {
+    display: inline-flex;
+  }
+
+  .collapse-button,
+  .topbar-search span,
+  .topbar-search kt-kbd {
+    display: none;
+  }
+
+  .topbar-search {
+    flex: none;
+  }
+
+  .toolbar > kt-input,
+  .toolbar > kt-select,
+  .toolbar > kt-multi-select {
+    width: 100%;
+  }
+
+  .toolbar > .grow {
+    display: none;
+  }
+
+  .app-topbar,
+  .app-content {
+    padding-inline: 16px;
+  }
+
+  .cookie-bar {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar {
+    transition: none;
+  }
+}
+
+/* === SMALL PIECES ======================================================= */
+
+[hidden] {
+  display: none !important;
+}
+
+.app.collapsed .storage {
+  display: none;
+}
+
+.row.end {
+  justify-content: flex-end;
+}
+
+.row.between {
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.stack.tight {
+  gap: 2px;
+  min-width: 0;
+}
+
+.mail-reading-head .row {
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.mail-title {
+  gap: 2px;
+  min-width: 0;
+}
+
+.card-title {
+  margin: 0;
+  font: var(--font-title-h6);
+}
+
+/* Five filters do not fit a phone: the group scrolls rather than the page. */
+.toolbar kt-toggle-button-group,
+.toolbar kt-segmented-control {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.toolbar kt-input {
+  width: min(280px, 100%);
+}
+
+.toolbar kt-select {
+  width: min(170px, 100%);
+}
+
+.toolbar kt-multi-select {
+  width: min(260px, 100%);
+}

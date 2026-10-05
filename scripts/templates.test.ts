@@ -5,6 +5,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { KtNavItem, KtNavSection } from '../src/index.js';
 import { kantoRange } from './bump-templates.js';
 
 const root = process.cwd();
@@ -41,6 +42,18 @@ const SHARED: Record<string, readonly string[]> = {
     'src/content.ts',
     'src/conversations.ts',
     'src/model.ts',
+    'src/brand.ts',
+    'src/icons.ts',
+    'src/styles.css',
+  ],
+  dashboard: [
+    'src/data/generate.ts',
+    'src/data/fixtures.ts',
+    'src/data/api.ts',
+    'src/nav.ts',
+    'src/views.ts',
+    'src/cells.ts',
+    'src/format.ts',
     'src/brand.ts',
     'src/icons.ts',
     'src/styles.css',
@@ -287,5 +300,141 @@ describe('the chat', () => {
     expect(tokens.length).toBeGreaterThan(5);
     expect(tokens.join('')).toBe(answerFor('Which regions are growing?'));
     vi.useRealTimers();
+  });
+});
+
+describe('the dashboard', () => {
+  it('has a command and a sidebar link for every route, and a route for every link', async () => {
+    const { COMMANDS, NAV, ROUTES } = await import('../templates/dashboard-vanilla/src/nav');
+    const paths = ROUTES.map((route) => route.path);
+    expect(paths).toHaveLength(11);
+    expect(new Set(paths).size).toBe(11);
+    expect(COMMANDS.map((command) => command.id).sort()).toEqual([...paths].sort());
+    const hrefs: string[] = [];
+    const walk = (items: readonly KtNavItem[]) => {
+      for (const item of items) {
+        if (item.href) hrefs.push(item.href.replace(/^#/, ''));
+        if (item.children) walk(item.children);
+      }
+    };
+    for (const section of NAV) walk(section.items);
+    expect(hrefs.sort()).toEqual([...paths].sort());
+  });
+
+  it('reaches the members screens three levels down, and names every route', async () => {
+    const { NAV, ROUTES, navWithUnread, routeFor, titleFor } =
+      await import('../templates/dashboard-vanilla/src/nav');
+    const admin = NAV.find((section) => section.title === 'Administration')!;
+    const settings = admin.items.find((item) => item.label === 'Settings')!;
+    const members = settings.children!.find((item) => item.label === 'Members')!;
+    expect(members.children!.map((item) => item.href)).toEqual([
+      '#/settings/members/people',
+      '#/settings/members/roles',
+    ]);
+    expect(routeFor('/settings/members/roles')?.screen).toBe('roles');
+    expect(routeFor('/nowhere')).toBeUndefined();
+    for (const route of ROUTES) expect(titleFor(route.path)).not.toBe('Not found');
+
+    // The unread count sits beside Inbox, and goes when there is none.
+    const badge = (sections: readonly KtNavSection[]) =>
+      sections[0]!.items.find((item) => item.href === '#/inbox')!.badge;
+    expect(badge(navWithUnread(3))).toBe('3');
+    expect(badge(navWithUnread(0))).toBeUndefined();
+  });
+
+  it('serves the same customers every time, and forgets the deleted ones', async () => {
+    vi.useFakeTimers();
+    const { deleteCustomers, listCustomers } =
+      await import('../templates/dashboard-vanilla/src/data/api');
+    const first = listCustomers();
+    const second = listCustomers();
+    await vi.runAllTimersAsync();
+    const all = await first;
+    expect(all.length).toBeGreaterThan(50);
+    expect(all).toEqual(await second);
+    const doomed = [all[0]!.id, all[1]!.id];
+    const gone = deleteCustomers(doomed);
+    await vi.runAllTimersAsync();
+    await gone;
+    const after = listCustomers();
+    await vi.runAllTimersAsync();
+    const left = await after;
+    expect(left.map((row) => row.id)).not.toContain(doomed[0]);
+    expect(left).toHaveLength(all.length - 2);
+    vi.useRealTimers();
+  });
+
+  it('filters, then sorts every customer, then cuts the page', async () => {
+    const { buildEntities } = await import('../templates/dashboard-vanilla/src/data/generate');
+    const { customerPage, NO_FILTERS } = await import('../templates/dashboard-vanilla/src/views');
+    const rows = buildEntities(40, 5150);
+    const base = { ...NO_FILTERS, sortKey: null, sortDirection: null };
+
+    const first = customerPage(rows, base);
+    expect(first.rows).toHaveLength(9);
+    expect(first.total).toBe(40);
+    expect(first.totalPages).toBe(5);
+
+    // Sorted across all forty, not within the nine on screen.
+    const richest = customerPage(rows, { ...base, sortKey: 'amount', sortDirection: 'desc' });
+    expect(richest.rows[0]!.amount).toBe(Math.max(...rows.map((row) => row.amount)));
+
+    const pro = customerPage(rows, { ...base, plan: 'Pro', regions: ['Midlands'] });
+    expect(pro.rows.length).toBeGreaterThan(0);
+    expect(pro.rows.every((row) => row.plan === 'Pro' && row.region === 'Midlands')).toBe(true);
+
+    const wanted = rows[3]!;
+    const found = customerPage(rows, { ...base, query: wanted.ref.toLowerCase() });
+    expect(found.rows.map((row) => row.id)).toContain(wanted.id);
+
+    // A page past the end, once a filter shrinks the list, is the last page.
+    const clamped = customerPage(rows, { ...base, page: 9, plan: 'Pro' });
+    expect(clamped.page).toBe(clamped.totalPages);
+    expect(clamped.rows.length).toBeGreaterThan(0);
+  });
+
+  it('filters the mail and the files, and groups the activity by day', async () => {
+    const { MESSAGES, FILES, EVENTS } =
+      await import('../templates/dashboard-vanilla/src/data/fixtures');
+    const { visibleMail, visibleFiles, eventsByDay, unreadCount } =
+      await import('../templates/dashboard-vanilla/src/views');
+    expect(unreadCount(MESSAGES)).toBe(4);
+    expect(visibleMail(MESSAGES, 'starred', '').every((message) => message.starred)).toBe(true);
+    expect(visibleMail(MESSAGES, 'all', 'STORAGE').map((message) => message.subject)).toEqual([
+      'Storage quota',
+    ]);
+    const archived = MESSAGES.map((message, index) =>
+      index === 0 ? { ...message, folder: 'archive' as const } : message,
+    );
+    expect(visibleMail(archived, 'all', '')).toHaveLength(MESSAGES.length - 1);
+    expect(unreadCount(archived)).toBe(3);
+    expect(visibleFiles(FILES, 'starred', '').every((file) => file.starred)).toBe(true);
+    expect(visibleFiles(FILES, 'all', 'zzz')).toEqual([]);
+    const days = eventsByDay(EVENTS, 'access');
+    expect(days.map((day) => day.day)).toEqual(['Today', 'Yesterday']);
+    expect(days.flatMap((day) => day.events).every((event) => event.kind === 'access')).toBe(true);
+    expect(eventsByDay(EVENTS, 'all').flatMap((day) => day.events)).toHaveLength(EVENTS.length);
+  });
+
+  it('draws the table cells the same way in every stack, with text as text', async () => {
+    const { CUSTOMERS, MEMBERS } = await import('../templates/dashboard-vanilla/src/data/fixtures');
+    const { customerCell, memberCell } = await import('../templates/dashboard-vanilla/src/cells');
+    const customer = { ...CUSTOMERS[0]!, owner: '<img src=x onerror=alert(1)>' };
+    const person = customerCell(customer, { key: 'owner' }) as HTMLElement;
+    expect(person.querySelector('img')).toBeNull();
+    expect(person.textContent).toContain('<img');
+    const status = customerCell(customer, { key: 'status' }) as HTMLElement;
+    expect(status.tagName).toBe('KT-BADGE');
+    expect(status.textContent).toBe(customer.status);
+    expect(customerCell(customer, { key: 'region' })).toBeUndefined();
+
+    // The owner cannot be removed: someone has to stay.
+    const removed: string[] = [];
+    const cell = memberCell((member) => removed.push(member.name));
+    const owner = cell(MEMBERS[0]!, { key: 'actions' }) as HTMLElement;
+    expect(owner.hasAttribute('disabled')).toBe(true);
+    const other = cell(MEMBERS[1]!, { key: 'actions' }) as HTMLElement;
+    other.click();
+    expect(removed).toEqual([MEMBERS[1]!.name]);
   });
 });
