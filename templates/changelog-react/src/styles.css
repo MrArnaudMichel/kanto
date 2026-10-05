@@ -1,0 +1,155 @@
+/* The changelog's own layout. Kanto's styles.css sets its colours and type. */
+[hidden] {
+  display: none !important;
+}
+
+.brand {
+  color: var(--text-body);
+  font: 600 18px / 1 var(--font-family-display);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav a,
+.menu a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.nav a:hover,
+.menu a:hover {
+  color: var(--text-body);
+}
+
+.menu {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.page {
+  display: grid;
+  gap: 40px;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+}
+
+.releases-view {
+  display: grid;
+  gap: 28px;
+}
+
+.intro h1 {
+  margin: 0 0 8px;
+  font: var(--font-title-h1);
+}
+
+.intro p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Four filters do not fit every phone: the group scrolls, not the page. */
+.kind-filter {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.shown {
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+}
+
+.release-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.release-link {
+  color: var(--color-primary-text);
+  font: var(--font-normal-medium);
+  text-decoration: none;
+}
+
+.release-link:hover {
+  text-decoration: underline;
+}
+
+.release-summary {
+  margin: 4px 0 12px;
+  color: var(--text-muted);
+}
+
+.changes {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.change {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.release-page {
+  display: grid;
+  gap: 16px;
+}
+
+.back {
+  color: var(--color-primary-text);
+  text-decoration: none;
+}
+
+.release-page h1 {
+  margin: 0;
+  font: var(--font-title-h1);
+}
+
+.release-meta {
+  color: var(--text-muted);
+}
+
+.neighbours {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+
+@media (max-width: 767px) {
+  .nav {
+    display: none;
+  }
+
+  .page {
+    gap: 32px;
+    padding: 32px 16px 56px;
+  }
+
+  .change {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}

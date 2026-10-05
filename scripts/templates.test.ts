@@ -58,6 +58,16 @@ const SHARED: Record<string, readonly string[]> = {
     'src/icons.ts',
     'src/styles.css',
   ],
+  changelog: [
+    'src/content.ts',
+    'src/releases.ts',
+    'src/rss.ts',
+    'src/actions.ts',
+    'src/brand.ts',
+    'src/icons.ts',
+    'src/styles.css',
+    'public/rss.xml',
+  ],
   editor: [
     'src/content.ts',
     'src/documents.ts',
@@ -590,5 +600,72 @@ describe('the editor', () => {
     expect(loadDocs()).toEqual(SEED);
     spy.mockRestore();
     localStorage.clear();
+  });
+});
+
+describe('the changelog', () => {
+  it('filters the changes by kind, dropping a release with none of that kind', async () => {
+    const { RELEASES } = await import('../templates/changelog-vanilla/src/content');
+    const { filterReleases } = await import('../templates/changelog-vanilla/src/releases');
+    expect(filterReleases(RELEASES, 'all')).toEqual(RELEASES);
+    const fixed = filterReleases(RELEASES, 'fixed');
+    expect(fixed.length).toBeGreaterThan(0);
+    expect(fixed.length).toBeLessThan(RELEASES.length);
+    for (const release of fixed) {
+      expect(release.changes.length).toBeGreaterThan(0);
+      expect(release.changes.every((change) => change.kind === 'fixed')).toBe(true);
+    }
+  });
+
+  it('finds a release by version, with its newer and older neighbours', async () => {
+    const { RELEASES } = await import('../templates/changelog-vanilla/src/content');
+    const { neighbours, releaseByVersion, countByKind } =
+      await import('../templates/changelog-vanilla/src/releases');
+    // Newest first.
+    const dates = RELEASES.map((release) => release.date);
+    expect([...dates].sort().reverse()).toEqual(dates);
+    const middle = RELEASES[1]!;
+    expect(releaseByVersion(RELEASES, middle.version)).toBe(middle);
+    expect(releaseByVersion(RELEASES, '0.0.0')).toBeUndefined();
+    expect(neighbours(RELEASES, middle.version)).toEqual({
+      newer: RELEASES[0],
+      older: RELEASES[2],
+    });
+    expect(neighbours(RELEASES, RELEASES[0]!.version).newer).toBeUndefined();
+    expect(neighbours(RELEASES, RELEASES.at(-1)!.version).older).toBeUndefined();
+    const counts = countByKind(middle);
+    expect(counts.new + counts.improved + counts.fixed).toBe(middle.changes.length);
+  });
+
+  it('writes a feed that escapes what it says and dates it as RSS does', async () => {
+    const { buildRss, rfc822 } = await import('../templates/changelog-vanilla/src/rss');
+    expect(rfc822('2026-10-06')).toBe('Tue, 06 Oct 2026 00:00:00 GMT');
+    const feed = buildRss(
+      [
+        {
+          version: '1.0.0',
+          date: '2026-10-06',
+          title: 'Tom & Jerry <script>',
+          summary: 'Fish "and" chips',
+          changes: [{ kind: 'new', text: 'A < B' }],
+        },
+      ],
+      { name: 'Northwind', url: 'https://northwind.example/changelog/' },
+    );
+    expect(feed).toContain('<title>1.0.0 — Tom &amp; Jerry &lt;script&gt;</title>');
+    expect(feed).toContain('<link>https://northwind.example/changelog/#/releases/1.0.0</link>');
+    expect(feed).toContain('Fish &quot;and&quot; chips');
+    expect(feed).toContain('A &lt; B');
+    expect(feed).not.toContain('<script>');
+    const doc = new DOMParser().parseFromString(feed, 'application/xml');
+    expect(doc.querySelector('parsererror')).toBeNull();
+    expect(doc.querySelectorAll('item')).toHaveLength(1);
+  });
+
+  it('serves the feed the releases make', async () => {
+    const { RELEASES, SITE } = await import('../templates/changelog-vanilla/src/content');
+    const { buildRss } = await import('../templates/changelog-vanilla/src/rss');
+    const served = readFileSync(join(root, 'templates/changelog-vanilla/public/rss.xml'), 'utf8');
+    expect(served).toBe(buildRss(RELEASES, SITE));
   });
 });

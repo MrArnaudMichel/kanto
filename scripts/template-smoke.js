@@ -406,6 +406,84 @@ export const SMOKES = {
     await until(() => document.querySelector('kt-app-shell')?.hasAttribute('narrow') === true);
   },
 
+  async changelog(page, base) {
+    // A check that times out says which one it was.
+    const until = (check, arg) =>
+      page.waitForFunction(check, arg, { timeout: TIMEOUT }).catch((error) => {
+        throw new Error(`${error.message}\n  waiting for: ${String(check).replace(/\s+/g, ' ')}`);
+      });
+    const filter = (name) =>
+      page
+        .locator('kt-toggle-button-group.kind-filter')
+        .getByRole('button', { name, exact: true })
+        .click();
+    await page.goto(base);
+
+    // Every release, each change with its kind.
+    await until(() => document.querySelectorAll('kt-timeline-item').length === 5);
+    await until(() => document.querySelectorAll('.change kt-badge').length > 5);
+
+    // Only the fixes, then everything again.
+    await filter('Fixed');
+    await until(() => {
+      const badges = [...document.querySelectorAll('.change kt-badge')];
+      const releases = document.querySelectorAll('kt-timeline-item').length;
+      return (
+        badges.length > 0 &&
+        badges.every((badge) => badge.textContent.trim() === 'Fixed') &&
+        releases > 0 &&
+        releases < 5
+      );
+    });
+    await filter('Everything');
+    await until(() => document.querySelectorAll('kt-timeline-item').length === 5);
+
+    // A release's own page, its older neighbour, and back to them all.
+    await page.locator('a.release-link', { hasText: '2.3.0' }).click();
+    await until(
+      () =>
+        location.hash === '#/releases/2.3.0' &&
+        document.querySelector('.release-page h1')?.textContent === 'A faster dashboard',
+    );
+    await page.locator('a.older').click();
+    await until(() => location.hash === '#/releases/2.2.0');
+    await page.locator('a.newer').click();
+    await until(() => location.hash === '#/releases/2.3.0');
+    await page.locator('a.back').click();
+    await until(
+      () => location.hash === '#/' && document.querySelectorAll('kt-timeline-item').length === 5,
+    );
+
+    // A version that does not exist.
+    await page.goto(`${base}#/releases/9.9.9`);
+    await until(() => document.querySelector('kt-error-page') !== null);
+
+    // Subscribing says it worked.
+    await page.goto(`${base}#/`);
+    await page.locator('kt-newsletter kt-input input').fill('ada@northwind.com');
+    await page.locator('kt-newsletter kt-button').click();
+    await until(() => document.querySelector('kt-newsletter')?.subscribed === true);
+
+    // The feed is served beside the page, and is RSS.
+    const feed = await page.request.get(new URL('rss.xml', base).href);
+    const xml = await feed.text();
+    if (!feed.ok() || !xml.includes('<rss') || (xml.match(/<item>/g) ?? []).length !== 5) {
+      throw new Error(`rss.xml is not the feed: ${feed.status()}`);
+    }
+
+    // A phone: no sideways scroll, and the header's links in its menu.
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto(`${base}#/releases/2.2.0`);
+    await until(() => document.querySelector('.release-page') !== null);
+    await until(() => document.documentElement.scrollWidth <= window.innerWidth);
+    await page.locator('kt-header .menu-button').click();
+    await page.locator('kt-header [slot="menu"] a', { hasText: 'Releases' }).click();
+    await until(
+      () => location.hash === '#/' && document.querySelectorAll('kt-timeline-item').length === 5,
+    );
+    await until(() => document.documentElement.scrollWidth <= window.innerWidth);
+  },
+
   async chat(page, base) {
     const until = (check, arg) => page.waitForFunction(check, arg, { timeout: TIMEOUT });
     const ask = async (question) => {
