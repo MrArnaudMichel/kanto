@@ -29,6 +29,14 @@ const SHARED: Record<string, readonly string[]> = {
     'src/latest.ts',
   ],
   landing: ['src/content.ts', 'src/actions.ts', 'src/brand.ts', 'src/styles.css'],
+  portfolio: [
+    'src/content.ts',
+    'src/work.ts',
+    'src/actions.ts',
+    'src/brand.ts',
+    'src/icons.ts',
+    'src/styles.css',
+  ],
 };
 
 const projects = dirs.filter((dir) => existsSync(join(root, 'templates', dir, 'package.json')));
@@ -178,5 +186,43 @@ describe('the landing content', () => {
     await expect(ok).resolves.toBeUndefined();
     await expect(caught).resolves.toMatch(/on the list/);
     vi.useRealTimers();
+  });
+});
+
+describe('the portfolio', () => {
+  it('filters the work by tag, everything for All, nothing for a tag no project has', async () => {
+    const { projectsTagged } = await import('../templates/portfolio-vanilla/src/work');
+    const { PROJECTS } = await import('../templates/portfolio-vanilla/src/content');
+    expect(projectsTagged('All')).toEqual(PROJECTS);
+    const open = projectsTagged('Open source');
+    expect(open.length).toBeGreaterThan(0);
+    expect(open.every((project) => project.tags.includes('Open source'))).toBe(true);
+    expect(projectsTagged('Pottery')).toEqual([]);
+  });
+
+  it('finds a project by its slug', async () => {
+    const { projectBySlug } = await import('../templates/portfolio-vanilla/src/work');
+    expect(projectBySlug('atlas')!.name).toBe('Atlas');
+    expect(projectBySlug('nowhere')).toBeUndefined();
+  });
+
+  it('says what is missing or wrong in a message, field by field', async () => {
+    const { validateMessage } = await import('../templates/portfolio-vanilla/src/work');
+    expect(validateMessage({ name: '', email: '', message: '' })).toEqual({
+      name: 'Enter your name.',
+      email: 'Enter an email address, like name@example.com.',
+      message: 'Say a word about what you are building.',
+    });
+    expect(validateMessage({ name: 'Ada', email: 'ada@', message: 'A dashboard.' })).toEqual({
+      email: 'Enter an email address, like name@example.com.',
+    });
+    expect(validateMessage({ name: ' Ada ', email: 'ada@northwind.com', message: 'Hi.' })).toEqual(
+      {},
+    );
+  });
+
+  it('names no project Kanto', async () => {
+    const { PROJECTS } = await import('../templates/portfolio-vanilla/src/content');
+    expect(PROJECTS.some((project) => /kanto/i.test(project.name))).toBe(false);
   });
 });

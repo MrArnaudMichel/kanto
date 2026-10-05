@@ -69,7 +69,12 @@ export default ts.config(
     /* The smoke walks hand functions to Playwright, which runs them in the page. */
     files: ['scripts/template-smoke.js', 'scripts/screenshot-templates.js'],
     languageOptions: {
-      globals: { document: 'readonly', location: 'readonly', localStorage: 'readonly' },
+      globals: {
+        document: 'readonly',
+        location: 'readonly',
+        localStorage: 'readonly',
+        window: 'readonly',
+      },
     },
   },
   prettier,

@@ -80,4 +80,55 @@ export const SMOKES = {
     await page.locator('kt-header [slot="menu"] a', { hasText: 'Pricing' }).click();
     await until(() => location.hash === '#pricing');
   },
+
+  async portfolio(page, base) {
+    const until = (check) => page.waitForFunction(check, undefined, { timeout: TIMEOUT });
+    await page.goto(base);
+    await until(() => document.querySelector('.intro h1') !== null);
+    await until(() => document.querySelectorAll('kt-stat').length === 4);
+    await until(() => document.querySelectorAll('kt-card.work-card').length === 4);
+    await until(() => document.querySelectorAll('kt-timeline-item').length >= 4);
+    await until(() => (document.querySelector('kt-post-grid')?.posts ?? []).length === 3);
+
+    // Filtering: one tag, then back to everything.
+    await page
+      .locator('kt-toggle-button-group.work-filter kt-toggle-button[value="Open source"]')
+      .click();
+    await until(() => document.querySelectorAll('kt-card.work-card').length === 1);
+    await page.locator('kt-toggle-button-group.work-filter kt-toggle-button[value="All"]').click();
+    await until(() => document.querySelectorAll('kt-card.work-card').length === 4);
+
+    // A case study, then another: the panel follows.
+    await page.locator('kt-card.work-card').nth(0).click();
+    await until(() => document.querySelector('kt-side-panel')?.open === true);
+    const first = await page.evaluate(() => document.querySelector('kt-side-panel')?.heading);
+    await page.keyboard.press('Escape');
+    await until(() => document.querySelector('kt-side-panel')?.open === false);
+    await page.locator('kt-card.work-card').nth(1).click();
+    await page.waitForFunction(
+      (previous) =>
+        document.querySelector('kt-side-panel')?.open === true &&
+        document.querySelector('kt-side-panel')?.heading !== previous,
+      first,
+      { timeout: TIMEOUT },
+    );
+    await page.keyboard.press('Escape');
+
+    // The form says what is missing, then sends.
+    await page.locator('form.contact kt-button[type="submit"]').click();
+    await until(() => (document.querySelector('kt-input[name="name"]')?.error ?? '') !== '');
+    await page.locator('kt-input[name="name"] input').fill('Ada Park');
+    await page.locator('kt-input[name="email"] input').fill('ada@northwind.com');
+    await page.locator('kt-textarea[name="message"] textarea').fill('A dashboard for a fleet.');
+    await page.locator('form.contact kt-button[type="submit"]').click();
+    await until(() => document.querySelector('kt-alert.contact-sent') !== null);
+
+    // On a phone the header's links are in its menu.
+    await page.setViewportSize({ width: 390, height: 800 });
+    // Nothing wider than the phone: no sideways scroll.
+    await until(() => document.documentElement.scrollWidth <= window.innerWidth);
+    await page.locator('kt-header .menu-button').click();
+    await page.locator('kt-header [slot="menu"] a', { hasText: 'Contact' }).click();
+    await until(() => location.hash === '#contact');
+  },
 };
