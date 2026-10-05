@@ -20,6 +20,13 @@
 import * as React from 'react';
 import { createComponent, type EventName } from '@lit/react';
 import type { KtOption } from '../internal/listbox.js';
+import type {
+  KtBreadcrumbItem,
+  KtSegmentedOption,
+  KtSplitButtonItem,
+  KtTab,
+  KtTableRow,
+} from '../index.js';
 import type { KtCommand } from '../internal/command-search.js';
 import type { KtUserMenuItem } from '../components/navigation/kt-user-menu/kt-user-menu.js';
 import type { KtTreeItem } from '../components/data/kt-tree/kt-tree.js';
@@ -149,7 +156,7 @@ export const KtSplitButton = createComponent({
   elementClass: KtSplitButtonElement,
   react: React,
   events: {
-    onKtSelect: 'kt-select' as Kt<{ value: string | number }>,
+    onKtSelect: 'kt-select' as Kt<{ value: string | number; item: KtSplitButtonItem }>,
     onKtOpen: 'kt-open' as Kt<never>,
     onKtClose: 'kt-close' as Kt<never>,
   },
@@ -307,7 +314,7 @@ export const KtInputMenu = createComponent({
   elementClass: KtInputMenuElement,
   react: React,
   events: {
-    onKtChange: 'kt-change' as Kt<{ value: string | number | null }>,
+    onKtChange: 'kt-change' as Kt<{ value: string | number | null; option: KtOption | null }>,
     onKtFilter: 'kt-filter' as Kt<{ query: string }>,
   },
 });
@@ -337,7 +344,7 @@ export const KtBreadcrumb = createComponent({
   tagName: 'kt-breadcrumb',
   elementClass: KtBreadcrumbElement,
   react: React,
-  events: { onKtNavigate: 'kt-navigate' as Kt<{ index: number }> },
+  events: { onKtNavigate: 'kt-navigate' as Kt<{ item: KtBreadcrumbItem; index: number }> },
 });
 
 export const KtSubMenuNavigation = createComponent({
@@ -357,14 +364,14 @@ export const KtSegmentedControl = createComponent({
   tagName: 'kt-segmented-control',
   elementClass: KtSegmentedControlElement,
   react: React,
-  events: { onKtChange: 'kt-change' as Kt<{ value: string | number }> },
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | number; option: KtSegmentedOption }> },
 });
 
 export const KtTabs = createComponent({
   tagName: 'kt-tabs',
   elementClass: KtTabsElement,
   react: React,
-  events: { onKtChange: 'kt-change' as Kt<{ value: string | number }> },
+  events: { onKtChange: 'kt-change' as Kt<{ value: string | number; tab: KtTab }> },
 });
 
 export const KtFooter = createComponent({
@@ -452,7 +459,7 @@ export const KtDropdown = createComponent({
   elementClass: KtDropdownElement,
   react: React,
   events: {
-    onKtSelect: 'kt-select' as Kt<{ value: string | number }>,
+    onKtSelect: 'kt-select' as Kt<{ value: string | number; option: KtOption }>,
     onKtOpen: 'kt-open' as Kt<never>,
     onKtClose: 'kt-close' as Kt<never>,
   },
@@ -513,8 +520,8 @@ export const KtTable = createComponent({
       key: string | null;
       direction: 'asc' | 'desc' | null;
     }>,
-    onKtSelectionChange: 'kt-selection-change' as Kt<{ selected: unknown[] }>,
-    onKtRowClick: 'kt-row-click' as Kt<{ index: number }>,
+    onKtSelectionChange: 'kt-selection-change' as Kt<{ selected: unknown[]; rows: KtTableRow[] }>,
+    onKtRowClick: 'kt-row-click' as Kt<{ row: KtTableRow; index: number }>,
     onKtPageChange: 'kt-page-change' as Kt<{ page: number }>,
   },
 });

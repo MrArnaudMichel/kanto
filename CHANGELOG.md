@@ -5,6 +5,17 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.10.0] — 2026-10-05
+
+### Fixed
+
+- The React types gave eight events only part of their detail: `kt-table`'s
+  `kt-row-click` lacked `row`, and `kt-selection-change` `rows`; the
+  `option`, `item` or `tab` that `kt-dropdown`, `kt-input-menu`,
+  `kt-segmented-control`, `kt-split-button`, `kt-tabs` and `kt-breadcrumb`
+  send was missing too. A test now holds each event's type to the fields its
+  element documents.
+
 ## [1.9.0] — 2026-10-05
 
 ### Added

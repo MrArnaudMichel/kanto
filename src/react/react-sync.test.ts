@@ -88,6 +88,36 @@ function definedTags(): string[] {
   return [...tags].sort();
 }
 
+/** Each element's events, with the fields its `@fires` line says the detail carries. */
+function documentedDetails(): Record<string, Record<string, string[]>> {
+  const out: Record<string, Record<string, string[]>> = {};
+  const dir = join(root, 'src/components');
+  for (const file of readdirSync(dir, { recursive: true, encoding: 'utf8' })) {
+    if (!file.endsWith('.ts') || file.endsWith('.test.ts')) continue;
+    const source = readFileSync(join(dir, file), 'utf8');
+    const tag = /defineElement\('(kt-[a-z-]+)'/.exec(source)?.[1];
+    if (!tag) continue;
+    for (const [, event, fields] of source.matchAll(
+      /@fires (kt-[a-z-]+) - [^\n]*?`detail: \{ ([^}]*) \}`/g,
+    )) {
+      // `{ email, wait(promise) }` → email, wait; `{ id: string }` → id.
+      (out[tag] ??= {})[event!] = fields!
+        .split(',')
+        .map((field) => /^\s*(\w+)/.exec(field)![1]!)
+        .sort();
+    }
+  }
+  return out;
+}
+
+/** `{ row: KtTableRow; index: number }` → index, row. Null for a named type. */
+function typedFields(type: string): string[] | null {
+  if (!type.startsWith('{')) return null;
+  return entries(type.replace(/(\w+)\??:/g, "'$1':"))
+    .map(([name]) => name)
+    .sort();
+}
+
 describe('kanto-ds/react and kanto-ds/react/jsx', () => {
   it('both cover every element', () => {
     expect(Object.keys(wrapperEvents()).sort()).toEqual(definedTags());
@@ -96,5 +126,21 @@ describe('kanto-ds/react and kanto-ds/react/jsx', () => {
 
   it('declare the same events with the same detail types', () => {
     expect(jsxEvents()).toEqual(wrapperEvents());
+  });
+
+  it('type each detail with the fields the element says it sends', () => {
+    const typed = jsxEvents();
+    const wrong: string[] = [];
+    for (const [tag, events] of Object.entries(documentedDetails())) {
+      for (const [event, fields] of Object.entries(events)) {
+        const type = typed[tag]?.[event];
+        if (type === undefined) continue;
+        const declared = typedFields(type);
+        if (declared && declared.join() !== fields.join()) {
+          wrong.push(`${tag} ${event}: sends { ${fields.join(', ')} }, typed ${type}`);
+        }
+      }
+    }
+    expect(wrong).toEqual([]);
   });
 });

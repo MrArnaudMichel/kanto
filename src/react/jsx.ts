@@ -20,6 +20,11 @@
  */
 import type * as React from 'react';
 import type {
+  KtBreadcrumbItem,
+  KtSegmentedOption,
+  KtSplitButtonItem,
+  KtTab,
+  KtTableRow,
   KtPromptSubmitDetail,
   KtAuthMode,
   KtAuthSubmitDetail,
@@ -139,7 +144,11 @@ declare module 'react' {
       'kt-button': KtProps<KtButton>;
       'kt-split-button': KtProps<
         KtSplitButton,
-        { 'kt-select': { value: string | number }; 'kt-open': never; 'kt-close': never }
+        {
+          'kt-select': { value: string | number; item: KtSplitButtonItem };
+          'kt-open': never;
+          'kt-close': never;
+        }
       >;
       'kt-card': KtProps<KtCard, { 'kt-card-click': never }>;
       'kt-code': KtProps<KtCode, { 'kt-copy': { code: string } }>;
@@ -177,7 +186,10 @@ declare module 'react' {
       'kt-select': KtProps<KtSelect, { 'kt-change': { value: string | number | null } }>;
       'kt-input-menu': KtProps<
         KtInputMenu,
-        { 'kt-change': { value: string | number | null }; 'kt-filter': { query: string } }
+        {
+          'kt-change': { value: string | number | null; option: KtOption | null };
+          'kt-filter': { query: string };
+        }
       >;
       'kt-multi-select': KtProps<
         KtMultiSelect,
@@ -193,14 +205,17 @@ declare module 'react' {
           'kt-files-rejected': { files: File[]; reason: 'type' | 'size' };
         }
       >;
-      'kt-breadcrumb': KtProps<KtBreadcrumb, { 'kt-navigate': { index: number } }>;
+      'kt-breadcrumb': KtProps<
+        KtBreadcrumb,
+        { 'kt-navigate': { item: KtBreadcrumbItem; index: number } }
+      >;
       'kt-sub-menu-navigation': KtProps<KtSubMenuNavigation, { 'kt-navigate': unknown }>;
       'kt-page-header': KtProps<KtPageHeader>;
       'kt-segmented-control': KtProps<
         KtSegmentedControl,
-        { 'kt-change': { value: string | number } }
+        { 'kt-change': { value: string | number; option: KtSegmentedOption } }
       >;
-      'kt-tabs': KtProps<KtTabs, { 'kt-change': { value: string | number } }>;
+      'kt-tabs': KtProps<KtTabs, { 'kt-change': { value: string | number; tab: KtTab } }>;
       'kt-prompt-input': KtProps<
         KtPromptInput,
         { 'kt-input': { value: string }; 'kt-submit': KtPromptSubmitDetail }
@@ -275,7 +290,11 @@ declare module 'react' {
       'kt-collapsible': KtProps<KtCollapsible, { 'kt-toggle': { open: boolean } }>;
       'kt-dropdown': KtProps<
         KtDropdown,
-        { 'kt-select': { value: string | number }; 'kt-open': never; 'kt-close': never }
+        {
+          'kt-select': { value: string | number; option: KtOption };
+          'kt-open': never;
+          'kt-close': never;
+        }
       >;
       'kt-modal': KtProps<KtModal, { 'kt-close': never }>;
       'kt-command-palette': KtProps<
@@ -295,8 +314,8 @@ declare module 'react' {
         KtTable,
         {
           'kt-sort-change': { key: string | null; direction: 'asc' | 'desc' | null };
-          'kt-selection-change': { selected: unknown[] };
-          'kt-row-click': { index: number };
+          'kt-selection-change': { selected: unknown[]; rows: KtTableRow[] };
+          'kt-row-click': { row: KtTableRow; index: number };
           'kt-page-change': { page: number };
         }
       >;
