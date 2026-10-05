@@ -55,3 +55,49 @@ export function applyFormat(text: string, start: number, end: number, format: Fo
   const at = start + mark.length;
   return { text: before + mark + inner + mark + after, start: at, end: at + inner.length };
 }
+
+/**
+ * The part of `before` that `after` replaced: the least that changed. Applied
+ * as an edit of that range — not by setting the whole value — the browser
+ * keeps it on its undo stack, so Ctrl+Z takes it back.
+ */
+export function replacedRange(
+  before: string,
+  after: string,
+): { start: number; end: number; text: string } {
+  let start = 0;
+  while (start < before.length && start < after.length && before[start] === after[start])
+    start += 1;
+  let tail = 0;
+  while (
+    tail < before.length - start &&
+    tail < after.length - start &&
+    before[before.length - 1 - tail] === after[after.length - 1 - tail]
+  )
+    tail += 1;
+  return { start, end: before.length - tail, text: after.slice(start, after.length - tail) };
+}
+
+/**
+ * Formats the selection of `field` as the browser's own edit, so Ctrl+Z takes
+ * it back, and selects what the format left to type. The field's `input`
+ * event fires as for typing: whatever listens to it sees the new text.
+ */
+export function formatField(field: HTMLTextAreaElement, format: Format): Edit {
+  const before = field.value;
+  const edit = applyFormat(before, field.selectionStart, field.selectionEnd, format);
+  const range = replacedRange(before, edit.text);
+  field.focus();
+  field.setSelectionRange(range.start, range.end);
+  // execCommand is the one edit browsers put on the undo stack; where it is
+  // missing or refused, the text still changes — without the undo.
+  const done =
+    typeof document.execCommand === 'function' &&
+    document.execCommand('insertText', false, range.text);
+  if (!done || field.value !== edit.text) {
+    field.setRangeText(range.text, range.start, range.end);
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  field.setSelectionRange(edit.start, edit.end);
+  return edit;
+}

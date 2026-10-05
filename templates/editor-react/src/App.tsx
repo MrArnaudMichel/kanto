@@ -11,9 +11,9 @@ import {
   wordCount,
   type Doc,
 } from './documents';
-import { applyFormat, type Format } from './formatting';
+import { formatField, type Format } from './formatting';
 import { Preview } from './Preview';
-import { loadDocs, saveDocs } from './store';
+import { changedIds, loadDocs, mergeDocs, saveChanges, watchDocs } from './store';
 
 const TOOLS: { format: Format; icon: string; label: string; keys?: string }[] = [
   { format: 'heading', icon: 'heading-2', label: 'Heading' },
@@ -79,6 +79,46 @@ export function App() {
 
   const doc = docs.find((candidate) => candidate.id === id);
 
+  // What this tab changed since it last saved — only those are written — and
+  // the list as it is now, for saving from outside a render.
+  const unsaved = useRef(new Set<string>());
+  const latest = useRef(docs);
+
+  function save(): void {
+    clearTimeout(timer.current);
+    if (unsaved.current.size === 0) return;
+    if (saveChanges(latest.current, unsaved.current)) {
+      unsaved.current.clear();
+      setSaveState('Saved');
+    } else setSaveState('Not saved: this browser is not keeping data');
+  }
+  const saveNow = useRef(save);
+  saveNow.current = save;
+
+  // Leaving — a reload, a closed tab, another app — saves at once, not in a moment.
+  useEffect(() => {
+    const onHide = () => saveNow.current();
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') saveNow.current();
+    };
+    window.addEventListener('pagehide', onHide);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      window.removeEventListener('pagehide', onHide);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, []);
+
+  // Another tab saved: take its documents, keeping what this one has not saved yet.
+  useEffect(
+    () =>
+      watchDocs((stored) => {
+        latest.current = mergeDocs(stored, latest.current, unsaved.current);
+        setDocs(latest.current);
+      }),
+    [],
+  );
+
   // No document in the address: open the first.
   useEffect(() => {
     if (id === null && docs[0]) location.replace(`#/doc/${docs[0].id}`);
@@ -106,28 +146,27 @@ export function App() {
 
   /** The new list, kept a moment after the last change. */
   function change(next: Doc[]): void {
+    for (const changed of changedIds(latest.current, next)) unsaved.current.add(changed);
+    latest.current = next;
     setDocs(next);
     clearTimeout(timer.current);
     setSaveState('Saving…');
-    timer.current = setTimeout(() => {
-      setSaveState(saveDocs(next) ? 'Saved' : 'Not saved: this browser is not keeping data');
-    }, 500);
+    timer.current = setTimeout(save, 500);
   }
 
   function write(body: string): void {
-    if (id) change(updateBody(docs, id, body, Date.now()));
+    if (id) change(updateBody(latest.current, id, body, Date.now()));
   }
 
   function format(kind: Format): void {
-    const field = area.current;
-    if (!field) return;
-    const edit = applyFormat(field.value, field.selectionStart, field.selectionEnd, kind);
+    if (!area.current) return;
+    // The browser's own edit: its input event writes the text, and Ctrl+Z takes it back.
+    const edit = formatField(area.current, kind);
     selection.current = { start: edit.start, end: edit.end };
-    write(edit.text);
   }
 
   function startDoc(): void {
-    const made = createDoc(docs, doc?.folder ?? DEFAULT_FOLDER, Date.now());
+    const made = createDoc(latest.current, doc?.folder ?? DEFAULT_FOLDER, Date.now());
     change(made.list);
     focusNext.current = true;
     location.hash = `#/doc/${made.id}`;
@@ -166,7 +205,7 @@ export function App() {
                   confirmLabel: 'Delete',
                   variant: 'danger',
                   then: () => {
-                    change(deleteDoc(docs, doc.id));
+                    change(deleteDoc(latest.current, doc.id));
                     location.hash = '#/';
                   },
                 })
@@ -287,7 +326,7 @@ export function App() {
                       confirmLabel: 'Restore',
                       variant: 'primary',
                       then: () => {
-                        if (id) change(restoreVersion(docs, id, version.at, Date.now()));
+                        if (id) change(restoreVersion(latest.current, id, version.at, Date.now()));
                       },
                     })
                   }

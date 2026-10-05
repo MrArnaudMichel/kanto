@@ -363,6 +363,17 @@ export const SMOKES = {
     await page.locator('.toolbar').getByRole('button', { name: 'Bold' }).click();
     await until(() => (document.querySelector('.page')?.value ?? '').includes('**walk**'));
     await until(() => document.querySelector('.preview strong')?.textContent === 'walk');
+    // Ctrl+Z takes the format back: the toolbar edits through the browser's undo.
+    await page.keyboard.press('Control+z');
+    await until(() => {
+      const value = document.querySelector('.page')?.value ?? '';
+      return !value.includes('**walk**') && value.includes('Typed in the walk.');
+    });
+
+    // Leaving at once, before the pause that saves, keeps what was typed.
+    await page.locator('textarea.page').fill('# Kept\n\nTyped in the walk, then gone.');
+    await page.reload();
+    await until(() => (document.querySelector('.page')?.value ?? '').includes('then gone.'));
 
     // History keeps what typing replaced; restoring it asks first.
     await page.getByRole('button', { name: 'History' }).click();
@@ -393,6 +404,41 @@ export const SMOKES = {
         !JSON.stringify(document.querySelector('kt-tree')?.items ?? []).includes('Untitled') &&
         document.querySelector('.doc-title')?.textContent !== 'Untitled',
     );
+
+    // Two tabs: each saves its own document without undoing the other's.
+    const context = await page.context().browser().newContext();
+    const [one, two] = [await context.newPage(), await context.newPage()];
+    const saved = () => /^Saved/.test(document.querySelector('.save-state')?.textContent ?? '');
+    const ready = () => (document.querySelector('.page')?.value ?? '') !== '';
+    await one.goto(`${base}#/doc/meeting-notes`);
+    await two.goto(`${base}#/doc/launch-plan`);
+    await one.waitForFunction(ready, undefined, { timeout: TIMEOUT });
+    await two.waitForFunction(ready, undefined, { timeout: TIMEOUT });
+    await one.locator('textarea.page').fill('# From tab one');
+    await one.waitForFunction(saved, undefined, { timeout: TIMEOUT });
+    await two.locator('textarea.page').fill('# From tab two');
+    await two.waitForFunction(saved, undefined, { timeout: TIMEOUT });
+    await one.reload();
+    await one
+      .waitForFunction(
+        () => document.querySelector('.page')?.value === '# From tab one',
+        undefined,
+        {
+          timeout: TIMEOUT,
+        },
+      )
+      .catch(() => {
+        throw new Error("A second tab's save undid the first tab's document");
+      });
+    await one.goto(`${base}#/doc/launch-plan`);
+    await one.waitForFunction(
+      () => document.querySelector('.page')?.value === '# From tab two',
+      undefined,
+      {
+        timeout: TIMEOUT,
+      },
+    );
+    await context.close();
 
     // A document that is not there.
     await page.goto(`${base}#/doc/no-such-document`);

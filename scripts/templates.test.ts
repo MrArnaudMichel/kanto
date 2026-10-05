@@ -549,13 +549,14 @@ describe('the editor', () => {
     const box = document.createElement('div');
     box.append(
       ...renderMarkdown(
-        '<script>alert(1)</script> <img src=x onerror=alert(1)>\n\n[click](javascript:alert(1)) [mail](mailto:a@b.c) [here](#top)',
+        '<script>alert(1)</script> <img src=x onerror=alert(1)>\n\n[click](javascript:alert(1)) [mail](mailto:a@b.c) [here](#top) [doc](#/doc/launch-plan) [d](data:text/html,x) [v](VBScript:x) [j](JavaScript:x)',
       ),
     );
     expect(box.querySelector('script, img')).toBeNull();
     expect(box.textContent).toContain('<script>alert(1)</script>');
     const links = [...box.querySelectorAll('a')];
-    expect(links.map((a) => a.getAttribute('href'))).toEqual(['mailto:a@b.c', '#top']);
+    // An anchor would leave the document for the router's first one: only links to documents stay.
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['mailto:a@b.c', '#/doc/launch-plan']);
     expect(box.textContent).toContain('click');
   });
 
@@ -584,14 +585,17 @@ describe('the editor', () => {
     expect(empty.text.slice(empty.start, empty.end)).toBe('bold text');
   });
 
-  it('seeds the documents, and keeps working when storage refuses', async () => {
-    const { loadDocs, saveDocs } = await import('../templates/editor-vanilla/src/store');
+  it('seeds the documents once, keeps an empty list empty, and survives storage that refuses', async () => {
+    const { loadDocs, saveChanges } = await import('../templates/editor-vanilla/src/store');
     const { SEED } = await import('../templates/editor-vanilla/src/content');
     localStorage.clear();
     expect(loadDocs()).toEqual(SEED);
     const changed = SEED.map((doc, index) => (index === 0 ? { ...doc, body: 'changed' } : doc));
-    saveDocs(changed);
+    expect(saveChanges(changed, new Set([SEED[0]!.id]))).toBe(true);
     expect(loadDocs()[0]!.body).toBe('changed');
+    // Everything deleted stays deleted: the examples come only to a first visit.
+    expect(saveChanges([], new Set(SEED.map((doc) => doc.id)))).toBe(true);
+    expect(loadDocs()).toEqual([]);
     localStorage.setItem('kanto-editor', '{not json');
     expect(loadDocs()).toEqual(SEED);
     const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
@@ -600,6 +604,67 @@ describe('the editor', () => {
     expect(loadDocs()).toEqual(SEED);
     spy.mockRestore();
     localStorage.clear();
+  });
+
+  it('keeps what looks like a document from saved data, and mends the rest', async () => {
+    const { loadDocs } = await import('../templates/editor-vanilla/src/store');
+    const { SEED } = await import('../templates/editor-vanilla/src/content');
+    localStorage.setItem(
+      'kanto-editor',
+      JSON.stringify([null, {}, 1, { id: 'old', body: '# From before' }]),
+    );
+    const docs = loadDocs();
+    expect(docs).toHaveLength(1);
+    expect(docs[0]).toMatchObject({ id: 'old', title: 'From before', versions: [] });
+    expect(typeof docs[0]!.folder).toBe('string');
+    localStorage.setItem('kanto-editor', JSON.stringify([null, 'x']));
+    expect(loadDocs()).toEqual(SEED);
+    localStorage.clear();
+  });
+
+  it('saves only what this tab changed, over what another tab saved', async () => {
+    const { changedIds, mergeDocs, saveChanges, loadDocs } =
+      await import('../templates/editor-vanilla/src/store');
+    const { createDoc, updateBody } = await import('../templates/editor-vanilla/src/documents');
+    const { SEED } = await import('../templates/editor-vanilla/src/content');
+    localStorage.clear();
+    const [a, b] = [SEED[0]!.id, SEED[1]!.id];
+
+    // Tab one edits A and saves.
+    const one = updateBody(SEED, a, 'edited in one', 1);
+    expect([...changedIds(SEED, one)]).toEqual([a]);
+    saveChanges(one, changedIds(SEED, one));
+    // Tab two, opened before, edits B: A keeps tab one's text.
+    const two = updateBody(SEED, b, 'edited in two', 2);
+    saveChanges(two, changedIds(SEED, two));
+    const stored = loadDocs();
+    expect(stored.find((doc) => doc.id === a)!.body).toBe('edited in one');
+    expect(stored.find((doc) => doc.id === b)!.body).toBe('edited in two');
+
+    // A document made elsewhere arrives; one deleted here stays deleted; ours wins where we changed it.
+    const made = createDoc(stored, 'Notes', 3);
+    const local = updateBody(SEED, a, 'still typing', 4).filter((doc) => doc.id !== b);
+    const merged = mergeDocs(made.list, local, new Set([a, b]));
+    expect(merged.map((doc) => doc.id)).toContain(made.id);
+    expect(merged.some((doc) => doc.id === b)).toBe(false);
+    expect(merged.find((doc) => doc.id === a)!.body).toBe('still typing');
+    localStorage.clear();
+  });
+
+  it('says which part of the text a format replaced, so the browser can undo it', async () => {
+    const { applyFormat, replacedRange } =
+      await import('../templates/editor-vanilla/src/formatting');
+    const before = 'hello world';
+    const after = applyFormat(before, 6, 11, 'bold').text;
+    const range = replacedRange(before, after);
+    expect(range).toEqual({ start: 6, end: 11, text: '**world**' });
+    expect(before.slice(0, range.start) + range.text + before.slice(range.end)).toBe(after);
+    // The least that changed: what both texts share at either end stays put.
+    expect(replacedRange('one\ntwo', '- one\n- two')).toEqual({
+      start: 0,
+      end: 4,
+      text: '- one\n- ',
+    });
   });
 });
 

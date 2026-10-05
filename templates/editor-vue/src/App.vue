@@ -21,9 +21,9 @@ import {
   wordCount,
   type Doc,
 } from './documents';
-import { applyFormat, type Format } from './formatting';
+import { formatField, type Format } from './formatting';
 import Preview from './Preview.vue';
-import { loadDocs, saveDocs } from './store';
+import { changedIds, loadDocs, mergeDocs, saveChanges, watchDocs } from './store';
 
 const TOOLS: { format: Format; icon: string; label: string; keys?: string }[] = [
   { format: 'heading', icon: 'heading-2', label: 'Heading' },
@@ -105,14 +105,41 @@ watch(id, () => {
 // === Saving, a moment after the typing stops ===
 
 let timer: ReturnType<typeof setTimeout> | undefined;
+/** The documents this tab changed since it last saved: only those are written. */
+const unsaved = new Set<string>();
+
 function change(next: Doc[]): void {
+  for (const changed of changedIds(docs.value, next)) unsaved.add(changed);
   docs.value = next;
   clearTimeout(timer);
   saveState.value = 'Saving…';
-  timer = setTimeout(() => {
-    saveState.value = saveDocs(next) ? 'Saved' : 'Not saved: this browser is not keeping data';
-  }, 500);
+  timer = setTimeout(save, 500);
 }
+
+function save(): void {
+  clearTimeout(timer);
+  if (unsaved.size === 0) return;
+  if (saveChanges(docs.value, unsaved)) {
+    unsaved.clear();
+    saveState.value = 'Saved';
+  } else saveState.value = 'Not saved: this browser is not keeping data';
+}
+
+// Leaving — a reload, a closed tab, another app — saves at once, not in a moment.
+const onVisibility = () => {
+  if (document.visibilityState === 'hidden') save();
+};
+onMounted(() => {
+  window.addEventListener('pagehide', save);
+  document.addEventListener('visibilitychange', onVisibility);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('pagehide', save);
+  document.removeEventListener('visibilitychange', onVisibility);
+});
+
+// Another tab saved: take its documents, keeping what this one has not saved yet.
+onBeforeUnmount(watchDocs((stored) => (docs.value = mergeDocs(stored, docs.value, unsaved))));
 
 function write(body: string): void {
   if (id.value) change(updateBody(docs.value, id.value, body, Date.now()));
@@ -121,12 +148,9 @@ function write(body: string): void {
 function format(kind: Format): void {
   const field = area.value;
   if (!field) return;
-  const edit = applyFormat(field.value, field.selectionStart, field.selectionEnd, kind);
-  write(edit.text);
-  void nextTick(() => {
-    field.focus();
-    field.setSelectionRange(edit.start, edit.end);
-  });
+  // The browser's own edit: its input event writes the text, and Ctrl+Z takes it back.
+  const edit = formatField(field, kind);
+  void nextTick(() => field.setSelectionRange(edit.start, edit.end));
 }
 
 function onKey(event: KeyboardEvent): void {

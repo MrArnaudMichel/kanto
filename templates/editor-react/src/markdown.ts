@@ -2,11 +2,12 @@
  * Markdown to DOM nodes, for the preview: headings, paragraphs, lists, quotes,
  * fenced code, bold, italic, code and links. Text always goes in as text — raw
  * HTML shows as written — and a link keeps its href only for http(s), mailto
- * and in-page anchors. No framework is needed to build nodes, so every stack
+ * and other documents (`#/doc/<id>`). No framework is needed to build nodes, so every stack
  * mounts these.
  */
 
-const SAFE_HREF = /^(https?:\/\/|mailto:|#)/i;
+// `#/doc/…` opens another document; a bare anchor would leave this one.
+const SAFE_HREF = /^(https?:\/\/|mailto:|#\/doc\/)/i;
 
 function element(tag: string, children: (Node | string)[] = []): HTMLElement {
   const node = document.createElement(tag);

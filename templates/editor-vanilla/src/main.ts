@@ -21,9 +21,9 @@ import {
   wordCount,
   type Doc,
 } from './documents';
-import { applyFormat, type Format } from './formatting';
+import { formatField, type Format } from './formatting';
 import { renderMarkdown } from './markdown';
-import { loadDocs, saveDocs } from './store';
+import { changedIds, loadDocs, mergeDocs, saveChanges, watchDocs } from './store';
 
 applyBrand();
 
@@ -147,17 +147,45 @@ document.querySelector('#app')!.replaceChildren(shell);
 
 // === Saving, a moment after the typing stops ===
 
-let pending: ReturnType<typeof setTimeout> | undefined;
+let timer: ReturnType<typeof setTimeout> | undefined;
+/** The documents this tab changed since it last saved: only those are written. */
+const unsaved = new Set<string>();
+
+/** Every change goes through here, so the tab knows what it has to save. */
+function commit(next: Doc[]): void {
+  for (const id of changedIds(state.docs, next)) unsaved.add(id);
+  state.docs = next;
+}
+
+function save(): void {
+  clearTimeout(timer);
+  if (unsaved.size === 0) return;
+  if (saveChanges(state.docs, unsaved)) {
+    unsaved.clear();
+    saveState.textContent = 'Saved';
+  } else saveState.textContent = 'Not saved: this browser is not keeping data';
+}
 
 function persist(): void {
-  clearTimeout(pending);
+  clearTimeout(timer);
   saveState.textContent = 'Saving…';
-  pending = setTimeout(() => {
-    saveState.textContent = saveDocs(state.docs)
-      ? 'Saved'
-      : 'Not saved: this browser is not keeping data';
-  }, 500);
+  timer = setTimeout(save, 500);
 }
+
+// Leaving — a reload, a closed tab, another app — saves at once, not in a moment.
+window.addEventListener('pagehide', save);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') save();
+});
+
+// Another tab saved: take its documents, keeping what this one has not saved yet.
+watchDocs((stored) => {
+  state.docs = mergeDocs(stored, state.docs, unsaved);
+  const doc = current();
+  if (doc && !unsaved.has(doc.id) && area.value !== doc.body) area.value = doc.body;
+  drawTree();
+  drawDoc();
+});
 
 // === Drawing ===
 
@@ -205,7 +233,7 @@ function drawVersions(): void {
           },
           () => {
             if (!state.open) return;
-            state.docs = restoreVersion(state.docs, state.open, version.at, Date.now());
+            commit(restoreVersion(state.docs, state.open, version.at, Date.now()));
             area.value = current()?.body ?? '';
             drawDoc();
             drawTree();
@@ -261,18 +289,14 @@ window.addEventListener('hashchange', route);
 area.addEventListener('input', () => {
   if (!state.open) return;
   const before = current()?.title;
-  state.docs = updateBody(state.docs, state.open, area.value, Date.now());
+  commit(updateBody(state.docs, state.open, area.value, Date.now()));
   drawDoc();
   if (current()?.title !== before) drawTree();
   persist();
 });
 
 function format(kind: Format): void {
-  const edit = applyFormat(area.value, area.selectionStart, area.selectionEnd, kind);
-  area.value = edit.text;
-  area.focus();
-  area.setSelectionRange(edit.start, edit.end);
-  area.dispatchEvent(new Event('input'));
+  formatField(area, kind);
 }
 
 area.addEventListener('keydown', (event) => {
@@ -292,7 +316,7 @@ mode.addEventListener('kt-change', (event) => {
 
 function startDoc(): void {
   const made = createDoc(state.docs, current()?.folder ?? DEFAULT_FOLDER, Date.now());
-  state.docs = made.list;
+  commit(made.list);
   persist();
   location.hash = `#/doc/${made.id}`;
   area.focus();
@@ -321,7 +345,7 @@ deleteButton.addEventListener('click', () => {
       variant: 'danger',
     },
     () => {
-      state.docs = deleteDoc(state.docs, doc.id);
+      commit(deleteDoc(state.docs, doc.id));
       persist();
       location.hash = '#/';
     },
