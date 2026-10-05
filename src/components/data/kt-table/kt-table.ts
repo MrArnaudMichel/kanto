@@ -110,7 +110,10 @@ export class KtTable extends KtElement {
         font: var(--font-normal-regular);
       }
 
+      /* Positioned, so what a cell hides by absolute positioning — an icon
+         button's label — stays inside the scroll, not past the page's edge. */
       .scroller {
+        position: relative;
         overflow: auto;
         border-radius: var(--border-radius);
       }

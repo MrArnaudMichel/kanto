@@ -34,6 +34,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- `kt-table` narrower than its table could widen the page: an icon-only
+  button in a cell, past the scroller's edge, kept its hidden label outside
+  the scroll, so a phone scrolled sideways. The scroller now holds it.
 - The React types gave eight events only part of their detail: `kt-table`'s
   `kt-row-click` lacked `row`, and `kt-selection-change` `rows`; the
   `option`, `item` or `tab` that `kt-dropdown`, `kt-input-menu`,

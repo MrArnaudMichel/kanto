@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { fixture, settle } from '#test/fixture';
 import '../../../styles.css';
 import './kt-table.js';
+import '../../core/kt-button/kt-button.js';
 import type { KtTable, KtTableRow } from 'kanto-ds';
 
 const COUNT = 5000;
@@ -80,5 +81,34 @@ describe('kt-table virtual', () => {
 
     expect(rows(el)).toHaveLength(10);
     expect(el.shadowRoot!.querySelector('kt-pagination')).not.toBeNull();
+  });
+});
+
+describe('kt-table, narrower than its table', () => {
+  it('keeps what its cells hide inside its own scroll, not the page', async () => {
+    // A row's icon-only button, past the right edge: its label is hidden by
+    // absolute positioning, which must not escape the scroller and widen the page.
+    const el = await fixture<KtTable>(`<kt-table style="width: 300px"></kt-table>`);
+    el.columns = [
+      { key: 'name', label: 'Name' },
+      { key: 'action', label: '', width: '60px' },
+    ];
+    // A word that does not wrap, as an email address does not: the table outgrows its box.
+    el.data = [{ id: 1, name: 'n'.repeat(80) }];
+    el.renderCell = (_row, column) => {
+      if (column.key !== 'action') return undefined;
+      const button = document.createElement('kt-button');
+      button.setAttribute('icon', 'trash-2');
+      button.setAttribute('label', 'Remove the row');
+      return button;
+    };
+    await frame(el);
+    const button = el.shadowRoot!.querySelector('kt-button')!;
+    await settle(button as unknown as KtTable);
+    const hidden = button.shadowRoot!.querySelector<HTMLElement>('.visually-hidden')!;
+    expect(hidden).not.toBeNull();
+    // The label sits past the window's edge, yet the page must not scroll sideways.
+    expect(hidden.getBoundingClientRect().right).toBeGreaterThan(innerWidth);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
   });
 });
