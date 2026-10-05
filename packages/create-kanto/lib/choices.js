@@ -7,6 +7,11 @@ export const TEMPLATES = [
     hint: 'an admin console: inbox, customers, files, activity, nested settings, Cmd+K',
   },
   {
+    id: 'editor',
+    label: 'Editor',
+    hint: 'documents in Markdown: a toolbar, a preview, autosave and versions',
+  },
+  {
     id: 'landing',
     label: 'Landing page',
     hint: "a product's marketing page, every section a block",

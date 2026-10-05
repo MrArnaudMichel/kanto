@@ -191,6 +191,56 @@ list in \`src/nav.ts\`.`,
     seed: { 'northwind-console-cookies': 'accepted' },
   },
   {
+    id: 'editor',
+    name: 'Editor',
+    summary:
+      'A document editor: documents in folders, Markdown with a preview, autosave and versions.',
+    description: `Northwind Docs: documents in folders on the side, a page to write in
+Markdown with a toolbar and a preview beside it, autosave, and a version kept
+every minute to go back to.
+
+What is written stays plain text. The toolbar wraps the selection
+(\`src/formatting.ts\`), the preview is drawn by a small renderer that puts text
+in as text (\`src/markdown.ts\`), and the documents live in this browser until
+\`src/store.ts\` talks to your backend.`,
+    tryIt: `- Select a word and press **Bold** — or Cmd+B (Ctrl+B).
+- Type, wait for **Saved**, reload: your text is there.
+- Open **History** after a minute of writing, and restore the older text: it asks
+  first, and keeps what you had as a version too.
+- Make a **New document**, then delete it — that asks first as well.`,
+    demo: './templates/editor/',
+    project: true,
+    routes: [
+      { path: '#/', what: 'The first document.' },
+      { path: '#/doc/<id>', what: 'A document: the page, the preview, its history.' },
+    ],
+    files: [
+      { path: 'src/store.ts', what: 'Where documents are kept. Call your backend here.' },
+      { path: 'src/content.ts', what: 'The example documents.' },
+      { path: 'src/formatting.ts', what: 'What the toolbar does to the text.' },
+      { path: 'src/markdown.ts', what: 'How the preview is drawn.' },
+    ],
+    components: [
+      'kt-app-shell',
+      'kt-tree',
+      'kt-button',
+      'kt-tooltip',
+      'kt-segmented-control',
+      'kt-side-panel',
+      'kt-confirm-dialog',
+      'kt-empty-state',
+      'kt-error-page',
+    ],
+    screens: [
+      { file: 'editor-page.png', path: 'templates/editor/', caption: 'Writing, with the preview' },
+      {
+        file: 'editor-guide.png',
+        path: 'templates/editor/#/doc/writing-guide',
+        caption: 'The writing guide',
+      },
+    ],
+  },
+  {
     id: 'landing',
     name: 'Landing',
     summary: "A product's marketing page: a hero, features, pricing, questions and the way in.",

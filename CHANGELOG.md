@@ -15,7 +15,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - The SaaS template — sign in, first steps, a dashboard, customers and
   settings — the Dashboard template — an admin console: an inbox, customers,
   files, an audit log, integrations and settings three levels deep, with
-  Cmd+K — the Landing template — a product's marketing page, every section a
+  Cmd+K — the Editor template — documents in Markdown, with a preview,
+  autosave and versions — the Landing template — a product's marketing page, every section a
   block — the Chat template — an assistant whose model is one function — and
   the Portfolio template — a person's work, career, writing and contact form
   — in React, Vue and TypeScript without a framework, each a project of its
