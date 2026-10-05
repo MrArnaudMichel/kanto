@@ -3,6 +3,7 @@ import type { KtTableRow } from 'kanto-ds';
 import { ref, watch } from 'vue';
 import { CUSTOMER_COLUMNS } from '../content';
 import { getCustomer, listCustomers, type Customer } from '../data/api';
+import { latestOnly } from '../latest';
 import { customerDetails, customerRows } from '../view';
 
 const query = ref('');
@@ -29,9 +30,11 @@ function onInput(event: CustomEvent<{ value: string }>): void {
   query.value = event.detail.value;
 }
 
+const openCustomer = latestOnly(getCustomer);
+
 function onRowClick(event: CustomEvent<{ row: KtTableRow }>): void {
-  void getCustomer(String(event.detail.row.id)).then((found) => {
-    customer.value = found ?? null;
+  void openCustomer(String(event.detail.row.id)).then(({ stale, value }) => {
+    if (!stale) customer.value = value ?? null;
   });
 }
 </script>

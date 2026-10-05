@@ -5,13 +5,13 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { kantoRange } from './bump-templates.js';
 
 const root = process.cwd();
 const dirs = readdirSync(join(root, 'templates'), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name);
 const version = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version as string;
-const [major, minor] = version.split('.');
 
 /** Files every stack of a template carries unchanged. */
 const SHARED = [
@@ -25,6 +25,7 @@ const SHARED = [
   'src/brand.ts',
   'src/icons.ts',
   'src/styles.css',
+  'src/latest.ts',
 ];
 
 const projects = dirs.filter((dir) => existsSync(join(root, 'templates', dir, 'package.json')));
@@ -40,7 +41,8 @@ describe('each template', () => {
       const at = (file: string) => join(root, 'templates', dir, file);
       const pkg = JSON.parse(readFileSync(at('package.json'), 'utf8'));
       expect(pkg.private).toBe(true);
-      expect(pkg.dependencies['kanto-ds']).toBe(`^${major}.${minor}.0`);
+      // The range a release writes, so a prerelease's own check agrees with it.
+      expect(pkg.dependencies['kanto-ds']).toBe(kantoRange(version));
       expect(Object.keys(pkg.scripts)).toEqual(
         expect.arrayContaining(['dev', 'build', 'preview', 'typecheck']),
       );
@@ -84,6 +86,22 @@ describe('the SaaS data', () => {
     expect(tiles[2]!.inverted).toBe(true);
     expect(revenueSeries(summary).map((series) => series.values?.length)).toEqual([12, 12]);
     vi.useRealTimers();
+  });
+});
+
+describe('latestOnly', () => {
+  it('lets only the last call answer: an earlier one coming back late is stale', async () => {
+    const { latestOnly } = await import('../templates/saas-vanilla/src/latest');
+    const resolvers: ((value: string) => void)[] = [];
+    const open = latestOnly(
+      (id: string) => new Promise<string>((resolve) => resolvers.push(() => resolve(id))),
+    );
+    const first = open('A');
+    const second = open('B');
+    resolvers[1]!('B');
+    resolvers[0]!('A');
+    await expect(second).resolves.toEqual({ stale: false, value: 'B' });
+    await expect(first).resolves.toEqual({ stale: true, value: 'A' });
   });
 });
 

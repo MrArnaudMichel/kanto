@@ -6,10 +6,18 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+/**
+ * The kanto-ds range a template asks for at `version`: its minor for a
+ * release, the prerelease itself for one — `^1.10.0`, `^1.10.0-beta.1`.
+ */
+export function kantoRange(version) {
+  const [major, minor] = version.split('.');
+  return version.includes('-') ? `^${version}` : `^${major}.${minor}.0`;
+}
+
 /** @returns {string[]} The files changed, relative to `root`. */
 export function bumpTemplates(root, version) {
-  const [major, minor] = version.split('.');
-  const range = version.includes('-') ? `^${version}` : `^${major}.${minor}.0`;
+  const range = kantoRange(version);
   const changed = [];
   const update = (path, edit) => {
     const file = join(root, path);

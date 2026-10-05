@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { bumpTemplates } from './bump-templates.js';
+import { bumpTemplates, kantoRange } from './bump-templates.js';
 
 let root = '';
 afterEach(() => rmSync(root, { recursive: true, force: true }));
@@ -41,5 +41,11 @@ describe('bumpTemplates', () => {
     expect(read('templates/saas-react/package.json').dependencies['kanto-ds']).toBe(
       '^2.0.0-beta.1',
     );
+  });
+
+  it('asks for the minor of a release, and for a prerelease itself', () => {
+    expect(kantoRange('1.10.0')).toBe('^1.10.0');
+    expect(kantoRange('1.10.3')).toBe('^1.10.0');
+    expect(kantoRange('1.10.0-beta.1')).toBe('^1.10.0-beta.1');
   });
 });

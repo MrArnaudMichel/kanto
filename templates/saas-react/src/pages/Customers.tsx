@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { KtTableRow } from 'kanto-ds';
 import { CUSTOMER_COLUMNS } from '../content';
 import { getCustomer, listCustomers, type Customer } from '../data/api';
+import { latestOnly } from '../latest';
 import { customerDetails, customerRows } from '../view';
 
 export function Customers() {
   const [query, setQuery] = useState('');
   const [rows, setRows] = useState<KtTableRow[] | null>(null);
   const [customer, setCustomer] = useState<Customer | null>(null);
+  const openCustomer = useMemo(() => latestOnly(getCustomer), []);
 
   // The cleanup drops an answer that comes back after a later search was sent.
   useEffect(() => {
@@ -41,7 +43,9 @@ export function Customers() {
         data={rows ?? []}
         loading={rows === null}
         onkt-row-click={(event) => {
-          void getCustomer(String(event.detail.row.id)).then((found) => setCustomer(found ?? null));
+          void openCustomer(String(event.detail.row.id)).then(({ stale, value }) => {
+            if (!stale) setCustomer(value ?? null);
+          });
         }}
       />
       <kt-side-panel

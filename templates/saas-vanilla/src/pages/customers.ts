@@ -1,6 +1,7 @@
 import type { KtDescriptionList, KtInput, KtSidePanel, KtTable, KtTableRow } from 'kanto-ds';
 import { CUSTOMER_COLUMNS } from '../content';
 import { getCustomer, listCustomers } from '../data/api';
+import { latestOnly } from '../latest';
 import { customerDetails, customerRows } from '../view';
 
 export function customersPage(page: HTMLElement): () => void {
@@ -14,6 +15,7 @@ export function customersPage(page: HTMLElement): () => void {
   const panel = page.querySelector<KtSidePanel>('kt-side-panel')!;
   const details = page.querySelector<KtDescriptionList>('kt-description-list')!;
   table.columns = CUSTOMER_COLUMNS;
+  const openCustomer = latestOnly(getCustomer);
 
   // Each search is a ticket: an answer that comes back after a later search was
   // sent is dropped, so fast typing never shows the results of an old query.
@@ -34,8 +36,8 @@ export function customersPage(page: HTMLElement): () => void {
   });
   table.addEventListener('kt-row-click', (event) => {
     const { row } = (event as CustomEvent<{ row: KtTableRow }>).detail;
-    void getCustomer(String(row.id)).then((customer) => {
-      if (!customer) return;
+    void openCustomer(String(row.id)).then(({ stale, value: customer }) => {
+      if (stale || !customer) return;
       panel.heading = customer.name;
       details.items = customerDetails(customer);
       panel.open = true;
