@@ -13,11 +13,13 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 `npm create kanto@latest`.
 
 - The SaaS template — sign in, first steps, a dashboard, customers and
-  settings — the Landing template — a product's marketing page, every
-  section a block — the Chat template — an assistant whose model is one
-  function — and the Portfolio template — a person's work, career, writing
-  and contact form — in React, Vue and TypeScript without a framework, each a
-  project of its own in `templates/`, to scaffold or to fork.
+  settings — the Dashboard template — an admin console: an inbox, customers,
+  files, an audit log, integrations and settings three levels deep, with
+  Cmd+K — the Landing template — a product's marketing page, every section a
+  block — the Chat template — an assistant whose model is one function — and
+  the Portfolio template — a person's work, career, writing and contact form
+  — in React, Vue and TypeScript without a framework, each a project of its
+  own in `templates/`, to scaffold or to fork.
 - Every template is installed against the published package, built and
   walked in a browser in CI and before every release.
 - The docs site's Templates section: a gallery, and a page per template with
@@ -27,8 +29,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   on the first block.
 - The docs site's Apps section is a showcase of products built with Kanto,
   with a form to add yours. Its four demo applications are templates now —
-  Dashboard, Landing, Chat and Portfolio — each running on its page, their
-  projects to come; their old pages lead there.
+  Dashboard, Landing, Chat and Portfolio — each running on its page; their
+  old pages, and every screen of the console, lead there.
 
 ### Fixed
 

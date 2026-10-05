@@ -15,7 +15,7 @@ export interface TemplateEntry {
   readonly tryIt: string;
   /**
    * The running demo, relative to the site: a template's live build
-   * (`./templates/saas/#/sign-in`), or a demo of the docs (`./#/app/console/home`).
+   * (`./templates/saas/#/sign-in`).
    */
   readonly demo: string;
   /** Its projects exist: `create-kanto` makes it, `templates/<id>-<stack>/` hold it. */
@@ -30,7 +30,7 @@ export interface TemplateEntry {
     readonly path: string;
     readonly caption: string;
   }[];
-  /** localStorage set before the screenshots: the demo seen signed in. */
+  /** localStorage set before the screenshots: the demo seen signed in, a notice answered. */
   readonly seed?: Readonly<Record<string, string>>;
 }
 
@@ -117,20 +117,42 @@ visit to any page goes to sign in.`,
     name: 'Dashboard',
     summary:
       'An admin console: inbox, customers, files, activity, integrations and nested settings, in one shell.',
-    description: `An operations console: a dashboard, a mailbox, a customer table, a file
-browser, an audit log, integrations and five settings screens, all hanging off
-one shell.`,
-    tryIt: `- The sidebar nests three levels deep under **Administration**, and it is
-  \`<kt-sub-menu-navigation>\` doing it rather than markup written for this
-  screen. Navigate to a nested page and watch the branch open itself.
-- **⌘K** anywhere opens the command palette.
-- Collapse the sidebar from the top bar: labels are hidden, not clipped.
-- On **Customers**, tick some rows to raise the bulk bar, then delete — it asks
-  first.`,
-    demo: './#/app/console/home',
-    project: false,
-    routes: [],
-    files: [],
+    description: `Northwind's operations console: an overview, a mailbox, customers to filter
+and act on, files, an audit log, integrations and five settings screens, all
+in one shell — a sidebar three levels deep, a top bar and Cmd+K.
+
+The data comes through one file, \`src/data/api.ts\`: point it at your backend
+and the screens do not change. The sidebar, the routes and the commands are one
+list in \`src/nav.ts\`.`,
+    tryIt: `- **⌘K** (Ctrl+K) anywhere opens the command palette: type a screen, press Enter.
+- Open **Settings › Members › Roles**: the sidebar's branch opens itself, three
+  levels down.
+- On **Customers**, sort by MRR — across every page, not just this one — then
+  tick some rows and delete: it asks first.
+- Read a message in the **Inbox**: the count on the bell and beside Inbox goes down.
+- Collapse the sidebar from the top bar; on a phone it is a drawer.`,
+    demo: './templates/dashboard/#/',
+    project: true,
+    routes: [
+      { path: '#/', what: 'The overview: figures, revenue, the latest orders, what happened.' },
+      { path: '#/inbox', what: 'A two-pane mailbox, with a message to compose.' },
+      {
+        path: '#/customers',
+        what: 'Filters, sorting and pages, a bulk delete that asks, a customer in a side panel.',
+      },
+      { path: '#/files, #/activity', what: 'Stored files; the audit log, day by day.' },
+      { path: '#/integrations', what: 'What the workspace is wired to, on or off.' },
+      {
+        path: '#/settings/…',
+        what: 'General, Members › People and Roles, Notifications, Security.',
+      },
+    ],
+    files: [
+      { path: 'src/data/api.ts', what: "Each screen's data. Call your backend here." },
+      { path: 'src/nav.ts', what: 'The sidebar, the routes and the Cmd+K commands.' },
+      { path: 'src/brand.ts', what: 'The brand, in one call.' },
+      { path: 'src/views.ts', what: 'Filtering, sorting and paging, tested once.' },
+    ],
     components: [
       'kt-sub-menu-navigation',
       'kt-command-palette',
@@ -138,14 +160,35 @@ one shell.`,
       'kt-stat',
       'kt-chart',
       'kt-table',
-      'kt-pagination',
+      'kt-select',
+      'kt-multi-select',
       'kt-side-panel',
-      'kt-drag-drop',
-      'kt-timeline',
       'kt-confirm-dialog',
+      'kt-modal',
       'kt-tabs',
+      'kt-timeline',
+      'kt-toggle-button-group',
+      'kt-segmented-control',
+      'kt-form',
+      'kt-drag-drop',
+      'kt-toggle',
+      'kt-meter',
     ],
-    screens: [{ file: 'dashboard-home.png', path: '#/app/console/home', caption: 'Home' }],
+    screens: [
+      { file: 'dashboard-home.png', path: 'templates/dashboard/#/', caption: 'The overview' },
+      {
+        file: 'dashboard-customers.png',
+        path: 'templates/dashboard/#/customers',
+        caption: 'Customers',
+      },
+      {
+        file: 'dashboard-roles.png',
+        path: 'templates/dashboard/#/settings/members/roles',
+        caption: 'Settings, three levels down',
+      },
+    ],
+    // The cookie notice answered, so it does not cover the screens.
+    seed: { 'northwind-console-cookies': 'accepted' },
   },
   {
     id: 'landing',

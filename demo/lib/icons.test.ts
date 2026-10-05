@@ -1,7 +1,7 @@
 /**
  * The docs register only the Lucide icons they draw, not all two thousand.
- * This keeps the list honest: every icon name the docs, the demo apps or a
- * component page writes must be in it, or that icon renders as a blank box.
+ * This keeps the list honest: every icon name the docs or a component page
+ * writes must be in it, or that icon renders as a blank box.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -39,16 +39,9 @@ function iconNames(): Set<string> {
   return names;
 }
 
-/**
- * Names chosen at run time, which no pattern can find: a file type's icon
- * (apps/console/files.ts), a role's (apps/console/settings.ts). A crawl of
- * every route, watching for kt-icon's missing-icon warning, found these.
- */
-const COMPUTED = ['table', 'image', 'file-archive', 'crown', 'shield', 'user', 'eye'];
-
 describe('the docs icon set', () => {
   it('has every icon the docs draw', () => {
-    const missing = [...iconNames(), ...COMPUTED].filter((name) => !getIcon(name));
+    const missing = [...iconNames()].filter((name) => !getIcon(name));
     expect(missing).toEqual([]);
   });
 });

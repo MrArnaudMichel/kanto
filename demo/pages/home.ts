@@ -209,7 +209,7 @@ export function homePage({
         ${stage({ siteAccent: appearance.accent, rerender })}
         <p class="stage-caption">
           Every part of it is Kanto, live — and
-          <a href="#/app/console/home">the whole app</a> is one click away.
+          <a href="#/templates/dashboard">the whole console</a> is one click away.
         </p>
       </div>
     </section>
@@ -322,7 +322,7 @@ export function homePage({
         ${TEMPLATE_CATALOG.map((entry) =>
           preview({
             href: `#/templates/${entry.id}`,
-            // The demo, from beside this page: `./#/app/console/home`, `./templates/saas/#/sign-in`.
+            // The demo, from beside this page: `./templates/saas/#/sign-in`.
             src: `${location.pathname.replace(/[^/]*$/, '')}${entry.demo.slice(2)}`,
             name: entry.name,
             note: entry.summary,

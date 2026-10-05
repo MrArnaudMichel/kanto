@@ -22,9 +22,8 @@ describe('the templates catalog', () => {
     );
     expect(new Set(TEMPLATE_CATALOG.map((entry) => entry.id)).size).toBe(TEMPLATE_CATALOG.length);
     for (const entry of TEMPLATE_CATALOG) {
-      expect(entry.demo, entry.id).toMatch(
-        /^\.\/(templates\/[a-z-]+\/(#\/[a-z-]*)?|#\/app\/[a-z/-]+)$/,
-      );
+      // Every demo is a template's own build: the docs' demo apps are gone.
+      expect(entry.demo, entry.id).toMatch(/^\.\/templates\/[a-z-]+\/(#\/[a-z-]*)?$/);
     }
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'landing')!.demo).toBe(
       './templates/landing/',
@@ -33,6 +32,9 @@ describe('the templates catalog', () => {
       './templates/portfolio/',
     );
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'chat')!.demo).toBe('./templates/chat/');
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'dashboard')!.demo).toBe(
+      './templates/dashboard/#/',
+    );
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'saas')!.demo).toBe(
       './templates/saas/#/sign-in',
     );

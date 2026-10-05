@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { VERSION_TAG } from './lib/project.js';
+import { NPM_URL, REPO_URL, VERSION_TAG } from './lib/project.js';
 
 /**
  * Mounts the whole documentation site once and inspects what came out.
@@ -253,24 +253,20 @@ describe('the documentation shell', () => {
     }
   });
 
-  it('runs every demo in Templates, and says when a project is still to come', async () => {
+  it('runs every demo in Templates, the dashboard from its own build', async () => {
     const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
     location.hash = '#/templates';
     await tick();
     expect(app.querySelectorAll('.templates-gallery .template-card').length).toBeGreaterThanOrEqual(
       5,
     );
-    const cards = [...app.querySelectorAll('.template-card')];
-    const dashboard = cards.find((card) => card.querySelector('a[href="#/templates/dashboard"]'))!;
-    expect(dashboard.querySelector('.template-stacks')!.textContent).toMatch(/coming/i);
     location.hash = '#/templates/dashboard';
     await tick();
     expect(document.title).toBe('Dashboard — Kanto');
     expect(app.querySelector<HTMLIFrameElement>('.template-run iframe')!.getAttribute('src')).toBe(
-      './#/app/console/home',
+      './templates/dashboard/#/',
     );
-    expect(app.querySelector('.template-start kt-code')).toBeNull();
-    expect(app.querySelector('.template-start')!.textContent).toMatch(/coming/i);
+    expect(app.querySelector('.template-start kt-code')).not.toBeNull();
     expect(app.querySelector('#try')).not.toBeNull();
   });
 
@@ -278,6 +274,8 @@ describe('the documentation shell', () => {
     const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
     for (const [old, title] of [
       ['#/apps/console-home', 'Dashboard'],
+      ['#/app/console/home', 'Dashboard'],
+      ['#/app/console/settings/security', 'Dashboard'],
       ['#/apps/landing', 'Landing'],
       ['#/apps/chat', 'Chat'],
       ['#/apps/portfolio', 'Portfolio'],
@@ -288,6 +286,21 @@ describe('the documentation shell', () => {
       location.hash = old!;
       await tick();
       expect(document.title, old).toBe(`${title} — Kanto`);
+      // The template's page itself, in the docs — not a title left over from the last one.
+      expect(app.querySelector('.template-run iframe'), old).not.toBeNull();
     }
+  });
+
+  it('links the release page to the repository, and ships the changelog either way', async () => {
+    // GitHub may or may not answer here. Either way the history comes from the
+    // changelog this repository ships, so the version the manifest names is on
+    // the page, with the way out to the repository and to npm.
+    location.hash = '#/release/releases';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const links = [...app.querySelectorAll<HTMLAnchorElement>('a')].map((a) => a.href);
+    expect(links.some((h) => h.includes(REPO_URL))).toBe(true);
+    expect(links.some((h) => h.includes(NPM_URL))).toBe(true);
+    expect(app.querySelector('.release-current-tag')!.textContent).toBe(VERSION_TAG);
   });
 });

@@ -4,7 +4,6 @@ import { toaster } from 'kanto-ds';
 import 'kanto-ds';
 import 'kanto-ds/styles.css';
 import './shell.css';
-import './apps.css';
 import './home.css';
 
 import { COMPONENTS } from './lib/registry.js';
@@ -12,7 +11,6 @@ import { INSTALL_COMMAND, REPO_URL, VERSION_TAG } from './lib/project.js';
 import { commandTarget, siteCommands } from './lib/site-search.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
 import { newComponents, parseChangelog } from './lib/releases.js';
-import { lazyLoader } from './lib/lazy.js';
 import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appsPage } from './pages/apps.js';
@@ -22,7 +20,6 @@ import { foundationsPage } from './pages/foundations.js';
 import { homeFooter, homePage } from './pages/home.js';
 import { templatePage, templatesPage } from './pages/templates.js';
 import { TEMPLATE_CATALOG } from './lib/templates.js';
-import type { SettingsSection } from './apps/console/settings.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetStage } from './lib/stage.js';
 import { resetReasons } from './lib/reasons.js';
@@ -158,6 +155,7 @@ const DEMO_PAGES: Record<string, string> = {
 
 /** Full-screen demos, `#/app/<path>`, that became templates' live builds. */
 const RETIRED_DEMOS: Record<string, string> = {
+  console: 'dashboard',
   landing: 'landing',
   portfolio: 'portfolio',
   chat: 'chat',
@@ -203,74 +201,6 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'apps', label: 'Apps', icon: 'app-window' },
   { id: 'release', label: 'Release', icon: 'tag' },
 ];
-
-/**
- * The full-bleed applications.
- *
- * They take the whole viewport rather than sitting inside the documentation
- * chrome: an application shell wrapped in another application shell reads as
- * neither, and the point of these pages is what a whole product looks like.
- */
-type Screen = () => TemplateResult;
-
-/**
- * The demo apps, each loaded the first time it is opened: a visitor reading
- * the docs does not download a console, a chat and a portfolio as well.
- */
-const settings = (section: SettingsSection) => () =>
-  import('./apps/console/settings.js').then(
-    (m): Screen =>
-      () =>
-        m.consoleSettings(section),
-  );
-const APPS: Record<string, () => Promise<Screen>> = {
-  'console/home': () => import('./apps/console/home.js').then((m) => m.consoleHome),
-  'console/inbox': () => import('./apps/console/inbox.js').then((m) => m.consoleInbox),
-  'console/customers': () => import('./apps/console/customers.js').then((m) => m.consoleCustomers),
-  'console/files': () => import('./apps/console/files.js').then((m) => m.consoleFiles),
-  'console/activity': () => import('./apps/console/activity.js').then((m) => m.consoleActivity),
-  'console/integrations': () =>
-    import('./apps/console/integrations.js').then((m) => m.consoleIntegrations),
-  'console/settings/general': settings('general'),
-  'console/settings/members/people': settings('people'),
-  'console/settings/members/roles': settings('roles'),
-  'console/settings/notifications': settings('notifications'),
-  'console/settings/security': settings('security'),
-};
-
-/** The apps, each loaded the first time it is opened. */
-const apps = lazyLoader(APPS, () => update());
-
-/** `#/app/<path>` — anything under it renders without the docs chrome. */
-function currentApp(): (() => TemplateResult) | null {
-  const path = /^#\/app\/(.+)$/.exec(location.hash)?.[1];
-  const app = path ? apps(path) : null;
-  if (!path || !app) return null;
-  if (app.state === 'ready') return app.value;
-  if (app.state === 'failed')
-    return () =>
-      html`<div class="app-loading">
-        <kt-empty-state
-          icon="triangle-alert"
-          heading="This app did not load"
-          description="The connection may have dropped. Try again, or go back to the documentation."
-        >
-          <kt-button slot="actions" variant="primary" @click=${() => apps.retry(path)}
-            >Try again</kt-button
-          >
-          <kt-button
-            slot="actions"
-            variant="secondary"
-            @click=${() => {
-              location.hash = '#/';
-            }}
-            >Back to the docs</kt-button
-          >
-        </kt-empty-state>
-      </div>`;
-  // A blank page for the moment the app takes to arrive.
-  return () => html`<div class="app-loading" aria-busy="true"></div>`;
-}
 
 function currentRoute(): Route {
   // `#/guide/installation#no-build-step`: the route, then a heading on it.
@@ -523,9 +453,6 @@ function docLayout(route: Route, page: DocPage): TemplateResult {
 }
 
 function shell(): TemplateResult {
-  const app = currentApp();
-  if (app) return app();
-
   const route = currentRoute();
   const result = route.page();
   const isDoc = typeof result === 'object' && 'headings' in result;
@@ -627,7 +554,6 @@ function shell(): TemplateResult {
 
 /** The tab title: the page, then the system; the home page says what Kanto is. */
 function pageTitle(): string {
-  if (currentApp()) return document.title;
   const route = currentRoute();
   return route.section === 'home'
     ? 'Kanto — web components in your colours, in any framework'

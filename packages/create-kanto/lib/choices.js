@@ -2,6 +2,11 @@
 export const TEMPLATES = [
   { id: 'saas', label: 'SaaS app', hint: 'sign-in, dashboard, customers, settings' },
   {
+    id: 'dashboard',
+    label: 'Dashboard',
+    hint: 'an admin console: inbox, customers, files, activity, nested settings, Cmd+K',
+  },
+  {
     id: 'landing',
     label: 'Landing page',
     hint: "a product's marketing page, every section a block",
