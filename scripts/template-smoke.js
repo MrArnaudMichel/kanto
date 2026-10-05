@@ -92,10 +92,14 @@ export const SMOKES = {
 
     // Filtering: one tag, then back to everything.
     await page
-      .locator('kt-toggle-button-group.work-filter kt-toggle-button[value="Open source"]')
+      .locator('kt-toggle-button-group.work-filter')
+      .getByRole('button', { name: 'Open source', exact: true })
       .click();
     await until(() => document.querySelectorAll('kt-card.work-card').length === 1);
-    await page.locator('kt-toggle-button-group.work-filter kt-toggle-button[value="All"]').click();
+    await page
+      .locator('kt-toggle-button-group.work-filter')
+      .getByRole('button', { name: 'All', exact: true })
+      .click();
     await until(() => document.querySelectorAll('kt-card.work-card').length === 4);
 
     // A case study, then another: the panel follows.
@@ -115,12 +119,12 @@ export const SMOKES = {
     await page.keyboard.press('Escape');
 
     // The form says what is missing, then sends.
-    await page.locator('form.contact kt-button[type="submit"]').click();
-    await until(() => (document.querySelector('kt-input[name="name"]')?.error ?? '') !== '');
-    await page.locator('kt-input[name="name"] input').fill('Ada Park');
-    await page.locator('kt-input[name="email"] input').fill('ada@northwind.com');
-    await page.locator('kt-textarea[name="message"] textarea').fill('A dashboard for a fleet.');
-    await page.locator('form.contact kt-button[type="submit"]').click();
+    await page.locator('form.contact').getByRole('button', { name: 'Send' }).click();
+    await until(() => (document.querySelector('form.contact kt-input')?.error ?? '') !== '');
+    await page.locator('form.contact kt-input').nth(0).locator('input').fill('Ada Park');
+    await page.locator('form.contact kt-input').nth(1).locator('input').fill('ada@northwind.com');
+    await page.locator('form.contact kt-textarea textarea').fill('A dashboard for a fleet.');
+    await page.locator('form.contact').getByRole('button', { name: 'Send' }).click();
     await until(() => document.querySelector('kt-alert.contact-sent') !== null);
 
     // On a phone the header's links are in its menu.
