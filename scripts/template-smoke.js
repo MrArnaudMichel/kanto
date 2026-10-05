@@ -150,4 +150,50 @@ export const SMOKES = {
     await page.locator('kt-header [slot="menu"] a', { hasText: 'Contact' }).click();
     await until(() => location.hash === '#contact');
   },
+
+  async chat(page, base) {
+    const until = (check, arg) => page.waitForFunction(check, arg, { timeout: TIMEOUT });
+    const ask = async (question) => {
+      await page.locator('kt-prompt-input textarea').fill(question);
+      await page.locator('kt-prompt-input textarea').press('Enter');
+    };
+    await page.goto(base);
+
+    // The seeded conversations, the first one open.
+    await until(() => document.querySelectorAll('.conversations .conversation').length >= 2);
+    await until(() => document.querySelectorAll('.transcript kt-chat-message').length >= 2);
+
+    // A new conversation: suggestions, then a question streamed into an answer.
+    await page.getByRole('button', { name: 'New chat', exact: true }).click();
+    await until(() => document.querySelector('.transcript kt-empty-state') !== null);
+    await until(() => document.querySelectorAll('.conversations .conversation').length >= 3);
+    await ask('Which regions are growing?');
+    await until(() => {
+      const messages = [...document.querySelectorAll('.transcript kt-chat-message')];
+      const last = messages.at(-1);
+      return (
+        messages.length === 2 &&
+        last?.from === 'assistant' &&
+        last.streaming === false &&
+        last.textContent.trim().length > 40
+      );
+    });
+    // The conversation took its title from the question.
+    await until(() =>
+      document
+        .querySelector('.conversation[aria-current="true"]')
+        ?.textContent.includes('Which regions'),
+    );
+
+    // Back to the first conversation: its own messages.
+    await page.locator('.conversations .conversation').nth(1).click();
+    await until(() =>
+      document.querySelector('.transcript kt-chat-message')?.textContent.includes('Why is revenue'),
+    );
+
+    // A phone: no sideways scroll, and the list is in the shell's drawer.
+    await page.setViewportSize({ width: 390, height: 800 });
+    await until(() => document.documentElement.scrollWidth <= window.innerWidth);
+    await until(() => document.querySelector('kt-app-shell')?.hasAttribute('narrow') === true);
+  },
 };

@@ -37,6 +37,14 @@ const SHARED: Record<string, readonly string[]> = {
     'src/icons.ts',
     'src/styles.css',
   ],
+  chat: [
+    'src/content.ts',
+    'src/conversations.ts',
+    'src/model.ts',
+    'src/brand.ts',
+    'src/icons.ts',
+    'src/styles.css',
+  ],
 };
 
 const projects = dirs.filter((dir) => existsSync(join(root, 'templates', dir, 'package.json')));
@@ -224,5 +232,58 @@ describe('the portfolio', () => {
   it('names no project Kanto', async () => {
     const { PROJECTS } = await import('../templates/portfolio-vanilla/src/content');
     expect(PROJECTS.some((project) => /kanto/i.test(project.name))).toBe(false);
+  });
+});
+
+describe('the chat', () => {
+  it('starts a conversation, titles it from its first question, and ignores a blank one', async () => {
+    const { addQuestion, newConversation } =
+      await import('../templates/chat-vanilla/src/conversations');
+    const started = newConversation([]);
+    expect(started.list[0]!.title).toBe('New chat');
+    expect(addQuestion(started.list, started.id, '   ')).toBeNull();
+    const asked = addQuestion(
+      started.list,
+      started.id,
+      '  Why is revenue down 3% this month, and since when exactly?  ',
+    )!;
+    const conversation = asked.list.find((item) => item.id === started.id)!;
+    expect(conversation.title).toBe('Why is revenue down 3% this month, and since…');
+    expect(conversation.messages.map((message) => message.from)).toEqual(['user', 'assistant']);
+    expect(conversation.messages[1]).toMatchObject({
+      id: asked.replyId,
+      text: '',
+      streaming: true,
+    });
+    expect(started.list[0]!.messages).toEqual([]);
+  });
+
+  it('streams a reply into its own conversation, whichever is open', async () => {
+    const { addQuestion, appendToken, finishReply, newConversation } =
+      await import('../templates/chat-vanilla/src/conversations');
+    const first = newConversation([]);
+    const asked = addQuestion(first.list, first.id, 'Which regions are growing?')!;
+    const second = newConversation(asked.list);
+    let list = appendToken(second.list, first.id, asked.replyId, 'North ');
+    list = appendToken(list, first.id, asked.replyId, 'East');
+    list = finishReply(list, first.id, asked.replyId);
+    const reply = list.find((item) => item.id === first.id)!.messages[1]!;
+    expect(reply).toMatchObject({ text: 'North East', streaming: false });
+    expect(list.find((item) => item.id === second.id)!.messages).toEqual([]);
+  });
+
+  it('answers by keyword, and streams the whole answer a token at a time', async () => {
+    vi.useFakeTimers();
+    const { answerFor, reply } = await import('../templates/chat-vanilla/src/model');
+    const { FALLBACK } = await import('../templates/chat-vanilla/src/content');
+    expect(answerFor('Why is REVENUE down?')).toMatch(/Revenue fell 3%/);
+    expect(answerFor('Tell me a joke')).toBe(FALLBACK);
+    const tokens: string[] = [];
+    const done = reply('Which regions are growing?', (token) => tokens.push(token));
+    await vi.runAllTimersAsync();
+    await done;
+    expect(tokens.length).toBeGreaterThan(5);
+    expect(tokens.join('')).toBe(answerFor('Which regions are growing?'));
+    vi.useRealTimers();
   });
 });
