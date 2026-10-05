@@ -318,6 +318,94 @@ export const SMOKES = {
     );
   },
 
+  async editor(page, base) {
+    // A check that times out says which one it was.
+    const until = (check, arg) =>
+      page.waitForFunction(check, arg, { timeout: TIMEOUT }).catch((error) => {
+        throw new Error(`${error.message}\n  waiting for: ${String(check).replace(/\s+/g, ' ')}`);
+      });
+    await page.goto(base);
+
+    // It opens on the first document, its preview drawn beside it.
+    await until(() => location.hash.startsWith('#/doc/'));
+    await until(
+      () =>
+        (document.querySelector('.preview h1')?.textContent ?? '') !== '' &&
+        document.querySelector('.preview h1')?.textContent ===
+          document.querySelector('.doc-title')?.textContent,
+    );
+
+    // Another document, from the tree.
+    await page
+      .locator('kt-tree')
+      .getByRole('treeitem', { name: 'Meeting notes — 6 October' })
+      .click();
+    await until(() => location.hash === '#/doc/meeting-notes');
+    await until(() => (document.querySelector('.page')?.value ?? '').includes('Present: Dana'));
+
+    // Typing saves itself, and survives a reload.
+    await page.locator('textarea.page').fill('# Kept\n\nTyped in the walk.');
+    await until(() => /^Saved/.test(document.querySelector('.save-state')?.textContent ?? ''));
+    await until(() => document.querySelector('.doc-title')?.textContent === 'Kept');
+    await page.reload();
+    await until(() =>
+      (document.querySelector('.page')?.value ?? '').includes('Typed in the walk.'),
+    );
+    await until(() => document.querySelector('.preview h1')?.textContent === 'Kept');
+
+    // Bold wraps the selection.
+    await page.evaluate(() => {
+      const area = document.querySelector('.page');
+      const at = area.value.indexOf('walk');
+      area.focus();
+      area.setSelectionRange(at, at + 4);
+    });
+    await page.locator('.toolbar').getByRole('button', { name: 'Bold' }).click();
+    await until(() => (document.querySelector('.page')?.value ?? '').includes('**walk**'));
+    await until(() => document.querySelector('.preview strong')?.textContent === 'walk');
+
+    // History keeps what typing replaced; restoring it asks first.
+    await page.getByRole('button', { name: 'History' }).click();
+    await until(
+      () =>
+        document.querySelector('kt-side-panel')?.open === true &&
+        document.querySelectorAll('.version').length > 0,
+    );
+    await page.locator('.version').first().getByRole('button', { name: 'Restore' }).click();
+    await until(() => document.querySelector('kt-confirm-dialog')?.open === true);
+    await page.locator('kt-confirm-dialog').getByRole('button', { name: 'Restore' }).click();
+    await until(() => (document.querySelector('.page')?.value ?? '').includes('Present: Dana'));
+    await page.keyboard.press('Escape');
+    await until(() => document.querySelector('kt-side-panel')?.open === false);
+
+    // A new document, then deleting it, which asks first.
+    await page.getByRole('button', { name: 'New document' }).click();
+    await until(
+      () =>
+        document.querySelector('.doc-title')?.textContent === 'Untitled' &&
+        document.activeElement?.classList.contains('page') === true,
+    );
+    await page.getByRole('button', { name: 'Delete document' }).click();
+    await until(() => document.querySelector('kt-confirm-dialog')?.open === true);
+    await page.locator('kt-confirm-dialog').getByRole('button', { name: 'Delete' }).click();
+    await until(
+      () =>
+        !JSON.stringify(document.querySelector('kt-tree')?.items ?? []).includes('Untitled') &&
+        document.querySelector('.doc-title')?.textContent !== 'Untitled',
+    );
+
+    // A document that is not there.
+    await page.goto(`${base}#/doc/no-such-document`);
+    await until(() => document.querySelector('kt-error-page') !== null);
+
+    // A phone: no sideways scroll, and the documents are in the shell's drawer.
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto(`${base}#/`);
+    await until(() => (document.querySelector('.page')?.value ?? '') !== '');
+    await until(() => document.documentElement.scrollWidth <= window.innerWidth);
+    await until(() => document.querySelector('kt-app-shell')?.hasAttribute('narrow') === true);
+  },
+
   async chat(page, base) {
     const until = (check, arg) => page.waitForFunction(check, arg, { timeout: TIMEOUT });
     const ask = async (question) => {

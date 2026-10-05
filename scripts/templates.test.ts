@@ -58,6 +58,16 @@ const SHARED: Record<string, readonly string[]> = {
     'src/icons.ts',
     'src/styles.css',
   ],
+  editor: [
+    'src/content.ts',
+    'src/documents.ts',
+    'src/markdown.ts',
+    'src/formatting.ts',
+    'src/store.ts',
+    'src/brand.ts',
+    'src/icons.ts',
+    'src/styles.css',
+  ],
 };
 
 const projects = dirs.filter((dir) => existsSync(join(root, 'templates', dir, 'package.json')));
@@ -436,5 +446,149 @@ describe('the dashboard', () => {
     const other = cell(MEMBERS[1]!, { key: 'actions' }) as HTMLElement;
     other.click();
     expect(removed).toEqual([MEMBERS[1]!.name]);
+  });
+});
+
+describe('the editor', () => {
+  const MINUTE = 60_000;
+
+  it('keeps a version a minute, the last twenty, and restores one', async () => {
+    const { createDoc, updateBody, restoreVersion, VERSION_EVERY } =
+      await import('../templates/editor-vanilla/src/documents');
+    expect(VERSION_EVERY).toBe(MINUTE);
+    const made = createDoc([], 'Notes', 0);
+    let list = made.list;
+    list = updateBody(list, made.id, 'one', 1000);
+    list = updateBody(list, made.id, 'two', 2000);
+    const doc = () => list.find((candidate) => candidate.id === made.id)!;
+    // The first save records what it replaced; another within the minute does not.
+    expect(doc().versions.map((version) => version.body)).toEqual(['']);
+    expect(doc().body).toBe('two');
+    list = updateBody(list, made.id, 'three', 2000 + MINUTE);
+    expect(doc().versions.map((version) => version.body)).toEqual(['', 'two']);
+
+    for (let i = 0; i < 40; i += 1) list = updateBody(list, made.id, `v${i}`, (i + 3) * MINUTE * 2);
+    expect(doc().versions).toHaveLength(20);
+
+    const older = doc().versions[0]!;
+    const current = doc().body;
+    list = restoreVersion(list, made.id, older.at, 999 * MINUTE);
+    expect(doc().body).toBe(older.body);
+    // What restoring replaced is a version too: nothing is lost.
+    expect(doc().versions.at(-1)!.body).toBe(current);
+  });
+
+  it('titles a document by its first heading or line, and counts its words', async () => {
+    const { titleOf, wordCount } = await import('../templates/editor-vanilla/src/documents');
+    expect(titleOf('# Launch plan\n\nText')).toBe('Launch plan');
+    expect(titleOf('\n\nFirst line here\nSecond')).toBe('First line here');
+    expect(titleOf('   ')).toBe('Untitled');
+    expect(wordCount('# A title\n\nTwo words, **three**.')).toBe(5);
+    expect(wordCount('')).toBe(0);
+  });
+
+  it('lists the documents as a tree: folders, then their documents', async () => {
+    const { treeOf, deleteDoc } = await import('../templates/editor-vanilla/src/documents');
+    const { SEED } = await import('../templates/editor-vanilla/src/content');
+    const tree = treeOf(SEED);
+    expect(tree.length).toBeGreaterThanOrEqual(2);
+    for (const folder of tree) expect(folder.children!.length).toBeGreaterThan(0);
+    const first = tree[0]!.children![0]!;
+    expect(first.label).toBe(SEED.find((doc) => doc.id === first.id)!.title);
+    expect(deleteDoc(SEED, first.id).some((doc) => doc.id === first.id)).toBe(false);
+  });
+
+  it('renders Markdown to nodes: blocks, inlines, and text kept as text', async () => {
+    const { renderMarkdown } = await import('../templates/editor-vanilla/src/markdown');
+    const box = document.createElement('div');
+    box.append(
+      ...renderMarkdown(
+        [
+          '# Title',
+          '## Sub',
+          'Some **bold**, *italic*, `code` and [a link](https://example.com).',
+          '',
+          '- one',
+          '- two',
+          '',
+          '1. first',
+          '2. second',
+          '',
+          '> quoted',
+          '',
+          '```',
+          'const x = 1 < 2;',
+          '```',
+        ].join('\n'),
+      ),
+    );
+    expect(box.querySelector('h1')!.textContent).toBe('Title');
+    expect(box.querySelector('h2')!.textContent).toBe('Sub');
+    expect(box.querySelector('p strong')!.textContent).toBe('bold');
+    expect(box.querySelector('p em')!.textContent).toBe('italic');
+    expect(box.querySelector('p code')!.textContent).toBe('code');
+    expect(box.querySelector('a')!.getAttribute('href')).toBe('https://example.com');
+    expect([...box.querySelectorAll('ul li')].map((li) => li.textContent)).toEqual(['one', 'two']);
+    expect(box.querySelectorAll('ol li')).toHaveLength(2);
+    expect(box.querySelector('blockquote')!.textContent).toBe('quoted');
+    expect(box.querySelector('pre code')!.textContent).toBe('const x = 1 < 2;');
+  });
+
+  it('renders nothing that runs: markup stays text, unsafe links lose their href', async () => {
+    const { renderMarkdown } = await import('../templates/editor-vanilla/src/markdown');
+    const box = document.createElement('div');
+    box.append(
+      ...renderMarkdown(
+        '<script>alert(1)</script> <img src=x onerror=alert(1)>\n\n[click](javascript:alert(1)) [mail](mailto:a@b.c) [here](#top)',
+      ),
+    );
+    expect(box.querySelector('script, img')).toBeNull();
+    expect(box.textContent).toContain('<script>alert(1)</script>');
+    const links = [...box.querySelectorAll('a')];
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['mailto:a@b.c', '#top']);
+    expect(box.textContent).toContain('click');
+  });
+
+  it('wraps the selection in Markdown, and keeps it selected', async () => {
+    const { applyFormat } = await import('../templates/editor-vanilla/src/formatting');
+    // "world" selected in "hello world".
+    expect(applyFormat('hello world', 6, 11, 'bold')).toEqual({
+      text: 'hello **world**',
+      start: 8,
+      end: 13,
+    });
+    expect(applyFormat('hello world', 6, 11, 'italic').text).toBe('hello *world*');
+    expect(applyFormat('hello world', 6, 11, 'code').text).toBe('hello `world`');
+    expect(applyFormat('hello world', 6, 11, 'link')).toEqual({
+      text: 'hello [world](https://)',
+      start: 14,
+      end: 22,
+    });
+    // Line formats apply to the lines the selection touches.
+    expect(applyFormat('one\ntwo', 0, 5, 'list').text).toBe('- one\n- two');
+    expect(applyFormat('one\ntwo', 5, 5, 'heading').text).toBe('one\n## two');
+    expect(applyFormat('one', 0, 0, 'quote').text).toBe('> one');
+    // Nothing selected: a placeholder, selected, to type over.
+    const empty = applyFormat('ab', 1, 1, 'bold');
+    expect(empty.text).toBe('a**bold text**b');
+    expect(empty.text.slice(empty.start, empty.end)).toBe('bold text');
+  });
+
+  it('seeds the documents, and keeps working when storage refuses', async () => {
+    const { loadDocs, saveDocs } = await import('../templates/editor-vanilla/src/store');
+    const { SEED } = await import('../templates/editor-vanilla/src/content');
+    localStorage.clear();
+    expect(loadDocs()).toEqual(SEED);
+    const changed = SEED.map((doc, index) => (index === 0 ? { ...doc, body: 'changed' } : doc));
+    saveDocs(changed);
+    expect(loadDocs()[0]!.body).toBe('changed');
+    localStorage.setItem('kanto-editor', '{not json');
+    expect(loadDocs()).toEqual(SEED);
+    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    expect(loadDocs()).toEqual(SEED);
+    spy.mockRestore();
+    localStorage.clear();
   });
 });
