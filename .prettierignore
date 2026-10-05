@@ -5,3 +5,4 @@ package-lock.json
 
 # Plan-execution scratch (git-ignored locally).
 .superpowers/
+packages/create-kanto/templates/

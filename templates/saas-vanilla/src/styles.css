@@ -1,0 +1,63 @@
+/* The app's own layout. Kanto's styles.css already sets the page's colours and type. */
+html,
+body,
+#app {
+  height: 100%;
+}
+
+.app {
+  height: 100dvh;
+}
+
+.app-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.app-brand {
+  color: var(--text-body);
+  font: 600 18px / 1 var(--font-family-display);
+  text-decoration: none;
+}
+
+.page {
+  display: grid;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  min-height: 96px;
+}
+
+.panel {
+  padding: 24px;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+}
+
+.settings {
+  display: grid;
+  gap: 40px;
+}
+
+.auth {
+  display: grid;
+  min-height: 100%;
+  padding: 32px 16px;
+  place-items: center;
+}
+
+.auth-note {
+  margin: 0;
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+}

@@ -5,7 +5,15 @@ import wc from 'eslint-plugin-wc';
 import prettier from 'eslint-config-prettier';
 
 export default ts.config(
-  { ignores: ['dist/**', 'dist-demo/**', 'coverage/**'] },
+  {
+    ignores: [
+      'dist/**',
+      'dist-demo/**',
+      'coverage/**',
+      'templates/**',
+      'packages/create-kanto/templates/**',
+    ],
+  },
   js.configs.recommended,
   ...ts.configs.recommendedTypeChecked,
   lit.configs['flat/recommended'],

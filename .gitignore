@@ -11,3 +11,9 @@ coverage/
 npm-debug.log*
 dist-demo/
 demo/public/llms-full.txt
+
+# Templates: each installs and builds on its own.
+templates/*/node_modules/
+templates/*/dist/
+# create-kanto bundles templates/ here at pack time.
+packages/create-kanto/templates/
