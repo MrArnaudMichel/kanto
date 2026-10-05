@@ -4,7 +4,7 @@
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { kantoRange } from './bump-templates.js';
 
 const root = process.cwd();
@@ -166,6 +166,10 @@ describe('signing in, and where a visit goes', () => {
 });
 
 describe('the landing content', () => {
+  // The actions import kanto-ds, slow to load under a busy suite: load them
+  // once, with time to spare, so no test times out while its body runs on.
+  beforeAll(() => import('../templates/landing-vanilla/src/actions'), 30_000);
+
   it('leads every plan, and every call to start, to the closing call to action', async () => {
     const { PRICING, HERO } = await import('../templates/landing-vanilla/src/content');
     expect(PRICING.plans.length).toBe(3);
@@ -183,8 +187,6 @@ describe('the landing content', () => {
   });
 
   it('subscribes a new address, and says so for one already on the list', async () => {
-    // It imports kanto-ds, which is slow to load under a busy suite: load it
-    // before the clock is faked.
     const { subscribe } = await import('../templates/landing-vanilla/src/actions');
     vi.useFakeTimers();
     const ok = subscribe('ada@northwind.com');
@@ -273,9 +275,9 @@ describe('the chat', () => {
   });
 
   it('answers by keyword, and streams the whole answer a token at a time', async () => {
-    vi.useFakeTimers();
     const { answerFor, reply } = await import('../templates/chat-vanilla/src/model');
     const { FALLBACK } = await import('../templates/chat-vanilla/src/content');
+    vi.useFakeTimers();
     expect(answerFor('Why is REVENUE down?')).toMatch(/Revenue fell 3%/);
     expect(answerFor('Tell me a joke')).toBe(FALLBACK);
     const tokens: string[] = [];
