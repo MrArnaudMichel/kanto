@@ -55,9 +55,19 @@ export default ts.config(
       // Spread first: disableTypeChecked works by unsetting parserOptions,
       // and replacing languageOptions outright would put them back.
       ...ts.configs.disableTypeChecked.languageOptions,
-      globals: { console: 'readonly', process: 'readonly' },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        fetch: 'readonly',
+        setTimeout: 'readonly',
+      },
     },
     rules: { ...ts.configs.disableTypeChecked.rules, 'no-console': 'off' },
+  },
+  {
+    /* The smoke walks hand functions to Playwright, which runs them in the page. */
+    files: ['scripts/template-smoke.js'],
+    languageOptions: { globals: { document: 'readonly', location: 'readonly' } },
   },
   prettier,
 );
