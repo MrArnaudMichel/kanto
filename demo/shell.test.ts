@@ -189,7 +189,9 @@ describe('the documentation shell', () => {
     location.hash = '#/templates/saas';
     await tick();
     expect(document.title).toBe('SaaS — Kanto');
-    expect(app.querySelectorAll('.template-screens img')).toHaveLength(4);
+    expect(app.querySelector<HTMLIFrameElement>('.template-run iframe')!.getAttribute('src')).toBe(
+      './templates/saas/#/sign-in',
+    );
     // From the template's page too, the demo resolves beside the site, not under the hash.
     const demo = app.querySelector<HTMLAnchorElement>('a.template-demo')!;
     expect(
@@ -209,7 +211,7 @@ describe('the documentation shell', () => {
   });
 
   it('sends an old template link to the gallery', async () => {
-    location.hash = '#/templates/dashboard';
+    location.hash = '#/templates/sign-in';
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(document.title).toBe('Templates — Kanto');
   });
@@ -226,14 +228,11 @@ describe('the documentation shell', () => {
         '.built-with a[href^="https://github.com/MrArnaudMichel/kanto/issues/new?template=showcase.yml"]',
       ),
     ).not.toBeNull();
-    // The demos keep their pages until their templates replace them.
+    // The demos are templates now: Apps holds the showcase alone.
     const groups = [...app.querySelectorAll('.sidebar-group .overline')].map((g) =>
       g.textContent!.trim(),
     );
-    expect(groups).toEqual(expect.arrayContaining(['Apps', 'Demos']));
-    location.hash = '#/apps/console-home';
-    await tick();
-    expect(document.title).toBe('Console — Kanto');
+    expect(groups).toEqual(['Apps']);
   });
 
   it('names every link on the templates and apps pages, or hides it from assistive tech', async () => {
@@ -251,6 +250,41 @@ describe('the documentation shell', () => {
         )
         .map((link) => link.getAttribute('href'));
       expect(unnamed, hash).toEqual([]);
+    }
+  });
+
+  it('runs every demo in Templates, and says when a project is still to come', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    location.hash = '#/templates';
+    await tick();
+    expect(app.querySelectorAll('.templates-gallery .template-card').length).toBeGreaterThanOrEqual(
+      5,
+    );
+    const cards = [...app.querySelectorAll('.template-card')];
+    const dashboard = cards.find((card) => card.querySelector('a[href="#/templates/dashboard"]'))!;
+    expect(dashboard.querySelector('.template-stacks')!.textContent).toMatch(/coming/i);
+    location.hash = '#/templates/dashboard';
+    await tick();
+    expect(document.title).toBe('Dashboard — Kanto');
+    expect(app.querySelector<HTMLIFrameElement>('.template-run iframe')!.getAttribute('src')).toBe(
+      './#/app/console/home',
+    );
+    expect(app.querySelector('.template-start kt-code')).toBeNull();
+    expect(app.querySelector('.template-start')!.textContent).toMatch(/coming/i);
+    expect(app.querySelector('#try')).not.toBeNull();
+  });
+
+  it('sends the old demo pages to their templates', async () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+    for (const [old, title] of [
+      ['#/apps/console-home', 'Dashboard'],
+      ['#/apps/landing', 'Landing'],
+      ['#/apps/chat', 'Chat'],
+      ['#/apps/portfolio', 'Portfolio'],
+    ]) {
+      location.hash = old!;
+      await tick();
+      expect(document.title, old).toBe(`${title} — Kanto`);
     }
   });
 });

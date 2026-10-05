@@ -10,7 +10,6 @@ import { renderDoc, type Heading } from '../lib/markdown.js';
 import {
   createCommand,
   degitCommand,
-  demoHref,
   STACKS,
   TEMPLATE_CATALOG,
   type StackId,
@@ -24,7 +23,7 @@ const chosen = new Map<string, StackId>();
 const screenSrc = (file: string) => `./templates/${file}`;
 
 function demoLink(entry: TemplateEntry): TemplateResult {
-  return html`<a class="template-demo" href=${demoHref(entry.id)} target="_blank" rel="noopener"
+  return html`<a class="template-demo" href=${entry.demo} target="_blank" rel="noopener"
     >Live demo<kt-icon name="arrow-up-right" size="14" aria-hidden="true"></kt-icon
   ></a>`;
 }
@@ -58,7 +57,9 @@ export function templatesPage(): DocPage {
             <div class="template-card-body">
               <h2><a href=${`#/templates/${entry.id}`}>${entry.name}</a></h2>
               <p>${entry.summary}</p>
-              <p class="template-stacks">${STACKS.map((stack) => stack.label).join(', ')}</p>
+              <p class="template-stacks">
+                ${entry.project ? STACKS.map((stack) => stack.label).join(', ') : 'Project coming soon'}
+              </p>
               <div class="template-card-actions">
                 ${demoLink(entry)}
                 <a href=${`#/templates/${entry.id}`}>How to start</a>
@@ -70,11 +71,33 @@ export function templatesPage(): DocPage {
   };
 }
 
+/** The template, running, framed at desktop width and scaled down — as the demo pages did. */
+function running(entry: TemplateEntry): TemplateResult {
+  return html`<div class="app-preview template-run">
+      <div class="app-preview-chrome">
+        <span class="app-preview-dots"><i></i><i></i><i></i></span>
+        <span class="app-preview-url">${entry.name}</span>
+      </div>
+      <div class="app-preview-viewport">
+        <iframe
+          class="app-preview-frame"
+          title=${`${entry.name}, running`}
+          loading="lazy"
+          src=${entry.demo}
+        ></iframe>
+      </div>
+    </div>
+    <p class="app-preview-note">
+      The frame is the template itself, running. Everything in it works.
+    </p>`;
+}
+
 export function templatePage(entry: TemplateEntry, rerender: () => void): DocPage {
   const stack = chosen.get(entry.id) ?? 'react';
-  const doc = renderDoc(entry.description);
+  const inside = entry.routes.length > 0 || entry.files.length > 0;
   const headings: Heading[] = [
-    { id: 'screens', text: 'Screens', level: 2 },
+    { id: 'demo', text: 'Demo', level: 2 },
+    { id: 'try', text: 'What to try', level: 2 },
     { id: 'start', text: 'Start a project', level: 2 },
     { id: 'inside', text: 'What is inside', level: 2 },
     { id: 'components', text: 'Components', level: 2 },
@@ -89,81 +112,81 @@ export function templatePage(entry: TemplateEntry, rerender: () => void): DocPag
     body: html`
       <section class="preview-section">
         <div class="app-preview-head">
-          <h2 id="screens">Screens</h2>
+          <h2 id="demo">Demo</h2>
           ${demoLink(entry)}
         </div>
-        <div class="template-screens">
-          ${entry.screens.map(
-            (screen) =>
-              html`<figure>
-                <img
-                  src=${screenSrc(screen.file)}
-                  alt=${screen.caption}
-                  loading="lazy"
-                  width="1400"
-                  height="860"
-                />
-                <figcaption>${screen.caption}</figcaption>
-              </figure>`,
-          )}
-        </div>
+        ${running(entry)}
       </section>
       <div class="prose">
+        <h2 id="try">What to try</h2>
+        ${unsafeHTML(renderDoc(entry.tryIt).html)}
         <section class="template-start">
           <h2 id="start">Start a project</h2>
-          <kt-tabs
-            label="Stack"
-            .tabs=${STACKS.map((option) => ({ value: option.id, label: option.label }))}
-            .value=${stack}
-            @kt-change=${(event: CustomEvent<{ value: StackId }>) => {
-              chosen.set(entry.id, event.detail.value);
-              rerender();
-            }}
-          ></kt-tabs>
-          ${code(createCommand(entry.id, stack), 'bash')}
-          <p>Or fork it as it is, without the tool:</p>
-          ${code(degitCommand(entry.id, stack), 'bash')}
+          ${
+            entry.project
+              ? html`<kt-tabs
+                    label="Stack"
+                    .tabs=${STACKS.map((option) => ({ value: option.id, label: option.label }))}
+                    .value=${stack}
+                    @kt-change=${(event: CustomEvent<{ value: StackId }>) => {
+                      chosen.set(entry.id, event.detail.value);
+                      rerender();
+                    }}
+                  ></kt-tabs>
+                  ${code(createCommand(entry.id, stack), 'bash')}
+                  <p>Or fork it as it is, without the tool:</p>
+                  ${code(degitCommand(entry.id, stack), 'bash')}`
+              : html`<p>
+                  The project is coming: React, Vue and TypeScript, made with
+                  <code>npm create kanto@latest</code> like the others. For now, the demo above is
+                  the template running.
+                </p>`
+          }
         </section>
         <h2 id="inside">What is inside</h2>
-        ${unsafeHTML(doc.html)}
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Route</th>
-                <th>What it shows</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${entry.routes.map(
-                (route) =>
-                  html`<tr>
-                    <td><code>${route.path}</code></td>
-                    <td>${route.what}</td>
-                  </tr>`,
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>To change first</th>
-                <th>What it holds</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${entry.files.map(
-                (file) =>
-                  html`<tr>
-                    <td><code>${file.path}</code></td>
-                    <td>${file.what}</td>
-                  </tr>`,
-              )}
-            </tbody>
-          </table>
-        </div>
+        ${unsafeHTML(renderDoc(entry.description).html)}
+        ${
+          inside
+            ? html`<div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Route</th>
+                        <th>What it shows</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${entry.routes.map(
+                        (route) =>
+                          html`<tr>
+                            <td><code>${route.path}</code></td>
+                            <td>${route.what}</td>
+                          </tr>`,
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>To change first</th>
+                        <th>What it holds</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${entry.files.map(
+                        (file) =>
+                          html`<tr>
+                            <td><code>${file.path}</code></td>
+                            <td>${file.what}</td>
+                          </tr>`,
+                      )}
+                    </tbody>
+                  </table>
+                </div>`
+            : ''
+        }
         <h2 id="components">Components</h2>
         <ul class="template-components">
           ${entry.components.map(

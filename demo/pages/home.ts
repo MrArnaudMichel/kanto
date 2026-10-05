@@ -1,7 +1,7 @@
 /**
  * The front door. A product first — one live screen, re-coloured from a row
  * of swatches — then three reasons, each shown working; the wall of screens;
- * the templates to start from, and whole apps; and the way in. No code until someone asks.
+ * the templates to start from, each running; and the way in. No code until someone asks.
  */
 import { html, type TemplateResult } from 'lit';
 import { ref } from 'lit/directives/ref.js';
@@ -12,7 +12,7 @@ import { stage } from '../lib/stage.js';
 import { REASONS } from '../lib/reasons.js';
 import { AGENT_SETUPS } from '../lib/agents.js';
 import { chatDemo } from '../lib/chat-demo.js';
-import { demoHref, TEMPLATE_CATALOG } from '../lib/templates.js';
+import { TEMPLATE_CATALOG } from '../lib/templates.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
 import { NPM_URL, REPO_URL, VERSION, VERSION_TAG } from '../lib/project.js';
@@ -52,21 +52,6 @@ export class SaveComponent {}`,
 
 <kt-button variant="primary">Save changes</kt-button>`,
 };
-
-const APPS = [
-  {
-    path: 'console/home',
-    name: 'Console',
-    note: 'An admin tool: inbox, customers, files, settings.',
-  },
-  { path: 'chat', name: 'Chat', note: 'A messaging app, threads and composer.' },
-  { path: 'landing', name: 'Landing', note: 'A marketing page with pricing and sign-up.' },
-  {
-    path: 'portfolio',
-    name: 'Portfolio',
-    note: 'A personal site with a timeline and a contact form.',
-  },
-];
 
 let framework: keyof typeof FRAMEWORKS = 'react';
 
@@ -331,33 +316,16 @@ export function homePage({
       <h2 id="home-templates">Start from a template</h2>
       <p>
         Whole projects — routed, typed and building — in React, Vue or TypeScript without a
-        framework. <a href="#/templates">See every template</a>.
+        framework, each running here. <a href="#/templates">See every template</a>.
       </p>
-      <ul class="home-template-cards">
-        ${TEMPLATE_CATALOG.map(
-          (entry) =>
-            html`<li>
-              <a class="home-template-name" href=${`#/templates/${entry.id}`}>${entry.name}</a>
-              <p>${entry.summary}</p>
-              <div class="home-template-actions">
-                <a href=${demoHref(entry.id)} target="_blank" rel="noopener">Live demo</a>
-                <a href=${`#/templates/${entry.id}`}>How to start</a>
-              </div>
-            </li>`,
-        )}
-      </ul>
-    </section>
-
-    <section class="home-band home-screens" aria-labelledby="home-apps">
-      <h2 id="home-apps">And whole apps</h2>
-      <p>Products built from Kanto end to end — open one and use it.</p>
       <ul class="home-previews home-previews-apps">
-        ${APPS.map((app) =>
+        ${TEMPLATE_CATALOG.map((entry) =>
           preview({
-            href: `#/app/${app.path}`,
-            src: `${location.pathname}#/app/${app.path}`,
-            name: app.name,
-            note: app.note,
+            href: `#/templates/${entry.id}`,
+            // The demo, from beside this page: `./#/app/chat`, `./templates/saas/#/sign-in`.
+            src: `${location.pathname.replace(/[^/]*$/, '')}${entry.demo.slice(2)}`,
+            name: entry.name,
+            note: entry.summary,
           }),
         )}
       </ul>

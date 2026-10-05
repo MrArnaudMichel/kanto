@@ -193,13 +193,13 @@ describe('the gallery', () => {
 });
 
 describe('templates', () => {
-  it('leads to the gallery, and to each template and its live demo', () => {
+  it('leads to the gallery, and to each template, a miniature of it running', () => {
     const section = mount().querySelector('.home-templates')!;
     expect(section.querySelector('a[href="#/templates"]')).not.toBeNull();
     for (const entry of TEMPLATE_CATALOG) {
       expect(section.querySelector(`a[href="#/templates/${entry.id}"]`), entry.id).not.toBeNull();
-      expect(section.querySelector(`a[href="./templates/${entry.id}/"]`), entry.id).not.toBeNull();
     }
+    expect(section.querySelectorAll('iframe')).toHaveLength(TEMPLATE_CATALOG.length);
   });
 
   it('no longer leads to the blocks page', () => {

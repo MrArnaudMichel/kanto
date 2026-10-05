@@ -18,12 +18,14 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - Every template is installed against the published package, built and
   walked in a browser in CI and before every release.
 - The docs site's Templates section: a gallery, and a page per template with
-  its screens, the command for each stack and a live demo. The Blocks page it
+  the template running in a frame, what to try, and the command for each
+  stack. The Blocks page it
   replaces sent people to the same blocks as Components does; old links land
   on the first block.
 - The docs site's Apps section is a showcase of products built with Kanto,
-  with a form to add yours. The demo applications keep their pages under
-  Demos until their templates replace them.
+  with a form to add yours. Its four demo applications are templates now —
+  Dashboard, Landing, Chat and Portfolio — each running on its page, their
+  projects to come; their old pages lead there.
 
 ### Fixed
 

@@ -94,22 +94,28 @@ then linked to `publish.yml` on npmjs.com.
 
 ### Templates — `#/templates`
 
-The section comes back in the top bar, as the gallery of templates:
+The section in the top bar, as the gallery of templates — every template,
+with its demo running:
 
 - **The gallery** (`#/templates`): one card per template — a screenshot, what
-  it is for, its stacks, and two ways in: **Live demo** and the command.
-- **A template's page** (`#/templates/<id>`): screenshots of its main
-  screens; what is inside (routes, the files to change); the command, with a
-  tab per stack (`npm create kanto@latest my-app -- --template saas --stack
-react`) and Copy; the `degit` line; the components it uses, each linking to
-  its page.
-- **Live demos:** the site's build also builds each template's vanilla stack — the lightest build, the
-  site's own way of using Kanto, and Kanto without a framework —
-  into `templates/<id>/` beside the docs, so **Live demo** opens the real
-  template, signed in with any email. Built in the Pages workflow, which
-  already has the network.
-- **Screenshots:** made by a script from those builds (as the share image is),
-  committed under `demo/public/templates/`.
+  it is for, its stacks, and two ways in: **Live demo** and its page.
+- **A template's page** (`#/templates/<id>`): the template **running in a
+  frame**, with Open full screen; what to try in it; the command, with a tab
+  per stack and Copy, and the `degit` line; what is inside (routes, the files
+  to change); the components it uses, each linking to its page.
+- **Demos for every template, now:** the four demo applications (Console →
+  Dashboard, Landing, Assistant → Chat, Portfolio) are templates in the
+  gallery from phase 2, each running from its demo. Until its projects exist
+  (phase 3) a template's page says the project is coming instead of giving a
+  command; the catalog marks which templates have projects, and only those
+  are held to `create-kanto`'s list.
+- **Live demos of templates with projects:** the site's build also builds
+  each template's vanilla stack into `templates/<id>/` beside the docs. SaaS's
+  frame opens on its sign-in screen; any email gets in.
+- **Screenshots:** made by a script from the running demos, committed under
+  `demo/public/templates/`.
+- **The home page** shows a running miniature of each template, leading to its
+  page, under "Start from a template".
 
 ### Apps — `#/apps`
 
@@ -118,9 +124,9 @@ one line, a link. It starts with the Kanto docs site itself, and a card
 "Built something with Kanto? Show it" leading to a GitHub issue form. Each
 card is data in one file.
 
-The current demos (`#/app/console/…`, `landing`, `chat`, `portfolio`) stay
-reachable at their URLs while their template is built; each is removed, and
-its URL sent to the template's page, once its template is live. The home page
+The demos left Apps for Templates: their full-screen URLs (`#/app/…`) stay
+until their template's project replaces them, and their old pages
+(`#/apps/console-home`, …) lead to their template's page. The home page
 stage, which draws on the console's screens, keeps working throughout.
 
 ### Blocks

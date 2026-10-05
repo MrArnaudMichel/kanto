@@ -12,6 +12,7 @@ import '../shell.css';
 import '../home.css';
 import { KT_DEFAULT_APPEARANCE } from 'kanto-ds';
 import { homeFooter, homePage } from './home.js';
+import { TEMPLATE_CATALOG } from '../lib/templates.js';
 
 afterEach(() => {
   delete document.documentElement.dataset['theme'];
@@ -59,8 +60,8 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
       host,
     );
     const frames = [...host.querySelectorAll('iframe')];
-    // The four apps.
-    expect(frames.length).toBe(4);
+    // One per template.
+    expect(frames.length).toBe(TEMPLATE_CATALOG.length);
     for (const frame of frames) {
       expect(frame.hasAttribute('inert')).toBe(true);
       expect(frame.getAttribute('tabindex')).toBe('-1');
@@ -71,10 +72,10 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
 
     frames[0]!.scrollIntoView();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(frames[0]!.getAttribute('src')).toContain('#/app/');
+    expect(frames[0]!.getAttribute('src')).toContain(TEMPLATE_CATALOG[0]!.demo.slice(1));
     frames.at(-1)!.scrollIntoView();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(frames.at(-1)!.getAttribute('src')).toContain('#/app/');
+    expect(frames.at(-1)!.getAttribute('src')).toContain(TEMPLATE_CATALOG.at(-1)!.demo.slice(1));
   });
 });
 

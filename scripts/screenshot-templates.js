@@ -16,7 +16,7 @@ import { createServer } from 'vite';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 5197;
 /** Screens of the way in are shot signed out. */
-const PUBLIC_SCREENS = new Set(['#/sign-in', '#/sign-up']);
+const PUBLIC_SCREENS = /#\/sign-(in|up)$/;
 
 // The catalog is TypeScript: let Vite load it.
 const loader = await createServer({
@@ -55,11 +55,11 @@ try {
         viewport: { width: 1400, height: 860 },
         colorScheme: 'dark',
       });
-      const seed = PUBLIC_SCREENS.has(screen.hash) ? {} : (entry.seed ?? {});
+      const seed = PUBLIC_SCREENS.test(screen.path) ? {} : (entry.seed ?? {});
       await page.addInitScript((pairs) => {
         for (const [key, value] of Object.entries(pairs)) localStorage.setItem(key, value);
       }, seed);
-      await page.goto(`${base}/templates/${entry.id}/${screen.hash}`);
+      await page.goto(`${base}/${screen.path}`);
       await page.waitForLoadState('networkidle');
       // The fixtures answer after ~300ms; let them land and the motion settle.
       await page.waitForTimeout(1500);

@@ -11,14 +11,23 @@ export interface TemplateEntry {
   readonly summary: string;
   /** Markdown, on the template's page: what it is and how it is made. */
   readonly description: string;
+  /** Markdown: what to try in the running demo. */
+  readonly tryIt: string;
+  /**
+   * The running demo, relative to the site: a template's live build
+   * (`./templates/saas/#/sign-in`), or a demo of the docs (`./#/app/chat`).
+   */
+  readonly demo: string;
+  /** Its projects exist: `create-kanto` makes it, `templates/<id>-<stack>/` hold it. */
+  readonly project: boolean;
   readonly routes: readonly { readonly path: string; readonly what: string }[];
   /** The files a fork changes first. */
   readonly files: readonly { readonly path: string; readonly what: string }[];
   readonly components: readonly string[];
-  /** Screens shot from the live demo; the first is the card's. */
+  /** Screens shot from the running demo, by path from the site's root; the first is the card's. */
   readonly screens: readonly {
     readonly file: string;
-    readonly hash: string;
+    readonly path: string;
     readonly caption: string;
   }[];
   /** localStorage set before the screenshots: the demo seen signed in. */
@@ -45,6 +54,12 @@ pages do not change.
 
 A new account lands on its first steps before its dashboard; a signed-out
 visit to any page goes to sign in.`,
+    tryIt: `- Sign in with any email and password — then open a customer from the
+  table, and change your name in Settings.
+- Search the customers as fast as you type: the last search always wins.
+- Delete the workspace — it asks first.`,
+    demo: './templates/saas/#/sign-in',
+    project: true,
     routes: [
       {
         path: '#/sign-in, #/sign-up',
@@ -84,10 +99,10 @@ visit to any page goes to sign in.`,
       'kt-error-page',
     ],
     screens: [
-      { file: 'saas-overview.png', hash: '#/', caption: 'The overview' },
-      { file: 'saas-customers.png', hash: '#/customers', caption: 'Customers' },
-      { file: 'saas-settings.png', hash: '#/settings', caption: 'Settings' },
-      { file: 'saas-sign-in.png', hash: '#/sign-in', caption: 'Signing in' },
+      { file: 'saas-overview.png', path: 'templates/saas/#/', caption: 'The overview' },
+      { file: 'saas-customers.png', path: 'templates/saas/#/customers', caption: 'Customers' },
+      { file: 'saas-settings.png', path: 'templates/saas/#/settings', caption: 'Settings' },
+      { file: 'saas-sign-in.png', path: 'templates/saas/#/sign-in', caption: 'Signing in' },
     ],
     seed: {
       'kanto-saas-session': JSON.stringify({
@@ -97,6 +112,117 @@ visit to any page goes to sign in.`,
       }),
     },
   },
+  {
+    id: 'dashboard',
+    name: 'Dashboard',
+    summary:
+      'An admin console: inbox, customers, files, activity, integrations and nested settings, in one shell.',
+    description: `An operations console: a dashboard, a mailbox, a customer table, a file
+browser, an audit log, integrations and five settings screens, all hanging off
+one shell.`,
+    tryIt: `- The sidebar nests three levels deep under **Administration**, and it is
+  \`<kt-sub-menu-navigation>\` doing it rather than markup written for this
+  screen. Navigate to a nested page and watch the branch open itself.
+- **⌘K** anywhere opens the command palette.
+- Collapse the sidebar from the top bar: labels are hidden, not clipped.
+- On **Customers**, tick some rows to raise the bulk bar, then delete — it asks
+  first.`,
+    demo: './#/app/console/home',
+    project: false,
+    routes: [],
+    files: [],
+    components: [
+      'kt-sub-menu-navigation',
+      'kt-command-palette',
+      'kt-page-header',
+      'kt-stat',
+      'kt-chart',
+      'kt-table',
+      'kt-pagination',
+      'kt-side-panel',
+      'kt-drag-drop',
+      'kt-timeline',
+      'kt-confirm-dialog',
+      'kt-tabs',
+    ],
+    screens: [{ file: 'dashboard-home.png', path: '#/app/console/home', caption: 'Home' }],
+  },
+  {
+    id: 'landing',
+    name: 'Landing',
+    summary: "A product's marketing page: a hero, features, pricing, questions and the way in.",
+    description: `A marketing page, to check that a system built for data-dense tools can still
+say hello: long measure, generous rhythm, one message per band.`,
+    tryIt: `- The pricing control really swaps the plans.
+- The FAQ is \`<kt-collapsible>\`, a disclosure rather than an accordion —
+  opening one answer does not close the one you were comparing it to.`,
+    demo: './#/app/landing',
+    project: false,
+    routes: [],
+    files: [],
+    components: [
+      'kt-header',
+      'kt-segmented-control',
+      'kt-card',
+      'kt-chart',
+      'kt-collapsible',
+      'kt-input',
+      'kt-button',
+    ],
+    screens: [{ file: 'landing-home.png', path: '#/app/landing', caption: 'The page' }],
+  },
+  {
+    id: 'chat',
+    name: 'Chat',
+    summary: 'An assistant: threads, answers that stream, sources, tool calls and a composer.',
+    description: `An assistant with the parts a real one has: a thread list, sources beside the
+answer, tool calls that show their work, and a composer with attachments and a
+model picker.`,
+    tryIt: `- Ask anything — replies stream a token at a time, and the transcript stays
+  pinned to the bottom while they do.
+- Open a **tool call** to see the arguments and the result.
+- The sources rail on the right follows the turn you are reading.`,
+    demo: './#/app/chat',
+    project: false,
+    routes: [],
+    files: [],
+    components: [
+      'kt-avatar',
+      'kt-code',
+      'kt-collapsible',
+      'kt-select',
+      'kt-textarea',
+      'kt-skeleton',
+      'kt-tooltip',
+      'kt-meter',
+    ],
+    screens: [{ file: 'chat-home.png', path: '#/app/chat', caption: 'A conversation' }],
+  },
+  {
+    id: 'portfolio',
+    name: 'Portfolio',
+    summary: "A person's work: projects to filter, case studies, a career and a contact form.",
+    description: `Typography rather than density, one thing said at a time: the third kind of
+screen, after the console and the marketing page.`,
+    tryIt: `- Filter the work, then open a case study — the panel carries a
+  \`<kt-timeline>\`, the same element as the career list on the page.
+- The contact form validates before it pretends to send.`,
+    demo: './#/app/portfolio',
+    project: false,
+    routes: [],
+    files: [],
+    components: [
+      'kt-header',
+      'kt-toggle-button-group',
+      'kt-side-panel',
+      'kt-timeline',
+      'kt-stat',
+      'kt-form',
+      'kt-input',
+      'kt-textarea',
+    ],
+    screens: [{ file: 'portfolio-home.png', path: '#/app/portfolio', caption: 'The site' }],
+  },
 ];
 
 export const createCommand = (id: string, stack: string): string =>
@@ -104,6 +230,3 @@ export const createCommand = (id: string, stack: string): string =>
 
 export const degitCommand = (id: string, stack: string): string =>
   `npx degit MrArnaudMichel/kanto/templates/${id}-${stack} my-app`;
-
-/** The live demo, built beside the site from the template's vanilla stack. */
-export const demoHref = (id: string): string => `./templates/${id}/`;
