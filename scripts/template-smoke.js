@@ -50,4 +50,24 @@ export const SMOKES = {
     await at('/no-such-page');
     await until(() => document.querySelector('kt-error-page') !== null);
   },
+
+  async landing(page, base) {
+    const until = (check) => page.waitForFunction(check, undefined, { timeout: TIMEOUT });
+    await page.goto(base);
+    await until(() => (document.querySelector('kt-hero')?.heading ?? '').length > 0);
+    await until(() => document.querySelectorAll('kt-logo-cloud img').length >= 5);
+    await until(() => (document.querySelector('kt-feature-grid')?.features ?? []).length === 6);
+    await until(() => (document.querySelector('kt-pricing-table')?.plans ?? []).length === 3);
+    await until(() => (document.querySelector('kt-faq')?.items ?? []).length >= 4);
+    await until(() => (document.querySelector('kt-footer')?.columns ?? []).length >= 2);
+
+    // The billing switch swaps the prices.
+    await page.locator('kt-pricing-table kt-segmented-control [role="radio"]').nth(1).click();
+    await until(() => document.querySelector('kt-pricing-table')?.billing === 'yearly');
+
+    // The newsletter takes an address and thanks the reader.
+    await page.locator('kt-newsletter kt-input input').fill('ada@northwind.com');
+    await page.locator('kt-newsletter kt-button').click();
+    await until(() => document.querySelector('kt-newsletter')?.subscribed === true);
+  },
 };

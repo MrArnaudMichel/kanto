@@ -1,0 +1,30 @@
+/* The page's own layout. Kanto's styles.css sets its colours and type. */
+.page {
+  display: grid;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+.brand {
+  color: var(--text-body);
+  font: 600 18px / 1 var(--font-family-display);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 24px;
+}
+.nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.nav a:hover {
+  color: var(--text-body);
+}
+
+/* Anchored sections clear the sticky header. */
+[id] {
+  scroll-margin-top: 80px;
+}

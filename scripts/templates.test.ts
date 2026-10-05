@@ -14,19 +14,22 @@ const dirs = readdirSync(join(root, 'templates'), { withFileTypes: true })
 const version = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version as string;
 
 /** Files every stack of a template carries unchanged. */
-const SHARED = [
-  'src/data/fixtures.ts',
-  'src/data/api.ts',
-  'src/auth.ts',
-  'src/guard.ts',
-  'src/content.ts',
-  'src/format.ts',
-  'src/view.ts',
-  'src/brand.ts',
-  'src/icons.ts',
-  'src/styles.css',
-  'src/latest.ts',
-];
+const SHARED: Record<string, readonly string[]> = {
+  saas: [
+    'src/data/fixtures.ts',
+    'src/data/api.ts',
+    'src/auth.ts',
+    'src/guard.ts',
+    'src/content.ts',
+    'src/format.ts',
+    'src/view.ts',
+    'src/brand.ts',
+    'src/icons.ts',
+    'src/styles.css',
+    'src/latest.ts',
+  ],
+  landing: ['src/content.ts', 'src/actions.ts', 'src/brand.ts', 'src/styles.css'],
+};
 
 const projects = dirs.filter((dir) => existsSync(join(root, 'templates', dir, 'package.json')));
 
@@ -52,13 +55,15 @@ describe('each template', () => {
       expect(existsSync(at('package-lock.json')), `${dir} commits no lockfile`).toBe(false);
     });
 
-  it.each(SHARED)('shares %s, unchanged, across the SaaS stacks', (file) => {
-    const copies = ['saas-react', 'saas-vue', 'saas-vanilla'].map((dir) =>
-      readFileSync(join(root, 'templates', dir, file), 'utf8'),
-    );
-    expect(copies[1], `saas-vue/${file}`).toBe(copies[0]);
-    expect(copies[2], `saas-vanilla/${file}`).toBe(copies[0]);
-  });
+  for (const [template, files] of Object.entries(SHARED)) {
+    it.each(files)(`shares %s, unchanged, across the ${template} stacks`, (file) => {
+      const copies = ['react', 'vue', 'vanilla'].map((stack) =>
+        readFileSync(join(root, 'templates', `${template}-${stack}`, file), 'utf8'),
+      );
+      expect(copies[1], `${template}-vue/${file}`).toBe(copies[0]);
+      expect(copies[2], `${template}-vanilla/${file}`).toBe(copies[0]);
+    });
+  }
 });
 
 describe('the SaaS data', () => {
@@ -141,5 +146,33 @@ describe('signing in, and where a visit goes', () => {
       name: 'Ada',
     });
     expect(currentSession()).toMatchObject({ email: 'ada@northwind.com' });
+  });
+});
+
+describe('the landing content', () => {
+  it('leads every plan, and every call to start, to the closing call to action', async () => {
+    const { PRICING, HERO } = await import('../templates/landing-vanilla/src/content');
+    expect(PRICING.plans.length).toBe(3);
+    for (const plan of PRICING.plans) expect(plan.href, plan.id).toBe('#start');
+    expect(HERO.primaryHref).toBe('#start');
+  });
+
+  it('draws each logo as an image named after its company', async () => {
+    const { logoSrc } = await import('../templates/landing-vanilla/src/content');
+    const src = logoSrc('Sato Ceramics');
+    expect(src.startsWith('data:image/svg+xml,')).toBe(true);
+    expect(decodeURIComponent(src)).toContain('Sato Ceramics');
+  });
+
+  it('subscribes a new address, and says so for one already on the list', async () => {
+    vi.useFakeTimers();
+    const { subscribe } = await import('../templates/landing-vanilla/src/actions');
+    const ok = subscribe('ada@northwind.com');
+    const taken = subscribe('already@example.com');
+    const caught = taken.catch((error: Error) => error.message);
+    await vi.runAllTimersAsync();
+    await expect(ok).resolves.toBeUndefined();
+    await expect(caught).resolves.toMatch(/on the list/);
+    vi.useRealTimers();
   });
 });
