@@ -757,11 +757,17 @@
     z-index: 30;
     width: min(300px, 85vw);
     transform: translateX(-100%);
-    transition: transform var(--transition-base, 0.2s) ease;
+    /* Hidden once it has slid out: off screen is not out of the keyboard's way. */
+    visibility: hidden;
+    transition:
+      transform var(--transition-base, 0.2s) ease,
+      visibility 0s linear var(--transition-base, 0.2s);
   }
 
   .app.nav-open .app-sidebar {
     transform: none;
+    visibility: visible;
+    transition: transform var(--transition-base, 0.2s) ease;
   }
 
   .app.nav-open .scrim {

@@ -55,7 +55,7 @@ const tileFor = (role: Role) => ({
         compact
         :columns="COLUMNS"
         :data="ROWS"
-        :render-cell="capabilityCell"
+        :renderCell="capabilityCell"
       />
     </kt-card>
     <div class="tile-row">

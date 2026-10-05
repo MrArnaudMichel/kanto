@@ -168,7 +168,7 @@ const details = computed(() =>
         :sort-key="query.sortKey"
         :sort-direction="query.sortDirection"
         :empty-text="filters > 0 ? 'No customer matches these filters.' : 'No customers yet.'"
-        :render-cell="customerCell"
+        :renderCell="customerCell"
         @kt-sort-change="onSort"
         @kt-page-change="
           (event: CustomEvent<{ page: number }>) => (query = { ...query, page: event.detail.page })

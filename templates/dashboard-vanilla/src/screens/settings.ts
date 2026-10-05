@@ -155,8 +155,9 @@ export function people(outlet: HTMLElement): () => void {
     confirm.open = false;
     if (!member) return;
     void removeMember(member.id).then(async () => {
-      table.data = await listMembers();
-      if (live) toaster.success(`${member.name} removed`);
+      toaster.success(`${member.name} removed`);
+      const left = await listMembers();
+      if (live) table.data = left;
     });
   });
   confirm.addEventListener('kt-cancel', () => {
@@ -368,10 +369,9 @@ export function security(outlet: HTMLElement): () => void {
             : [
                 button('Sign out', { size: 'small', variant: 'danger' }, () => {
                   void revokeSession(session.id).then(async () => {
-                    const left = await listSessions();
-                    if (!live) return;
-                    drawSessions(left);
                     toaster.success(`${session.device} signed out`);
+                    const left = await listSessions();
+                    if (live) drawSessions(left);
                   });
                 }),
               ]),

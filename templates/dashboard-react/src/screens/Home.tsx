@@ -6,7 +6,7 @@ import { getOverview, type Grain, type Overview } from '../data/api';
 import { PERSON } from '../data/fixtures';
 import { formatMoney } from '../format';
 import { hrefFor } from '../nav';
-import { Screen, SectionHeader, TileCard } from '../parts';
+import { Screen, SectionHeader, TileCard, useKept } from '../parts';
 
 const GRAINS = [
   { id: 'daily', label: 'Daily' },
@@ -22,11 +22,14 @@ const ORDER_COLUMNS = [
   { key: 'amount', label: 'Amount', sortable: true, align: 'right' as const },
 ];
 
+// Kept while the reader is elsewhere.
+const kept = { grain: 'daily' as Grain };
+
 const formatAxis = (n: number) => formatMoney(n);
 const formatGb = (n: number) => `${n} GB`;
 
 export function Home() {
-  const [grain, setGrain] = useState<Grain>('daily');
+  const [grain, setGrain] = useKept(kept, 'grain');
   // Bumped by Refresh: the same grain, loaded again.
   const [reloads, setReloads] = useState(0);
   const [overview, setOverview] = useState<Overview | null>(null);

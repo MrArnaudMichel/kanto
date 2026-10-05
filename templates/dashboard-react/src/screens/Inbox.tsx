@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { toaster, type KtInput, type KtTextarea } from 'kanto-ds';
 import type { Message } from '../data/api';
 import { setMail, useMail } from '../mail';
-import { Screen } from '../parts';
+import { Screen, useKept } from '../parts';
 import { unreadCount, visibleMail, type MailFilter } from '../views';
 
 function Reading({
@@ -153,11 +153,10 @@ const kept = { selected: 1 as number | null, filter: 'all' as MailFilter, query:
 export function Inbox() {
   const mail = useMail();
   const messages = mail ?? [];
-  const [selected, setSelected] = useState(kept.selected);
-  const [filter, setFilter] = useState(kept.filter);
-  const [query, setQuery] = useState(kept.query);
+  const [selected, setSelected] = useKept(kept, 'selected');
+  const [filter, setFilter] = useKept(kept, 'filter');
+  const [query, setQuery] = useKept(kept, 'query');
   const [composing, setComposing] = useState(false);
-  Object.assign(kept, { selected, filter, query });
 
   const shown = visibleMail(messages, filter, query);
   const message = messages.find((candidate) => candidate.id === selected);

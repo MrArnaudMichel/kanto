@@ -1,13 +1,20 @@
+<script lang="ts">
+import type { FileFilter } from '../views';
+
+/** Kept while the reader is elsewhere. */
+const kept = { filter: 'all' as FileFilter, query: '' };
+</script>
+
 <script setup lang="ts">
 /** A file browser: the plainest screen, and the one that shows the most components at once. */
 import { toaster } from 'kanto-ds';
-import { computed, onBeforeUnmount, ref, shallowRef } from 'vue';
+import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { fileCell } from '../cells';
 import { listFiles, type FileRow } from '../data/api';
 import { FILE_STATS } from '../data/fixtures';
 import SectionHeader from '../SectionHeader.vue';
 import TileCard from '../TileCard.vue';
-import { visibleFiles, type FileFilter } from '../views';
+import { visibleFiles } from '../views';
 
 const COLUMNS = [
   { key: 'name', label: 'Name', sortable: true },
@@ -23,8 +30,11 @@ const FILTERS = [
 const renderFile = fileCell((file) => toaster.info(`Downloading ${file.name}…`));
 
 const all = shallowRef<readonly FileRow[] | null>(null);
-const filter = ref<FileFilter>('all');
-const query = ref('');
+const filter = ref<FileFilter>(kept.filter);
+const query = ref(kept.query);
+watch([filter, query], () => Object.assign(kept, { filter: filter.value, query: query.value }), {
+  flush: 'sync',
+});
 let live = true;
 onBeforeUnmount(() => {
   live = false;
@@ -97,7 +107,7 @@ const rows = computed(() => visibleFiles(all.value ?? [], filter.value, query.va
           :loading="all === null"
           :columns="COLUMNS"
           :data="rows"
-          :render-cell="renderFile"
+          :renderCell="renderFile"
         />
       </kt-card>
     </section>

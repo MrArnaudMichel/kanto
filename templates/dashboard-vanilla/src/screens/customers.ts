@@ -148,11 +148,13 @@ export function customers(outlet: HTMLElement): () => void {
     const ids = selected;
     confirm.open = false;
     void deleteCustomers(ids).then(async () => {
-      all = await listCustomers();
+      // Said even if the reader has moved on: the change happened.
+      toaster.success(`${ids.length} customer${ids.length > 1 ? 's' : ''} deleted`);
+      const rows = await listCustomers();
       if (!live) return;
+      all = rows;
       selected = [];
       draw();
-      toaster.success(`${ids.length} customer${ids.length > 1 ? 's' : ''} deleted`);
     });
   });
   confirm.addEventListener('kt-cancel', () => {

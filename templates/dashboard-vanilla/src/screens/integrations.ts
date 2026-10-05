@@ -43,11 +43,13 @@ export function integrations(outlet: HTMLElement): () => void {
     toggle.addEventListener('kt-change', (event) => {
       const connected = (event as CustomEvent<{ checked: boolean }>).detail.checked;
       void setIntegration(entry.id, connected).then(async () => {
-        all = await listIntegrations();
-        if (!live) return;
-        draw();
+        // Said even if the reader has moved on: the change happened.
         if (connected) toaster.success(`${entry.name} connected`);
         else toaster.info(`${entry.name} disconnected`);
+        const loaded = await listIntegrations();
+        if (!live) return;
+        all = loaded;
+        draw();
       });
     });
     return el('kt-card', {}, [

@@ -57,7 +57,7 @@ function remove(): void {
         :loading="members === null"
         :columns="COLUMNS"
         :data="members ?? []"
-        :render-cell="renderMember"
+        :renderCell="renderMember"
       />
     </kt-card>
 

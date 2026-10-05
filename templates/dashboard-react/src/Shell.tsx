@@ -32,6 +32,7 @@ export function Shell() {
   const mail = useMail();
   const unread = mail ? unreadCount(mail) : 0;
   const palette = useRef<KtCommandPalette>(null);
+  const search = useRef<HTMLButtonElement>(null);
   const [collapsed, setCollapsed] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const [cookies, setCookies] = useState(cookiesAnswered);
@@ -42,6 +43,11 @@ export function Shell() {
     window.scrollTo(0, 0);
     setDrawer(false);
   }, [pathname]);
+
+  // Into the drawer once it opens: the keyboard starts where the eye does.
+  useEffect(() => {
+    if (drawer) search.current?.focus();
+  }, [drawer]);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -81,7 +87,7 @@ export function Shell() {
           </span>
         </a>
 
-        <button type="button" className="app-search" onClick={openPalette}>
+        <button ref={search} type="button" className="app-search" onClick={openPalette}>
           <kt-icon name="search" size={16} />
           <span>Search…</span>
           <kt-kbd keys="mod k" />
@@ -140,6 +146,7 @@ export function Shell() {
             size="small"
             icon="menu"
             label="Open the menu"
+            expanded={drawer}
             onClick={() => setDrawer(true)}
           />
           <kt-button

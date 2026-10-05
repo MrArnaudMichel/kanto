@@ -152,7 +152,11 @@ export const SMOKES = {
   },
 
   async dashboard(page, base) {
-    const until = (check, arg) => page.waitForFunction(check, arg, { timeout: TIMEOUT });
+    // A check that times out says which one it was.
+    const until = (check, arg) =>
+      page.waitForFunction(check, arg, { timeout: TIMEOUT }).catch((error) => {
+        throw new Error(`${error.message}\n  waiting for: ${String(check).replace(/\s+/g, ' ')}`);
+      });
 
     // Every screen, each by its marker.
     const screens = [
@@ -213,19 +217,99 @@ export const SMOKES = {
       before,
     );
 
+    // Deleting for real, then leaving at once: the deletion is still reported.
+    await page.locator('.bulk-bar').getByRole('button', { name: 'Delete' }).click();
+    await until(() => document.querySelector('kt-confirm-dialog')?.open === true);
+    await page.locator('kt-confirm-dialog').getByRole('button', { name: 'Delete' }).click();
+    await page.goto(`${base}#/files`);
+    await until(() =>
+      [...document.querySelectorAll('kt-toast')].some((toast) => /deleted/.test(toast.heading)),
+    );
+
+    // The tables draw their cells — badges, icons, a row's buttons — in their shadow root.
+    const drawn = ([screen, tag, least]) =>
+      (document.querySelector(`.screen-${screen} kt-table`)?.shadowRoot?.querySelectorAll(tag)
+        .length ?? 0) >= least;
+    await page.goto(`${base}#/customers`);
+    await until(drawn, ['customers', 'kt-badge', 1]);
+    await page.goto(`${base}#/settings/members/roles`);
+    await until(drawn, ['roles', 'kt-icon', 1]);
+    await page.goto(`${base}#/settings/members/people`);
+    await until(drawn, ['people', 'kt-button', 2]);
+    // Removing a member asks first.
+    await page.locator('.screen-people kt-table kt-button:not([disabled])').first().click();
+    await until(() => document.querySelector('kt-confirm-dialog')?.open === true);
+    await page.keyboard.press('Escape');
+    await until(() => document.querySelector('kt-confirm-dialog')?.open === false);
+
+    // A screen's filters are kept while the reader is elsewhere, in every stack.
+    await page.goto(`${base}#/files`);
+    await page
+      .locator('.screen-files kt-segmented-control')
+      .getByRole('radio', { name: 'Starred' })
+      .click();
+    await until(
+      () => document.querySelector('.screen-files kt-segmented-control')?.value === 'starred',
+    );
+    await page.goto(`${base}#/activity`);
+    await page
+      .locator('.screen-activity kt-toggle-button-group')
+      .getByRole('button', { name: 'Billing', exact: true })
+      .click();
+    await until(
+      () => document.querySelector('.screen-activity kt-toggle-button-group')?.value === 'billing',
+    );
+    await page.goto(`${base}#/`);
+    await until(() => document.querySelector('.screen-home') !== null);
+    await page.goto(`${base}#/files`);
+    await until(
+      () => document.querySelector('.screen-files kt-segmented-control')?.value === 'starred',
+    );
+    await page.goto(`${base}#/activity`);
+    await until(
+      () => document.querySelector('.screen-activity kt-toggle-button-group')?.value === 'billing',
+    );
+
     // A page that is not there.
     await page.goto(`${base}#/no-such-screen`);
     await until(() => document.querySelector('kt-error-page') !== null);
 
-    // A phone: no sideways scroll, and the sidebar is a drawer a link closes.
+    // A phone: no sideways scroll on any screen, and the sidebar is a drawer a link closes.
     await page.setViewportSize({ width: 390, height: 800 });
-    for (const path of ['/', '/customers', '/inbox', '/settings/general']) {
+    for (const [path, name] of screens) {
       await page.goto(`${base}#${path}`);
-      await until(() => document.querySelector('.screen') !== null);
+      await until((marker) => document.querySelector(`.screen-${marker}`) !== null, name);
+      // Once the screen's data is in: its tables are drawn.
+      await page.waitForTimeout(400);
       await until(() => document.documentElement.scrollWidth <= window.innerWidth);
     }
+    // The closed drawer is out of the way of the keyboard too.
+    await page.goto(`${base}#/`);
+    await until(() => document.querySelector('.screen-home') !== null);
+    for (let i = 0; i < 6; i += 1) {
+      await page.keyboard.press('Tab');
+      const inDrawer = await page.evaluate(
+        () => document.activeElement?.closest('.app-sidebar') !== null,
+      );
+      if (inDrawer) throw new Error('Tab reached the closed drawer');
+    }
+    await until(
+      () =>
+        document
+          .querySelector('.menu-button')
+          ?.shadowRoot?.querySelector('button')
+          ?.getAttribute('aria-expanded') === 'false',
+    );
     await page.locator('.menu-button').click();
     await until(() => document.querySelector('.app')?.classList.contains('nav-open') === true);
+    await until(
+      () =>
+        document
+          .querySelector('.menu-button')
+          ?.shadowRoot?.querySelector('button')
+          ?.getAttribute('aria-expanded') === 'true',
+    );
+    await until(() => document.activeElement?.closest('.app-sidebar') !== null);
     await page.locator('kt-sub-menu-navigation a', { hasText: 'Files' }).click();
     await until(
       () =>

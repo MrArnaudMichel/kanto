@@ -1,14 +1,22 @@
+<script lang="ts">
+import type { EventKind } from '../data/api';
+
+/** Kept while the reader is elsewhere. */
+const kept = { kind: 'all' as EventKind | 'all' };
+</script>
+
 <script setup lang="ts">
 /** The audit log, one day at a time. */
 import { toaster } from 'kanto-ds';
-import { computed, onBeforeUnmount, ref, shallowRef } from 'vue';
-import { listEvents, type AuditEvent, type EventKind } from '../data/api';
+import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
+import { listEvents, type AuditEvent } from '../data/api';
 import { EVENT_FILTERS } from '../data/fixtures';
 import SectionHeader from '../SectionHeader.vue';
 import { eventsByDay } from '../views';
 
 const events = shallowRef<readonly AuditEvent[]>([]);
-const kind = ref<EventKind | 'all'>('all');
+const kind = ref<EventKind | 'all'>(kept.kind);
+watch(kind, (value) => (kept.kind = value), { flush: 'sync' });
 let live = true;
 onBeforeUnmount(() => {
   live = false;

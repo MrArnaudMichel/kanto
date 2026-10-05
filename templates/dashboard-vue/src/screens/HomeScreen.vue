@@ -1,9 +1,16 @@
+<script lang="ts">
+import type { Grain } from '../data/api';
+
+/** Kept while the reader is elsewhere. */
+const kept = { grain: 'daily' as Grain };
+</script>
+
 <script setup lang="ts">
 /** The overview: the numbers, the trend, the latest orders and what happened lately. */
 import { toaster } from 'kanto-ds';
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { orderCell } from '../cells';
-import { getOverview, type Grain, type Overview } from '../data/api';
+import { getOverview, type Overview } from '../data/api';
 import { PERSON } from '../data/fixtures';
 import { formatMoney } from '../format';
 import { hrefFor } from '../nav';
@@ -27,7 +34,8 @@ const ORDER_COLUMNS = [
 const formatAxis = (n: number) => formatMoney(n);
 const formatGb = (n: number) => `${n} GB`;
 
-const grain = ref<Grain>('daily');
+const grain = ref<Grain>(kept.grain);
+watch(grain, (value) => (kept.grain = value), { flush: 'sync' });
 // Bumped by Refresh: the same grain, loaded again.
 const reloads = ref(0);
 const overview = shallowRef<Overview | null>(null);
@@ -145,7 +153,7 @@ const greeting = `Welcome back, ${PERSON.name.split(' ')[0]}`;
           :loading="loading"
           :columns="ORDER_COLUMNS"
           :data="overview?.orders ?? []"
-          :render-cell="orderCell"
+          :renderCell="orderCell"
         />
       </kt-card>
     </section>

@@ -4,7 +4,7 @@ import { toaster } from 'kanto-ds';
 import { fileCell } from '../cells';
 import { listFiles, type FileRow } from '../data/api';
 import { FILE_STATS } from '../data/fixtures';
-import { Screen, SectionHeader, TileCard } from '../parts';
+import { Screen, SectionHeader, TileCard, useKept } from '../parts';
 import { visibleFiles, type FileFilter } from '../views';
 
 const COLUMNS = [
@@ -20,12 +20,15 @@ const FILTERS = [
   { value: 'starred', label: 'Starred' },
 ];
 
+// Kept while the reader is elsewhere.
+const kept = { filter: 'all' as FileFilter, query: '' };
+
 const renderFile = fileCell((file) => toaster.info(`Downloading ${file.name}…`));
 
 export function Files() {
   const [all, setAll] = useState<readonly FileRow[] | null>(null);
-  const [filter, setFilter] = useState<FileFilter>('all');
-  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useKept(kept, 'filter');
+  const [query, setQuery] = useKept(kept, 'query');
 
   useEffect(() => {
     let live = true;

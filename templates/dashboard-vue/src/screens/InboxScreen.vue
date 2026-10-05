@@ -18,12 +18,15 @@ const messages = computed(() => mail.value ?? []);
 const selected = ref(kept.selected);
 const filter = ref(kept.filter);
 const query = ref(kept.query);
-watch([selected, filter, query], () =>
-  Object.assign(kept, {
-    selected: selected.value,
-    filter: filter.value,
-    query: query.value,
-  }),
+watch(
+  [selected, filter, query],
+  () =>
+    Object.assign(kept, {
+      selected: selected.value,
+      filter: filter.value,
+      query: query.value,
+    }),
+  { flush: 'sync' },
 );
 
 const shown = computed(() => visibleMail(messages.value, filter.value, query.value));

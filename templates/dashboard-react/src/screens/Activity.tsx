@@ -3,12 +3,15 @@ import { useEffect, useState } from 'react';
 import { toaster } from 'kanto-ds';
 import { listEvents, type AuditEvent, type EventKind } from '../data/api';
 import { EVENT_FILTERS } from '../data/fixtures';
-import { Screen, SectionHeader } from '../parts';
+import { Screen, SectionHeader, useKept } from '../parts';
 import { eventsByDay } from '../views';
+
+// Kept while the reader is elsewhere.
+const kept = { kind: 'all' as EventKind | 'all' };
 
 export function Activity() {
   const [events, setEvents] = useState<readonly AuditEvent[]>([]);
-  const [kind, setKind] = useState<EventKind | 'all'>('all');
+  const [kind, setKind] = useKept(kept, 'kind');
 
   useEffect(() => {
     let live = true;

@@ -4,7 +4,7 @@
  * Screens render in its RouterView.
  */
 import { toaster, type KtCommandPalette } from 'kanto-ds';
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { PERSON, STORAGE, WORKSPACE } from './data/fixtures';
 import { loadMail, mail } from './mail';
@@ -30,6 +30,7 @@ const ACCOUNT_MENU = [
 const route = useRoute();
 const router = useRouter();
 const palette = useTemplateRef<KtCommandPalette>('palette');
+const search = useTemplateRef<HTMLButtonElement>('search');
 const collapsed = ref(false);
 const drawer = ref(false);
 const cookies = ref(cookiesAnswered());
@@ -48,6 +49,11 @@ watch(
   },
   { immediate: true },
 );
+
+// Into the drawer once it opens: the keyboard starts where the eye does.
+watch(drawer, (open) => {
+  if (open) void nextTick(() => search.value?.focus());
+});
 
 const closeOnEscape = (event: KeyboardEvent) => {
   if (event.key === 'Escape') drawer.value = false;
@@ -87,7 +93,7 @@ function answer(choice: string): void {
         </span>
       </a>
 
-      <button type="button" class="app-search" @click="openPalette">
+      <button ref="search" type="button" class="app-search" @click="openPalette">
         <kt-icon name="search" :size="16" />
         <span>Search…</span>
         <kt-kbd keys="mod k" />
@@ -137,6 +143,7 @@ function answer(choice: string): void {
           size="small"
           icon="menu"
           label="Open the menu"
+          :expanded="drawer"
           @click="drawer = true"
         />
         <kt-button

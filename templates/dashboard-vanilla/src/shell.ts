@@ -5,6 +5,7 @@
  */
 import {
   toaster,
+  type KtButton,
   type KtCommandPalette,
   type KtDropdown,
   type KtSubMenuNavigation,
@@ -116,14 +117,20 @@ export function createShell(root: HTMLElement): Shell {
 
   const app = el('div', { class: 'app' });
 
-  const menu = el('kt-button', {
+  const menu = el<KtButton>('kt-button', {
     class: 'menu-button',
     variant: 'secondary-no-bg',
     size: 'small',
     icon: 'menu',
     label: 'Open the menu',
   });
-  menu.addEventListener('click', () => app.classList.add('nav-open'));
+  menu.expanded = false;
+  menu.addEventListener('click', () => {
+    app.classList.add('nav-open');
+    menu.expanded = true;
+    // Into the drawer: the keyboard starts where the eye does.
+    search.focus();
+  });
 
   const collapse = el('kt-button', {
     class: 'collapse-button',
@@ -191,7 +198,10 @@ export function createShell(root: HTMLElement): Shell {
   // === The drawer, on a phone ===
 
   const scrim = el('div', { class: 'scrim' });
-  const closeDrawer = () => app.classList.remove('nav-open');
+  const closeDrawer = () => {
+    app.classList.remove('nav-open');
+    menu.expanded = false;
+  };
   scrim.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeDrawer();

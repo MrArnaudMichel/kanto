@@ -1,5 +1,5 @@
 /** Small pieces several screens share. */
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Tile } from './data/api';
 
 /** A figure with its icon chip: the overview's, the files' and the roles' tiles. */
@@ -38,6 +38,24 @@ export function SectionHeader({
       ) : null}
     </kt-page-header>
   );
+}
+
+/**
+ * State a screen keeps while the reader is elsewhere: written to `store` as it
+ * changes — not as it renders, which may not happen before the reader leaves.
+ */
+export function useKept<S extends object, K extends keyof S>(
+  store: S,
+  key: K,
+): [S[K], (next: S[K]) => void] {
+  const [value, setValue] = useState(store[key]);
+  return [
+    value,
+    (next) => {
+      store[key] = next;
+      setValue(() => next);
+    },
+  ];
 }
 
 /** A screen's root: the class the stylesheet and the tests find it by. */
