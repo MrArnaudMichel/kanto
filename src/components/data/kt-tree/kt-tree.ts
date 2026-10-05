@@ -63,8 +63,11 @@ export class KtTree extends KtElement {
         display: block;
       }
 
+      /* One column the tree's width: a long label is cut with an ellipsis
+         rather than pushing its row past the tree's edge. */
       [role='tree'] {
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: 1px;
         margin: 0;
         padding: 0;

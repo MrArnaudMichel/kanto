@@ -34,6 +34,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- `kt-tree` narrower than a label let that row run past its edge, uncut;
+  the label now ends in an ellipsis inside the tree.
 - `kt-table` narrower than its table could widen the page: an icon-only
   button in a cell, past the scroller's edge, kept its hidden label outside
   the scroll, so a phone scrolled sideways. The scroller now holds it.

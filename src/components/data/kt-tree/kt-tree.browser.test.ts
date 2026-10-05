@@ -47,3 +47,24 @@ describe('kt-tree, from the keyboard', () => {
     expect(child!.left - parent!.left).toBeGreaterThanOrEqual(19);
   });
 });
+
+describe('kt-tree, narrower than its labels', () => {
+  it('keeps every row inside the tree, a long label cut with an ellipsis', async () => {
+    const el = await fixture<KtTree>(`<kt-tree style="width: 180px"></kt-tree>`);
+    el.items = [
+      {
+        id: 'folder',
+        label: 'Folder',
+        children: [{ id: 'doc', label: 'A document whose name is far longer than the tree' }],
+      },
+    ];
+    el.expanded = ['folder'];
+    await settle(el);
+    const tree = el.getBoundingClientRect();
+    for (const row of el.shadowRoot!.querySelectorAll<HTMLElement>('[role="treeitem"]')) {
+      expect(row.getBoundingClientRect().right).toBeLessThanOrEqual(tree.right + 0.5);
+    }
+    const label = el.shadowRoot!.querySelectorAll<HTMLElement>('.label')[1]!;
+    expect(label.scrollWidth).toBeGreaterThan(label.clientWidth);
+  });
+});
