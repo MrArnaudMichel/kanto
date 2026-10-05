@@ -46,7 +46,9 @@ export class KtSidePanel extends KtElement {
         top: 0;
         right: 0;
         left: auto;
-        display: flex;
+        /* Closed, it has no box: slid off screen alone, its contents stayed in
+           the tab order and in reach of screen readers. */
+        display: none;
         flex-direction: column;
         gap: var(--gap-drag-drop);
         box-sizing: border-box;
@@ -68,6 +70,7 @@ export class KtSidePanel extends KtElement {
       }
 
       dialog[open] {
+        display: flex;
         transform: translateX(0);
       }
 

@@ -35,6 +35,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- `kt-side-panel`, closed, stayed in the page: slid off screen, its buttons
+  were still in the tab order and in reach of screen readers. Closed, it is
+  gone; it still slides in and out.
 - `kt-tree` narrower than a label let that row run past its edge, uncut;
   the label now ends in an ellipsis inside the tree.
 - `kt-table` narrower than its table could widen the page: an icon-only
