@@ -167,8 +167,10 @@ describe('the landing content', () => {
   });
 
   it('subscribes a new address, and says so for one already on the list', async () => {
-    vi.useFakeTimers();
+    // It imports kanto-ds, which is slow to load under a busy suite: load it
+    // before the clock is faked.
     const { subscribe } = await import('../templates/landing-vanilla/src/actions');
+    vi.useFakeTimers();
     const ok = subscribe('ada@northwind.com');
     const taken = subscribe('already@example.com');
     const caught = taken.catch((error: Error) => error.message);
