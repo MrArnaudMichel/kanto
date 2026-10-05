@@ -39,7 +39,7 @@ export class KtPagination extends KtElement {
       .info {
         padding: 0 4px;
         color: var(--text-muted);
-        font: var(--font-normal-regular);
+        font: var(--font-normal-small);
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
       }
@@ -72,6 +72,7 @@ export class KtPagination extends KtElement {
       <kt-button
         part="previous"
         variant="dark"
+        size="small"
         icon="chevron-left"
         ?disabled=${first}
         @click=${() => this.go(this.page - 1)}
@@ -87,6 +88,7 @@ export class KtPagination extends KtElement {
       <kt-button
         part="next"
         variant="dark"
+        size="small"
         icon="chevron-right"
         icon-position="right"
         ?disabled=${last}

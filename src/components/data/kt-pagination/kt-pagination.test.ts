@@ -72,7 +72,10 @@ describe('kt-pagination', () => {
     // a design system ends up with two kinds of button on one screen.
     const el = await fixture<KtPagination>('<kt-pagination total-pages="3"></kt-pagination>');
     expect(controls(el)).toHaveLength(2);
-    for (const control of controls(el)) expect(control.variant).toBe('dark');
+    for (const control of controls(el)) {
+      expect(control.variant).toBe('dark');
+      expect(control.size).toBe('small');
+    }
     expect(el.shadowRoot!.querySelector('nav > button')).toBeNull();
   });
 });
