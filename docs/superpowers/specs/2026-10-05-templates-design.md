@@ -1,13 +1,14 @@
-# Forkable templates and `create-kanto` — design
+# Templates, Apps and `create-kanto` — design
 
-Date: 2026-10-05. Status: awaiting review.
+Date: 2026-10-05, revised the same day. Status: awaiting review of the
+revision.
 
 ## Goal
 
 Starting a product on Kanto should take one command and leave a real project:
-routed, typed, building, and using the blocks the way they are meant to be
-used. The old docs "templates" were single screens to copy; these are whole
-projects to fork and keep.
+routed, typed, building, and using Kanto the way it is meant to be used. The
+docs site shows those projects as **Templates**, and shows real products built
+with Kanto as **Apps**.
 
 Success:
 
@@ -15,144 +16,165 @@ Success:
   `npm install && npm run dev` works at once.
 - Each project is also forkable without the tool:
   `npx degit MrArnaudMichel/kanto/templates/saas-react my-app`.
+- The site's Templates section shows every template running, with the one
+  command that makes it.
 - No template can ship broken: each one is built and opened in a browser, in
   CI and before every publish, against the package npm would ship.
 
-## Decisions already made
+## Decisions
 
-| Question                 | Answer                                                          |
-| ------------------------ | --------------------------------------------------------------- |
-| Where the templates live | `templates/` in this repository, plus `npm create kanto@latest` |
-| Stacks                   | React, Vue and vanilla TypeScript                               |
-| Templates                | SaaS, landing, blog                                             |
-| Order                    | SaaS first, in all three stacks, with the tool and the CI       |
+| Question                 | Answer                                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Where the templates live | `templates/<template>-<stack>/` in this repository, plus `npm create kanto@latest`                       |
+| Stacks                   | React, Vue and vanilla TypeScript — every template in all three                                          |
+| Templates                | SaaS (built), Landing, Portfolio, Chat, Dashboard, Editor, Changelog — more later                        |
+| The current demo apps    | The starting point of their templates; each leaves the site once its template is live                    |
+| Dashboard vs SaaS        | Dashboard is the current Console: an admin panel. SaaS is the product with sign-in                       |
+| Editor                   | A document editor: documents on the side, a page to write, a toolbar, autosave                           |
+| The site's Blocks page   | Removed: the blocks stay in Components, under Blocks                                                     |
+| The site's Apps section  | A showcase of real products built with Kanto: the Kanto site first, and a call for more                  |
+| Order                    | The templates that exist as demos first (Landing, Portfolio, Chat, Dashboard), then Editor and Changelog |
 
 ## 1. The projects
 
-One folder per template and stack: `templates/<template>-<stack>/`, nine in
-all. Each is a standalone Vite + TypeScript project:
+One folder per template and stack, each a standalone Vite + TypeScript
+project:
 
 - its own `package.json`, depending on `kanto-ds@^<current minor>`, with
   `dev`, `build`, `preview` and `typecheck` scripts;
 - a README: what is in it, how to run it, where to change the brand (one
-  `setAppearance` call), and links to the components it uses;
+  `setAppearance` call), and the components it uses;
 - no lockfile committed (a fork resolves its own), `.gitignore` included;
-- the brand set in one place, `src/brand.ts`, with `setAppearance` (and
-  `setAccent`), so a fork re-colours itself in one edit.
+- the brand set in one place, `src/brand.ts`;
+- what does not depend on the stack — data, rules, view helpers, content —
+  in shared files, identical across the template's three stacks and tested
+  once (`scripts/templates.test.ts`);
+- hash routing (`#/customers`), so a build runs on any static host.
 
 Not npm workspaces: the library's lockfile and install stay as they are, and a
 template folder is exactly what a fork gets.
 
-### SaaS
+### The templates
 
-An invoicing app — the same world as the blocks' examples — inside
-`kt-app-shell`:
+| Template      | What it is                                                                                       | Starts from            | Built from (mainly)                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------ | ---------------------- | ------------------------------------------------------------------------------------------- |
+| **SaaS**      | An invoicing product: sign in, first steps, dashboard, customers, settings — **built** (phase 1) | —                      | `kt-app-shell`, `kt-auth-form`, `kt-empty-page`, `kt-table`, `kt-settings-section`          |
+| **Landing**   | A product's marketing page, every section a block; words and data in one `src/content.ts`        | `demo/apps/landing`    | `kt-hero`, `kt-feature-grid`, `kt-pricing-table`, `kt-faq`, `kt-cta`, `kt-footer`           |
+| **Portfolio** | A person's work: projects, a case study, a career, a contact form                                | `demo/apps/portfolio`  | `kt-timeline`, `kt-side-panel`, `kt-form`                                                   |
+| **Chat**      | An assistant: conversations on the side, messages, a prompt; the model behind one function       | `demo/apps/chat`       | `kt-chat-message`, `kt-prompt-input`, `kt-app-shell`                                        |
+| **Dashboard** | An admin console: home, inbox, customers, files, activity, integrations, nested settings         | `demo/apps/console`    | `kt-app-shell`, `kt-sub-menu-navigation`, `kt-table`, `kt-chart`, `kt-tree`                 |
+| **Editor**    | A document editor: documents on the side, a page with a toolbar, autosave, version history       | new                    | `kt-app-shell`, `kt-tree`, `kt-toast`, and a writing surface chosen when phase 4 is planned |
+| **Changelog** | A product's public release notes: releases, filters by kind, a subscribe form, RSS               | the docs' Release page | `kt-timeline`, `kt-badge`, `kt-newsletter`, `kt-post-grid`                                  |
 
-| Route                  | Built from                                                            |
-| ---------------------- | --------------------------------------------------------------------- |
-| `/sign-in`, `/sign-up` | `kt-auth-form`                                                        |
-| `/welcome`             | `kt-empty-page` (first run)                                           |
-| `/`                    | dashboard: `kt-page-header`, `kt-stat`, `kt-chart`, `kt-table`        |
-| `/customers`           | `kt-table` with filter and pagination, `kt-side-panel` for a customer |
-| `/settings`            | `kt-settings-section` ×3, `kt-confirm-dialog` for the danger zone     |
-| anything else          | `kt-error-page`                                                       |
+Each fakes its back end the way SaaS does: one `src/data/api.ts` with async
+functions over fixtures, the one file a fork replaces. Chat's model is one
+`reply()` function that streams a canned answer, documented as where to call
+a real model.
 
-Data comes from a `src/data/` module with an async API (`listCustomers()`,
-…) that resolves fixtures after a short delay — the one file a fork replaces
-with its backend. Signing in is faked the same way, in `src/auth.ts`.
-
-Routing: `react-router` (React), `vue-router` (Vue), and a ~50-line hash
-router in `src/router.ts` (vanilla).
-
-### Landing
-
-One page, all blocks: `kt-header`, `kt-hero`, `kt-logo-cloud`,
-`kt-feature-grid`, `kt-testimonials`, `kt-pricing-table`, `kt-faq`,
-`kt-cta`, `kt-newsletter`, `kt-footer`. The words and data in one
-`src/content.ts`, so a fork rewrites one file. No dependency beyond Kanto
-(and React or Vue).
-
-### Blog
-
-`/` lists posts with `kt-post-grid`; `/posts/:slug` renders one with
-`kt-blog-post`; `kt-newsletter` closes both. Posts are Markdown files in
-`posts/` with front matter (title, date, author, tags, excerpt, cover), read
-at build time with Vite's `import.meta.glob` and rendered with `marked`.
+More later (the tool's template list is data): Blog, Shop, Docs.
 
 ## 2. `create-kanto`
 
-A new package in `packages/create-kanto/`, published as `create-kanto`.
+A package in `packages/create-kanto/`, published as `create-kanto` — built in
+phase 1:
 
-- Zero dependencies: Node's `readline` for the questions, `fs` for the copy.
-- Interactive: project name, template (SaaS, landing, blog), stack (React,
-  Vue, vanilla). Or flags: `npm create kanto@latest my-app -- --template
-saas --stack react`, and `--yes` for the defaults.
-- It copies the chosen folder, sets `name` in `package.json`, renames
-  `_gitignore` to `.gitignore` (npm strips `.gitignore` from packages),
-  refuses a non-empty target, and prints the next three commands.
-- The templates are bundled into the package at pack time (`prepack` copies
-  `templates/` in), not fetched from GitHub: it works offline, and a given
-  `create-kanto` always makes the templates of the same release.
+- zero dependencies; interactive, or `--template`, `--stack`, `--yes`;
+- sets `name` in `package.json`, names `_gitignore` back to `.gitignore`,
+  refuses a non-empty target, prints the next three commands;
+- templates bundled at pack time; the same version as `kanto-ds`, bumped and
+  published by the same `npm run release`.
 
-### Versioning and release
-
-`create-kanto` carries the same version as `kanto-ds` and is published by the
-same `npm run release`: the release script bumps both, and `publish.yml`
-publishes both. Its templates depend on `kanto-ds@^<that minor>`.
+Each new template is one entry in `lib/choices.js` and its three folders.
 
 **One manual step, once:** npm's trusted publishing can only be configured on
-a package that exists, so the very first `create-kanto` is published by hand
-(`npm publish` from `packages/create-kanto`), then linked to `publish.yml` on
-npmjs.com. Every release after that is automatic.
+a package that exists, so the very first `create-kanto` is published by hand,
+then linked to `publish.yml` on npmjs.com.
 
-## 3. Checks
+## 3. The docs site
 
-- `scripts/check-templates.js`, run by `npm run check:templates`: packs
-  `kanto-ds` as `check:consumer` does; for each template, installs it with that
-  tarball, type-checks, builds, serves the build and opens it in Chromium —
-  no console error, the `kt-*` elements defined, each key route rendering its
-  main element (for SaaS: sign in, then the dashboard's table has rows).
-- Unit tests for `create-kanto`: scaffold into a temporary folder with flags,
-  check the files, the name, `.gitignore`, and the refusal on a non-empty
-  folder.
-- CI: a `templates` job beside `verify`, so the main job does not get slower.
-  `publish.yml` runs `check:templates` before publishing.
-- `npm run verify` stays as it is (fast enough to run before each commit);
-  `check:templates` installs real dependencies and is run on its own, and in
-  CI.
+### Templates — `#/templates`
 
-## 4. Docs
+The section comes back in the top bar, as the gallery of templates:
 
-- A guide page, "Start a project": the command, the three templates with a
-  screenshot each, what is inside, and `degit` for those who prefer it.
-- The home page's agents and stack sections, the README and `AGENTS.md` point
-  to it.
-- CHANGELOG: `create-kanto` and the templates under Added.
+- **The gallery** (`#/templates`): one card per template — a screenshot, what
+  it is for, its stacks, and two ways in: **Live demo** and the command.
+- **A template's page** (`#/templates/<id>`): screenshots of its main
+  screens; what is inside (routes, the files to change); the command, with a
+  tab per stack (`npm create kanto@latest my-app -- --template saas --stack
+react`) and Copy; the `degit` line; the components it uses, each linking to
+  its page.
+- **Live demos:** the site's build also builds each template's React stack
+  into `templates/<id>/` beside the docs, so **Live demo** opens the real
+  template, signed in with any email. Built in the Pages workflow, which
+  already has the network.
+- **Screenshots:** made by a script from those builds (as the share image is),
+  committed under `demo/public/templates/`.
+
+### Apps — `#/apps`
+
+A showcase of real products built with Kanto: a card each — screenshot, name,
+one line, a link. It starts with the Kanto docs site itself, and a card
+"Built something with Kanto? Show it" leading to a GitHub issue form. Each
+card is data in one file.
+
+The current demos (`#/app/console/…`, `landing`, `chat`, `portfolio`) stay
+reachable at their URLs while their template is built; each is removed, and
+its URL sent to the template's page, once its template is live. The home page
+stage, which draws on the console's screens, keeps working throughout.
+
+### Blocks
+
+The `#/blocks` page and its top-bar entry go; `#/blocks` and `#/templates/…`
+links from before keep landing somewhere useful (the Components page of the
+first block, and the gallery). The home page's "Build a page from blocks"
+section becomes "Start from a template", leading to the gallery.
+
+## 4. Checks
+
+- `npm run check:templates` (phase 1): packs `kanto-ds`, installs each
+  template against the tarball, type-checks, builds, serves and walks it in
+  Chromium — one walk per template kind in `scripts/template-smoke.js`, the
+  same for every stack. A template kind without a walk fails the check.
+- `scripts/templates.test.ts`: each folder is a project; each template's
+  shared files identical across its stacks; their logic unit-tested.
+- CI: the `templates` job; `publish.yml` checks the templates before
+  publishing.
 
 ## 5. Phases
 
-Each phase ends verified, committed, and reviewable on its own.
+Each phase ends verified, committed and reviewable on its own.
 
-1. **SaaS × React, Vue, vanilla, `create-kanto`, `check:templates`, CI job.**
-   Proves the whole chain on the largest template.
-2. **Landing × 3.**
-3. **Blog × 3**, the guide page, then a release with the first manual publish
-   of `create-kanto`.
+1. **SaaS × 3, `create-kanto`, `check:templates`, CI.** Done, on
+   `feat/templates`.
+2. **The site:**
+   - Blocks page out.
+   - Templates gallery and template pages, with SaaS.
+   - Live demos and screenshots in the site build.
+   - Apps as a showcase.
+   - The two SaaS defects seen in its screenshots: the sidebar's background
+     stops under its links, and the search field shows no icon.
+3. **Landing, Portfolio, Chat, Dashboard × 3**, each from its demo, each
+   retiring its demo when it lands.
+4. **Editor and Changelog × 3.**
+
+Releases: `feat/templates` merges to `main` only with the 1.10.0 release —
+the React SaaS template needs the React types fixed in that branch. The first
+release that carries `create-kanto` includes its manual first publish.
 
 ## Out of scope
 
-- A backend, real auth, or a database in any template.
-- Next.js, Nuxt, SvelteKit or Angular variants (possible later; the tool's
-  template list is data).
+- A back end, real auth, a database or a real model in any template.
+- Next.js, Nuxt, SvelteKit or Angular variants.
 - Server-side rendering of the components.
 
 ## Risks
 
-- **Nine projects to keep up.** Mitigated by `check:templates` failing on any
-  drift, and by keeping each template's own code small — the blocks do the
-  work.
-- **Template installs in CI are slow and need the network.** Hence a job of
-  its own, with npm's cache.
-- **React and Vue typings for every element**: already shipped
-  (`kanto-ds/react`, `kanto-ds/vue`); the templates are the first real
-  consumers, so gaps found there are fixed in the library, not worked around.
+- **Twenty-one projects to keep up.** Mitigated by `check:templates` failing on
+  any drift, shared files per template, and keeping each template's own code
+  small — the components do the work.
+- **Template installs in CI and in the Pages build are slow and need the
+  network.** A CI job of its own; the Pages build builds one stack per
+  template.
+- **The demos and their templates diverging during phase 3.** Each template
+  starts from its demo's current code, and the demo goes the day the template
+  lands.
