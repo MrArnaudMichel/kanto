@@ -152,8 +152,8 @@ Each phase ends verified, committed and reviewable on its own.
    - Templates gallery and template pages, with SaaS.
    - Live demos and screenshots in the site build.
    - Apps as a showcase.
-   - The two SaaS defects seen in its screenshots: the sidebar's background
-     stops under its links, and the search field shows no icon.
+   - The SaaS sidebar's background stopping under its links (the navigation
+     was not `flush`).
 3. **Landing, Portfolio, Chat, Dashboard × 3**, each from its demo, each
    retiring its demo when it lands.
 4. **Editor and Changelog × 3.**

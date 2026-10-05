@@ -29,6 +29,8 @@ function onSelect(event: CustomEvent<{ id: string }>): void {
       />
     </div>
     <kt-sub-menu-navigation
+      class="app-nav"
+      flush
       slot="sidebar"
       label="Workspace"
       :sections="NAV"

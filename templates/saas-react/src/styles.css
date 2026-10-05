@@ -23,6 +23,12 @@ body,
   text-decoration: none;
 }
 
+/* The sidebar's navigation, flush: the room the card's padding gave it. */
+.app-nav {
+  display: block;
+  padding: 16px 12px;
+}
+
 .page {
   display: grid;
   gap: 24px;

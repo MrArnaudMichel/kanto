@@ -25,6 +25,8 @@ export function AppLayout() {
         />
       </div>
       <kt-sub-menu-navigation
+        className="app-nav"
+        flush
         slot="sidebar"
         label="Workspace"
         sections={NAV}

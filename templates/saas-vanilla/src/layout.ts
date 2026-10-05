@@ -13,7 +13,7 @@ export function inShell(path: string, render: Page) {
         <a class="app-brand" href="#/"></a>
         <kt-user-menu></kt-user-menu>
       </div>
-      <kt-sub-menu-navigation slot="sidebar" label="Workspace"></kt-sub-menu-navigation>
+      <kt-sub-menu-navigation slot="sidebar" class="app-nav" flush label="Workspace"></kt-sub-menu-navigation>
       <div class="page"></div>
     </kt-app-shell>`;
     outlet.querySelector('.app-brand')!.textContent = APP_NAME;

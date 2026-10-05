@@ -25,6 +25,10 @@ export const SMOKES = {
     await page.locator('kt-auth-form kt-button.submit').click();
     await until(() => location.hash === '#/');
     await until(() => document.querySelectorAll('kt-stat').length === 4);
+    // The sidebar owns its background: the navigation is flush, not a card in it.
+    await until(
+      () => document.querySelector('kt-sub-menu-navigation')?.hasAttribute('flush') === true,
+    );
     await until(() => (document.querySelector('kt-table')?.data ?? []).length > 0);
 
     // Customers: all of them, then only the ones a search finds, then one opened.
