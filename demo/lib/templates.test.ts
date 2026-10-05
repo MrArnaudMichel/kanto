@@ -32,6 +32,7 @@ describe('the templates catalog', () => {
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'portfolio')!.demo).toBe(
       './templates/portfolio/',
     );
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'chat')!.demo).toBe('./templates/chat/');
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'saas')!.demo).toBe(
       './templates/saas/#/sign-in',
     );

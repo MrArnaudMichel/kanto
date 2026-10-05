@@ -15,7 +15,7 @@ export interface TemplateEntry {
   readonly tryIt: string;
   /**
    * The running demo, relative to the site: a template's live build
-   * (`./templates/saas/#/sign-in`), or a demo of the docs (`./#/app/chat`).
+   * (`./templates/saas/#/sign-in`), or a demo of the docs (`./#/app/console/home`).
    */
   readonly demo: string;
   /** Its projects exist: `create-kanto` makes it, `templates/<id>-<stack>/` hold it. */
@@ -198,29 +198,38 @@ the page is yours.`,
   {
     id: 'chat',
     name: 'Chat',
-    summary: 'An assistant: threads, answers that stream, sources, tool calls and a composer.',
-    description: `An assistant with the parts a real one has: a thread list, sources beside the
-answer, tool calls that show their work, and a composer with attachments and a
-model picker.`,
-    tryIt: `- Ask anything — replies stream a token at a time, and the transcript stays
-  pinned to the bottom while they do.
-- Open a **tool call** to see the arguments and the result.
-- The sources rail on the right follows the turn you are reading.`,
-    demo: './#/app/chat',
-    project: false,
+    summary: 'An assistant: conversations on the side, answers that stream, and a prompt.',
+    description: `Atlas, an assistant that answers about Northwind's numbers: conversations
+down the side, the transcript, and a prompt — each answer streamed a word at a
+time.
+
+The model is one function, \`reply()\` in \`src/model.ts\`: it streams a canned
+answer until you point it at your model's streaming API, and nothing else
+changes.`,
+    tryIt: `- Start a new chat from a suggestion, and watch the answer stream.
+- Ask, then switch to another conversation before the answer ends: it lands in
+  the conversation it belongs to.
+- Narrow the window: the conversations move into the shell's drawer.`,
+    demo: './templates/chat/',
+    project: true,
     routes: [],
-    files: [],
-    components: [
-      'kt-avatar',
-      'kt-code',
-      'kt-collapsible',
-      'kt-select',
-      'kt-textarea',
-      'kt-skeleton',
-      'kt-tooltip',
-      'kt-meter',
+    files: [
+      { path: 'src/model.ts', what: 'The model. Call yours here.' },
+      { path: 'src/content.ts', what: 'What it says, suggests and knows.' },
+      { path: 'src/conversations.ts', what: 'The conversations, as plain data.' },
+      { path: 'src/brand.ts', what: 'The brand, in one call.' },
     ],
-    screens: [{ file: 'chat-home.png', path: '#/app/chat', caption: 'A conversation' }],
+    components: [
+      'kt-app-shell',
+      'kt-button',
+      'kt-chat-message',
+      'kt-prompt-input',
+      'kt-empty-state',
+    ],
+    screens: [
+      { file: 'chat-conversation.png', path: 'templates/chat/', caption: 'A conversation' },
+      { file: 'chat-new.png', path: 'templates/chat/#new', caption: 'A new chat' },
+    ],
   },
   {
     id: 'portfolio',

@@ -322,7 +322,7 @@ export function homePage({
         ${TEMPLATE_CATALOG.map((entry) =>
           preview({
             href: `#/templates/${entry.id}`,
-            // The demo, from beside this page: `./#/app/chat`, `./templates/saas/#/sign-in`.
+            // The demo, from beside this page: `./#/app/console/home`, `./templates/saas/#/sign-in`.
             src: `${location.pathname.replace(/[^/]*$/, '')}${entry.demo.slice(2)}`,
             name: entry.name,
             note: entry.summary,

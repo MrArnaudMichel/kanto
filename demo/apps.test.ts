@@ -26,7 +26,6 @@ const APP_ROUTES = [
     label: 'Notifications',
   },
   { hash: '#/app/console/settings/security', marker: '.settings-narrow', label: 'Security' },
-  { hash: '#/app/chat', marker: '.chat-transcript', label: null },
 ] as const;
 
 describe('the full-bleed applications', () => {
@@ -60,13 +59,13 @@ describe('the full-bleed applications', () => {
   }
 
   it('drops the documentation chrome on an application route', async () => {
-    await show('#/app/chat');
+    await show('#/app/console/home');
     expect(app.querySelector('.sidebar-group')).toBeNull();
     expect(app.querySelector('.toc')).toBeNull();
   });
 
   it('brings the documentation chrome back on the way out', async () => {
-    await show('#/app/chat');
+    await show('#/app/console/home');
     await show('#/components/kt-button');
     expect(app.querySelector('.sidebar-group')).not.toBeNull();
     expect(app.querySelector('.toc')).not.toBeNull();
@@ -105,7 +104,7 @@ describe('the full-bleed applications', () => {
   });
 
   it('previews the running application on its documentation page', async () => {
-    for (const slug of ['console-home', 'chat']) {
+    for (const slug of ['console-home']) {
       await show(`#/apps/${slug}`);
       const frame = app.querySelector<HTMLIFrameElement>('.app-preview-frame');
       expect(frame, slug).not.toBeNull();

@@ -14,8 +14,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 - The SaaS template — sign in, first steps, a dashboard, customers and
   settings — the Landing template — a product's marketing page, every
-  section a block — and the Portfolio template — a person's work, career,
-  writing and contact form — in React, Vue and TypeScript without a framework, each a
+  section a block — the Chat template — an assistant whose model is one
+  function — and the Portfolio template — a person's work, career, writing
+  and contact form — in React, Vue and TypeScript without a framework, each a
   project of its own in `templates/`, to scaffold or to fork.
 - Every template is installed against the published package, built and
   walked in a browser in CI and before every release.

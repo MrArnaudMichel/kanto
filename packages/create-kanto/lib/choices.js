@@ -7,6 +7,11 @@ export const TEMPLATES = [
     hint: "a product's marketing page, every section a block",
   },
   {
+    id: 'chat',
+    label: 'Chat',
+    hint: 'an assistant: conversations, streamed answers, one function for the model',
+  },
+  {
     id: 'portfolio',
     label: 'Portfolio',
     hint: "a person's work, career, writing and a contact form",

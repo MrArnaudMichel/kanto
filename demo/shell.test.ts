@@ -283,6 +283,7 @@ describe('the documentation shell', () => {
       ['#/apps/portfolio', 'Portfolio'],
       ['#/app/landing', 'Landing'],
       ['#/app/portfolio', 'Portfolio'],
+      ['#/app/chat', 'Chat'],
     ]) {
       location.hash = old!;
       await tick();

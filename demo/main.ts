@@ -157,7 +157,11 @@ const DEMO_PAGES: Record<string, string> = {
 };
 
 /** Full-screen demos, `#/app/<path>`, that became templates' live builds. */
-const RETIRED_DEMOS: Record<string, string> = { landing: 'landing', portfolio: 'portfolio' };
+const RETIRED_DEMOS: Record<string, string> = {
+  landing: 'landing',
+  portfolio: 'portfolio',
+  chat: 'chat',
+};
 
 const TEMPLATE_ROUTES: Route[] = [
   {
@@ -232,7 +236,6 @@ const APPS: Record<string, () => Promise<Screen>> = {
   'console/settings/members/roles': settings('roles'),
   'console/settings/notifications': settings('notifications'),
   'console/settings/security': settings('security'),
-  chat: () => import('./apps/chat.js').then((m) => m.chatPage),
 };
 
 /** The apps, each loaded the first time it is opened. */
