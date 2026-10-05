@@ -18,7 +18,15 @@ describe('the templates catalog', () => {
 
   it('shows every demo as a template, each with its demo running', () => {
     expect(TEMPLATE_CATALOG.map((entry) => entry.id)).toEqual(
-      expect.arrayContaining(['saas', 'dashboard', 'editor', 'landing', 'chat', 'portfolio']),
+      expect.arrayContaining([
+        'saas',
+        'dashboard',
+        'editor',
+        'landing',
+        'chat',
+        'portfolio',
+        'changelog',
+      ]),
     );
     expect(new Set(TEMPLATE_CATALOG.map((entry) => entry.id)).size).toBe(TEMPLATE_CATALOG.length);
     for (const entry of TEMPLATE_CATALOG) {
@@ -37,6 +45,9 @@ describe('the templates catalog', () => {
     );
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'editor')!.demo).toBe(
       './templates/editor/',
+    );
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'changelog')!.demo).toBe(
+      './templates/changelog/',
     );
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'saas')!.demo).toBe(
       './templates/saas/#/sign-in',

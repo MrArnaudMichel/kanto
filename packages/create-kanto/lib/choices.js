@@ -26,6 +26,11 @@ export const TEMPLATES = [
     label: 'Portfolio',
     hint: "a person's work, career, writing and a contact form",
   },
+  {
+    id: 'changelog',
+    label: 'Changelog',
+    hint: "a product's release notes: a filter, a page per release, email and RSS",
+  },
 ];
 
 export const STACKS = [

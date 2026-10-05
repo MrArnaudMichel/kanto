@@ -12,15 +12,17 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 **`create-kanto`** — start a project on Kanto in one command:
 `npm create kanto@latest`.
 
-- The SaaS template — sign in, first steps, a dashboard, customers and
-  settings — the Dashboard template — an admin console: an inbox, customers,
-  files, an audit log, integrations and settings three levels deep, with
-  Cmd+K — the Editor template — documents in Markdown, with a preview,
-  autosave and versions — the Landing template — a product's marketing page, every section a
-  block — the Chat template — an assistant whose model is one function — and
-  the Portfolio template — a person's work, career, writing and contact form
-  — in React, Vue and TypeScript without a framework, each a project of its
-  own in `templates/`, to scaffold or to fork.
+- Seven templates, in React, Vue and TypeScript without a framework, each a
+  project of its own in `templates/`, to scaffold or to fork:
+  - **SaaS** — sign in, first steps, a dashboard, customers and settings;
+  - **Dashboard** — an admin console: an inbox, customers, files, an audit
+    log, integrations and settings three levels deep, with Cmd+K;
+  - **Editor** — documents in Markdown, with a preview, autosave and
+    versions;
+  - **Landing** — a product's marketing page, every section a block;
+  - **Chat** — an assistant whose model is one function;
+  - **Portfolio** — a person's work, career, writing and contact form;
+  - **Changelog** — release notes by kind, with email and RSS.
 - Every template is installed against the published package, built and
   walked in a browser in CI and before every release.
 - The docs site's Templates section: a gallery, and a page per template with

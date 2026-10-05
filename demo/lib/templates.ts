@@ -375,6 +375,55 @@ Everything it says is in \`src/content.ts\`; the filter and the checks are in
       { file: 'portfolio-work.png', path: 'templates/portfolio/#work', caption: 'Selected work' },
     ],
   },
+  {
+    id: 'changelog',
+    name: 'Changelog',
+    summary: "A product's release notes: every release by kind, a page for each, email and RSS.",
+    description: `Northwind's public release notes: every release newest first, each change
+marked New, Improved or Fixed; a filter by kind; a page per release with the
+ones either side; a form to get them by email; and an RSS feed.
+
+The releases are data, in \`src/content.ts\`. The feed is built from the same
+data by \`src/rss.ts\` and served as \`public/rss.xml\` — a test keeps the
+two equal.`,
+    tryIt: `- Show only what was **Fixed**, then everything again.
+- Open a release from its version, then step to the one before and after.
+- Subscribe with any address — one ending in \`@example.com\` is on the list
+  already.
+- Open **RSS**: the feed the releases make.`,
+    demo: './templates/changelog/',
+    project: true,
+    routes: [
+      { path: '#/', what: 'Every release, newest first, with the filter by kind.' },
+      { path: '#/releases/<version>', what: 'One release, and the ones either side.' },
+      { path: 'rss.xml', what: 'The feed, beside the page.' },
+    ],
+    files: [
+      { path: 'src/content.ts', what: 'The releases, and everything the page says.' },
+      { path: 'src/rss.ts', what: 'The feed. Write public/rss.xml again after a release.' },
+      { path: 'src/actions.ts', what: 'The email sign-up. Call your email provider here.' },
+      { path: 'src/brand.ts', what: 'The brand, in one call.' },
+    ],
+    components: [
+      'kt-header',
+      'kt-toggle-button-group',
+      'kt-timeline',
+      'kt-badge',
+      'kt-newsletter',
+      'kt-post-grid',
+      'kt-empty-state',
+      'kt-footer',
+      'kt-error-page',
+    ],
+    screens: [
+      { file: 'changelog-releases.png', path: 'templates/changelog/', caption: 'Every release' },
+      {
+        file: 'changelog-release.png',
+        path: 'templates/changelog/#/releases/2.4.0',
+        caption: 'One release',
+      },
+    ],
+  },
 ];
 
 export const createCommand = (id: string, stack: string): string =>
