@@ -13,19 +13,30 @@ function onScroll(): void {
   if (element) pinned.value = element.scrollHeight - element.scrollTop - element.clientHeight < 40;
 }
 
-// The newest message stays in view while a reply streams, unless the reader scrolled up.
+// A conversation opens at its newest message.
+watch(
+  () => props.conversation?.id,
+  () => {
+    pinned.value = true;
+  },
+);
+
+// The newest message stays in view while a reply streams, unless the reader scrolled up —
+// a frame later, once the messages have drawn themselves.
 watch(
   () => props.conversation,
   async () => {
     await nextTick();
-    if (box.value && pinned.value) box.value.scrollTop = box.value.scrollHeight;
+    requestAnimationFrame(() => {
+      if (box.value && pinned.value) box.value.scrollTop = box.value.scrollHeight;
+    });
   },
   { deep: true, flush: 'post' },
 );
 </script>
 
 <template>
-  <div ref="box" class="transcript" aria-live="polite" @scroll="onScroll">
+  <div ref="box" class="transcript" @scroll="onScroll">
     <kt-empty-state
       v-if="!conversation || conversation.messages.length === 0"
       icon="sparkles"

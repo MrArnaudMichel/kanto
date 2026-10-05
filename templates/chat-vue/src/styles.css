@@ -86,3 +86,13 @@ body,
   margin: 0;
   white-space: pre-wrap;
 }
+
+/* Read out to a screen reader, not shown: a finished answer, once. */
+.announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

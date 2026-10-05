@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ASSISTANT, PERSON, SUGGESTIONS } from './content';
 import type { Conversation } from './conversations';
 
@@ -13,10 +13,19 @@ export function Transcript({
   const box = useRef<HTMLDivElement>(null);
   const pinned = useRef(true);
 
-  // The newest message stays in view while a reply streams, unless the reader scrolled up.
-  useLayoutEffect(() => {
-    const element = box.current;
-    if (element && pinned.current) element.scrollTop = element.scrollHeight;
+  // A conversation opens at its newest message.
+  useEffect(() => {
+    pinned.current = true;
+  }, [conversation?.id]);
+
+  // The newest message stays in view while a reply streams, unless the reader scrolled up —
+  // a frame later, once the messages have drawn themselves.
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const element = box.current;
+      if (element && pinned.current) element.scrollTop = element.scrollHeight;
+    });
+    return () => cancelAnimationFrame(frame);
   });
 
   const messages = conversation?.messages ?? [];
@@ -24,7 +33,6 @@ export function Transcript({
     <div
       ref={box}
       className="transcript"
-      aria-live="polite"
       onScroll={(event) => {
         const element = event.currentTarget;
         pinned.current = element.scrollHeight - element.scrollTop - element.clientHeight < 40;

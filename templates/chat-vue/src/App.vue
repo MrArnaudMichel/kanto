@@ -16,6 +16,9 @@ const started = location.hash === '#new' ? newConversation(SEED) : null;
 const list = ref<Conversation[]>(started ? started.list : [...SEED]);
 const open = ref(started ? started.id : SEED[0]!.id);
 const shell = useTemplateRef<KtAppShell>('shell');
+// One reply at a time.
+const busy = ref(false);
+const announcement = ref('');
 const current = computed(() => list.value.find((conversation) => conversation.id === open.value));
 
 function choose(id: number): void {
@@ -30,17 +33,26 @@ function startNew(): void {
   choose(next.id);
 }
 
-/** Sends a question in the open conversation; resolves once the reply has streamed. */
+/** Sends a question in the open conversation; resolves once the reply has streamed. One at a time. */
 async function ask(text: string): Promise<void> {
+  if (busy.value) return;
   const id = open.value;
   const asked = addQuestion(list.value, id, text);
   if (!asked) return;
+  busy.value = true;
   list.value = asked.list;
-  // `id` is the conversation asked in: the reply lands there, whichever is open.
-  await reply(text, (token) => {
-    list.value = appendToken(list.value, id, asked.replyId, token);
-  });
-  list.value = finishReply(list.value, id, asked.replyId);
+  let answer = '';
+  try {
+    // `id` is the conversation asked in: the reply lands there, whichever is open.
+    await reply(text, (token) => {
+      answer += token;
+      list.value = appendToken(list.value, id, asked.replyId, token);
+    });
+    list.value = finishReply(list.value, id, asked.replyId);
+    announcement.value = `${ASSISTANT.name}: ${answer}`;
+  } finally {
+    busy.value = false;
+  }
 }
 
 function onSubmit(
@@ -78,9 +90,11 @@ function onSubmit(
         <kt-prompt-input
           :label="`Ask ${ASSISTANT.name}`"
           placeholder="Ask about your numbers…"
+          :disabled="busy"
           @kt-submit="onSubmit"
         />
       </div>
+      <p class="announcer" role="status">{{ announcement }}</p>
     </div>
   </kt-app-shell>
 </template>

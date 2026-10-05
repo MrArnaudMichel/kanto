@@ -24,6 +24,10 @@ export function App() {
   const [list, setList] = useState<Conversation[]>(start.list);
   const [open, setOpen] = useState(start.open);
   const shell = useRef<KtAppShell>(null);
+  // One reply at a time — a ref, so a suggestion clicked mid-answer reads the truth.
+  const busy = useRef(false);
+  const [answering, setAnswering] = useState(false);
+  const [announcement, setAnnouncement] = useState('');
   const current = list.find((conversation) => conversation.id === open);
 
   function choose(id: number): void {
@@ -32,15 +36,28 @@ export function App() {
     if (shell.current) shell.current.sidebarOpen = false;
   }
 
-  /** Sends a question in the open conversation; resolves once the reply has streamed. */
+  /** Sends a question in the open conversation; resolves once the reply has streamed. One at a time. */
   async function ask(text: string): Promise<void> {
+    if (busy.current) return;
     const id = open;
     const asked = addQuestion(list, id, text);
     if (!asked) return;
+    busy.current = true;
+    setAnswering(true);
     setList(asked.list);
-    // `id` is the conversation asked in: the reply lands there, whichever is open.
-    await reply(text, (token) => setList((now) => appendToken(now, id, asked.replyId, token)));
-    setList((now) => finishReply(now, id, asked.replyId));
+    let answer = '';
+    try {
+      // `id` is the conversation asked in: the reply lands there, whichever is open.
+      await reply(text, (token) => {
+        answer += token;
+        setList((now) => appendToken(now, id, asked.replyId, token));
+      });
+      setList((now) => finishReply(now, id, asked.replyId));
+      setAnnouncement(`${ASSISTANT.name}: ${answer}`);
+    } finally {
+      busy.current = false;
+      setAnswering(false);
+    }
   }
 
   return (
@@ -55,7 +72,7 @@ export function App() {
           variant="secondary"
           onClick={() => {
             const started = newConversation(list);
-            setList(started.list);
+            setList((now) => [started.list[0]!, ...now]);
             choose(started.id);
           }}
         >
@@ -82,9 +99,13 @@ export function App() {
           <kt-prompt-input
             label={`Ask ${ASSISTANT.name}`}
             placeholder="Ask about your numbers…"
+            disabled={answering}
             onkt-submit={(event) => event.detail.wait(ask(event.detail.value))}
           />
         </div>
+        <p className="announcer" role="status">
+          {announcement}
+        </p>
       </div>
     </kt-app-shell>
   );

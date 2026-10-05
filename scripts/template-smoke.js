@@ -191,6 +191,39 @@ export const SMOKES = {
       document.querySelector('.transcript kt-chat-message')?.textContent.includes('Why is revenue'),
     );
 
+    // A finished answer is announced once, not the whole transcript on every word.
+    await until(() => !document.querySelector('.transcript')?.hasAttribute('aria-live'));
+    await until(() =>
+      (document.querySelector('.announcer')?.textContent ?? '').includes('North East'),
+    );
+
+    // One reply at a time: a suggestion makes the prompt wait like a question does.
+    await page.getByRole('button', { name: 'New chat', exact: true }).click();
+    await page.getByRole('button', { name: 'What happened to churn?', exact: true }).click();
+    await until(() => document.querySelector('kt-prompt-input')?.disabled === true);
+    await until(() => document.querySelector('kt-prompt-input')?.disabled === false);
+    await until(() => document.querySelectorAll('.transcript kt-chat-message').length === 2);
+
+    // The transcript follows the answer as it streams, on a short screen.
+    await page.setViewportSize({ width: 1280, height: 420 });
+    await ask('Why is revenue down 3% this month?');
+    await until(() => document.querySelector('kt-prompt-input')?.disabled === false);
+    await until(() => {
+      const box = document.querySelector('.transcript');
+      return box !== null && box.scrollHeight - box.scrollTop - box.clientHeight < 40;
+    });
+
+    // A conversation chosen while an answer streams opens at once.
+    await ask('Which regions are growing?');
+    await page.locator('.conversations .conversation').nth(2).click();
+    await until(
+      () =>
+        document
+          .querySelector('.conversations li:nth-child(3) .conversation')
+          ?.getAttribute('aria-current') === 'true',
+    );
+    await until(() => document.querySelector('kt-prompt-input')?.disabled === false);
+
     // A phone: no sideways scroll, and the list is in the shell's drawer.
     await page.setViewportSize({ width: 390, height: 800 });
     await until(() => document.documentElement.scrollWidth <= window.innerWidth);
