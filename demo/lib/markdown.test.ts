@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { plainTextOf, renderDoc } from './markdown.js';
+import { plainTextOf, renderDoc, renderUntrustedMarkdown } from './markdown.js';
 
 describe('plainTextOf', () => {
   it('drops markup and puts the characters back', () => {
@@ -31,5 +31,34 @@ describe('renderDoc', () => {
   it('keeps anchors unique when two headings share a name', () => {
     const doc = renderDoc('# T\n\n## Usage\n\na\n\n## Usage\n\nb\n');
     expect(doc.headings.map((h) => h.id)).toEqual(['usage', 'usage-1']);
+  });
+});
+
+describe('renderUntrustedMarkdown', () => {
+  it('renders the markdown', () => {
+    const out = renderUntrustedMarkdown('## Added\n\n- `kt-meter`\n- **kt-page-header**\n');
+    expect(out).toContain('<h2');
+    expect(out).toContain('<li>');
+    expect(out).toContain('<strong>kt-page-header</strong>');
+  });
+
+  it('drops embedded HTML, block and inline', () => {
+    // Release notes arrive over the network. marked passes raw HTML straight
+    // through, so anything in a note would land in the page with the same
+    // privileges as the docs themselves.
+    const out = renderUntrustedMarkdown(
+      'Before\n\n<img src=x onerror="alert(1)">\n\nAfter with <b>inline</b> too.\n',
+    );
+    expect(out).not.toContain('<img');
+    expect(out).not.toContain('onerror');
+    expect(out).not.toContain('<b>');
+    expect(out).toContain('Before');
+    expect(out).toContain('After with');
+  });
+
+  it('escapes what it puts in a code block', () => {
+    const out = renderUntrustedMarkdown('```\n<script>alert(1)</script>\n```\n');
+    expect(out).toContain('&lt;script&gt;');
+    expect(out).not.toContain('<script>');
   });
 });
