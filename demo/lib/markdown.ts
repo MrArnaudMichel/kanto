@@ -126,6 +126,30 @@ export function renderDoc(source: string): RenderedDoc {
 }
 
 /**
+ * Renders markdown that did not come from this repository.
+ *
+ * Release notes arrive over the network, and marked passes raw HTML straight
+ * through — so anything embedded in a note would be inserted into the page with
+ * the same privileges as the docs themselves. Dropping the `html` tokens is the
+ * precise fix: every other construct still renders, and there is no HTML left
+ * to insert. Headings get no anchors either, since these are not page sections.
+ */
+export function renderUntrustedMarkdown(source: string): string {
+  const marked = new Marked({
+    gfm: true,
+    breaks: false,
+    renderer: {
+      html: () => '',
+      code({ text }: Tokens.Code) {
+        return `<kt-code>${escapeHtml(text)}</kt-code>`;
+      },
+    },
+  });
+
+  return marked.parse(source, { async: false });
+}
+
+/**
  * The reader's text for a heading: markup out, entities back to characters.
  *
  * Stripping the tags is not enough. A heading like `<form>` renders as
