@@ -37,6 +37,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- `kt-sub-menu-navigation`, `collapsed`, hid each label and its name with it:
+  an icon-only row read as a bare "link", with no tooltip to say where it
+  led. Collapsed, a row is named by its label, read aloud and shown on hover.
 - `kt-side-panel`, closed, stayed in the page: slid off screen, its buttons
   were still in the tab order and in reach of screen readers. Closed, it is
   gone; it still slides in and out.

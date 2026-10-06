@@ -58,7 +58,7 @@
   "./components/navigation/kt-page-header": 2600,
   "./components/navigation/kt-segmented-control": 6300,
   "./components/navigation/kt-steps": 5900,
-  "./components/navigation/kt-sub-menu-navigation": 6800,
+  "./components/navigation/kt-sub-menu-navigation": 7500,
   "./components/navigation/kt-tabs": 6200,
   "./components/navigation/kt-toggle-button": 4700,
   "./components/navigation/kt-toggle-button-group": 5700,

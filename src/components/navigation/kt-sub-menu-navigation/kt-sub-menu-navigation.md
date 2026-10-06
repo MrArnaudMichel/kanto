@@ -60,6 +60,7 @@ the state with `active: true`, for routes that do not map to a single href.
 sidebar that already owns its surface. `collapsed` reduces every row to its
 icon; labels, badges and open branches are hidden rather than clipped, because
 a label sliced in half at 48px reads as a bug rather than as a narrow sidebar.
+Each row then carries its label as its accessible name and as a tooltip.
 
 ```html
 <kt-sub-menu-navigation flush collapsed></kt-sub-menu-navigation>

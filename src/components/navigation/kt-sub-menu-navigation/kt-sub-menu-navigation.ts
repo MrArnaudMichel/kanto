@@ -291,6 +291,8 @@ export class KtSubMenuNavigation extends KtElement {
       within: branch && !active && this.holdsActive(item),
     });
     const inset = styleMap({ '--depth': String(depth) });
+    // Collapsed, the label is hidden: the row carries it as its name and tooltip.
+    const named = this.collapsed ? item.label : nothing;
 
     const body = html`
       ${item.icon ? html`<kt-icon name=${item.icon} size="16"></kt-icon>` : nothing}
@@ -316,6 +318,8 @@ export class KtSubMenuNavigation extends KtElement {
               class=${classes}
               style=${inset}
               aria-expanded=${open ? 'true' : 'false'}
+              aria-label=${named}
+              title=${named}
               aria-disabled=${item.disabled ? 'true' : nothing}
               @click=${() => this.onToggle(item, path)}
             >
@@ -327,6 +331,8 @@ export class KtSubMenuNavigation extends KtElement {
               style=${inset}
               href=${item.href ?? '#'}
               aria-current=${active ? 'page' : nothing}
+              aria-label=${named}
+              title=${named}
               aria-disabled=${item.disabled ? 'true' : nothing}
               @click=${(event: MouseEvent) => this.onSelect(event, item)}
             >

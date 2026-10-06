@@ -188,6 +188,23 @@ describe('kt-sub-menu-navigation', () => {
     expect(el.shadowRoot!.querySelector('kt-icon[name="house"]')).not.toBeNull();
   });
 
+  it('names each row when collapsed, as the label it hides, and in a tooltip', async () => {
+    // display:none on the label took the row's accessible name with it: an
+    // icon-only link read as "link", with nothing on hover to say where it led.
+    el.sections = NESTED;
+    el.collapsed = true;
+    await settle(el);
+    const home = links(el).find((link) => link.getAttribute('href') === '#/home')!;
+    expect(home.getAttribute('aria-label')).toBe('Home');
+    expect(home.title).toBe('Home');
+    expect(branch(el, 'Settings').getAttribute('aria-label')).toBe('Settings');
+
+    el.collapsed = false;
+    await settle(el);
+    expect(home.hasAttribute('aria-label')).toBe(false);
+    expect(home.hasAttribute('title')).toBe(false);
+  });
+
   it('gives a branch row the same width as a link row', async () => {
     // A <button> sizes to its content even as a flex container, so without an
     // explicit width the hover fill stopped at the end of the word.
