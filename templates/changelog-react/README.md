@@ -22,8 +22,10 @@ npm run dev
 | The page                     | `src/App.tsx`                                    |
 
 Releases open at `#/releases/<version>`, so the build runs on any static host.
-After changing the releases, write the feed again: `public/rss.xml` must be
-what `buildRss(RELEASES, SITE)` returns.
+The feed writes itself: `vite-feed.ts` rewrites `public/rss.xml` from the
+releases each time the app starts or builds — commit it with them. Set
+`SITE.url` in `src/content.ts` to where the changelog lives: the feed's links
+start there.
 
 ## Components used
 

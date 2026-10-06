@@ -483,9 +483,17 @@ export const SMOKES = {
     });
     await filter('Everything');
     await until(() => document.querySelectorAll('kt-timeline-item').length === 5);
+    // Pressed again, Everything stays pressed: a filter is always shown chosen.
+    await filter('Everything');
+    await until(
+      () => document.querySelector('kt-toggle-button-group.kind-filter')?.value === 'all',
+    );
+
+    // Each release is a heading, so a screen reader can go from one to the next.
+    await until(() => document.querySelectorAll('.releases h2').length === 5);
 
     // A release's own page, its older neighbour, and back to them all.
-    await page.locator('a.release-link', { hasText: '2.3.0' }).click();
+    await page.locator('a.release-link', { hasText: 'A faster dashboard' }).click();
     await until(
       () =>
         location.hash === '#/releases/2.3.0' &&
@@ -502,6 +510,11 @@ export const SMOKES = {
 
     // A version that does not exist.
     await page.goto(`${base}#/releases/9.9.9`);
+    await until(() => document.querySelector('kt-error-page') !== null);
+    // An address that cannot even be read is a page that does not exist, not a blank one.
+    await page.goto(`${base}#/`);
+    await until(() => document.querySelectorAll('kt-timeline-item').length === 5);
+    await page.goto(`${base}#/releases/%E0`);
     await until(() => document.querySelector('kt-error-page') !== null);
 
     // Subscribing says it worked.

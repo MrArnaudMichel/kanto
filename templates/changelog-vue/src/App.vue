@@ -31,7 +31,13 @@ const releaseHref = (release: Release) => `#/releases/${release.version}`;
 
 const read = () => {
   const version = /^#\/releases\/(.+)$/.exec(location.hash)?.[1];
-  return version ? decodeURIComponent(version) : null;
+  if (!version) return null;
+  // An address that cannot be read names no release: it is shown as unknown.
+  try {
+    return decodeURIComponent(version);
+  } catch {
+    return version;
+  }
 };
 const version = ref(read());
 const onHash = () => (version.value = read());
@@ -63,7 +69,10 @@ const count = computed(() => releases.value.reduce((sum, item) => sum + item.cha
 
 // The chosen filter pressed again would leave none: everything, then.
 function onKind(event: CustomEvent<{ value: string | null }>): void {
-  kind.value = (event.detail.value as Kind | null) ?? 'all';
+  const next = (event.detail.value as Kind | null) ?? 'all';
+  // The group cleared itself; the state may not change, so say it here.
+  (event.currentTarget as HTMLElement & { value: string | null }).value = next;
+  kind.value = next;
 }
 
 // === The header and the newsletter ===
@@ -129,13 +138,15 @@ function onSubscribe(event: CustomEvent<KtSubscribeDetail>): void {
             <kt-timeline-item
               v-for="item in releases"
               :key="item.version"
-              :heading="item.title"
               :time="formatDate(item.date)"
               icon="sparkles"
               variant="primary"
             >
               <div class="release-heading">
-                <a class="release-link" :href="releaseHref(item)">{{ item.version }}</a>
+                <h2 class="release-title">
+                  <a class="release-link" :href="releaseHref(item)">{{ item.title }}</a>
+                </h2>
+                <kt-badge variant="code">{{ item.version }}</kt-badge>
               </div>
               <p class="release-summary">{{ item.summary }}</p>
               <Changes :release="item" />

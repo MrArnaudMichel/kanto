@@ -25,7 +25,13 @@ const LINKS = [
 function useVersion(): string | null {
   const read = () => {
     const version = /^#\/releases\/(.+)$/.exec(location.hash)?.[1];
-    return version ? decodeURIComponent(version) : null;
+    if (!version) return null;
+    // An address that cannot be read names no release: it is shown as unknown.
+    try {
+      return decodeURIComponent(version);
+    } catch {
+      return version;
+    }
   };
   const [version, setVersion] = useState(read);
   useEffect(() => {
@@ -76,7 +82,12 @@ function Releases() {
           label="Show"
           value={kind}
           // The chosen filter pressed again would leave none: everything, then.
-          onkt-change={(event) => setKind((event.detail.value as Kind | null) ?? 'all')}
+          onkt-change={(event) => {
+            const next = (event.detail.value as Kind | null) ?? 'all';
+            // The group cleared itself; the state may not change, so say it here.
+            (event.currentTarget as HTMLElement & { value: string | null }).value = next;
+            setKind(next);
+          }}
         >
           {KINDS.map((option) => (
             <kt-toggle-button key={option.value} value={option.value}>
@@ -98,15 +109,17 @@ function Releases() {
             {releases.map((release) => (
               <kt-timeline-item
                 key={release.version}
-                heading={release.title}
                 time={formatDate(release.date)}
                 icon="sparkles"
                 variant="primary"
               >
                 <div className="release-heading">
-                  <a className="release-link" href={releaseHref(release)}>
-                    {release.version}
-                  </a>
+                  <h2 className="release-title">
+                    <a className="release-link" href={releaseHref(release)}>
+                      {release.title}
+                    </a>
+                  </h2>
+                  <kt-badge variant="code">{release.version}</kt-badge>
                 </div>
                 <p className="release-summary">{release.summary}</p>
                 <Changes release={release} />

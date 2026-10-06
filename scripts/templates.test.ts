@@ -2,7 +2,7 @@
  * The templates: each a project of its own, and what the stacks of one
  * template share — data, rules, view helpers — kept identical and tested once.
  */
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { KtNavItem, KtNavSection } from '../src/index.js';
@@ -67,6 +67,7 @@ const SHARED: Record<string, readonly string[]> = {
     'src/icons.ts',
     'src/styles.css',
     'public/rss.xml',
+    'vite-feed.ts',
   ],
   editor: [
     'src/content.ts',
@@ -725,6 +726,25 @@ describe('the changelog', () => {
     const doc = new DOMParser().parseFromString(feed, 'application/xml');
     expect(doc.querySelector('parsererror')).toBeNull();
     expect(doc.querySelectorAll('item')).toHaveLength(1);
+  });
+
+  it("writes the feed again on every start and build, so a fork's feed follows its releases", async () => {
+    const { feed } = await import('../templates/changelog-vanilla/vite-feed');
+    const { RELEASES, SITE } = await import('../templates/changelog-vanilla/src/content');
+    const { buildRss } = await import('../templates/changelog-vanilla/src/rss');
+    const path = join(root, 'templates/changelog-vanilla/public/rss.xml');
+    const kept = readFileSync(path, 'utf8');
+    try {
+      writeFileSync(path, 'stale');
+      const plugin = feed();
+      (plugin.configResolved as (config: { publicDir: string }) => void)({
+        publicDir: join(root, 'templates/changelog-vanilla/public'),
+      });
+      (plugin.buildStart as () => void)();
+      expect(readFileSync(path, 'utf8')).toBe(buildRss(RELEASES, SITE));
+    } finally {
+      writeFileSync(path, kept);
+    }
   });
 
   it('serves the feed the releases make', async () => {

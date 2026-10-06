@@ -80,9 +80,13 @@
   align-items: baseline;
 }
 
+.release-title {
+  margin: 0;
+  font: var(--font-title-h6);
+}
+
 .release-link {
-  color: var(--color-primary-text);
-  font: var(--font-normal-medium);
+  color: var(--text-body);
   text-decoration: none;
 }
 

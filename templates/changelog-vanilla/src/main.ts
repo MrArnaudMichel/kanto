@@ -156,14 +156,16 @@ function drawList(): void {
         el(
           'kt-timeline-item',
           {
-            heading: release.title,
             time: formatDate(release.date),
             icon: 'sparkles',
             variant: 'primary',
           },
           [
             el('div', { class: 'release-heading' }, [
-              el('a', { class: 'release-link', href: releaseHref(release) }, [release.version]),
+              el('h2', { class: 'release-title' }, [
+                el('a', { class: 'release-link', href: releaseHref(release) }, [release.title]),
+              ]),
+              el('kt-badge', { variant: 'code' }, [release.version]),
             ]),
             el('p', { class: 'release-summary' }, [release.summary]),
             changeList(release),
@@ -218,7 +220,14 @@ function route(): void {
     drawList();
     return;
   }
-  const release = releaseByVersion(RELEASES, decodeURIComponent(version));
+  let name = version;
+  // An address that cannot be read names no release: it is shown as unknown.
+  try {
+    name = decodeURIComponent(version);
+  } catch {
+    // Kept as written.
+  }
+  const release = releaseByVersion(RELEASES, name);
   document.title = release
     ? `${release.version} — ${SITE.name} changelog`
     : `${SITE.name} changelog`;
