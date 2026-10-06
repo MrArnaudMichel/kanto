@@ -153,7 +153,8 @@ export function createShell(root: HTMLElement): Shell {
   topSearch.setAttribute('aria-label', 'Search');
   topSearch.addEventListener('click', openPalette);
 
-  const bellCount = el('span', { class: 'bell-count' });
+  // Hidden until the mail says how many: an empty badge says nothing.
+  const bellCount = el('span', { class: 'bell-count', hidden: true });
   const bell = el('kt-button', {
     variant: 'secondary-no-bg',
     size: 'small',

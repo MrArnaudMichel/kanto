@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /** Who is in the workspace, and the way to take someone out of it. */
 import { toaster } from 'kanto-ds';
-import { onBeforeUnmount, shallowRef } from 'vue';
+import { onBeforeUnmount, ref, shallowRef } from 'vue';
 import { memberCell } from '../cells';
 import { listMembers, removeMember, type Member } from '../data/api';
 
@@ -13,8 +13,13 @@ const COLUMNS = [
 ];
 
 const members = shallowRef<readonly Member[] | null>(null);
+// The member stays named while the dialog closes, so its words do not vanish first.
 const removing = shallowRef<Member | null>(null);
-const renderMember = memberCell((member) => (removing.value = member));
+const asking = ref(false);
+const renderMember = memberCell((member) => {
+  removing.value = member;
+  asking.value = true;
+});
 let live = true;
 onBeforeUnmount(() => {
   live = false;
@@ -25,7 +30,7 @@ void listMembers().then((loaded) => {
 
 function remove(): void {
   const member = removing.value;
-  removing.value = null;
+  asking.value = false;
   if (!member) return;
   void removeMember(member.id).then(async () => {
     members.value = await listMembers();
@@ -62,13 +67,13 @@ function remove(): void {
     </kt-card>
 
     <kt-confirm-dialog
-      :open="removing !== null"
+      :open="asking"
       :heading="`Remove ${removing?.name ?? ''}?`"
       message="They lose access at once."
       confirm-label="Remove"
       variant="danger"
       @kt-confirm="remove"
-      @kt-cancel="removing = null"
+      @kt-cancel="asking = false"
     />
   </div>
 </template>

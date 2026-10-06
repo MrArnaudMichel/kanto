@@ -153,9 +153,16 @@ const MEMBER_COLUMNS = [
 
 export function People() {
   const [members, setMembers] = useState<readonly Member[] | null>(null);
+  // The member stays named while the dialog closes, so its words do not vanish first.
   const [removing, setRemoving] = useState<Member | null>(null);
+  const [asking, setAsking] = useState(false);
   // Built once: the table redraws every cell when its renderer changes.
-  const [renderMember] = useState(() => memberCell(setRemoving));
+  const [renderMember] = useState(() =>
+    memberCell((member) => {
+      setRemoving(member);
+      setAsking(true);
+    }),
+  );
 
   useEffect(() => {
     let live = true;
@@ -196,21 +203,21 @@ export function People() {
       </kt-card>
 
       <kt-confirm-dialog
-        open={removing !== null}
+        open={asking}
         heading={`Remove ${removing?.name ?? ''}?`}
         message="They lose access at once."
         confirmLabel="Remove"
         variant="danger"
         onkt-confirm={() => {
           const member = removing;
-          setRemoving(null);
+          setAsking(false);
           if (!member) return;
           void removeMember(member.id).then(async () => {
             setMembers(await listMembers());
             toaster.success(`${member.name} removed`);
           });
         }}
-        onkt-cancel={() => setRemoving(null)}
+        onkt-cancel={() => setAsking(false)}
       />
     </SettingsScreen>
   );

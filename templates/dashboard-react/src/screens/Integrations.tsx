@@ -5,7 +5,8 @@ import { listIntegrations, setIntegration, type Integration } from '../data/api'
 import { Screen } from '../parts';
 
 export function Integrations() {
-  const [all, setAll] = useState<readonly Integration[]>([]);
+  // Null until they arrive: "0 of 0 connected" would be wrong for a moment.
+  const [all, setAll] = useState<readonly Integration[] | null>(null);
   const [open, setOpen] = useState<Integration | null>(null);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export function Integrations() {
     });
   };
 
-  const on = all.filter((entry) => entry.connected).length;
+  const on = (all ?? []).filter((entry) => entry.connected).length;
 
   return (
     <Screen name="integrations">
@@ -47,14 +48,16 @@ export function Integrations() {
         </kt-button>
       </kt-page-header>
 
-      <kt-alert
-        variant="info"
-        heading={`${on} of ${all.length} connected`}
-        description="Turning one off stops its traffic; its history stays."
-      />
+      {all ? (
+        <kt-alert
+          variant="info"
+          heading={`${on} of ${all.length} connected`}
+          description="Turning one off stops its traffic; its history stays."
+        />
+      ) : null}
 
       <div className="integration-grid">
-        {all.map((entry) => (
+        {(all ?? []).map((entry) => (
           <kt-card key={entry.id}>
             <div slot="header" className="row between card-head">
               <span className={`tile-icon ${entry.tone}`}>

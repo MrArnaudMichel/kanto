@@ -107,7 +107,7 @@ export const memberCell =
     const member = row as Member;
     if (column.key === 'name') return person(member.name, member.email);
     if (column.key === 'role') {
-      return node('kt-badge', { variant: member.role === 'Owner' ? 'primary' : 'neutral' }, [
+      return node('kt-badge', { tone: member.role === 'Owner' ? 'primary' : 'neutral' }, [
         member.role,
       ]);
     }

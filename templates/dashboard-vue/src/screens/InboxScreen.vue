@@ -124,9 +124,11 @@ function sendNew(): void {
             "
           />
         </div>
-        <div class="mail-scroll">
+        <div class="mail-scroll" :aria-busy="mail === null">
+          <!-- Until the mail arrives: its shape, not an empty mailbox. -->
+          <kt-skeleton v-if="mail === null" variant="text" :count="6" />
           <kt-empty-state
-            v-if="shown.length === 0"
+            v-else-if="shown.length === 0"
             compact
             icon="search"
             heading="No messages"
@@ -150,13 +152,14 @@ function sendNew(): void {
               <span :class="['mail-subject', { unread: item.unread }]">{{ item.subject }}</span>
               <span class="mail-preview">{{ item.preview }}</span>
             </span>
-            <kt-icon v-if="item.starred" name="star" :size="14" />
+            <kt-icon v-if="item.starred" name="star" :size="14" label="Starred" />
           </button>
         </div>
       </div>
 
       <div class="mail-reading">
-        <template v-if="message">
+        <template v-if="mail === null" />
+        <template v-else-if="message">
           <div class="mail-reading-head">
             <div class="row">
               <kt-avatar :name="message.from" />

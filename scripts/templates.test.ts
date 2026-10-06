@@ -453,6 +453,13 @@ describe('the dashboard', () => {
     // The owner cannot be removed: someone has to stay.
     const removed: string[] = [];
     const cell = memberCell((member) => removed.push(member.name));
+    // A role is a coloured tag: the owner's in the accent, the rest neutral.
+    const role = cell(MEMBERS[0]!, { key: 'role' }) as HTMLElement;
+    expect(role.getAttribute('tone')).toBe('primary');
+    expect(role.hasAttribute('variant')).toBe(false);
+    expect((cell(MEMBERS[1]!, { key: 'role' }) as HTMLElement).getAttribute('tone')).toBe(
+      'neutral',
+    );
     const owner = cell(MEMBERS[0]!, { key: 'actions' }) as HTMLElement;
     expect(owner.hasAttribute('disabled')).toBe(true);
     const other = cell(MEMBERS[1]!, { key: 'actions' }) as HTMLElement;

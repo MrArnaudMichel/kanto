@@ -177,6 +177,47 @@ export const SMOKES = {
       await until((marker) => document.querySelector(`.screen-${marker}`) !== null, name);
     }
 
+    // Opened cold, a screen shows no state its data has not decided yet: no "no
+    // messages", no "0 of 0", no empty badge, no button without a name.
+    const cold = async (path, marker) => {
+      await page.goto(`${base}#${path}`);
+      await page.reload();
+      await until((name) => document.querySelector(`.screen-${name}`) !== null, marker);
+    };
+    await cold('/inbox', 'inbox');
+    const inboxEarly = await page.evaluate(() => {
+      const bell = document.querySelector('.bell-count');
+      return {
+        empty:
+          document.querySelectorAll('.mail-row').length === 0 &&
+          document.querySelector('.screen-inbox kt-empty-state') !== null,
+        bell: bell !== null && !bell.hidden && bell.textContent.trim() === '',
+      };
+    });
+    if (inboxEarly.empty) throw new Error('The inbox says it is empty before its mail arrives');
+    if (inboxEarly.bell) throw new Error('The bell shows an empty count before the mail arrives');
+    await cold('/integrations', 'integrations');
+    const integrationsEarly = await page.evaluate(
+      () => document.querySelector('.screen-integrations kt-alert')?.heading ?? '',
+    );
+    if (/^0 of 0/.test(integrationsEarly)) {
+      throw new Error('Integrations says "0 of 0 connected" before they arrive');
+    }
+    await cold('/customers', 'customers');
+    const unnamed = await page.evaluate(() =>
+      [...document.querySelectorAll('.screen-customers kt-button')].some(
+        (button) =>
+          !button.hidden && button.textContent.trim() === '' && !button.getAttribute('label'),
+      ),
+    );
+    if (unnamed) throw new Error('Customers shows a button with no name before its data arrives');
+
+    // A starred message says so, not only with a star.
+    await page.goto(`${base}#/inbox`);
+    await until(
+      () => document.querySelector('.mail-row kt-icon[name="star"]')?.label === 'Starred',
+    );
+
     // The overview: four figures, the latest orders.
     await page.goto(`${base}#/`);
     await until(() => document.querySelectorAll('.screen-home kt-stat').length === 4);
@@ -240,6 +281,9 @@ export const SMOKES = {
     await page.locator('.screen-people kt-table kt-button:not([disabled])').first().click();
     await until(() => document.querySelector('kt-confirm-dialog')?.open === true);
     await page.keyboard.press('Escape');
+    // Its words stay while it closes: no "Remove ?" flashing out.
+    const closing = await page.evaluate(() => document.querySelector('kt-confirm-dialog')?.heading);
+    if (closing === 'Remove ?') throw new Error('The dialog lost its words while closing');
     await until(() => document.querySelector('kt-confirm-dialog')?.open === false);
 
     // A screen's filters are kept while the reader is elsewhere, in every stack.
@@ -282,6 +326,12 @@ export const SMOKES = {
       // Once the screen's data is in: its tables are drawn.
       await page.waitForTimeout(400);
       await until(() => document.documentElement.scrollWidth <= window.innerWidth);
+      // Nothing on the screen past its edge either — clipped is not fitting.
+      await until(() =>
+        [...document.querySelectorAll('.screen *')].every(
+          (node) => node.getBoundingClientRect().right <= window.innerWidth + 1,
+        ),
+      );
     }
     // The closed drawer is out of the way of the keyboard too.
     await page.goto(`${base}#/`);

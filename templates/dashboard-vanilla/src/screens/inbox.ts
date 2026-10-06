@@ -1,7 +1,7 @@
 /** A two-pane mailbox: the list on the left, the message on the right. */
 import { toaster, type KtInput, type KtModal, type KtTabs, type KtTextarea } from 'kanto-ds';
 import type { Message } from '../data/api';
-import { button, el, icon, pageHeader, screen } from '../dom';
+import { button, el, pageHeader, screen } from '../dom';
 import { loadMail, updateMail } from '../mail';
 import { unreadCount, visibleMail, type MailFilter } from '../views';
 
@@ -37,10 +37,14 @@ export function inbox(outlet: HTMLElement): () => void {
     drawList();
   });
 
-  const list = el('div', { class: 'mail-scroll' });
+  // Until the mail arrives: its shape, not an empty mailbox.
+  const list = el('div', { class: 'mail-scroll', 'aria-busy': 'true' }, [
+    el('kt-skeleton', { variant: 'text', count: 6 }),
+  ]);
   const reading = el('div', { class: 'mail-reading' });
 
   function drawList(): void {
+    list.removeAttribute('aria-busy');
     tabs.tabs = [
       { value: 'all', label: 'All' },
       { value: 'unread', label: `Unread (${unreadCount(messages)})` },
@@ -79,7 +83,9 @@ export function inbox(outlet: HTMLElement): () => void {
               el('span', { class: `mail-subject${unread}` }, [message.subject]),
               el('span', { class: 'mail-preview' }, [message.preview]),
             ]),
-            ...(message.starred ? [icon('star', 14)] : []),
+            ...(message.starred
+              ? [el('kt-icon', { name: 'star', size: 14, label: 'Starred' })]
+              : []),
           ],
         );
         row.addEventListener('click', () => {

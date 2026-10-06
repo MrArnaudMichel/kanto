@@ -7,7 +7,8 @@ export function integrations(outlet: HTMLElement): () => void {
   let live = true;
   let all: readonly Integration[] = [];
 
-  const summary = el('kt-alert', { variant: 'info' });
+  // Shown once the integrations are in: "0 of 0" would be wrong for a moment.
+  const summary = el('kt-alert', { variant: 'info', hidden: true });
   const grid = el('div', { class: 'integration-grid' });
   const panel = el<KtSidePanel>('kt-side-panel');
 
@@ -71,6 +72,7 @@ export function integrations(outlet: HTMLElement): () => void {
 
   function draw(): void {
     const on = all.filter((entry) => entry.connected).length;
+    summary.hidden = false;
     summary.setAttribute('heading', `${on} of ${all.length} connected`);
     summary.setAttribute('description', 'Turning one off stops its traffic; its history stays.');
     grid.replaceChildren(...all.map(card));

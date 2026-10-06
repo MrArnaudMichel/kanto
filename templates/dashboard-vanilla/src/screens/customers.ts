@@ -67,12 +67,17 @@ export function customers(outlet: HTMLElement): () => void {
     set({ regions: (event as CustomEvent<{ value: string[] }>).detail.value });
   });
 
-  const clear = button('', { variant: 'secondary-no-bg', size: 'small', icon: 'x' }, () => {
-    search.value = '';
-    plan.value = null;
-    regions.value = [];
-    set({ query: '', plan: null, regions: [] });
-  });
+  // Hidden until the filters say what there is to clear.
+  const clear = button(
+    '',
+    { variant: 'secondary-no-bg', size: 'small', icon: 'x', hidden: true },
+    () => {
+      search.value = '';
+      plan.value = null;
+      regions.value = [];
+      set({ query: '', plan: null, regions: [] });
+    },
+  );
 
   // === The list ===
 

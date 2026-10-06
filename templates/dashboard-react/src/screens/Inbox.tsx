@@ -204,8 +204,11 @@ export function Inbox() {
               onkt-change={(event) => setFilter(event.detail.value as MailFilter)}
             />
           </div>
-          <div className="mail-scroll">
-            {shown.length === 0 ? (
+          <div className="mail-scroll" aria-busy={mail === null}>
+            {mail === null ? (
+              // Until the mail arrives: its shape, not an empty mailbox.
+              <kt-skeleton variant="text" count={6} />
+            ) : shown.length === 0 ? (
               <kt-empty-state
                 compact
                 icon="search"
@@ -235,7 +238,7 @@ export function Inbox() {
                       <span className={`mail-subject${unread}`}>{item.subject}</span>
                       <span className="mail-preview">{item.preview}</span>
                     </span>
-                    {item.starred ? <kt-icon name="star" size={14} /> : null}
+                    {item.starred ? <kt-icon name="star" size={14} label="Starred" /> : null}
                   </button>
                 );
               })
@@ -244,7 +247,7 @@ export function Inbox() {
         </div>
 
         <div className="mail-reading">
-          {message && message.folder === 'inbox' ? (
+          {mail === null ? null : message && message.folder === 'inbox' ? (
             <Reading
               key={message.id}
               message={message}

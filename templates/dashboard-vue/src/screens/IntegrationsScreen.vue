@@ -4,7 +4,8 @@ import { toaster } from 'kanto-ds';
 import { computed, onBeforeUnmount, shallowRef } from 'vue';
 import { listIntegrations, setIntegration, type Integration } from '../data/api';
 
-const all = shallowRef<readonly Integration[]>([]);
+// Null until they arrive: "0 of 0 connected" would be wrong for a moment.
+const all = shallowRef<readonly Integration[] | null>(null);
 const open = shallowRef<Integration | null>(null);
 let live = true;
 onBeforeUnmount(() => {
@@ -14,7 +15,7 @@ void listIntegrations().then((loaded) => {
   if (live) all.value = loaded;
 });
 
-const on = computed(() => all.value.filter((entry) => entry.connected).length);
+const on = computed(() => (all.value ?? []).filter((entry) => entry.connected).length);
 const endpoint = computed(() => (open.value ? `https://api.${open.value.id}.example/v2` : ''));
 
 function connect(entry: Integration, connected: boolean): void {
@@ -53,13 +54,14 @@ function save(): void {
     </kt-page-header>
 
     <kt-alert
+      v-if="all"
       variant="info"
       :heading="`${on} of ${all.length} connected`"
       description="Turning one off stops its traffic; its history stays."
     />
 
     <div class="integration-grid">
-      <kt-card v-for="entry in all" :key="entry.id">
+      <kt-card v-for="entry in all ?? []" :key="entry.id">
         <div slot="header" class="row between card-head">
           <span :class="`tile-icon ${entry.tone}`"><kt-icon :name="entry.icon" :size="18" /></span>
           <kt-badge :tone="entry.connected ? 'success' : 'neutral'">
