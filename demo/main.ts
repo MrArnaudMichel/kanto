@@ -629,8 +629,6 @@ setRenderer(update);
 applyDocsAppearance(appearance);
 
 window.addEventListener('hashchange', () => {
-  // Inside an app the invitation would cover what the visitor came to see.
-  if (location.hash.startsWith('#/app/')) inviting = false;
   // Each visit to the home page starts its examples from the site as it is.
   if (currentRoute().section !== 'home') {
     resetStage();
@@ -679,7 +677,6 @@ update();
 // The invitation waits for the page to settle, then shows once.
 setTimeout(() => {
   inviting = shouldInvite({
-    hash: location.hash,
     width: window.innerWidth,
     seen: readInviteSeen(),
   });

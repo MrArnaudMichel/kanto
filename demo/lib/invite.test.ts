@@ -9,14 +9,12 @@ afterEach(() => {
 
 describe('the Customise invitation', () => {
   it('shows on a first visit to the docs, at desktop width', () => {
-    expect(shouldInvite({ hash: '#/', width: 1280, seen: false })).toBe(true);
-    expect(shouldInvite({ hash: '#/components/kt-button', width: 1280, seen: false })).toBe(true);
+    expect(shouldInvite({ width: 1280, seen: false })).toBe(true);
   });
 
-  it('never shows once seen, in an app, or on a phone', () => {
-    expect(shouldInvite({ hash: '#/', width: 1280, seen: true })).toBe(false);
-    expect(shouldInvite({ hash: '#/app/console/home', width: 1280, seen: false })).toBe(false);
-    expect(shouldInvite({ hash: '#/', width: 599, seen: false })).toBe(false);
+  it('never shows once seen, or on a phone', () => {
+    expect(shouldInvite({ width: 1280, seen: true })).toBe(false);
+    expect(shouldInvite({ width: 599, seen: false })).toBe(false);
   });
 
   it('is remembered as seen', () => {

@@ -34,7 +34,7 @@ if (missingDemos.length) {
 console.log(`ok   the docs site serves a live demo of ${demos.join(', ')}`);
 if (demosOnly) process.exit(0);
 const source = readFileSync(join(root, 'demo/lib/icons.ts'), 'utf8');
-const registered = /registerIcons\(\{([^}]*)\}\)/.exec(source)?.[1] ?? '';
+const registered = /DOCS_ICONS = \{([^}]*)\}/.exec(source)?.[1] ?? '';
 const names = registered
   .split(',')
   .map((name) => name.trim())

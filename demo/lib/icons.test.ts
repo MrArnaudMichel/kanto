@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import * as lucide from 'lucide';
 import { describe, expect, it } from 'vitest';
 import { getIcon, toKebabCase } from 'kanto-ds/icons';
-import { registerDocsIcons } from './icons.js';
+import { DOCS_ICONS, registerDocsIcons } from './icons.js';
 
 registerDocsIcons();
 
@@ -43,5 +43,14 @@ describe('the docs icon set', () => {
   it('has every icon the docs draw', () => {
     const missing = [...iconNames()].filter((name) => !getIcon(name));
     expect(missing).toEqual([]);
+  });
+
+  it('registers no icon the docs do not draw', () => {
+    // Each one is weight in every page of the site.
+    const drawn = iconNames();
+    const unused = Object.keys(DOCS_ICONS)
+      .map(toKebabCase)
+      .filter((name) => !drawn.has(name));
+    expect(unused).toEqual([]);
   });
 });
