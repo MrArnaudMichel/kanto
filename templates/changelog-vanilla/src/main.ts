@@ -4,9 +4,11 @@ import './styles.css';
 import './icons';
 import type { KtHeader, KtNewsletter, KtPostGrid, KtSubscribeDetail } from 'kanto-ds';
 import { subscribe } from './actions';
+import { leaveList, openRelease, pageTitle, returnToList, toNewsletter } from './navigation';
 import { applyBrand } from './brand';
 import { FOOTER, INTRO, NEWSLETTER, POSTS, RELEASES, SITE } from './content';
 import {
+  countSummary,
   filterReleases,
   formatDate,
   KIND_LABEL,
@@ -62,13 +64,10 @@ const links = (onChoose?: () => void) =>
     if (onChoose) link.addEventListener('click', onChoose);
     return link;
   });
-const subscribeButton = el('kt-button', { slot: 'actions', size: 'small', icon: 'rss' }, [
+const subscribeButton = el('kt-button', { slot: 'actions', size: 'small', icon: 'mail' }, [
   'Subscribe',
 ]);
-subscribeButton.addEventListener('click', () => {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  newsletter.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
-});
+subscribeButton.addEventListener('click', () => toNewsletter(newsletter));
 header.append(
   el('a', { slot: 'brand', class: 'brand', href: '#/' }, [`${SITE.name} changelog`]),
   el('nav', { class: 'nav', 'aria-label': 'Changelog' }, links()),
@@ -191,8 +190,10 @@ function releaseView(release: Release): HTMLElement {
   const { newer, older } = neighbours(RELEASES, release.version);
   return el('article', { class: 'release-page' }, [
     el('a', { class: 'back', href: '#/' }, ['All releases']),
-    el('div', { class: 'release-meta' }, [`${release.version} · ${formatDate(release.date)}`]),
-    el('h1', {}, [release.title]),
+    el('div', { class: 'release-meta' }, [
+      `${release.version} · ${formatDate(release.date)} · ${countSummary(release)}`,
+    ]),
+    el('h1', { tabindex: '-1' }, [release.title]),
     el('p', { class: 'release-summary' }, [release.summary]),
     changeList(release),
     el('nav', { class: 'neighbours', 'aria-label': 'Other releases' }, [
@@ -212,14 +213,21 @@ function releaseView(release: Release): HTMLElement {
 
 // === Where the reader is ===
 
+/** Whether the list is on screen: leaving it keeps its place. */
+let onList = false;
+
 function route(): void {
   const version = /^#\/releases\/(.+)$/.exec(location.hash)?.[1];
   if (!version) {
-    document.title = `${SITE.name} changelog`;
+    document.title = pageTitle(null, undefined);
     content.replaceChildren(releasesView);
     drawList();
+    onList = true;
+    returnToList();
     return;
   }
+  if (onList) leaveList();
+  onList = false;
   let name = version;
   // An address that cannot be read names no release: it is shown as unknown.
   try {
@@ -228,13 +236,11 @@ function route(): void {
     // Kept as written.
   }
   const release = releaseByVersion(RELEASES, name);
-  document.title = release
-    ? `${release.version} — ${SITE.name} changelog`
-    : `${SITE.name} changelog`;
+  document.title = pageTitle(name, release);
   content.replaceChildren(
     release ? releaseView(release) : el('kt-error-page', { 'home-href': '#/' }),
   );
-  window.scrollTo(0, 0);
+  openRelease(content.querySelector<HTMLElement>('.release-page h1'));
 }
 window.addEventListener('hashchange', route);
 route();

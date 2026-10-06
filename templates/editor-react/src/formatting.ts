@@ -4,6 +4,31 @@
  */
 export type Format = 'bold' | 'italic' | 'code' | 'link' | 'heading' | 'list' | 'quote';
 
+/** The toolbar, in order. `keys` is the shortcut with Ctrl, or Cmd on a Mac. */
+export const TOOLS: readonly { format: Format; icon: string; label: string; keys?: string }[] = [
+  { format: 'heading', icon: 'heading-2', label: 'Heading' },
+  { format: 'bold', icon: 'bold', label: 'Bold', keys: 'b' },
+  { format: 'italic', icon: 'italic', label: 'Italic', keys: 'i' },
+  { format: 'code', icon: 'code', label: 'Code' },
+  { format: 'list', icon: 'list', label: 'List' },
+  { format: 'quote', icon: 'text-quote', label: 'Quote' },
+  { format: 'link', icon: 'link', label: 'Link', keys: 'k' },
+];
+
+type Tool = (typeof TOOLS)[number];
+
+const onMac = (): boolean => /Mac|iPhone|iPad/.test(navigator.platform);
+
+/** What a tool's tooltip says: its name, and its shortcut as this computer writes it. */
+export const toolTip = (tool: Tool): string =>
+  tool.keys ? `${tool.label} (${onMac() ? 'Cmd' : 'Ctrl'}+${tool.keys.toUpperCase()})` : tool.label;
+
+/** The tool a key press asks for: Ctrl or Cmd with its letter, and nothing else held. */
+export function toolFor(event: KeyboardEvent): Tool | undefined {
+  if (!(event.ctrlKey || event.metaKey) || event.shiftKey || event.altKey) return undefined;
+  return TOOLS.find((tool) => tool.keys === event.key.toLowerCase());
+}
+
 export interface Edit {
   readonly text: string;
   readonly start: number;
@@ -22,12 +47,31 @@ const PREFIXES: Record<'heading' | 'list' | 'quote', string> = {
   quote: '> ',
 };
 
+/** Whether `mark` sits at the end of `text` as itself — a single `*` is not the end of `**`. */
+const endsWithMark = (text: string, mark: string) =>
+  text.endsWith(mark) && (mark !== '*' || !text.endsWith('**') || text.endsWith('***'));
+const startsWithMark = (text: string, mark: string) =>
+  text.startsWith(mark) && (mark !== '*' || !text.startsWith('**') || text.startsWith('***'));
+
+/**
+ * The toolbar's edit: wraps the selection, or marks the lines it touches —
+ * and takes the format away when it is already there, as a toggle does.
+ */
 export function applyFormat(text: string, start: number, end: number, format: Format): Edit {
   const before = text.slice(0, start);
   const after = text.slice(end);
   const selected = text.slice(start, end);
 
   if (format === 'link') {
+    // An address selected is the link's address; the label is what is left to type.
+    if (/^(https?:\/\/|mailto:)\S+$/.test(selected)) {
+      const label = 'link text';
+      return {
+        text: `${before}[${label}](${selected})${after}`,
+        start: start + 1,
+        end: start + 1 + label.length,
+      };
+    }
     const label = selected || 'link text';
     const url = 'https://';
     const inserted = `[${label}](${url})`;
@@ -38,19 +82,49 @@ export function applyFormat(text: string, start: number, end: number, format: Fo
 
   if (format === 'heading' || format === 'list' || format === 'quote') {
     const prefix = PREFIXES[format];
+    // A selection ending just after a line break stops on the line before it.
+    const last = end > start && text[end - 1] === '\n' ? end - 1 : end;
     const lineStart = text.lastIndexOf('\n', start - 1) + 1;
-    const nextBreak = text.indexOf('\n', end);
+    const nextBreak = text.indexOf('\n', last);
     const lineEnd = nextBreak === -1 ? text.length : nextBreak;
     const lines = text.slice(lineStart, lineEnd).split('\n');
+    const head = text.slice(0, lineStart);
+    const tail = text.slice(lineEnd);
+    if (lines.every((line) => line.startsWith(prefix))) {
+      const plain = lines.map((line) => line.slice(prefix.length)).join('\n');
+      const from = Math.max(lineStart, start - prefix.length);
+      return {
+        text: head + plain + tail,
+        start: from,
+        end: Math.max(from, last - prefix.length * lines.length),
+      };
+    }
     const marked = lines.map((line) => prefix + line).join('\n');
     return {
-      text: text.slice(0, lineStart) + marked + text.slice(lineEnd),
+      text: head + marked + tail,
       start: start + prefix.length,
-      end: end + prefix.length * lines.length,
+      end: last + prefix.length * lines.length,
     };
   }
 
   const { mark, placeholder } = WRAPS[format];
+  // Already marked, inside the selection or around it: unmark.
+  if (
+    selected.length >= mark.length * 2 &&
+    startsWithMark(selected, mark) &&
+    endsWithMark(selected, mark)
+  ) {
+    const inner = selected.slice(mark.length, -mark.length);
+    return { text: before + inner + after, start, end: start + inner.length };
+  }
+  if (selected && endsWithMark(before, mark) && startsWithMark(after, mark)) {
+    const from = start - mark.length;
+    return {
+      text: before.slice(0, -mark.length) + selected + after.slice(mark.length),
+      start: from,
+      end: from + selected.length,
+    };
+  }
   const inner = selected || placeholder;
   const at = start + mark.length;
   return { text: before + mark + inner + mark + after, start: at, end: at + inner.length };

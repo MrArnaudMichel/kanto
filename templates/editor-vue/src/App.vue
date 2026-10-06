@@ -21,19 +21,9 @@ import {
   wordCount,
   type Doc,
 } from './documents';
-import { formatField, type Format } from './formatting';
+import { formatField, toolFor, toolTip, TOOLS, type Format } from './formatting';
 import Preview from './Preview.vue';
 import { changedIds, loadDocs, mergeDocs, saveChanges, watchDocs } from './store';
-
-const TOOLS: { format: Format; icon: string; label: string; keys?: string }[] = [
-  { format: 'heading', icon: 'heading-2', label: 'Heading' },
-  { format: 'bold', icon: 'bold', label: 'Bold', keys: 'mod b' },
-  { format: 'italic', icon: 'italic', label: 'Italic', keys: 'mod i' },
-  { format: 'code', icon: 'code', label: 'Code' },
-  { format: 'list', icon: 'list', label: 'List' },
-  { format: 'quote', icon: 'text-quote', label: 'Quote' },
-  { format: 'link', icon: 'link', label: 'Link', keys: 'mod k' },
-];
 
 const MODES = [
   { value: 'write', label: 'Write' },
@@ -154,8 +144,7 @@ function format(kind: Format): void {
 }
 
 function onKey(event: KeyboardEvent): void {
-  if (!(event.metaKey || event.ctrlKey)) return;
-  const tool = TOOLS.find((candidate) => candidate.keys === `mod ${event.key.toLowerCase()}`);
+  const tool = toolFor(event);
   if (!tool) return;
   event.preventDefault();
   format(tool.format);
@@ -244,8 +233,8 @@ function confirmed(): void {
     </div>
 
     <div v-if="doc" class="editor">
-      <div class="toolbar" role="toolbar" aria-label="Formatting">
-        <kt-tooltip v-for="tool in TOOLS" :key="tool.format" :text="tool.label">
+      <div class="toolbar" role="group" aria-label="Formatting">
+        <kt-tooltip v-for="tool in TOOLS" :key="tool.format" :text="toolTip(tool)">
           <kt-button
             variant="secondary-no-bg"
             size="small"

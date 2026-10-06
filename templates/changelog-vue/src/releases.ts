@@ -69,6 +69,15 @@ export function countByKind(release: Release): Record<Kind, number> {
   return counts;
 }
 
+/** What a release holds, in words: "2 new, 1 improved, 1 fixed". */
+export function countSummary(release: Release): string {
+  const counts = countByKind(release);
+  return (Object.keys(counts) as Kind[])
+    .filter((kind) => counts[kind] > 0)
+    .map((kind) => `${counts[kind]} ${kind}`)
+    .join(', ');
+}
+
 const day = new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' });
 
 /** `2026-10-06` → "October 6, 2026". */

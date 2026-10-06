@@ -2,6 +2,9 @@
  * Where the documents are kept: this browser's storage. Replace these with
  * calls to your backend and the editor does not change — a backend would also
  * want to settle two people editing the same document, which this does not.
+ *
+ * Every save writes every document with its versions: right for a few dozen
+ * notes in a browser; a backend saves the one that changed.
  */
 import { DEFAULT_FOLDER, SEED } from './content';
 import { titleOf, type Doc, type Version } from './documents';

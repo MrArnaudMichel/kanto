@@ -126,6 +126,7 @@
 
 .release-page h1 {
   margin: 0;
+  outline: none;
   font: var(--font-title-h1);
 }
 
@@ -156,4 +157,9 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 4px;
   }
+}
+
+/* The sticky header does not cover the form it scrolls to. */
+#subscribe {
+  scroll-margin-top: 96px;
 }

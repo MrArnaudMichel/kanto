@@ -1,62 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Northwind changelog</title>
     <link>https://northwind.example/changelog/</link>
     <description>What is new in Northwind.</description>
+    <atom:link href="https://northwind.example/changelog/rss.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Tue, 06 Oct 2026 00:00:00 GMT</lastBuildDate>
     <item>
       <title>2.4.0 — Recurring invoices</title>
       <link>https://northwind.example/changelog/#/releases/2.4.0</link>
       <guid>https://northwind.example/changelog/#/releases/2.4.0</guid>
       <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
-      <description>Bill the same customer every month without writing the invoice again.
-
-new: Recurring invoices: monthly, quarterly or yearly, with an end date or none.
-new: Reminder emails three days before a recurring invoice goes out.
-improved: The customer page shows what is billed next, and when.
-fixed: An invoice dated the 31st no longer moves to the 1st in shorter months.</description>
+      <description>&lt;p&gt;Bill the same customer every month without writing the invoice again.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;New: Recurring invoices: monthly, quarterly or yearly, with an end date or none.&lt;/li&gt;&lt;li&gt;New: Reminder emails three days before a recurring invoice goes out.&lt;/li&gt;&lt;li&gt;Improved: The customer page shows what is billed next, and when.&lt;/li&gt;&lt;li&gt;Fixed: An invoice dated the 31st no longer moves to the 1st in shorter months.&lt;/li&gt;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>2.3.0 — A faster dashboard</title>
       <link>https://northwind.example/changelog/#/releases/2.3.0</link>
       <guid>https://northwind.example/changelog/#/releases/2.3.0</guid>
       <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
-      <description>The dashboard opens in half the time, and the chart says what it shows.
-
-improved: The dashboard loads its figures in one request instead of six.
-improved: The revenue chart reads its values aloud to screen readers.
-fixed: Overdue totals counted invoices paid on their due date.</description>
+      <description>&lt;p&gt;The dashboard opens in half the time, and the chart says what it shows.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Improved: The dashboard loads its figures in one request instead of six.&lt;/li&gt;&lt;li&gt;Improved: The revenue chart reads its values aloud to screen readers.&lt;/li&gt;&lt;li&gt;Fixed: Overdue totals counted invoices paid on their due date.&lt;/li&gt;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>2.2.0 — Teams</title>
       <link>https://northwind.example/changelog/#/releases/2.2.0</link>
       <guid>https://northwind.example/changelog/#/releases/2.2.0</guid>
       <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
-      <description>Invite the people you work with, and choose what each of them can do.
-
-new: Invite teammates by email; they join the workspace you choose.
-new: Roles: owners, admins, members and viewers.
-improved: The settings page groups what a workspace and a person each own.</description>
+      <description>&lt;p&gt;Invite the people you work with, and choose what each of them can do.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;New: Invite teammates by email; they join the workspace you choose.&lt;/li&gt;&lt;li&gt;New: Roles: owners, admins, members and viewers.&lt;/li&gt;&lt;li&gt;Improved: The settings page groups what a workspace and a person each own.&lt;/li&gt;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>2.1.1 — Fixes</title>
       <link>https://northwind.example/changelog/#/releases/2.1.1</link>
       <guid>https://northwind.example/changelog/#/releases/2.1.1</guid>
       <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
-      <description>Small things, put right.
-
-fixed: Searching customers by email ignored capital letters only half the time.
-fixed: The export kept the column order of the last export, not the screen’s.</description>
+      <description>&lt;p&gt;Small things, put right.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Fixed: Searching customers by email ignored capital letters only half the time.&lt;/li&gt;&lt;li&gt;Fixed: The export kept the column order of the last export, not the screen’s.&lt;/li&gt;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>2.1.0 — Exports</title>
       <link>https://northwind.example/changelog/#/releases/2.1.0</link>
       <guid>https://northwind.example/changelog/#/releases/2.1.0</guid>
       <pubDate>Thu, 30 Jul 2026 00:00:00 GMT</pubDate>
-      <description>Every list exports to a spreadsheet, as it is on screen.
-
-new: Export customers and invoices to CSV or XLSX.
-improved: Filters and sorting carry into the export.</description>
+      <description>&lt;p&gt;Every list exports to a spreadsheet, as it is on screen.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;New: Export customers and invoices to CSV or XLSX.&lt;/li&gt;&lt;li&gt;Improved: Filters and sorting carry into the export.&lt;/li&gt;&lt;/ul&gt;</description>
     </item>
   </channel>
 </rss>

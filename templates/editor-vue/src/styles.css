@@ -125,6 +125,8 @@ body,
 
 .preview {
   min-width: 0;
+  /* A long address or word wraps rather than scrolling the pane sideways. */
+  overflow-wrap: anywhere;
   padding: 32px max(24px, calc((100% - 720px) / 2));
   overflow-y: auto;
   line-height: 1.7;

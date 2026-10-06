@@ -450,6 +450,13 @@ export const SMOKES = {
     await until(() => (document.querySelector('.page')?.value ?? '') !== '');
     await until(() => document.documentElement.scrollWidth <= window.innerWidth);
     await until(() => document.querySelector('kt-app-shell')?.hasAttribute('narrow') === true);
+
+    // With no documents at all, the way to start one, and the page ready to type in.
+    await page.evaluate(() => localStorage.setItem('kanto-editor', '[]'));
+    await page.reload();
+    await until(() => document.querySelector('kt-empty-state') !== null);
+    await page.locator('kt-empty-state').getByRole('button', { name: 'New document' }).click();
+    await until(() => document.activeElement?.classList.contains('page') === true);
   },
 
   async changelog(page, base) {
@@ -508,9 +515,35 @@ export const SMOKES = {
       () => location.hash === '#/' && document.querySelectorAll('kt-timeline-item').length === 5,
     );
 
+    // The header's Subscribe takes the reader, and the keyboard, to the form.
+    await page.locator('kt-header').getByRole('button', { name: 'Subscribe' }).click();
+    await until(() => document.activeElement === document.querySelector('kt-newsletter'));
+
+    // A release opens at its top, its heading focused; back, the list is where it was left.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const link = page.locator('a.release-link').nth(3);
+    await link.scrollIntoViewIfNeeded();
+    const left = await page.evaluate(() => Math.round(window.scrollY));
+    if (left < 100) throw new Error(`the list did not scroll: ${left}`);
+    await link.click();
+    await until(
+      () =>
+        location.hash.startsWith('#/releases/') &&
+        window.scrollY === 0 &&
+        document.activeElement?.matches('.release-page h1') === true,
+    );
+    await page.goBack();
+    await until(
+      (y) =>
+        document.querySelectorAll('kt-timeline-item').length === 5 &&
+        Math.abs(window.scrollY - y) < 4,
+      left,
+    );
+
     // A version that does not exist.
     await page.goto(`${base}#/releases/9.9.9`);
     await until(() => document.querySelector('kt-error-page') !== null);
+    await until(() => document.title === 'Release not found — Northwind changelog');
     // An address that cannot even be read is a page that does not exist, not a blank one.
     await page.goto(`${base}#/`);
     await until(() => document.querySelectorAll('kt-timeline-item').length === 5);

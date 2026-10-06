@@ -71,8 +71,9 @@ Everything is Markdown: what you type is what is kept.
 The toolbar does the same to what you select. Your work saves itself, and **History** keeps a version a minute.
 
 \`\`\`
-Cmd+B  bold
-Cmd+I  italic
+Ctrl+B  bold     (Cmd+B on a Mac)
+Ctrl+I  italic   (Cmd+I on a Mac)
+Ctrl+K  link     (Cmd+K on a Mac)
 \`\`\``,
   },
 ];

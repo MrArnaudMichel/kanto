@@ -63,6 +63,7 @@ const SHARED: Record<string, readonly string[]> = {
     'src/releases.ts',
     'src/rss.ts',
     'src/actions.ts',
+    'src/navigation.ts',
     'src/brand.ts',
     'src/icons.ts',
     'src/styles.css',
@@ -586,6 +587,83 @@ describe('the editor', () => {
     expect(empty.text.slice(empty.start, empty.end)).toBe('bold text');
   });
 
+  it('renders the Markdown people write: numbered from where they start, nested marks, every heading, rules', async () => {
+    const { renderMarkdown } = await import('../templates/editor-vanilla/src/markdown');
+    const box = document.createElement('div');
+    box.append(
+      ...renderMarkdown(
+        [
+          '1. one',
+          '',
+          '2. two',
+          '',
+          '#### Four',
+          '###### Six',
+          '',
+          '**bold *and italic***, **[a bold link](https://example.com)**',
+          '',
+          '---',
+          '',
+          '[wiki](https://en.wikipedia.org/wiki/Foo_(bar)) after',
+        ].join('\n'),
+      ),
+    );
+    const lists = [...box.querySelectorAll('ol')];
+    // A blank line between items does not restart the count.
+    expect(lists.map((list) => list.getAttribute('start') ?? '1')).toEqual(['1', '2']);
+    expect(box.querySelector('h4')!.textContent).toBe('Four');
+    expect(box.querySelector('h6')!.textContent).toBe('Six');
+    expect(box.querySelector('strong em')!.textContent).toBe('and italic');
+    expect(box.querySelector('strong a')!.getAttribute('href')).toBe('https://example.com');
+    expect(box.querySelector('hr')).not.toBeNull();
+    const wiki = [...box.querySelectorAll('a')].find((a) => a.textContent === 'wiki')!;
+    expect(wiki.getAttribute('href')).toBe('https://en.wikipedia.org/wiki/Foo_(bar)');
+    expect(box.textContent).toContain(' after');
+    expect(box.textContent).not.toContain('*');
+  });
+
+  it('gives no href to a link that only looks safe', async () => {
+    const { renderMarkdown } = await import('../templates/editor-vanilla/src/markdown');
+    const box = document.createElement('div');
+    box.append(
+      ...renderMarkdown(
+        '[a]( javascript:alert(1)) [b](&#106;avascript:alert(1)) [c](jav&#x61;script:x)',
+      ),
+    );
+    expect(box.querySelectorAll('a[href]')).toHaveLength(0);
+  });
+
+  it('takes a format back when it is applied again, and reads what is selected', async () => {
+    const { applyFormat } = await import('../templates/editor-vanilla/src/formatting');
+    // Bold on bold text, the marks selected or not, removes them.
+    expect(applyFormat('a **b** c', 4, 5, 'bold')).toEqual({ text: 'a b c', start: 2, end: 3 });
+    expect(applyFormat('a **b** c', 2, 7, 'bold')).toEqual({ text: 'a b c', start: 2, end: 3 });
+    expect(applyFormat('*x*', 1, 2, 'italic').text).toBe('x');
+    // A heading, a list or a quote applied again goes.
+    expect(applyFormat('## x', 3, 3, 'heading').text).toBe('x');
+    expect(applyFormat('- a\n- b', 0, 7, 'list').text).toBe('a\nb');
+    // A selection ending just after a line break leaves the next line alone.
+    expect(applyFormat('a\nb', 0, 2, 'quote').text).toBe('> a\nb');
+    // Link on an address: the address is the link, the label is left to type.
+    const link = applyFormat('see https://example.com', 4, 23, 'link');
+    expect(link.text).toBe('see [link text](https://example.com)');
+    expect(link.text.slice(link.start, link.end)).toBe('link text');
+  });
+
+  it('reads a shortcut only as itself, and names it as this computer does', async () => {
+    const { TOOLS, toolFor, toolTip } = await import('../templates/editor-vanilla/src/formatting');
+    const key = (init: KeyboardEventInit) => new KeyboardEvent('keydown', init);
+    expect(toolFor(key({ key: 'b', ctrlKey: true }))?.format).toBe('bold');
+    expect(toolFor(key({ key: 'B', metaKey: true }))?.format).toBe('bold');
+    // Ctrl+Shift+I is the browser's, not Italic; Ctrl+B with Alt is someone else's too.
+    expect(toolFor(key({ key: 'I', ctrlKey: true, shiftKey: true }))).toBeUndefined();
+    expect(toolFor(key({ key: 'b', ctrlKey: true, altKey: true }))).toBeUndefined();
+    expect(toolFor(key({ key: 'b' }))).toBeUndefined();
+    const bold = TOOLS.find((tool) => tool.format === 'bold')!;
+    expect(toolTip(bold)).toMatch(/^Bold \((Ctrl|Cmd)\+B\)$/);
+    expect(toolTip(TOOLS.find((tool) => tool.format === 'code')!)).toBe('Code');
+  });
+
   it('seeds the documents once, keeps an empty list empty, and survives storage that refuses', async () => {
     const { loadDocs, saveChanges } = await import('../templates/editor-vanilla/src/store');
     const { SEED } = await import('../templates/editor-vanilla/src/content');
@@ -701,6 +779,9 @@ describe('the changelog', () => {
     expect(neighbours(RELEASES, RELEASES.at(-1)!.version).older).toBeUndefined();
     const counts = countByKind(middle);
     expect(counts.new + counts.improved + counts.fixed).toBe(middle.changes.length);
+    const { countSummary } = await import('../templates/changelog-vanilla/src/releases');
+    expect(countSummary(RELEASES[0]!)).toBe('2 new, 1 improved, 1 fixed');
+    expect(countSummary(RELEASES[3]!)).toBe('2 fixed');
   });
 
   it('writes a feed that escapes what it says and dates it as RSS does', async () => {
@@ -720,8 +801,15 @@ describe('the changelog', () => {
     );
     expect(feed).toContain('<title>1.0.0 — Tom &amp; Jerry &lt;script&gt;</title>');
     expect(feed).toContain('<link>https://northwind.example/changelog/#/releases/1.0.0</link>');
-    expect(feed).toContain('Fish &quot;and&quot; chips');
-    expect(feed).toContain('A &lt; B');
+    // Readers show a description as HTML: the changes as a list, labelled as on the page,
+    // escaped once for the HTML and once more for the XML.
+    expect(feed).toContain('&lt;p&gt;Fish &amp;quot;and&amp;quot; chips&lt;/p&gt;');
+    expect(feed).toContain('&lt;li&gt;New: A &amp;lt; B&lt;/li&gt;');
+    // Where the feed itself lives, and when it last changed: what validators ask for.
+    expect(feed).toContain(
+      '<atom:link href="https://northwind.example/changelog/rss.xml" rel="self" type="application/rss+xml"/>',
+    );
+    expect(feed).toContain('<lastBuildDate>Tue, 06 Oct 2026 00:00:00 GMT</lastBuildDate>');
     expect(feed).not.toContain('<script>');
     const doc = new DOMParser().parseFromString(feed, 'application/xml');
     expect(doc.querySelector('parsererror')).toBeNull();
@@ -745,6 +833,14 @@ describe('the changelog', () => {
     } finally {
       writeFileSync(path, kept);
     }
+  });
+
+  it('names each page in the tab, a release that is not there too', async () => {
+    const { RELEASES } = await import('../templates/changelog-vanilla/src/content');
+    const { pageTitle } = await import('../templates/changelog-vanilla/src/navigation');
+    expect(pageTitle(null, undefined)).toBe('Northwind changelog');
+    expect(pageTitle('2.4.0', RELEASES[0])).toBe('2.4.0 — Northwind changelog');
+    expect(pageTitle('9.9.9', undefined)).toBe('Release not found — Northwind changelog');
   });
 
   it('serves the feed the releases make', async () => {

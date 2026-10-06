@@ -1,9 +1,8 @@
 /**
- * The feed, built from the same releases as the page. `public/rss.xml` is
- * this, written out — a test keeps the two equal; rewrite the file with
- * `buildRss` whenever the releases change.
+ * The feed, built from the same releases as the page. `vite-feed.ts` writes
+ * it to `public/rss.xml` whenever the app starts or builds.
  */
-import type { Release } from './releases';
+import { KIND_LABEL, type Release } from './releases';
 
 const escape = (text: string): string =>
   text
@@ -22,24 +21,30 @@ export function buildRss(
 ): string {
   const items = releases.map((release) => {
     const link = `${site.url}#/releases/${release.version}`;
-    const changes = release.changes.map((change) => `${change.kind}: ${change.text}`).join('\n');
+    // Readers show this as HTML: escaped once for the HTML, then again as XML below.
+    const changes = release.changes
+      .map((change) => `<li>${escape(`${KIND_LABEL[change.kind]}: ${change.text}`)}</li>`)
+      .join('');
+    const description = `<p>${escape(release.summary)}</p><ul>${changes}</ul>`;
     return [
       '    <item>',
       `      <title>${escape(`${release.version} — ${release.title}`)}</title>`,
       `      <link>${escape(link)}</link>`,
       `      <guid>${escape(link)}</guid>`,
       `      <pubDate>${rfc822(release.date)}</pubDate>`,
-      `      <description>${escape(`${release.summary}\n\n${changes}`)}</description>`,
+      `      <description>${escape(description)}</description>`,
       '    </item>',
     ].join('\n');
   });
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<rss version="2.0">',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     '  <channel>',
     `    <title>${escape(`${site.name} changelog`)}</title>`,
     `    <link>${escape(site.url)}</link>`,
     `    <description>${escape(`What is new in ${site.name}.`)}</description>`,
+    `    <atom:link href="${escape(`${site.url}rss.xml`)}" rel="self" type="application/rss+xml"/>`,
+    ...(releases[0] ? [`    <lastBuildDate>${rfc822(releases[0].date)}</lastBuildDate>`] : []),
     ...items,
     '  </channel>',
     '</rss>',

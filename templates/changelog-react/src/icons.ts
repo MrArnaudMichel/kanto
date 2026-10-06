@@ -3,6 +3,6 @@
  * it, add it here, then name it in kebab case — `icon="receipt-text"`.
  */
 import { registerIcons } from 'kanto-ds/icons';
-import { ArrowLeft, ArrowRight, Bug, Rss, Sparkles, TrendingUp } from 'lucide';
+import { Mail, Sparkles } from 'lucide';
 
-registerIcons({ ArrowLeft, ArrowRight, Bug, Rss, Sparkles, TrendingUp });
+registerIcons({ Mail, Sparkles });

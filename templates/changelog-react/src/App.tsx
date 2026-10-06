@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import type { KtHeader, KtNewsletter } from 'kanto-ds';
 import { subscribe } from './actions';
+import { leaveList, openRelease, pageTitle, returnToList, toNewsletter } from './navigation';
 import { FOOTER, INTRO, NEWSLETTER, POSTS, RELEASES, SITE } from './content';
 import {
+  countSummary,
   filterReleases,
   formatDate,
   KIND_LABEL,
@@ -35,7 +37,14 @@ function useVersion(): string | null {
   };
   const [version, setVersion] = useState(read);
   useEffect(() => {
-    const update = () => setVersion(read());
+    let showing = read();
+    const update = () => {
+      const next = read();
+      // Leaving the list for a release: its place is kept for the way back.
+      if (showing === null && next !== null) leaveList();
+      showing = next;
+      setVersion(next);
+    };
     window.addEventListener('hashchange', update);
     return () => window.removeEventListener('hashchange', update);
   }, []);
@@ -139,8 +148,10 @@ function ReleasePage({ release }: { release: Release }) {
       <a className="back" href="#/">
         All releases
       </a>
-      <div className="release-meta">{`${release.version} · ${formatDate(release.date)}`}</div>
-      <h1>{release.title}</h1>
+      <div className="release-meta">
+        {`${release.version} · ${formatDate(release.date)} · ${countSummary(release)}`}
+      </div>
+      <h1 tabIndex={-1}>{release.title}</h1>
       <p className="release-summary">{release.summary}</p>
       <Changes release={release} />
       <nav className="neighbours" aria-label="Other releases">
@@ -170,10 +181,9 @@ export function App() {
   const release = version === null ? undefined : releaseByVersion(RELEASES, version);
 
   useEffect(() => {
-    document.title = release
-      ? `${release.version} — ${SITE.name} changelog`
-      : `${SITE.name} changelog`;
-    if (version !== null) window.scrollTo(0, 0);
+    document.title = pageTitle(version, release);
+    if (version === null) returnToList();
+    else openRelease(document.querySelector<HTMLElement>('.release-page h1'));
   }, [version, release]);
 
   return (
@@ -199,10 +209,9 @@ export function App() {
         <kt-button
           slot="actions"
           size="small"
-          icon="rss"
+          icon="mail"
           onClick={() => {
-            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            newsletter.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+            if (newsletter.current) toNewsletter(newsletter.current);
           }}
         >
           Subscribe

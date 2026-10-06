@@ -11,19 +11,9 @@ import {
   wordCount,
   type Doc,
 } from './documents';
-import { formatField, type Format } from './formatting';
+import { formatField, toolFor, toolTip, TOOLS, type Format } from './formatting';
 import { Preview } from './Preview';
 import { changedIds, loadDocs, mergeDocs, saveChanges, watchDocs } from './store';
-
-const TOOLS: { format: Format; icon: string; label: string; keys?: string }[] = [
-  { format: 'heading', icon: 'heading-2', label: 'Heading' },
-  { format: 'bold', icon: 'bold', label: 'Bold', keys: 'mod b' },
-  { format: 'italic', icon: 'italic', label: 'Italic', keys: 'mod i' },
-  { format: 'code', icon: 'code', label: 'Code' },
-  { format: 'list', icon: 'list', label: 'List' },
-  { format: 'quote', icon: 'text-quote', label: 'Quote' },
-  { format: 'link', icon: 'link', label: 'Link', keys: 'mod k' },
-];
 
 const MODES = [
   { value: 'write', label: 'Write' },
@@ -233,9 +223,9 @@ export function App() {
 
       {doc ? (
         <div className="editor">
-          <div className="toolbar" role="toolbar" aria-label="Formatting">
+          <div className="toolbar" role="group" aria-label="Formatting">
             {TOOLS.map((tool) => (
-              <kt-tooltip key={tool.format} text={tool.label}>
+              <kt-tooltip key={tool.format} text={toolTip(tool)}>
                 <kt-button
                   variant="secondary-no-bg"
                   size="small"
@@ -263,8 +253,7 @@ export function App() {
               value={doc.body}
               onChange={(event) => write(event.target.value)}
               onKeyDown={(event) => {
-                if (!(event.metaKey || event.ctrlKey)) return;
-                const tool = TOOLS.find((t) => t.keys === `mod ${event.key.toLowerCase()}`);
+                const tool = toolFor(event.nativeEvent);
                 if (!tool) return;
                 event.preventDefault();
                 format(tool.format);

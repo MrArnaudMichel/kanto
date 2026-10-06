@@ -7,11 +7,13 @@ const kept = { kind: 'all' as Kind | 'all' };
 
 <script setup lang="ts">
 import type { KtHeader, KtNewsletter, KtSubscribeDetail } from 'kanto-ds';
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 import { subscribe } from './actions';
+import { leaveList, openRelease, pageTitle, returnToList, toNewsletter } from './navigation';
 import Changes from './Changes.vue';
 import { FOOTER, INTRO, NEWSLETTER, POSTS, RELEASES, SITE } from './content';
 import {
+  countSummary,
   filterReleases,
   formatDate,
   KINDS,
@@ -40,7 +42,12 @@ const read = () => {
   }
 };
 const version = ref(read());
-const onHash = () => (version.value = read());
+const onHash = () => {
+  const next = read();
+  // Leaving the list for a release: its place is kept for the way back.
+  if (version.value === null && next !== null) leaveList();
+  version.value = next;
+};
 onMounted(() => window.addEventListener('hashchange', onHash));
 onBeforeUnmount(() => window.removeEventListener('hashchange', onHash));
 
@@ -52,10 +59,12 @@ const around = computed(() => (release.value ? neighbours(RELEASES, release.valu
 watch(
   [version, release],
   () => {
-    document.title = release.value
-      ? `${release.value.version} — ${SITE.name} changelog`
-      : `${SITE.name} changelog`;
-    if (version.value !== null) window.scrollTo(0, 0);
+    document.title = pageTitle(version.value, release.value);
+    // Once the page is drawn: the list where it was left, or a release from its top.
+    void nextTick(() => {
+      if (version.value === null) returnToList();
+      else openRelease(document.querySelector<HTMLElement>('.release-page h1'));
+    });
   },
   { immediate: true },
 );
@@ -80,9 +89,8 @@ function onKind(event: CustomEvent<{ value: string | null }>): void {
 const header = useTemplateRef<KtHeader>('header');
 const newsletter = useTemplateRef<KtNewsletter>('newsletter');
 
-function toNewsletter(): void {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  newsletter.value?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+function goToNewsletter(): void {
+  if (newsletter.value) toNewsletter(newsletter.value);
 }
 
 function onSubscribe(event: CustomEvent<KtSubscribeDetail>): void {
@@ -101,7 +109,7 @@ function onSubscribe(event: CustomEvent<KtSubscribeDetail>): void {
         {{ link.label }}
       </a>
     </nav>
-    <kt-button slot="actions" size="small" icon="rss" @click="toNewsletter">Subscribe</kt-button>
+    <kt-button slot="actions" size="small" icon="mail" @click="goToNewsletter">Subscribe</kt-button>
   </kt-header>
 
   <main class="page">
@@ -157,8 +165,10 @@ function onSubscribe(event: CustomEvent<KtSubscribeDetail>): void {
 
       <article v-else-if="release" class="release-page">
         <a class="back" href="#/">All releases</a>
-        <div class="release-meta">{{ `${release.version} · ${formatDate(release.date)}` }}</div>
-        <h1>{{ release.title }}</h1>
+        <div class="release-meta">
+          {{ `${release.version} · ${formatDate(release.date)} · ${countSummary(release)}` }}
+        </div>
+        <h1 tabindex="-1">{{ release.title }}</h1>
         <p class="release-summary">{{ release.summary }}</p>
         <Changes :release="release" />
         <nav class="neighbours" aria-label="Other releases">

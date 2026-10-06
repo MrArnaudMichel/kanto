@@ -21,7 +21,7 @@ import {
   wordCount,
   type Doc,
 } from './documents';
-import { formatField, type Format } from './formatting';
+import { formatField, toolFor, toolTip, TOOLS, type Format } from './formatting';
 import { renderMarkdown } from './markdown';
 import { changedIds, loadDocs, mergeDocs, saveChanges, watchDocs } from './store';
 
@@ -73,16 +73,6 @@ const deleteButton = el('kt-button', {
 const newButton = el('kt-button', { variant: 'secondary', icon: 'square-pen' }, ['New document']);
 const tree = el<KtTree>('kt-tree', { class: 'documents', label: 'Documents' });
 
-const TOOLS: { format: Format; icon: string; label: string; keys?: string }[] = [
-  { format: 'heading', icon: 'heading-2', label: 'Heading' },
-  { format: 'bold', icon: 'bold', label: 'Bold', keys: 'mod b' },
-  { format: 'italic', icon: 'italic', label: 'Italic', keys: 'mod i' },
-  { format: 'code', icon: 'code', label: 'Code' },
-  { format: 'list', icon: 'list', label: 'List' },
-  { format: 'quote', icon: 'text-quote', label: 'Quote' },
-  { format: 'link', icon: 'link', label: 'Link', keys: 'mod k' },
-];
-
 const area = el<HTMLTextAreaElement>('textarea', {
   class: 'page',
   'aria-label': 'Document, in Markdown',
@@ -94,7 +84,7 @@ const words = el('span', { class: 'word-count' });
 
 const toolbar = el(
   'div',
-  { class: 'toolbar', role: 'toolbar', 'aria-label': 'Formatting' },
+  { class: 'toolbar', role: 'group', 'aria-label': 'Formatting' },
   TOOLS.map((tool) => {
     const button = el('kt-button', {
       variant: 'secondary-no-bg',
@@ -103,7 +93,7 @@ const toolbar = el(
       label: tool.label,
     });
     button.addEventListener('click', () => format(tool.format));
-    return el('kt-tooltip', { text: tool.label }, [button]);
+    return el('kt-tooltip', { text: toolTip(tool) }, [button]);
   }),
 );
 toolbar.append(el('span', { class: 'toolbar-gap' }), mode);
@@ -255,6 +245,9 @@ function drawVersions(): void {
   );
 }
 
+/** Set by New document: the page takes the focus once it shows the new one. */
+let focusNext = false;
+
 /** Shows the document at `id`, the empty state, or the page that is not there. */
 function show(id: string | null): void {
   state.open = id;
@@ -268,6 +261,10 @@ function show(id: string | null): void {
   drawTree();
   drawDoc();
   shell.sidebarOpen = false;
+  if (focusNext && doc) {
+    focusNext = false;
+    area.focus();
+  }
 }
 
 // === Where the reader is: #/doc/<id> ===
@@ -300,8 +297,7 @@ function format(kind: Format): void {
 }
 
 area.addEventListener('keydown', (event) => {
-  if (!(event.metaKey || event.ctrlKey)) return;
-  const tool = TOOLS.find((candidate) => candidate.keys === `mod ${event.key.toLowerCase()}`);
+  const tool = toolFor(event);
   if (!tool) return;
   event.preventDefault();
   format(tool.format);
@@ -318,8 +314,10 @@ function startDoc(): void {
   const made = createDoc(state.docs, current()?.folder ?? DEFAULT_FOLDER, Date.now());
   commit(made.list);
   persist();
+  // The page takes the focus once it shows the new document — from the empty
+  // state it is still hidden now.
+  focusNext = true;
   location.hash = `#/doc/${made.id}`;
-  area.focus();
 }
 newButton.addEventListener('click', startDoc);
 startButton.addEventListener('click', startDoc);
