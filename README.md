@@ -142,7 +142,7 @@ shape. Some of what that meant:
 ```bash
 npm install
 npm run dev          # the documentation site, on src/
-npm test             # 431 tests
+npm test             # 450 tests
 npm run typecheck
 npm run lint
 npm run build        # JS, types, and the static CSS + fonts
