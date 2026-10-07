@@ -414,6 +414,45 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
+.release-name {
+  color: var(--text-muted);
+  font: var(--font-medium-regular);
+}
+
+/* Release notes are somebody's changelog, not a page: the prose rhythm built
+   for a documentation column leaves them swimming inside a card. */
+.release-notes {
+  max-width: none;
+  font: var(--font-normal-small);
+  line-height: 1.6;
+}
+
+/* .prose sets the documentation column's rhythm and comes later in this file,
+   so matching it on specificity alone loses. These headings are somebody's
+   changelog inside a card, not sections of this page. */
+.prose.release-notes h1,
+.prose.release-notes h2,
+.prose.release-notes h3 {
+  margin: 12px 0 6px;
+  color: var(--text-body);
+  font: var(--font-medium-regular);
+}
+
+.prose.release-notes p,
+.prose.release-notes ul,
+.prose.release-notes ol {
+  margin: 0 0 8px;
+}
+
+.prose.release-notes ul,
+.prose.release-notes ol {
+  padding-left: 18px;
+}
+
+.prose.release-notes > :last-child {
+  margin-bottom: 0;
+}
+
 .release-links {
   display: flex;
   flex-direction: column;
