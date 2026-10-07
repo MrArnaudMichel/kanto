@@ -110,10 +110,15 @@ describe('the full-bleed applications', () => {
     }
   });
 
-  it('links the release page to the repository', async () => {
+  it('links the release page to the repository, and ships the changelog either way', async () => {
+    // The version list is fetched, so it may be a list, a set of skeletons or
+    // the fallback depending on what GitHub said. What must always be here is
+    // the way out to the repository and the changelog itself.
     await show('#/release/releases');
+
     const links = [...app.querySelectorAll<HTMLAnchorElement>('a')].map((a) => a.href);
     expect(links.some((h) => h.includes('github.com/MrArnaudMichel/kanto'))).toBe(true);
-    expect(app.querySelector('.release-grid')).not.toBeNull();
+    expect(links.some((h) => h.includes('npmjs.com/package/kanto'))).toBe(true);
+    expect(app.querySelector('.prose')!.textContent).toContain('Changelog');
   });
 });
