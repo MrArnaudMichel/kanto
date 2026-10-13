@@ -152,6 +152,14 @@ export function templatePage(entry: TemplateEntry, rerender: () => void): DocPag
       <div class="prose">
         <h2 id="try">What to try</h2>
         ${unsafeHTML(renderDoc(entry.tryIt).html)}
+        ${
+          entry.id === 'saas'
+            ? html`<p class="template-pro">
+                Need the back end too — real accounts, billing, an admin panel, your database?
+                <a href="#/pro">${PRO.name}</a> is the whole SaaS, paid once.
+              </p>`
+            : ''
+        }
         <section class="template-start">
           <h2 id="start">Start a project</h2>
           ${

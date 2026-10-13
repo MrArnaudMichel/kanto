@@ -22,24 +22,25 @@ type Pro = ProOffer;
 
 /** A screen of the live demo, in the site's theme: dark by default, light when it is. */
 function screen(file: string, alt: string, eager = false): TemplateResult {
-  const attrs = (theme: string) => `./pro/${file}-${theme}.webp`;
+  const src = (theme: string) => `./pro/${file}-${theme}.webp`;
+  // Only one is ever shown: each carries the name, and the hero loads both at once.
+  const loading = eager ? 'eager' : 'lazy';
   return html`<span class="pro-shot">
     <img
       class="pro-shot-dark"
-      src=${attrs('dark')}
+      src=${src('dark')}
       alt=${alt}
       width="1440"
       height="900"
-      loading=${eager ? 'eager' : 'lazy'}
+      loading=${loading}
     />
     <img
       class="pro-shot-light"
-      src=${attrs('light')}
-      alt=""
-      aria-hidden="true"
+      src=${src('light')}
+      alt=${alt}
       width="1440"
       height="900"
-      loading="lazy"
+      loading=${loading}
     />
   </span>`;
 }

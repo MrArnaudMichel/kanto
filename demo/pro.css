@@ -21,23 +21,21 @@
   justify-content: center;
 }
 a.pro-buy {
-  padding: 0 22px;
-  color: var(--color-primary-on, #fff);
-  font: 600 16px / 1 var(--font-family-body);
+  height: var(--button-height);
+  padding: 0 var(--button-padding-x);
+  color: var(--color-white);
+  font: var(--font-normal-medium);
   text-decoration: none;
   background: var(--color-primary-base);
-  border-radius: var(--radius-button, 8px);
+  border-radius: var(--border-radius);
 }
 a.pro-buy-large {
-  min-height: 48px;
-}
-a.pro-buy-medium {
-  min-height: 40px;
-  font-size: 15px;
+  height: var(--button-height-large);
+  padding: 0 calc(var(--button-padding-x) + 8px);
 }
 a.pro-buy:hover {
   text-decoration: none;
-  filter: brightness(1.08);
+  background: var(--color-primary-hover);
 }
 a.pro-buy:focus-visible,
 .pro-demo:focus-visible {

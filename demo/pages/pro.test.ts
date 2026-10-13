@@ -70,6 +70,40 @@ describe('the Kanto SaaS Pro page', () => {
   });
 });
 
+describe('what the page promises, as the product holds it', () => {
+  it('sells no database a buyer cannot deploy yet, and says where uploads need a server', () => {
+    expect(PRO_DONE.map((item) => item.body).join(' ')).not.toMatch(/\bD1\b/);
+    const hosts = PRO_QUESTIONS.find((question) => /where does it run/i.test(question.heading))!;
+    expect(hosts.answer).toMatch(/server/i);
+    expect(hosts.answer).toMatch(/upload|files/i);
+  });
+
+  it('answers refunds, before anyone has to ask', () => {
+    expect(PRO_QUESTIONS.some((question) => /refund/i.test(question.heading))).toBe(true);
+  });
+
+  it('names the hero screen in either theme', () => {
+    const shots = [...mount().querySelectorAll<HTMLImageElement>('.pro-hero-shot img')];
+    expect(shots).toHaveLength(2);
+    for (const shot of shots) {
+      expect(shot.alt).toMatch(/\S/);
+      expect(shot.hasAttribute('aria-hidden')).toBe(false);
+    }
+  });
+
+  it("draws Buy with the button's own tokens, not look-alike ones", () => {
+    const css = readFileSync('demo/pro.css', 'utf8');
+    expect(css).not.toMatch(/--color-primary-on|--radius-button/);
+    expect(css).toMatch(/var\(--border-radius\)/);
+  });
+
+  it('follows the Auto theme in a light system, not only the Light one', () => {
+    expect(readFileSync('demo/home.css', 'utf8')).toMatch(
+      /prefers-color-scheme: light\)[\s\S]*data-theme='auto'[\s\S]*\.pro-shot-light/,
+    );
+  });
+});
+
 describe('the way to it', () => {
   it('is on the home page, the templates gallery and the README', () => {
     const home = document.body.appendChild(document.createElement('main'));
@@ -82,5 +116,8 @@ describe('the way to it', () => {
     render(templatesPage().body, gallery);
     expect(gallery.querySelector('a[href="#/pro"]')).not.toBeNull();
     expect(readFileSync('README.md', 'utf8')).toContain('#/pro');
+    expect(readFileSync('demo/pages/templates.ts', 'utf8')).toMatch(
+      /entry\.id === 'saas'[\s\S]*#\/pro/,
+    );
   });
 });

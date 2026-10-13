@@ -72,7 +72,7 @@ export const PRO_DONE: readonly { icon: string; title: string; body: string }[] 
   {
     icon: 'layers',
     title: 'Your database',
-    body: 'SQLite (a file, Turso, D1), Postgres (Neon, Supabase) or MongoDB — the same code on each.',
+    body: 'SQLite (a file or Turso), Postgres (Neon, Supabase) or MongoDB — the same code on each.',
   },
   {
     icon: 'scroll-text',
@@ -123,7 +123,12 @@ export const PRO_QUESTIONS: readonly { heading: string; answer: string }[] = [
   {
     heading: 'Where does it run?',
     answer:
-      'Anywhere Nuxt runs on Node — Vercel, Netlify, Render, Fly.io, a VPS — with SQLite, Postgres or MongoDB wherever you keep them.',
+      'Everything runs on a Node server or in Docker — Render, Fly.io, Railway, a VPS. Vercel and Netlify run it too, with a cron for the emails, but files sent in messages need a server until a storage adapter comes.',
+  },
+  {
+    heading: 'Can I get a refund?',
+    answer:
+      'Payments go through Polar, which handles the receipt, the VAT and refunds, under its terms.',
   },
   {
     heading: 'Does my AI agent know where things go?',

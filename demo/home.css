@@ -1059,6 +1059,15 @@
 :root[data-theme='light'] .pro-shot-light {
   display: block !important;
 }
+/* Auto follows the system: light there, light here. */
+@media (prefers-color-scheme: light) {
+  :root[data-theme='auto'] .pro-shot-dark {
+    display: none !important;
+  }
+  :root[data-theme='auto'] .pro-shot-light {
+    display: block !important;
+  }
+}
 
 .home-pro {
   display: grid;
