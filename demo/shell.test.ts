@@ -303,4 +303,14 @@ describe('the documentation shell', () => {
     expect(links.some((h) => h.includes(NPM_URL))).toBe(true);
     expect(app.querySelector('.release-current-tag')!.textContent).toBe(VERSION_TAG);
   });
+
+  it("opens the buyer's thank-you page from Polar's return, its checkout id in the address", async () => {
+    location.hash = '#/pro/thanks?checkout_id=abc123';
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(app.querySelector('h1')?.textContent).toMatch(/Thank you/);
+    expect(
+      app.querySelector('a[href="https://github.com/kanto-ds/kanto-saas-pro/invitations"]'),
+    ).not.toBeNull();
+  });
 });

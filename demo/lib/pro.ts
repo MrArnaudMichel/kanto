@@ -10,6 +10,7 @@ export interface ProOffer {
   price: number;
   checkout: string;
   demo: string;
+  repository: string;
 }
 
 export const PRO: ProOffer = {
@@ -24,6 +25,8 @@ export const PRO: ProOffer = {
   checkout: '',
   /** The live demo, once deployed. Empty: no demo link is drawn. */
   demo: '',
+  /** The private repository a purchase opens (Polar's GitHub repository access). */
+  repository: 'kanto-ds/kanto-saas-pro',
 };
 
 /** The screens, as the live demo's `npm run shots` takes them, in public/pro/. */

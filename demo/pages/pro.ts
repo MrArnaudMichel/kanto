@@ -245,3 +245,43 @@ export function proPage(pro: Pro = PRO): TemplateResult {
     </section>
   </div>`;
 }
+
+/** After the purchase: Polar sends the buyer here (`#/pro/thanks?checkout_id=…`), with what to do next. */
+export function proThanksPage(pro: Pro = PRO): TemplateResult {
+  const repo = `https://github.com/${pro.repository}`;
+  return html`<div class="home pro">
+    <section class="home-hero pro-hero" aria-labelledby="pro-thanks">
+      <div class="home-hero-text">
+        <p class="pro-name">${pro.name}</p>
+        <h1 id="pro-thanks">Thank you. It is yours.</h1>
+        <p class="home-lead">
+          Polar has sent your receipt, and GitHub an invitation to the private repository. Three
+          steps and you are writing your product.
+        </p>
+      </div>
+    </section>
+    <section class="home-band" aria-labelledby="pro-next">
+      <h2 id="pro-next">What to do now</h2>
+      <ol class="pro-next">
+        <li>
+          <h3>Accept the invitation</h3>
+          <p>
+            It is in your email and on <a href=${`${repo}/invitations`}>${pro.repository}</a>, for
+            the GitHub account you gave at checkout.
+          </p>
+        </li>
+        <li>
+          <h3>Make it yours</h3>
+          ${code(`git clone git@github.com:${pro.repository}.git my-saas\ncd my-saas\nnpm install\nnpm run setup`, 'bash')}
+        </li>
+        <li>
+          <h3>Write your product</h3>
+          <p>
+            <code>docs/your-product.md</code> shows where it goes; <code>AGENTS.md</code> tells your
+            AI agent the same. A question, a bug: open an issue on the repository.
+          </p>
+        </li>
+      </ol>
+    </section>
+  </div>`;
+}

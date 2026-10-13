@@ -20,7 +20,7 @@ import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './page
 import { foundationsPage } from './pages/foundations.js';
 import { homeFooter, homePage } from './pages/home.js';
 import { templatePage, templatesPage } from './pages/templates.js';
-import { proPage } from './pages/pro.js';
+import { proPage, proThanksPage } from './pages/pro.js';
 import { TEMPLATE_CATALOG } from './lib/templates.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetStage } from './lib/stage.js';
@@ -156,6 +156,15 @@ const PRO_ROUTE: Route = {
   page: () => proPage(),
 };
 
+/** Where Polar sends a buyer after paying: the next steps. */
+const PRO_THANKS_ROUTE: Route = {
+  section: 'pro',
+  slug: 'thanks',
+  label: 'Thank you',
+  group: 'Pro',
+  page: () => proThanksPage(),
+};
+
 /** The demo applications' old pages, `#/apps/<slug>`, and the templates they became. */
 const DEMO_PAGES: Record<string, string> = {
   'console-home': 'dashboard',
@@ -195,6 +204,7 @@ const ROUTES: Route[] = [
   ...COMPONENT_ROUTES,
   ...TEMPLATE_ROUTES,
   PRO_ROUTE,
+  PRO_THANKS_ROUTE,
   SHOWCASE_ROUTE,
   ...RELEASE,
 ];
@@ -217,7 +227,12 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
 
 function currentRoute(): Route {
   // `#/guide/installation#no-build-step`: the route, then a heading on it.
-  const [section, slug] = location.hash.replace(/^#\/?/, '').split('#')[0]!.split('/');
+  // A query after the page (`#/pro/thanks?checkout_id=…`) is the page's, not part of its address.
+  const [section, slug] = location.hash
+    .replace(/^#\/?/, '')
+    .split('#')[0]!
+    .split('?')[0]!
+    .split('/');
   if (!section || section === 'home') return HOME;
   // The blocks page gave way to the templates; its blocks are in Components.
   if (section === 'blocks') return COMPONENT_ROUTES.find((route) => route.slug === 'kt-hero')!;
