@@ -93,4 +93,11 @@ describe('tickCount', () => {
     expect(tickCount(1000, 48)).toBe(6);
     expect(tickCount(200, 48)).toBe(4);
   });
+
+  it('runs an all-zero series from zero up, never below: a count of nothing is not negative', () => {
+    const ticks = niceTicks(0, 0, 5);
+    expect(ticks.min).toBe(0);
+    expect(ticks.max).toBeGreaterThan(0);
+    expect(ticks.values.every((value) => value >= 0)).toBe(true);
+  });
 });

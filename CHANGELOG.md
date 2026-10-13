@@ -54,6 +54,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   `kt-segmented-control`, `kt-split-button`, `kt-tabs` and `kt-breadcrumb`
   send was missing too. A test now holds each event's type to the fields its
   element documents.
+- `kt-chart` with every value at zero ran its axis from −1 to 1, as if a
+  count of nothing could go negative. An all-zero series runs from zero up.
 
 ## [1.9.0] — 2026-10-05
 

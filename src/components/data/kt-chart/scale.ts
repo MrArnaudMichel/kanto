@@ -22,9 +22,12 @@ function niceNumber(value: number): number {
 
 /** Round steps covering `lo…hi`, aiming for about `count` ticks. */
 export function niceTicks(lo: number, hi: number, count: number): Ticks {
-  if (hi === lo) {
+  if (hi === lo && lo === 0) {
+    // All zero: a count or an amount of nothing. The axis runs up from it, not below.
+    hi = 1;
+  } else if (hi === lo) {
     // A flat series still needs an axis; open it around the value.
-    const pad = Math.abs(lo) || 1;
+    const pad = Math.abs(lo);
     lo -= pad;
     hi += pad;
   }
