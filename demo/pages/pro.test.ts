@@ -20,6 +20,7 @@ describe('the Kanto SaaS Pro page', () => {
     const page = mount();
     expect(page.querySelector('h1')!.textContent).toMatch(/\S/);
     for (const id of [
+      'pro-parts',
       'pro-done',
       'pro-setup',
       'pro-product',
@@ -31,6 +32,9 @@ describe('the Kanto SaaS Pro page', () => {
       expect(page.querySelector(`section[aria-labelledby="${id}"] #${id}`), id).not.toBeNull();
     }
     expect(page.querySelectorAll('.pro-done li')).toHaveLength(PRO_DONE.length);
+    expect(
+      [...page.querySelectorAll('.pro-parts h3')].map((each) => each.textContent!.trim()),
+    ).toEqual(['Your product', 'Account', 'Admin']);
     expect(page.querySelectorAll('kt-collapsible')).toHaveLength(PRO_QUESTIONS.length);
   });
 

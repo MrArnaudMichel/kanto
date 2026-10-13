@@ -172,3 +172,38 @@ export const PRO_RESOURCE = `export default defineResource({
   limits: { free: 3, pro: 500, team: null },
   nav: true,
 });`;
+
+/** The SaaS's three parts: who uses each, where it lives, and the one the buyer writes. */
+export const PRO_PARTS: readonly {
+  title: string;
+  who: string;
+  path: string;
+  file: string;
+  body: string;
+  yours: boolean;
+}[] = [
+  {
+    title: 'Your product',
+    who: 'Your users',
+    path: '/app',
+    file: 'home',
+    body: 'What your users pay for. Northwind’s invoicing in the demo; yours in your copy.',
+    yours: true,
+  },
+  {
+    title: 'Account',
+    who: 'Your users',
+    path: '/account',
+    file: 'billing',
+    body: 'Their plan and payments, their team and its roles, their settings and API keys.',
+    yours: false,
+  },
+  {
+    title: 'Admin',
+    who: 'You and your staff',
+    path: '/admin',
+    file: 'admin',
+    body: 'Revenue, sign-ups, workspaces, support, plans, the landing and its flags.',
+    yours: false,
+  },
+];

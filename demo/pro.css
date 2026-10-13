@@ -210,3 +210,27 @@ a.pro-buy:focus-visible,
   outline: var(--outline-width) solid var(--color-primary-base);
   outline-offset: 2px;
 }
+
+/* The three parts: side by side, the one to write first. */
+.pro-parts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pro-parts h3 {
+  margin: 16px 0 4px;
+  color: var(--text-body);
+  font: 600 20px / 1.3 var(--font-family-display);
+}
+.pro-parts p {
+  margin: 0 0 10px;
+  color: var(--text-muted);
+  font: 400 15px / 1.6 var(--font-family-body);
+}
+.pro-parts .pro-parts-where {
+  color: var(--text-body);
+  font-size: 14px;
+}

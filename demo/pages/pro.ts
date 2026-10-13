@@ -11,6 +11,7 @@ import {
   PRO,
   PRO_COMPARE,
   PRO_DONE,
+  PRO_PARTS,
   PRO_QUESTIONS,
   PRO_RESOURCE,
   PRO_SCREENS,
@@ -88,6 +89,28 @@ export function proPage(pro: Pro = PRO): TemplateResult {
       <div class="pro-hero-shot">
         ${screen('home', 'Northwind, an example product built with Kanto SaaS Pro: its overview', true)}
       </div>
+    </section>
+
+    <section class="home-band" aria-labelledby="pro-parts">
+      <h2 id="pro-parts">Three parts, and you write one</h2>
+      <p>
+        Your users use the first two; you run the SaaS from the third. All three are built and
+        tested — the first is where your product goes.
+      </p>
+      <ol class="pro-parts">
+        ${PRO_PARTS.map(
+          (part) =>
+            html`<li>
+              ${screen(part.file, '')}
+              <h3>${part.title}</h3>
+              <p class="pro-parts-where">${part.who} · <code>${part.path}</code></p>
+              <p>${part.body}</p>
+              <kt-badge tone=${part.yours ? 'primary' : 'success'} size="small"
+                >${part.yours ? 'You write it' : 'Done'}</kt-badge
+              >
+            </li>`,
+        )}
+      </ol>
     </section>
 
     <section class="home-band" aria-labelledby="pro-done">
