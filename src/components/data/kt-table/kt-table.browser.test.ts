@@ -3,6 +3,7 @@
  * row heights and on scrolling, neither of which a simulated DOM has.
  */
 import { describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { fixture, settle } from '#test/fixture';
 import '../../../styles.css';
 import './kt-table.js';
@@ -110,5 +111,21 @@ describe('kt-table, narrower than its table', () => {
     // The label sits past the window's edge, yet the page must not scroll sideways.
     expect(hidden.getBoundingClientRect().right).toBeGreaterThan(innerWidth);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(innerWidth);
+  });
+
+  it('fits a narrow box with its few short columns, however wide the window', async () => {
+    // Half a laptop's page: the window is wide, the table's box is not.
+    await page.viewport(1280, 800);
+    const el = await fixture<KtTable>(`<kt-table style="width: 440px"></kt-table>`);
+    el.columns = [
+      { key: 'number', label: 'Invoice' },
+      { key: 'total', label: 'Total', align: 'right' },
+    ];
+    el.data = [{ id: 1, number: 'INV-2026-0001', total: '€3,207.60' }];
+    await frame(el);
+    const table = el.shadowRoot!.querySelector('table')!;
+    const width = table.getBoundingClientRect().width;
+    await page.viewport(414, 800);
+    expect(width).toBeLessThanOrEqual(440);
   });
 });

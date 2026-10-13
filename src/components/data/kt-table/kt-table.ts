@@ -106,6 +106,8 @@ export class KtTable extends KtElement {
       :host {
         display: block;
         width: 100%;
+        /* Its own width decides the layout, not the window's: a table in half a page is narrow. */
+        container-type: inline-size;
         color: var(--text-body);
         font: var(--font-normal-regular);
       }
@@ -243,7 +245,7 @@ export class KtTable extends KtElement {
         padding-top: 12px;
       }
 
-      @media (max-width: 680px) {
+      @container (max-width: 680px) {
         table {
           min-width: 100%;
         }

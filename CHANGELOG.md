@@ -12,6 +12,9 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - `kt-tour` on a step whose target is out of view — in a closed drawer on a
   phone, say — set its card beside it, off the screen, where nothing could be
   read or clicked. The card now shows centred.
+- `kt-table` kept its 600px minimum in a narrow box on a wide window — half a
+  laptop's page — and cut its last columns. It now reads its own width, not
+  the window's.
 
 ## [1.10.0] — 2026-10-13
 
