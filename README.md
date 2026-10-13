@@ -80,6 +80,15 @@ the face loaded by your page, from Google Fonts or your own files.
 | ![guide.png](demo/public/guide.png) | ![component.png](demo/public/component.png) |
 | ----------------------------------- | ------------------------------------------- |
 
+## Kanto SaaS Pro
+
+The whole SaaS, server side included, for when a template is not enough:
+accounts, teams and roles, plans and billing with Stripe or Lemon Squeezy, an
+admin panel and your database — SQLite, Postgres or MongoDB — in Nuxt, built
+with Kanto and set up in one command. You, or your AI agent, write only the
+product. A separate, paid product:
+**[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/#/pro)**.
+
 ## Why custom elements
 
 One implementation, every framework. The alternative — a React port, a Vue

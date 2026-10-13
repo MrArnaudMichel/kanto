@@ -25,6 +25,7 @@ const SECTIONS: Record<string, { title: string; icon: string }> = {
   home: { title: 'Pages', icon: 'house' },
   guide: { title: 'Guide', icon: 'book-open' },
   components: { title: 'Components', icon: 'component' },
+  pro: { title: 'Pro', icon: 'rocket' },
   apps: { title: 'Apps', icon: 'app-window' },
   release: { title: 'Release', icon: 'tag' },
 };

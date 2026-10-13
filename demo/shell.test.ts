@@ -29,7 +29,7 @@ describe('the documentation shell', () => {
 
   it('puts the top-level sections in the header', () => {
     const labels = [...app.querySelectorAll('.top-nav a')].map((a) => a.textContent!.trim());
-    expect(labels).toEqual(['Guide', 'Components', 'Templates', 'Apps', 'Release']);
+    expect(labels).toEqual(['Guide', 'Components', 'Templates', 'Pro', 'Apps', 'Release']);
   });
 
   it('lists the components in the sidebar, grouped', () => {

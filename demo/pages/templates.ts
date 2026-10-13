@@ -16,6 +16,7 @@ import {
   type TemplateEntry,
 } from '../lib/templates.js';
 import type { DocPage } from './component.js';
+import { PRO } from '../lib/pro.js';
 
 /** The stack each template's page shows, kept across re-renders. */
 const chosen = new Map<string, StackId>();
@@ -67,6 +68,37 @@ export function templatesPage(): DocPage {
             </div>
           </li>`,
       )}
+      <li class="template-card template-card-pro">
+        <a class="template-card-shot" href="#/pro" tabindex="-1" aria-hidden="true">
+          <span class="pro-shot">
+            <img
+              class="pro-shot-dark"
+              src="./pro/home-dark.webp"
+              alt=""
+              loading="lazy"
+              width="1440"
+              height="900"
+            />
+            <img
+              class="pro-shot-light"
+              src="./pro/home-light.webp"
+              alt=""
+              loading="lazy"
+              width="1440"
+              height="900"
+            />
+          </span>
+        </a>
+        <div class="template-card-body">
+          <h2><a href="#/pro">${PRO.name}</a></h2>
+          <p>
+            The whole SaaS, server side included: accounts, billing, an admin panel and your
+            database, in Nuxt.
+          </p>
+          <p class="template-stacks">Nuxt — paid once</p>
+          <div class="template-card-actions"><a href="#/pro">See what is in it</a></div>
+        </div>
+      </li>
     </ul>`,
   };
 }

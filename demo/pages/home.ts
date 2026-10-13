@@ -13,6 +13,7 @@ import { REASONS } from '../lib/reasons.js';
 import { AGENT_SETUPS } from '../lib/agents.js';
 import { chatDemo } from '../lib/chat-demo.js';
 import { TEMPLATE_CATALOG } from '../lib/templates.js';
+import { PRO } from '../lib/pro.js';
 import { code } from '../lib/highlight.js';
 import type { DocsAppearance } from '../lib/appearance.js';
 import { NPM_URL, REPO_URL, VERSION, VERSION_TAG } from '../lib/project.js';
@@ -329,6 +330,38 @@ export function homePage({
           }),
         )}
       </ul>
+    </section>
+
+    <section class="home-band home-pro" aria-labelledby="home-pro">
+      <div>
+        <h2 id="home-pro">And the whole SaaS, server side included</h2>
+        <p>
+          ${PRO.name} is the step after the templates: accounts, teams, plans and billing, an admin
+          panel and your database, in Nuxt, set up in one command. You write only the product. Paid
+          once.
+        </p>
+        <a class="home-link" href="#/pro">See ${PRO.name}</a>
+      </div>
+      <a href="#/pro" tabindex="-1" aria-hidden="true" class="home-pro-shot">
+        <span class="pro-shot">
+          <img
+            class="pro-shot-dark"
+            src="./pro/home-dark.webp"
+            alt=""
+            width="1440"
+            height="900"
+            loading="lazy"
+          />
+          <img
+            class="pro-shot-light"
+            src="./pro/home-light.webp"
+            alt=""
+            width="1440"
+            height="900"
+            loading="lazy"
+          />
+        </span>
+      </a>
     </section>
 
     <section class="home-band home-stack" aria-labelledby="home-frameworks">

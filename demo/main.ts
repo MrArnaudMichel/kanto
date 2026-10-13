@@ -5,6 +5,7 @@ import 'kanto-ds';
 import 'kanto-ds/styles.css';
 import './shell.css';
 import './home.css';
+import './pro.css';
 
 import { COMPONENTS } from './lib/registry.js';
 import { INSTALL_COMMAND, REPO_URL, VERSION_TAG } from './lib/project.js';
@@ -19,6 +20,7 @@ import { AI_AGENTS, APPEARANCE, INTRODUCTION, INSTALLATION, TOOLS } from './page
 import { foundationsPage } from './pages/foundations.js';
 import { homeFooter, homePage } from './pages/home.js';
 import { templatePage, templatesPage } from './pages/templates.js';
+import { proPage } from './pages/pro.js';
 import { TEMPLATE_CATALOG } from './lib/templates.js';
 import { registerDocsIcons } from './lib/icons.js';
 import { resetStage } from './lib/stage.js';
@@ -41,7 +43,7 @@ registerDocsIcons();
 
 /* ------------------------------------------------------------------ routes */
 
-type Section = 'home' | 'guide' | 'components' | 'templates' | 'apps' | 'release';
+type Section = 'home' | 'guide' | 'components' | 'templates' | 'pro' | 'apps' | 'release';
 
 interface Route {
   readonly section: Section;
@@ -145,6 +147,15 @@ const HOME: Route = {
   page: () => html``,
 };
 
+/** Kanto SaaS Pro: full width, like the home page. */
+const PRO_ROUTE: Route = {
+  section: 'pro',
+  slug: 'saas',
+  label: 'Kanto SaaS Pro',
+  group: 'Pro',
+  page: () => proPage(),
+};
+
 /** The demo applications' old pages, `#/apps/<slug>`, and the templates they became. */
 const DEMO_PAGES: Record<string, string> = {
   'console-home': 'dashboard',
@@ -183,6 +194,7 @@ const ROUTES: Route[] = [
   ...GUIDE,
   ...COMPONENT_ROUTES,
   ...TEMPLATE_ROUTES,
+  PRO_ROUTE,
   SHOWCASE_ROUTE,
   ...RELEASE,
 ];
@@ -198,6 +210,7 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
   { id: 'guide', label: 'Guide', icon: 'book-open' },
   { id: 'components', label: 'Components', icon: 'component' },
   { id: 'templates', label: 'Templates', icon: 'layout-template' },
+  { id: 'pro', label: 'Pro', icon: 'rocket' },
   { id: 'apps', label: 'Apps', icon: 'app-window' },
   { id: 'release', label: 'Release', icon: 'tag' },
 ];
@@ -532,9 +545,9 @@ function shell(): TemplateResult {
     ></kt-command-palette>
 
     ${
-      route.section === 'home'
+      route.section === 'home' || route.section === 'pro'
         ? html`<main class="home-main">
-              ${homePage({ appearance, onUse: useAppearance, rerender: update })}
+              ${route.section === 'pro' ? result : homePage({ appearance, onUse: useAppearance, rerender: update })}
             </main>
             ${homeFooter()}`
         : html`<div class="layout">

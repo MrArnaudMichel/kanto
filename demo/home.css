@@ -1035,3 +1035,55 @@
     display: none;
   }
 }
+
+/* === Kanto SaaS Pro: the band that leads to its page, and its screens (shared with the page) === */
+
+/* The screens: the dark one by default, the light one in the light theme. */
+.pro-shot {
+  display: block;
+  overflow: hidden;
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: 14px;
+}
+.pro-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.pro-shot-light {
+  display: none !important;
+}
+:root[data-theme='light'] .pro-shot-dark {
+  display: none !important;
+}
+:root[data-theme='light'] .pro-shot-light {
+  display: block !important;
+}
+
+.home-pro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 48px;
+  align-items: center;
+}
+.home-pro p {
+  margin: 14px 0 24px;
+  color: var(--text-muted);
+  font: 400 17px / 1.6 var(--font-family-body);
+}
+.home-pro h2 {
+  margin: 0;
+  color: var(--text-body);
+  font: 600 clamp(30px, 3.6vw, 44px) / 1.1 var(--font-family-display);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+@media (max-width: 860px) {
+  .home-pro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.home-pro-shot {
+  display: block;
+}

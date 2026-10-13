@@ -23,3 +23,8 @@ npm create kanto@latest my-app -- --template saas --stack react
 
 Each template is also in the repository, to fork as it is:
 `npx degit MrArnaudMichel/kanto/templates/saas-react my-app`.
+
+The `saas` template is the front end, its sign-in and data faked. For the
+whole SaaS — real accounts, billing, an admin panel and your database — see
+[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/#/pro), a separate, paid
+product.
