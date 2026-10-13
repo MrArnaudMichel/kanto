@@ -22,7 +22,7 @@ export const PRO: ProOffer = {
    * repository). Empty until the shop opens: the page then says so, and Buy
    * waits.
    */
-  checkout: '',
+  checkout: 'https://buy.polar.sh/polar_cl_Z0l6RSYAcEAhXv40w4topbl5KvyoCuxpFqiPh2Skift',
   /** The live demo, once deployed. Empty: no demo link is drawn. */
   demo: '',
   /** The private repository a purchase opens (Polar's GitHub repository access). */
