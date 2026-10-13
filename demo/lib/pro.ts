@@ -24,7 +24,7 @@ export const PRO: ProOffer = {
    */
   checkout: 'https://buy.polar.sh/polar_cl_Z0l6RSYAcEAhXv40w4topbl5KvyoCuxpFqiPh2Skift',
   /** The live demo, once deployed. Empty: no demo link is drawn. */
-  demo: '',
+  demo: 'https://demo.kanto.arnaudmichel.fr',
   /** The private repository a purchase opens (Polar's GitHub repository access). */
   repository: 'kanto-ds/kanto-saas-pro',
 };
