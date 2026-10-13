@@ -61,6 +61,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   nothing in it moves.
 - `kt-tour` removed from the page while it updated tried to open its card off
   the page, and threw. It now does nothing until it is back.
+- `kt-empty-state` without an `icon` drew nothing: its default, `inbox`, was
+  never registered. Kanto now ships it with the icons its elements draw.
 
 ## [1.9.0] — 2026-10-05
 

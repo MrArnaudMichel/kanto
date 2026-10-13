@@ -30,6 +30,9 @@ describe('the icons Kanto ships', () => {
         names.add(match[1]!);
       // …and the icons a bound icon=${...} chooses between: the quoted results
       // of a ternary, or a lone quoted name — not the values it compares.
+      // …a property's default, icon = 'inbox'…
+      for (const match of source.matchAll(/^\s*icon = '([a-z][a-z0-9-]*)';/gm))
+        names.add(match[1]!);
       for (const match of source.matchAll(/\bicon=\$\{([^}]*)\}/g)) {
         const expression = match[1]!.trim();
         const lone = /^'([a-z][a-z0-9-]*)'$/.exec(expression);
