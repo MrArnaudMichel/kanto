@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "kanto-ds": "^1.9.0",
+    "kanto-ds": "^1.10.0",
     "lucide": "^1.43.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
