@@ -209,6 +209,8 @@ export class KtTour extends KtElement {
 
   override updated(changed: PropertyValues): void {
     if (changed.has('open')) this.listen(this.open);
+    // Removed from the page with an update pending: nothing to show, and a popover cannot open off the page.
+    if (!this.isConnected) return;
     const spotlight = this.shadowRoot?.querySelector<HTMLElement>('.spotlight');
     const card = this.shadowRoot?.querySelector<HTMLElement>('.card');
     // Into the top layer, the light under the card.

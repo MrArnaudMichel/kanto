@@ -56,6 +56,11 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   element documents.
 - `kt-chart` with every value at zero ran its axis from −1 to 1, as if a
   count of nothing could go negative. An all-zero series runs from zero up.
+- `kt-side-panel` and `kt-modal` cut the focus ring of a field against the
+  edge of their scrolling body. The body leaves the ring its room, and
+  nothing in it moves.
+- `kt-tour` removed from the page while it updated tried to open its card off
+  the page, and threw. It now does nothing until it is back.
 
 ## [1.9.0] — 2026-10-05
 

@@ -122,6 +122,10 @@ export class KtSidePanel extends KtElement {
 
       .body {
         flex: 1 1 auto;
+        /* A scroller cuts what passes its edge: room for a focus ring (an
+           outline and its offset), given back by the margin so nothing moves. */
+        margin: calc(-1 * (var(--outline-width) + 2px));
+        padding: calc(var(--outline-width) + 2px);
         overflow: auto;
       }
 

@@ -58,3 +58,19 @@ describe('kt-tour, laid out', () => {
     expect(el.shadowRoot!.querySelector('.spotlight')).toBeNull();
   });
 });
+
+describe('kt-tour, clicked as a person clicks', () => {
+  it('takes a real click on Next: its buttons hold still under the pointer', async () => {
+    const { userEvent } = await import('vitest/browser');
+    const el = await mount();
+    el.steps = [...el.steps, { target: '#tour-target', title: 'Then this', body: 'Second.' }];
+    el.start();
+    await settle(el);
+    const next = [...el.shadowRoot!.querySelectorAll('kt-button')].find(
+      (button) => button.textContent?.trim() === 'Next',
+    )!;
+    await userEvent.click(next, { timeout: 3000 });
+    await settle(el);
+    expect(el.shadowRoot!.querySelector('h2')!.textContent).toBe('Then this');
+  });
+});
