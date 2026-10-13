@@ -51,6 +51,25 @@ describe('kt-tour, laid out', () => {
     expect(overlaps).toBe(false);
   });
 
+  it('centres the card, in view, for a target off the screen — a closed drawer, say', async () => {
+    const drawer = document.body.appendChild(document.createElement('div'));
+    drawer.id = 'tour-drawer';
+    drawer.style.cssText =
+      'position: fixed; top: 0; left: 0; width: 240px; height: 400px; transform: translateX(-110%)';
+    drawer.innerHTML = '<nav id="tour-offscreen" style="height: 200px">Billing</nav>';
+    const el = await fixture<KtTour>('<kt-tour></kt-tour>');
+    el.steps = [{ target: '#tour-offscreen', title: 'Account', body: 'Billing and the team.' }];
+    el.start();
+    await settle(el);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const card = el.shadowRoot!.querySelector('.card')!.getBoundingClientRect();
+    drawer.remove();
+    expect(card.top).toBeGreaterThanOrEqual(0);
+    expect(card.bottom).toBeLessThanOrEqual(innerHeight);
+    expect(Math.abs(card.left + card.width / 2 - innerWidth / 2)).toBeLessThan(2);
+    expect(el.shadowRoot!.querySelector('.spotlight')).toBeNull();
+  });
+
   it('centres the card for a step that points at nothing', async () => {
     const el = await mount(false);
     const card = el.shadowRoot!.querySelector('.card')!.getBoundingClientRect();

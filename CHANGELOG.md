@@ -5,6 +5,14 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- `kt-tour` on a step whose target is out of view — in a closed drawer on a
+  phone, say — set its card beside it, off the screen, where nothing could be
+  read or clicked. The card now shows centred.
+
 ## [1.10.0] — 2026-10-13
 
 ### Added

@@ -169,10 +169,29 @@ export class KtTour extends KtElement {
   }
 
   /** The element the current step points at, if it is on the page. */
-  private get target(): Element | null {
+  private get element(): Element | null {
     const target = this.step?.target;
     if (!target) return null;
     return typeof target === 'string' ? document.querySelector(target) : target;
+  }
+
+  /**
+   * The element, if it is in view: one in a closed drawer, or otherwise off
+   * the screen, cannot be lit, and a card set beside it would be off the
+   * screen too — the step shows centred instead.
+   */
+  private get target(): Element | null {
+    const element = this.element;
+    if (!element) return null;
+    const box = element.getBoundingClientRect();
+    const inView =
+      box.width > 0 &&
+      box.height > 0 &&
+      box.right > 0 &&
+      box.bottom > 0 &&
+      box.left < innerWidth &&
+      box.top < innerHeight;
+    return inView ? element : null;
   }
 
   override disconnectedCallback(): void {
@@ -202,7 +221,7 @@ export class KtTour extends KtElement {
   // `open` and `index` are states, so the map is read untyped.
   override willUpdate(changed: PropertyValues): void {
     if ((changed.has('open') || changed.has('index')) && this.open) {
-      this.target?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+      this.element?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
       this.measure();
     }
   }
