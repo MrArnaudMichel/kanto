@@ -10,7 +10,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "kanto-ds": "^1.10.0",
+    "kanto-ds": "^1.11.0",
     "lucide": "^1.43.0",
     "vue": "^3.5.0"
   },
