@@ -5,6 +5,22 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.11.0] — 2026-10-14
+
+### Added
+
+- `kt-side-panel` takes `size`: `small` (308px, as before) for a record or a
+  form, `medium` (480px), `large` (720px) for more than a form — a
+  comparison, a configuration. Never wider than the screen.
+- `kt-chat-message` takes `continued`: several messages in a row from one
+  person read as one turn — the avatar and the name are not drawn again, the
+  words line up with the first.
+
+### Fixed
+
+- `kt-side-panel`'s test of its slide-out waited a fixed time, and failed on a
+  loaded machine; it waits for the panel to be gone.
+
 ## [1.10.1] — 2026-10-14
 
 ### Changed
