@@ -1,6 +1,6 @@
 {
   "name": "create-kanto",
-  "version": "1.10.0",
+  "version": "1.9.0",
   "description": "Start a project on Kanto: a SaaS app, an admin console, a document editor, a landing page, an assistant, a portfolio or release notes, in React, Vue or plain TypeScript, ready to run.",
   "type": "module",
   "bin": {
