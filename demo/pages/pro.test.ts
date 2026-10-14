@@ -60,14 +60,14 @@ describe('the Kanto SaaS Pro page', () => {
     expect(open.textContent).toContain(`€${PRO.price}`);
   });
 
-  it('links the live demo only once there is one', () => {
+  it('links the live demo only once there is one, opening on the choice of who to be', () => {
     expect(mount({ ...PRO, demo: '' }).querySelector('a.pro-demo')).toBeNull();
     document.body.replaceChildren();
     expect(
       mount({ ...PRO, demo: 'https://demo.example' }).querySelector<HTMLAnchorElement>(
         'a.pro-demo',
       )!.href,
-    ).toBe('https://demo.example/');
+    ).toBe('https://demo.example/?as=choose');
   });
 
   it('offers the live demo as a button beside the one that buys', () => {

@@ -80,7 +80,7 @@ export function proPage(pro: Pro = PRO): TemplateResult {
             pro.demo
               ? html`<a
                   class="pro-demo pro-button-secondary"
-                  href=${pro.demo}
+                  href=${`${pro.demo.replace(/\/$/, '')}/?as=choose`}
                   target="_blank"
                   rel="noopener"
                   >Open the live demo<kt-icon
