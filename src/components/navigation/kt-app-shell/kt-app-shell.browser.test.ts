@@ -47,6 +47,21 @@ describe('kt-app-shell, wide', () => {
 });
 
 describe('kt-app-shell, narrow', () => {
+  it('ends its header with the menu, at the thumb, the header content before it', async () => {
+    const el = await mount(390);
+    const header = box(el, '.header');
+    const toggle = box(el, '.toggle');
+    const content = box(el, '.header-content');
+    const padding = parseFloat(getComputedStyle(part(el, '.header')).paddingRight);
+    expect(Math.abs(toggle.right - (header.right - padding))).toBeLessThan(1);
+    expect(content.right).toBeLessThanOrEqual(toggle.left);
+  });
+
+  it('starts it with the toggle when wide, beside the sidebar it narrows', async () => {
+    const el = await mount(1000);
+    expect(box(el, '.toggle').left).toBeLessThan(box(el, '.header-content').left);
+  });
+
   it('hides the sidebar off to the side, out of reach of Tab, and gives the content the width', async () => {
     const el = await mount(600);
     expect(el.hasAttribute('narrow')).toBe(true);

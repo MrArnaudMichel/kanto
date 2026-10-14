@@ -29,8 +29,8 @@ kt-app-shell[collapsed] .nav-label {
 ```
 
 Narrower than `breakpoint` — 900px of the **shell's own width**, not the
-viewport's — the sidebar leaves the layout. The toggle opens it as a drawer over
-the content, behind a backdrop; Escape or a click on the backdrop closes it. The
+viewport's — the sidebar leaves the layout. The toggle moves to the end of the
+header, under the thumb, and opens it as a drawer over the content, behind a backdrop; Escape or a click on the backdrop closes it. The
 drawer takes the focus as it opens and gives it back to the toggle as it
 closes, and a closed drawer is inert, so Tab never wanders into a panel that is
 not there. `narrow` is reflected while it applies.

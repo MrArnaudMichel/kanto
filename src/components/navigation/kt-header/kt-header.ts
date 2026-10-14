@@ -152,6 +152,14 @@ export class KtHeader extends KtElement {
       }
 
       @media (max-width: 899px) {
+        /* The navigation leaves the bar: the brand takes what is left, the
+           actions and the menu end it — not the actions in a middle column
+           that no longer has anything to centre. */
+        .bar,
+        :host([nav-align='start']) .bar {
+          grid-template-columns: minmax(0, 1fr) auto auto;
+        }
+
         .menu-button {
           display: inline-flex;
         }

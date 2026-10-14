@@ -11,8 +11,8 @@ import '../../core/kt-button/kt-button.js';
  *
  * Wide, the sidebar sits beside the content, and its toggle narrows it to a
  * rail (`collapsed`). Narrower than `breakpoint` — measured on the shell
- * itself, not the viewport — the sidebar leaves the layout: the toggle opens
- * it as a drawer over the content, behind a backdrop, closed by Escape or a
+ * itself, not the viewport — the sidebar leaves the layout: the toggle moves
+ * to the end of the header and opens it as a drawer over the content, behind a backdrop, closed by Escape or a
  * click outside. A closed drawer is inert, so Tab never wanders into it.
  *
  * The shell fills its container's height; give the container one —
@@ -89,6 +89,11 @@ export class KtAppShell extends KtElement {
         align-items: center;
         gap: var(--gap-form);
         min-width: 0;
+      }
+      /* Narrow, the toggle opens a drawer, not a rail beside it: it ends the
+         header, where a thumb reaches it, after the header's own content. */
+      :host([narrow]) .toggle {
+        order: 1;
       }
 
       .sidebar {

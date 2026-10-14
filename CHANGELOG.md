@@ -5,6 +5,17 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.10.1] — 2026-10-14
+
+### Fixed
+
+- `kt-header` on a phone set its actions beside the brand, in the middle column
+  the hidden navigation left empty. The brand opens the bar; the actions and
+  the menu end it.
+- `kt-app-shell` on a phone kept its menu at the start of the header. Narrow,
+  the menu ends the header, where a thumb reaches it; wide, the toggle still
+  starts it, beside the sidebar it narrows.
+
 ## [1.10.0] — 2026-10-14
 
 ### Added
