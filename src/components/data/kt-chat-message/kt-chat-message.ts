@@ -62,7 +62,25 @@ export class KtChatMessage extends KtElement {
       }
       /* A run's next message: the small avatar's room (24px) kept, so the words line up. */
       .avatar.spacer {
+        position: relative;
         width: 24px;
+      }
+      /* Its time, in the gutter: there for a screen reader, shown on hover or focus. */
+      .gutter-time {
+        position: absolute;
+        top: 0.35em;
+        right: -4px;
+        color: var(--text-muted);
+        font: var(--font-normal-small);
+        font-size: 10px;
+        line-height: 1.6;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity var(--duration-fast) var(--easing-standard);
+      }
+      :host(:hover) .gutter-time,
+      :host(:focus-within) .gutter-time {
+        opacity: 1;
       }
       :host([continued]) .meta {
         display: none;
@@ -213,7 +231,8 @@ export class KtChatMessage extends KtElement {
 
   /**
    * The next message of a run from one person: no avatar and no name again,
-   * the words lined up with the first. Its time stays, for a hover to show.
+   * the words lined up with the first. Its time moves to the avatar's gutter,
+   * read by a screen reader, shown on hover or focus.
    */
   @property({ type: Boolean, reflect: true })
   continued = false;
@@ -238,7 +257,15 @@ export class KtChatMessage extends KtElement {
         user
           ? nothing
           : this.continued
-            ? html`<div class="avatar spacer" aria-hidden="true"></div>`
+            ? html`<div class="avatar spacer">
+                ${
+                  this.time
+                    ? html`<time class="gutter-time" datetime=${this.datetime || nothing}
+                        >${this.time}</time
+                      >`
+                    : nothing
+                }
+              </div>`
             : html`<div class="avatar">
                 <slot name="avatar"
                   ><kt-avatar

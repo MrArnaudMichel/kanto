@@ -14,7 +14,7 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   comparison, a configuration. Never wider than the screen.
 - `kt-chat-message` takes `continued`: several messages in a row from one
   person read as one turn — the avatar and the name are not drawn again, the
-  words line up with the first.
+  words line up with the first, the time in the gutter on hover.
 
 ### Fixed
 

@@ -52,7 +52,8 @@ there — a message cannot know it is the newest.
 
 Several messages in a row from the same person read as one turn: set
 `continued` on every one after the first. The avatar and the name are not
-drawn again, and the words line up with the first message.
+drawn again, the words line up with the first message, and the time moves to
+the avatar's gutter — read by a screen reader, shown on hover or focus.
 
 ```html
 <kt-chat-message name="Frank" time="18:00">Our churn is low.</kt-chat-message>

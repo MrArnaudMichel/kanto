@@ -39,9 +39,11 @@ describe('kt-chat-message, laid out', () => {
       el.shadowRoot!.querySelector('.content')!.getBoundingClientRect().left -
       el.getBoundingClientRect().left;
     expect(Math.abs(left(next) - left(first))).toBeLessThan(1);
-    // Its time still there, for whoever asks: in the label.
-    expect(next.shadowRoot!.querySelector('time')!.getAttribute('datetime') ?? '').toBe('');
-    expect(next.shadowRoot!.querySelector('article')!.getAttribute('aria-label')).toBe('Frank');
+    // Its time stays: in the avatar's gutter, read by a screen reader, shown on hover.
+    const time = next.shadowRoot!.querySelector<HTMLElement>('.gutter-time')!;
+    expect(time.textContent!.trim()).toBe('18:01');
+    expect(getComputedStyle(time).display).not.toBe('none');
+    expect(getComputedStyle(time).opacity).toBe('0');
   });
 
   it('moves its thinking dots one after another, and holds them still under reduced motion', async () => {
