@@ -15,6 +15,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - `kt-app-shell` on a phone kept its menu at the start of the header. Narrow,
   the menu ends the header, where a thumb reaches it; wide, the toggle still
   starts it, beside the sidebar it narrows.
+- `kt-tour` on a target as tall as the screen — a sidebar — set its card under
+  it, off the screen. With no room above or below, the card goes beside it.
 
 ## [1.10.0] — 2026-10-14
 

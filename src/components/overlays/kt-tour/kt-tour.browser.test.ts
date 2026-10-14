@@ -1,5 +1,6 @@
 /** The light around the target, and the card beside it, not over it. */
 import { afterEach, describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { fixture, settle } from '#test/fixture';
 import '../../../styles.css';
 import './kt-tour.js';
@@ -49,6 +50,25 @@ describe('kt-tour, laid out', () => {
       card.top < target.bottom &&
       card.bottom > target.top;
     expect(overlaps).toBe(false);
+  });
+
+  it('sets the card beside a target as tall as the screen — a sidebar — not under it, off the screen', async () => {
+    await page.viewport(1000, 600);
+    const sidebar = document.body.appendChild(document.createElement('nav'));
+    sidebar.id = 'tour-sidebar';
+    sidebar.style.cssText = 'position: fixed; top: 40px; left: 0; width: 240px; height: 560px';
+    const el = await fixture<KtTour>('<kt-tour></kt-tour>');
+    el.steps = [{ target: '#tour-sidebar', title: 'Account', body: 'Billing and the team.' }];
+    el.start();
+    await settle(el);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const card = el.shadowRoot!.querySelector('.card')!.getBoundingClientRect();
+    sidebar.remove();
+    await page.viewport(414, 896);
+    expect(card.top).toBeGreaterThanOrEqual(0);
+    expect(card.bottom).toBeLessThanOrEqual(600);
+    expect(card.left).toBeGreaterThanOrEqual(240);
   });
 
   it('centres the card, in view, for a target off the screen — a closed drawer, say', async () => {

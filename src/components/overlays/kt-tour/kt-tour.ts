@@ -133,7 +133,22 @@ export class KtTour extends KtElement {
   private readonly floating = new FloatingController(this, {
     panel: () => this.shadowRoot?.querySelector<HTMLElement>('.card:not(.centred)'),
     anchor: () => this.target,
+    side: () => this.side(),
   });
+
+  /**
+   * Under the target, or over it — and beside it when neither has room for
+   * the card: a sidebar as tall as the screen leaves none, and a card under it
+   * would be off the screen.
+   */
+  private side(): 'bottom' | 'right' | 'left' {
+    const target = this.target?.getBoundingClientRect();
+    const card = this.shadowRoot?.querySelector<HTMLElement>('.card')?.offsetHeight ?? 0;
+    if (!target) return 'bottom';
+    const room = Math.max(target.top, innerHeight - target.bottom);
+    if (room >= card + 16) return 'bottom';
+    return innerWidth - target.right >= target.left ? 'right' : 'left';
+  }
 
   /** Starts the tour, on its first step or on `index`. */
   start(index = 0): void {
