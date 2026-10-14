@@ -21,6 +21,11 @@ async function mount(value: string | null = 'usage'): Promise<KtTabs> {
   el.tabs = TABS;
   el.value = value;
   await settle(el);
+  // The brand font first: arriving after the measure, it widens a label the
+  // mark follows a frame later, and a measure in between reads a gap that is
+  // not there for anyone looking (a cold CI runner, not a warm machine).
+  await document.fonts.ready;
+  await frame();
   await frame();
   return el;
 }
