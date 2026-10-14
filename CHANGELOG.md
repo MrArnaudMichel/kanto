@@ -5,18 +5,7 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.10.1] — 2026-10-14
-
-### Fixed
-
-- `kt-tour` on a step whose target is out of view — in a closed drawer on a
-  phone, say — set its card beside it, off the screen, where nothing could be
-  read or clicked. The card now shows centred.
-- `kt-table` kept its 600px minimum in a narrow box on a wide window — half a
-  laptop's page — and cut its last columns. It now reads its own width, not
-  the window's.
-
-## [1.10.0] — 2026-10-13
+## [1.10.0] — 2026-10-14
 
 ### Added
 
@@ -74,6 +63,12 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   the page, and threw. It now does nothing until it is back.
 - `kt-empty-state` without an `icon` drew nothing: its default, `inbox`, was
   never registered. Kanto now ships it with the icons its elements draw.
+- `kt-tour` on a step whose target is out of view — in a closed drawer on a
+  phone, say — set its card beside it, off the screen, where nothing could be
+  read or clicked. The card now shows centred.
+- `kt-table` kept its 600px minimum in a narrow box on a wide window — half a
+  laptop's page — and cut its last columns. It now reads its own width, not
+  the window's.
 
 ## [1.9.0] — 2026-10-05
 
