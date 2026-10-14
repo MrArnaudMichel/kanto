@@ -36,14 +36,21 @@ panel.addEventListener('kt-close', (e) => {
 cannot escape from is a trap, and cancelling `kt-close` is the right way to
 guard it.
 
+## Width
+
+`size` sets it: `small` (308px, the default) for a record or a form,
+`medium` (480px), `large` (720px) for more than a form — a comparison, a
+configuration. On a phone it is never wider than the screen.
+
 ## API
 
-| Property          | Attribute           | Type      | Default     |
-| ----------------- | ------------------- | --------- | ----------- |
-| `open`            | `open`              | `boolean` | `false`     |
-| `eyebrow`         | `eyebrow`           | `string`  | `'Details'` |
-| `heading`         | `heading`           | `string`  | `''`        |
-| `noBackdropClose` | `no-backdrop-close` | `boolean` | `false`     |
+| Property          | Attribute           | Type                             | Default     |
+| ----------------- | ------------------- | -------------------------------- | ----------- |
+| `open`            | `open`              | `boolean`                        | `false`     |
+| `eyebrow`         | `eyebrow`           | `string`                         | `'Details'` |
+| `heading`         | `heading`           | `string`                         | `''`        |
+| `size`            | `size`              | `'small' \| 'medium' \| 'large'` | `'small'`   |
+| `noBackdropClose` | `no-backdrop-close` | `boolean`                        | `false`     |
 
 | Method           | Description                               |
 | ---------------- | ----------------------------------------- |

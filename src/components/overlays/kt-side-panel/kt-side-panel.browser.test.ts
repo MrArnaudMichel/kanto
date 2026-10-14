@@ -1,5 +1,6 @@
 /** The side panel, closed, in a real browser: what the keyboard and screen readers can reach. */
 import { describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { fixture, settle } from '#test/fixture';
 import '../../../styles.css';
 import './kt-side-panel.js';
@@ -19,9 +20,8 @@ describe('kt-side-panel, closed', () => {
 
     el.open = false;
     await settle(el);
-    // Once its slide out has run.
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    expect(inside.checkVisibility()).toBe(false);
+    // Once its slide out has run — however long a loaded machine takes to run it.
+    await expect.poll(() => inside.checkVisibility(), { timeout: 2000 }).toBe(false);
   });
 });
 
@@ -38,5 +38,30 @@ describe('kt-side-panel, open', () => {
     // The ring is drawn 2px outside the field: the scroller must not cut it.
     expect(field.left - body.left).toBeGreaterThanOrEqual(2);
     expect(body.right - field.right).toBeGreaterThanOrEqual(2);
+  });
+
+  it('comes in three widths, and never wider than the screen', async () => {
+    await page.viewport(1280, 800);
+    const widths: Record<string, number> = {};
+    for (const size of ['', 'medium', 'large']) {
+      const el = await fixture<KtSidePanel>(
+        `<kt-side-panel open ${size ? `size="${size}"` : ''} heading="Stack"><p>Body</p></kt-side-panel>`,
+      );
+      await settle(el);
+      widths[size || 'small'] = el
+        .shadowRoot!.querySelector('dialog')!
+        .getBoundingClientRect().width;
+      el.open = false;
+      await settle(el);
+    }
+    await page.viewport(390, 800);
+    const narrow = await fixture<KtSidePanel>(
+      '<kt-side-panel open size="large" heading="Stack"><p>Body</p></kt-side-panel>',
+    );
+    await settle(narrow);
+    const onPhone = narrow.shadowRoot!.querySelector('dialog')!.getBoundingClientRect().width;
+    await page.viewport(414, 896);
+    expect(widths).toEqual({ small: 308, medium: 480, large: 720 });
+    expect(onPhone).toBeLessThanOrEqual(390);
   });
 });

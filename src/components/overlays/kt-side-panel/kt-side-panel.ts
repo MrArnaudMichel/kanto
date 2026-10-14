@@ -129,6 +129,14 @@ export class KtSidePanel extends KtElement {
         overflow: auto;
       }
 
+      /* Wider, for a panel that holds more than a form: a comparison, a stack. */
+      :host([size='medium']) dialog {
+        width: 480px;
+      }
+      :host([size='large']) dialog {
+        width: 720px;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         dialog {
           transition: none;
@@ -149,6 +157,10 @@ export class KtSidePanel extends KtElement {
 
   @property({ type: String })
   heading = '';
+
+  /** Its width: `small` (308px) for a record or a form, `medium` (480px), `large` (720px) for more. Never wider than the screen. */
+  @property({ type: String, reflect: true })
+  size: 'small' | 'medium' | 'large' = 'small';
 
   /** Suppresses dismissal by backdrop click. Escape still works, by design. */
   @property({ type: Boolean, attribute: 'no-backdrop-close' })
