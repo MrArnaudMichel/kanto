@@ -32,12 +32,19 @@ export const PRO: ProOffer = {
 /** The screens, as the live demo's `npm run shots` takes them, in public/pro/. */
 export const PRO_SCREENS = [
   { file: 'home', caption: 'The workspace, on the example product' },
+  { file: 'invoice', caption: 'An invoice, as the customer receives it' },
   { file: 'billing', caption: 'Plans, trials, receipts' },
   { file: 'messages', caption: 'Team threads and support' },
   { file: 'admin', caption: 'The admin panel: revenue and sign-ups' },
   { file: 'admin-workspace', caption: 'A workspace, seen by its staff' },
   { file: 'stack', caption: 'The stack: one answer each' },
   { file: 'sign-in', caption: 'Sign-in, with Google and GitHub' },
+] as const;
+
+/** The same app on a phone, side by side. */
+export const PRO_PHONES = [
+  { file: 'home-phone', caption: 'The workspace' },
+  { file: 'invoice-phone', caption: 'An invoice' },
 ] as const;
 
 /** What is done before the buyer writes a line. */
@@ -184,6 +191,8 @@ export const PRO_PARTS: readonly {
   file: string;
   body: string;
   yours: boolean;
+  /** Who it opens the live demo as: its customer, or the SaaS's creator. */
+  as: 'customer' | 'creator';
 }[] = [
   {
     title: 'Your product',
@@ -192,6 +201,7 @@ export const PRO_PARTS: readonly {
     file: 'home',
     body: 'What your users pay for. Northwind’s invoicing in the demo; yours in your copy.',
     yours: true,
+    as: 'customer',
   },
   {
     title: 'Account',
@@ -200,6 +210,7 @@ export const PRO_PARTS: readonly {
     file: 'billing',
     body: 'Their plan and payments, their team and its roles, their settings and API keys.',
     yours: false,
+    as: 'customer',
   },
   {
     title: 'Admin',
@@ -208,5 +219,6 @@ export const PRO_PARTS: readonly {
     file: 'admin',
     body: 'Revenue, sign-ups, workspaces, support, plans, the landing and its flags.',
     yours: false,
+    as: 'creator',
   },
 ];

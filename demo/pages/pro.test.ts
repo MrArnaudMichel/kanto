@@ -2,7 +2,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import { render } from 'lit';
 import { afterEach, describe, expect, it } from 'vitest';
 import { KT_DEFAULT_APPEARANCE } from 'kanto-ds';
-import { PRO, PRO_DONE, PRO_QUESTIONS, PRO_SCREENS, type ProOffer } from '../lib/pro.js';
+import {
+  PRO,
+  PRO_DONE,
+  PRO_PHONES,
+  PRO_QUESTIONS,
+  PRO_SCREENS,
+  type ProOffer,
+} from '../lib/pro.js';
 import { homePage } from './home.js';
 import { proPage } from './pro.js';
 import { templatesPage } from './templates.js';
@@ -61,6 +68,40 @@ describe('the Kanto SaaS Pro page', () => {
         'a.pro-demo',
       )!.href,
     ).toBe('https://demo.example/');
+  });
+
+  it('offers the live demo as a button beside the one that buys', () => {
+    const page = mount({ ...PRO, demo: 'https://demo.example' });
+    const demo = page.querySelector<HTMLAnchorElement>('.pro-hero .home-actions a.pro-demo')!;
+    expect(demo.classList.contains('pro-button-secondary')).toBe(true);
+    expect(demo.target).toBe('_blank');
+  });
+
+  it('opens each part in the demo, straight in, as the one who uses it', () => {
+    const page = mount({ ...PRO, demo: 'https://demo.example' });
+    expect(
+      [...page.querySelectorAll<HTMLAnchorElement>('.pro-parts a.pro-try')].map((link) => [
+        link.textContent!.trim(),
+        link.href,
+      ]),
+    ).toEqual([
+      ['Try it as a customer', 'https://demo.example/?as=customer'],
+      ['Try it as a customer', 'https://demo.example/?as=customer'],
+      ['Try it as the creator', 'https://demo.example/?as=creator'],
+    ]);
+    document.body.replaceChildren();
+    expect(mount({ ...PRO, demo: '' }).querySelector('a.pro-try')).toBeNull();
+  });
+
+  it('shows the same app on a phone, at a phone’s size', () => {
+    const phones = [
+      ...mount().querySelectorAll<HTMLImageElement>('.pro-phones img.pro-shot-light'),
+    ];
+    expect(phones).toHaveLength(PRO_PHONES.length);
+    for (const phone of phones) expect([phone.width, phone.height]).toEqual([390, 844]);
+    for (const shot of PRO_PHONES)
+      for (const theme of ['light', 'dark'])
+        expect(existsSync(`demo/public/pro/${shot.file}-${theme}.webp`), shot.file).toBe(true);
   });
 
   it('shows screens that exist, in both themes', () => {

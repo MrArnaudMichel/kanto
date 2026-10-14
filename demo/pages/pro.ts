@@ -12,6 +12,7 @@ import {
   PRO_COMPARE,
   PRO_DONE,
   PRO_PARTS,
+  PRO_PHONES,
   PRO_QUESTIONS,
   PRO_RESOURCE,
   PRO_SCREENS,
@@ -22,7 +23,12 @@ import {
 type Pro = ProOffer;
 
 /** A screen of the live demo, in the site's theme: dark by default, light when it is. */
-function screen(file: string, alt: string, eager = false): TemplateResult {
+function screen(
+  file: string,
+  alt: string,
+  eager = false,
+  size: { width: number; height: number } = { width: 1440, height: 900 },
+): TemplateResult {
   const src = (theme: string) => `./pro/${file}-${theme}.webp`;
   // Only one is ever shown: each carries the name, and the hero loads both at once.
   const loading = eager ? 'eager' : 'lazy';
@@ -31,16 +37,16 @@ function screen(file: string, alt: string, eager = false): TemplateResult {
       class="pro-shot-dark"
       src=${src('dark')}
       alt=${alt}
-      width="1440"
-      height="900"
+      width=${size.width}
+      height=${size.height}
       loading=${loading}
     />
     <img
       class="pro-shot-light"
       src=${src('light')}
       alt=${alt}
-      width="1440"
-      height="900"
+      width=${size.width}
+      height=${size.height}
       loading=${loading}
     />
   </span>`;
@@ -72,7 +78,11 @@ export function proPage(pro: Pro = PRO): TemplateResult {
           ${buy(pro)}
           ${
             pro.demo
-              ? html`<a class="pro-demo" href=${pro.demo} target="_blank" rel="noopener"
+              ? html`<a
+                  class="pro-demo pro-button-secondary"
+                  href=${pro.demo}
+                  target="_blank"
+                  rel="noopener"
                   >Open the live demo<kt-icon
                     name="arrow-up-right"
                     size="16"
@@ -108,6 +118,21 @@ export function proPage(pro: Pro = PRO): TemplateResult {
               <kt-badge tone=${part.yours ? 'primary' : 'success'} size="small"
                 >${part.yours ? 'You write it' : 'Done'}</kt-badge
               >
+              ${
+                pro.demo
+                  ? html`<a
+                      class="pro-try"
+                      href=${`${pro.demo.replace(/\/$/, '')}/?as=${part.as}`}
+                      target="_blank"
+                      rel="noopener"
+                      >${part.as === 'creator' ? 'Try it as the creator' : 'Try it as a customer'}<kt-icon
+                        name="arrow-up-right"
+                        size="14"
+                        aria-hidden="true"
+                      ></kt-icon
+                    ></a>`
+                  : ''
+              }
             </li>`,
         )}
       </ol>
@@ -166,6 +191,15 @@ export function proPage(pro: Pro = PRO): TemplateResult {
     <section class="home-band" aria-labelledby="pro-screens">
       <h2 id="pro-screens">Every screen, already there</h2>
       <p>Northwind, the example product, as the live demo runs it.</p>
+      <ul class="pro-phones" aria-label="On a phone">
+        ${PRO_PHONES.map(
+          (each) =>
+            html`<li>
+              ${screen(each.file, '', false, { width: 390, height: 844 })}
+              <span>${each.caption}, on a phone</span>
+            </li>`,
+        )}
+      </ul>
       <ul class="pro-screens">
         ${PRO_SCREENS.filter((each) => each.file !== 'home').map(
           (each) =>

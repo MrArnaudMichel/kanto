@@ -49,6 +49,20 @@ a.pro-buy:focus-visible,
   color: var(--text-body);
   font: 500 16px / 1 var(--font-family-body);
 }
+/* The live demo, as Kanto's secondary button: the buyer's second way in, not a footnote. */
+a.pro-button-secondary {
+  height: var(--button-height-large);
+  padding: 0 calc(var(--button-padding-x) + 8px);
+  color: var(--color-primary-text);
+  font: var(--font-normal-medium);
+  text-decoration: none;
+  background: var(--color-primary-soft);
+  border-radius: var(--border-radius);
+}
+a.pro-button-secondary:hover {
+  text-decoration: none;
+  background: var(--color-secondary-hover);
+}
 
 .pro-hero-shot {
   max-width: 1100px;
@@ -121,6 +135,30 @@ a.pro-buy:focus-visible,
   margin-top: 10px;
   color: var(--text-muted);
   font: var(--font-normal-small);
+}
+
+/* The same app on a phone: two screens side by side, at a phone's size. */
+.pro-phones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px 28px;
+  justify-content: center;
+  margin: 32px 0;
+  padding: 0;
+  list-style: none;
+}
+.pro-phones li {
+  width: min(260px, 100%);
+}
+.pro-phones .pro-shot img {
+  border-radius: 18px;
+}
+.pro-phones span:not(.pro-shot) {
+  display: block;
+  margin-top: 10px;
+  color: var(--text-muted);
+  font: var(--font-normal-small);
+  text-align: center;
 }
 
 .pro-compare-wrap {
@@ -233,6 +271,24 @@ a.pro-buy:focus-visible,
 .pro-parts .pro-parts-where {
   color: var(--text-body);
   font-size: 14px;
+}
+.pro-parts li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+/* Straight into the demo, as the one who uses that part. */
+.pro-try {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 14px;
+  color: var(--color-primary-text);
+  font: var(--font-normal-medium);
+}
+.pro-try:focus-visible {
+  outline: var(--outline-width) solid var(--color-primary-base);
+  outline-offset: 2px;
 }
 
 /* After the purchase: three steps, in order. */
