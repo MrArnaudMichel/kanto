@@ -23,6 +23,20 @@ The avatar — `avatar` for a picture, initials from `name` otherwise — named
 after the person. `show-name` writes the name beside it, for a header with the
 room.
 
+## At the foot of a sidebar
+
+`block` makes the button a row as wide as its container, shaped as the
+navigation items above it — their radius, their padding, their hover — with
+the name, the email and a chevron. Without `show-name`, as in a collapsed
+rail, it is the avatar alone, centred. The menu opens above or below the row,
+as wide as it.
+
+```html
+<div class="sidebar-account">
+  <kt-user-menu block show-name name="Dana Whitfield" email="dana@northwind.io"></kt-user-menu>
+</div>
+```
+
 ## The menu
 
 The panel opens under the button, lined up with its end, in the top layer, so
@@ -58,6 +72,7 @@ not something to choose.
 | `avatar`   | `avatar`    | `string`           | `''`    |
 | `items`    | —           | `KtUserMenuItem[]` | `[]`    |
 | `showName` | `show-name` | `boolean`          | `false` |
+| `block`    | `block`     | `boolean`          | `false` |
 
 | Method   | Description                                                       |
 | -------- | ----------------------------------------------------------------- |

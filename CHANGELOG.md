@@ -7,6 +7,13 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [1.10.1] — 2026-10-14
 
+### Changed
+
+- `kt-user-menu` takes `block`: at the foot of a sidebar, the account is a row
+  shaped as the navigation items above it — their radius, padding and hover,
+  the name and the email, a chevron — instead of a pill; the avatar alone,
+  centred, in a rail; its menu as wide as the row.
+
 ### Fixed
 
 - `kt-header` on a phone set its actions beside the brand, in the middle column

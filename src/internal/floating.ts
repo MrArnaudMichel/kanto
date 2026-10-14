@@ -22,7 +22,7 @@ export interface FloatingOptions {
   /** Which edge of the anchor it lines up with; its start by default. */
   readonly align?: () => Align;
   /** Sizes the panel to the anchor's width — a list under its field. */
-  readonly matchWidth?: boolean;
+  readonly matchWidth?: boolean | (() => boolean);
   /** Told the side it opened on, for the direction of its entrance. */
   readonly onPlace?: (side: Side) => void;
 }
@@ -122,7 +122,8 @@ export class FloatingController implements ReactiveController {
     const anchor = this.options.anchor()?.getBoundingClientRect();
     if (!panel || !anchor) return;
 
-    if (this.options.matchWidth) panel.style.width = `${anchor.width}px`;
+    const match = this.options.matchWidth;
+    if (typeof match === 'function' ? match() : match) panel.style.width = `${anchor.width}px`;
     // Untransformed size: the entrance animation scales and slides the panel.
     const { x, y, placement } = placeFloating(
       anchor,

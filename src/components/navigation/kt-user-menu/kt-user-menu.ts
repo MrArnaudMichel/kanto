@@ -77,6 +77,50 @@ export class KtUserMenu extends KtElement {
       :host([show-name]) .trigger {
         padding-inline-end: 10px;
       }
+
+      /* Block: the account at the foot of a sidebar, shaped as the navigation
+         items above it — as wide, as round, as padded — not a pill. */
+      :host([block]) {
+        display: block;
+      }
+      :host([block]) .trigger {
+        display: flex;
+        box-sizing: border-box;
+        width: 100%;
+        gap: 10px;
+        padding: var(--padding-sub-menu-item);
+        /* The avatar (24px) centred on the navigation's icons (16px), on their inset. */
+        padding-inline: calc(var(--nav-pad-left, 16px) - 4px) 8px;
+        text-align: left;
+        border-radius: var(--radius-input);
+      }
+      :host([block]:not([show-name])) .trigger {
+        justify-content: center;
+        padding-inline: 0;
+      }
+      .trigger-text {
+        display: grid;
+        flex: 1;
+        min-width: 0;
+      }
+      .trigger-name,
+      .trigger-email {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .trigger-name {
+        color: var(--text-body);
+        font: var(--font-normal-medium);
+      }
+      .trigger-email {
+        color: var(--text-muted);
+        font: var(--font-normal-small);
+      }
+      .trigger-chevron {
+        flex: none;
+        color: var(--text-muted);
+      }
       .trigger:hover {
         background: var(--surface-hover);
       }
@@ -204,6 +248,14 @@ export class KtUserMenu extends KtElement {
   @property({ type: Boolean, reflect: true, attribute: 'show-name' })
   showName = false;
 
+  /**
+   * A row as wide as its container — the account at the foot of a sidebar:
+   * with `show-name`, the name, the email and a chevron; without, the avatar
+   * centred in a rail. The menu opens above or below it, as wide as it.
+   */
+  @property({ type: Boolean, reflect: true })
+  block = false;
+
   /** Whether the menu is open. */
   @state() open = false;
 
@@ -213,7 +265,8 @@ export class KtUserMenu extends KtElement {
   private readonly floating = new FloatingController(this, {
     panel: () => this.shadowRoot?.querySelector<HTMLElement>('.panel'),
     anchor: () => this.trigger,
-    align: () => 'end',
+    align: () => (this.block ? 'start' : 'end'),
+    matchWidth: () => this.block,
   });
 
   override disconnectedCallback(): void {
@@ -344,7 +397,17 @@ export class KtUserMenu extends KtElement {
         @keydown=${this.onTriggerKeyDown}
       >
         <kt-avatar name=${this.name} src=${this.avatar || nothing} size="small"></kt-avatar>
-        ${this.showName ? html`<span aria-hidden="true">${this.name}</span>` : nothing}
+        ${
+          this.block && this.showName
+            ? html`<span class="trigger-text" aria-hidden="true">
+                  <span class="trigger-name">${this.name}</span>
+                  ${this.email ? html`<span class="trigger-email">${this.email}</span>` : nothing}
+                </span>
+                <kt-icon class="trigger-chevron" name="chevrons-up-down" size="16"></kt-icon>`
+            : this.showName
+              ? html`<span aria-hidden="true">${this.name}</span>`
+              : nothing
+        }
       </button>
       ${
         this.open
