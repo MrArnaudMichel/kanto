@@ -48,6 +48,17 @@ that appears only on hover cannot be reached by touch, and is hard to find from
 the keyboard. Put the messages in a list or a log, and announce new ones from
 there — a message cannot know it is the newest.
 
+## A run from one person
+
+Several messages in a row from the same person read as one turn: set
+`continued` on every one after the first. The avatar and the name are not
+drawn again, and the words line up with the first message.
+
+```html
+<kt-chat-message name="Frank" time="18:00">Our churn is low.</kt-chat-message>
+<kt-chat-message continued name="Frank" time="18:01">Yearly discounts first?</kt-chat-message>
+```
+
 ## API
 
 | Property    | Attribute   | Type                    | Default       |
@@ -57,6 +68,7 @@ there — a message cannot know it is the newest.
 | `avatar`    | `avatar`    | `string`                | `''`          |
 | `time`      | `time`      | `string`                | `''`          |
 | `datetime`  | `datetime`  | `string`                | `''`          |
+| `continued` | `continued` | `boolean`               | `false`       |
 | `thinking`  | `thinking`  | `boolean`               | `false`       |
 | `streaming` | `streaming` | `boolean`               | `false`       |
 

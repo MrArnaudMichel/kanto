@@ -60,6 +60,13 @@ export class KtChatMessage extends KtElement {
         flex: none;
         line-height: 0;
       }
+      /* A run's next message: the small avatar's room (24px) kept, so the words line up. */
+      .avatar.spacer {
+        width: 24px;
+      }
+      :host([continued]) .meta {
+        display: none;
+      }
 
       .body {
         display: grid;
@@ -204,6 +211,13 @@ export class KtChatMessage extends KtElement {
   @property({ type: Boolean, reflect: true })
   streaming = false;
 
+  /**
+   * The next message of a run from one person: no avatar and no name again,
+   * the words lined up with the first. Its time stays, for a hover to show.
+   */
+  @property({ type: Boolean, reflect: true })
+  continued = false;
+
   override render(): TemplateResult {
     const user = this.from === 'user';
     const busy = this.thinking || this.streaming;
@@ -223,17 +237,27 @@ export class KtChatMessage extends KtElement {
       ${
         user
           ? nothing
-          : html`<div class="avatar">
-              <slot name="avatar"
-                ><kt-avatar name=${this.name} src=${this.avatar || nothing} size="small"></kt-avatar
-              ></slot>
-            </div>`
+          : this.continued
+            ? html`<div class="avatar spacer" aria-hidden="true"></div>`
+            : html`<div class="avatar">
+                <slot name="avatar"
+                  ><kt-avatar
+                    name=${this.name}
+                    src=${this.avatar || nothing}
+                    size="small"
+                  ></kt-avatar
+                ></slot>
+              </div>`
       }
       <div class="body">
         ${
           this.name || this.time
             ? html`<div part="meta" class="meta">
-                ${this.name && !user ? html`<span class="name">${this.name}</span>` : nothing}
+                ${
+                  this.name && !user && !this.continued
+                    ? html`<span class="name">${this.name}</span>`
+                    : nothing
+                }
                 ${
                   this.time
                     ? html`<time datetime=${this.datetime || nothing}>${this.time}</time>`

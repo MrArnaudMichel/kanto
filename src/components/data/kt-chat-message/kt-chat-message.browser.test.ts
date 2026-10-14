@@ -26,6 +26,24 @@ describe('kt-chat-message, laid out', () => {
     expect(Math.abs(avatar.left - reply.getBoundingClientRect().left)).toBeLessThan(1);
   });
 
+  it('continues a run of messages from one person without their avatar and name again, lined up with the first', async () => {
+    const first = await fixture<KtChatMessage>(
+      '<kt-chat-message name="Frank" time="18:00" style="width: 600px">First</kt-chat-message>',
+    );
+    const next = await fixture<KtChatMessage>(
+      '<kt-chat-message continued name="Frank" time="18:01" style="width: 600px">Second</kt-chat-message>',
+    );
+    expect(next.shadowRoot!.querySelector('kt-avatar')).toBeNull();
+    expect(next.shadowRoot!.querySelector('.name')).toBeNull();
+    const left = (el: KtChatMessage) =>
+      el.shadowRoot!.querySelector('.content')!.getBoundingClientRect().left -
+      el.getBoundingClientRect().left;
+    expect(Math.abs(left(next) - left(first))).toBeLessThan(1);
+    // Its time still there, for whoever asks: in the label.
+    expect(next.shadowRoot!.querySelector('time')!.getAttribute('datetime') ?? '').toBe('');
+    expect(next.shadowRoot!.querySelector('article')!.getAttribute('aria-label')).toBe('Frank');
+  });
+
   it('moves its thinking dots one after another, and holds them still under reduced motion', async () => {
     const el = await fixture<KtChatMessage>(
       '<kt-chat-message name="AI" thinking></kt-chat-message>',
