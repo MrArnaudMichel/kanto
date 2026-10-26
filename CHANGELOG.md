@@ -5,6 +5,35 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.12.0] — 2026-10-26
+
+### Added
+
+- **kanto-mcp**: Kanto's documentation as an MCP server, for AI assistants as
+  they code. `claude mcp add kanto -- npx -y kanto-mcp`, or the same command in
+  Cursor, Windsurf or VS Code. Its tools list the components, give one's page
+  and its whole API — attributes, properties, methods, events, slots, CSS
+  parts — search the docs, and give the guides and each framework's setup, at
+  the version installed. Published beside create-kanto, at the library's
+  version.
+- The documentation site is read by search engines: each page has its own
+  address — `/components/kt-button/` — its title, its description and its
+  canonical link, written as HTML at build for crawlers that do not run a
+  script, with `sitemap.xml` and `robots.txt`.
+
+### Changed
+
+- The site's addresses are paths, not `#/…`. An old link still lands on its
+  page, the purchase's return included; links move without a reload; a
+  template's running demo is under `/live/<id>/`, and an old link to one
+  reaches it.
+- A component's page is titled by its tag, `kt-button — Kanto`.
+
+### Fixed
+
+- A link between two component pages, written to the markdown file beside
+  it, led to a missing page on the site; it leads to the page.
+
 ## [1.11.0] — 2026-10-14
 
 ### Added
