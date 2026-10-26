@@ -1,6 +1,6 @@
 {
   "name": "kanto-mcp",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "Kanto's documentation for AI assistants, as an MCP server: every kt-* component's page and API, a search across the docs, the guides and each framework's setup.",
   "type": "module",
   "bin": {
