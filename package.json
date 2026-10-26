@@ -23,7 +23,8 @@
     "a11y",
     "theming",
     "dark-theme",
-    "dark-mode"
+    "dark-mode",
+    "mcp"
   ],
   "homepage": "https://kanto.arnaudmichel.fr",
   "bugs": {
