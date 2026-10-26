@@ -17,27 +17,47 @@ attributes; events are kt-prefixed CustomEvents with the payload in detail.`;
 
 /** The answer to one message, or undefined for a notification. */
 export function handle(data, message) {
-  const { id, method, params = {} } = message ?? {};
+  const { id, method } = message ?? {};
   if (id === undefined || id === null) return undefined;
+  const params = message.params ?? {};
   const answer = (result) => ({ jsonrpc: '2.0', id, result });
-  switch (method) {
-    case 'initialize':
-      return answer({
-        protocolVersion: PROTOCOLS.includes(params.protocolVersion)
-          ? params.protocolVersion
-          : PROTOCOLS[0],
-        capabilities: { tools: {} },
-        serverInfo: { name: 'kanto-mcp', version: data.version },
-        instructions: INSTRUCTIONS,
-      });
-    case 'ping':
-      return answer({});
-    case 'tools/list':
-      return answer({ tools: TOOLS });
-    case 'tools/call':
-      return answer(callTool(data, params.name, params.arguments));
-    default:
-      return { jsonrpc: '2.0', id, error: { code: -32601, message: `No method ${method}` } };
+  const refuse = (code, text) => ({ jsonrpc: '2.0', id, error: { code, message: text } });
+  try {
+    return reply();
+  } catch (error) {
+    // A tool that throws answers with an error; the server keeps serving.
+    return refuse(
+      -32603,
+      `kanto-mcp failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  function reply() {
+    switch (method) {
+      case 'initialize':
+        return answer({
+          protocolVersion: PROTOCOLS.includes(params.protocolVersion)
+            ? params.protocolVersion
+            : PROTOCOLS[0],
+          capabilities: { tools: {} },
+          serverInfo: { name: 'kanto-mcp', version: data.version },
+          instructions: INSTRUCTIONS,
+        });
+      case 'ping':
+        return answer({});
+      case 'tools/list':
+        return answer({ tools: TOOLS });
+      case 'tools/call':
+        if (!TOOLS.some((tool) => tool.name === params.name)) {
+          return refuse(
+            -32602,
+            `No tool "${params.name}". The tools: ${TOOLS.map((tool) => tool.name).join(', ')}.`,
+          );
+        }
+        return answer(callTool(data, params.name, params.arguments));
+      default:
+        return refuse(-32601, `No method ${method}`);
+    }
   }
 }
 

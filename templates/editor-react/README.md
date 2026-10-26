@@ -28,4 +28,4 @@ Documents open at `#/doc/<id>`, so the build runs on any static host.
 
 `kt-app-shell`, `kt-tree`, `kt-button`, `kt-tooltip`, `kt-segmented-control`,
 `kt-side-panel`, `kt-confirm-dialog`, `kt-empty-state`, `kt-error-page`,
-`kt-toast`. Each is documented at https://kanto.arnaudmichel.fr/components.
+`kt-toast`. Each is documented at https://kanto.arnaudmichel.fr/components/.

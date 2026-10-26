@@ -31,4 +31,4 @@ start there.
 
 `kt-header`, `kt-toggle-button-group`, `kt-timeline`, `kt-badge`,
 `kt-newsletter`, `kt-post-grid`, `kt-button`, `kt-footer`, `kt-error-page`.
-Each is documented at https://kanto.arnaudmichel.fr/components.
+Each is documented at https://kanto.arnaudmichel.fr/components/.

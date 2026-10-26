@@ -29,4 +29,4 @@ which tags they are.
 `kt-toggle-button-group`, `kt-card`, `kt-empty-state`, `kt-side-panel`,
 `kt-timeline`, `kt-post-grid`, `kt-label-input`, `kt-input`, `kt-textarea`,
 `kt-alert`, `kt-footer`. Each is documented at
-https://kanto.arnaudmichel.fr/components.
+https://kanto.arnaudmichel.fr/components/.

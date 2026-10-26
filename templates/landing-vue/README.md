@@ -26,4 +26,4 @@ which tags they are.
 `kt-header`, `kt-hero`, `kt-logo-cloud`, `kt-feature-grid`,
 `kt-testimonials`, `kt-pricing-table`, `kt-faq`, `kt-cta`, `kt-newsletter`,
 `kt-footer`, `kt-button`. Each is documented at
-https://kanto.arnaudmichel.fr/components.
+https://kanto.arnaudmichel.fr/components/.

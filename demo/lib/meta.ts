@@ -10,7 +10,7 @@ export const SITE = 'https://kanto.arnaudmichel.fr';
 export interface PageMeta {
   readonly title: string;
   readonly description: string;
-  /** Its canonical path: `/components/kt-button`. */
+  /** Its canonical path: `/components/kt-button/`. */
   readonly path: string;
   /** False keeps it out of search engines: the buyer's thank-you page. */
   readonly indexed: boolean;

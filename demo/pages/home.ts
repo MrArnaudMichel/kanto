@@ -62,17 +62,17 @@ const FOOTER: { heading: string; links: { label: string; href: string }[] }[] = 
   {
     heading: 'Documentation',
     links: [
-      { label: 'Introduction', href: '/guide/introduction' },
-      { label: 'Installation', href: '/guide/installation' },
-      { label: 'Components', href: '/components/kt-button' },
-      { label: 'Templates', href: '/templates' },
-      { label: 'Appearance', href: '/guide/appearance' },
+      { label: 'Introduction', href: '/guide/introduction/' },
+      { label: 'Installation', href: '/guide/installation/' },
+      { label: 'Components', href: '/components/kt-button/' },
+      { label: 'Templates', href: '/templates/' },
+      { label: 'Appearance', href: '/guide/appearance/' },
     ],
   },
   {
     heading: 'For AI agents',
     links: [
-      { label: 'Set up your agent', href: '/guide/ai-agents' },
+      { label: 'Set up your agent', href: '/guide/ai-agents/' },
       { label: 'llms.txt', href: 'llms.txt' },
       { label: 'llms-full.txt', href: 'llms-full.txt' },
       { label: 'agents.md', href: 'agents.md' },
@@ -83,8 +83,8 @@ const FOOTER: { heading: string; links: { label: string; href: string }[] }[] = 
     links: [
       { label: 'GitHub', href: REPO_URL },
       { label: 'npm', href: NPM_URL },
-      { label: 'Releases', href: '/release/releases' },
-      { label: 'Editors', href: '/guide/tools' },
+      { label: 'Releases', href: '/release/releases/' },
+      { label: 'Editors', href: '/guide/tools/' },
     ],
   },
 ];
@@ -179,7 +179,7 @@ export function homePage({
   return html`<div class="home">
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero-text">
-        <a class="home-flag" href="/guide/ai-agents">
+        <a class="home-flag" href="/guide/ai-agents/">
           <kt-badge tone="primary" icon="sparkles">New</kt-badge>
           <span>Built for AI agents: Claude Code, Cursor and Copilot write it right</span>
         </a>
@@ -190,7 +190,7 @@ export function homePage({
           source.
         </p>
         <div class="home-actions">
-          <kt-button size="large" @click=${() => go('/guide/installation')}>Get started</kt-button>
+          <kt-button size="large" @click=${() => go('/guide/installation/')}>Get started</kt-button>
           ${install}
           <kt-button
             size="large"
@@ -209,7 +209,7 @@ export function homePage({
         ${stage({ siteAccent: appearance.accent, rerender })}
         <p class="stage-caption">
           Every part of it is Kanto, live — and
-          <a href="/templates/dashboard">the whole console</a> is one click away.
+          <a href="/templates/dashboard/">the whole console</a> is one click away.
         </p>
       </div>
     </section>
@@ -223,7 +223,7 @@ export function homePage({
           Copilot or Codex at them.
         </p>
         <ul class="home-agents-links">
-          <li><a href="/guide/ai-agents">Set up your agent</a></li>
+          <li><a href="/guide/ai-agents/">Set up your agent</a></li>
           <li><a href="llms.txt">llms.txt</a></li>
           <li><a href="llms-full.txt">llms-full.txt, every page in one file</a></li>
         </ul>
@@ -303,7 +303,7 @@ export function homePage({
               <span class="home-gallery-family">${family}</span>
               ${COMPONENTS.filter((entry) => entry.group === family).map(
                 (entry) =>
-                  html`<a href=${`/components/${entry.slug}`}
+                  html`<a href=${`/components/${entry.slug}/`}
                     >${entry.slug.replace(/^kt-/, '')}</a
                   >`,
               )}
@@ -316,12 +316,12 @@ export function homePage({
       <h2 id="home-templates">Start from a template</h2>
       <p>
         Whole projects — routed, typed and building — in React, Vue or TypeScript without a
-        framework, each running here. <a href="/templates">See every template</a>.
+        framework, each running here. <a href="/templates/">See every template</a>.
       </p>
       <ul class="home-previews home-previews-apps">
         ${TEMPLATE_CATALOG.map((entry) =>
           preview({
-            href: `/templates/${entry.id}`,
+            href: `/templates/${entry.id}/`,
             // The demo's own build: `/live/saas/#/sign-in`.
             src: entry.demo,
             name: entry.name,
@@ -339,9 +339,9 @@ export function homePage({
           panel and your database, in Nuxt, set up in one command. You write only the product. Paid
           once.
         </p>
-        <a class="home-link" href="/pro">See ${PRO.name}</a>
+        <a class="home-link" href="/pro/">See ${PRO.name}</a>
       </div>
-      <a href="/pro" tabindex="-1" aria-hidden="true" class="home-pro-shot">
+      <a href="/pro/" tabindex="-1" aria-hidden="true" class="home-pro-shot">
         <span class="pro-shot">
           <img
             class="pro-shot-dark"
@@ -432,11 +432,11 @@ export function homePage({
           </li>
         </ol>
         <div slot="footer" class="home-cta-actions">
-          <kt-button size="large" @click=${() => go('/guide/installation')}>Get started</kt-button>
+          <kt-button size="large" @click=${() => go('/guide/installation/')}>Get started</kt-button>
           <kt-button size="large" variant="secondary" icon="external-link" @click=${stackblitz}
             >Open in StackBlitz</kt-button
           >
-          <a class="home-link" href="/guide/installation#no-build-step"
+          <a class="home-link" href="/guide/installation/#no-build-step"
             >No bundler? One script tag.</a
           >
         </div>

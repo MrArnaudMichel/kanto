@@ -43,7 +43,7 @@ export function templatesPage(): DocPage {
           html`<li class="template-card">
             <a
               class="template-card-shot"
-              href=${`/templates/${entry.id}`}
+              href=${`/templates/${entry.id}/`}
               tabindex="-1"
               aria-hidden="true"
             >
@@ -56,20 +56,20 @@ export function templatesPage(): DocPage {
               />
             </a>
             <div class="template-card-body">
-              <h2><a href=${`/templates/${entry.id}`}>${entry.name}</a></h2>
+              <h2><a href=${`/templates/${entry.id}/`}>${entry.name}</a></h2>
               <p>${entry.summary}</p>
               <p class="template-stacks">
                 ${entry.project ? STACKS.map((stack) => stack.label).join(', ') : 'Project coming soon'}
               </p>
               <div class="template-card-actions">
                 ${demoLink(entry)}
-                <a href=${`/templates/${entry.id}`}>How to start</a>
+                <a href=${`/templates/${entry.id}/`}>How to start</a>
               </div>
             </div>
           </li>`,
       )}
       <li class="template-card template-card-pro">
-        <a class="template-card-shot" href="/pro" tabindex="-1" aria-hidden="true">
+        <a class="template-card-shot" href="/pro/" tabindex="-1" aria-hidden="true">
           <span class="pro-shot">
             <img
               class="pro-shot-dark"
@@ -90,13 +90,13 @@ export function templatesPage(): DocPage {
           </span>
         </a>
         <div class="template-card-body">
-          <h2><a href="/pro">${PRO.name}</a></h2>
+          <h2><a href="/pro/">${PRO.name}</a></h2>
           <p>
             The whole SaaS, server side included: accounts, billing, an admin panel and your
             database, in Nuxt.
           </p>
           <p class="template-stacks">Nuxt — paid once</p>
-          <div class="template-card-actions"><a href="/pro">See what is in it</a></div>
+          <div class="template-card-actions"><a href="/pro/">See what is in it</a></div>
         </div>
       </li>
     </ul>`,
@@ -156,7 +156,7 @@ export function templatePage(entry: TemplateEntry, rerender: () => void): DocPag
           entry.id === 'saas'
             ? html`<p class="template-pro">
                 Need the back end too — real accounts, billing, an admin panel, your database?
-                <a href="/pro">${PRO.name}</a> is the whole SaaS, paid once.
+                <a href="/pro/">${PRO.name}</a> is the whole SaaS, paid once.
               </p>`
             : ''
         }
@@ -232,7 +232,7 @@ export function templatePage(entry: TemplateEntry, rerender: () => void): DocPag
           ${entry.components.map(
             (tag) =>
               html`<li>
-                <a href=${`/components/${tag}`}><code>${tag}</code></a>
+                <a href=${`/components/${tag}/`}><code>${tag}</code></a>
               </li>`,
           )}
         </ul>

@@ -154,4 +154,4 @@ writing a control of your own.
 ## More
 
 - Every page in one file: https://kanto.arnaudmichel.fr/llms-full.txt
-- The documentation, live: https://kanto.arnaudmichel.fr — a component at https://kanto.arnaudmichel.fr/components/<tag>
+- The documentation, live: https://kanto.arnaudmichel.fr — a component at https://kanto.arnaudmichel.fr/components/<tag>/

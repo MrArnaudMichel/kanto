@@ -912,16 +912,16 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       ></kt-input>
       <kt-avatar slot="header" name="Dana Whitfield" size="small"></kt-avatar>
       <nav slot="sidebar" class="demo-shell-nav" aria-label="Northwind">
-        <a href="/components/kt-app-shell" aria-current="page"
+        <a href="/components/kt-app-shell/" aria-current="page"
           ><kt-icon name="layout-dashboard" size="16"></kt-icon><span>Overview</span></a
         >
-        <a href="/components/kt-app-shell"
+        <a href="/components/kt-app-shell/"
           ><kt-icon name="file-text" size="16"></kt-icon><span>Invoices</span></a
         >
-        <a href="/components/kt-app-shell"
+        <a href="/components/kt-app-shell/"
           ><kt-icon name="users" size="16"></kt-icon><span>Customers</span></a
         >
-        <a href="/components/kt-app-shell"
+        <a href="/components/kt-app-shell/"
           ><kt-icon name="settings" size="16"></kt-icon><span>Settings</span></a
         >
       </nav>
@@ -1099,11 +1099,11 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
 
   'kt-error-page': () =>
     html`<div class="demo-errors">
-      <kt-error-page heading-level="2" home-href="/components/kt-error-page"></kt-error-page>
+      <kt-error-page heading-level="2" home-href="/components/kt-error-page/"></kt-error-page>
       <kt-error-page
         kind="error"
         heading-level="2"
-        home-href="/components/kt-error-page"
+        home-href="/components/kt-error-page/"
         @kt-retry=${(event: Event) => {
           event.preventDefault();
           toaster.info('Retrying…');
@@ -1118,7 +1118,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       lead="Send, chase and reconcile in one place — and get paid on the day you said."
       heading-level="2"
     >
-      <a slot="announcement" href="/components/kt-hero"
+      <a slot="announcement" href="/components/kt-hero/"
         ><kt-badge tone="primary">New</kt-badge> Recurring invoices</a
       >
       <kt-button slot="actions" size="large">Start free</kt-button>
@@ -1190,7 +1190,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
         description: 'For finance teams with rules.',
         price: 'Custom',
         features: ['Everything in Team', 'Approvals', 'SSO and audit log'],
-        href: '/components/kt-pricing-table',
+        href: '/components/kt-pricing-table/',
         action: 'Talk to sales',
       },
     ];
@@ -1345,7 +1345,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       open-first
       .items=${items}
     >
-      <span slot="note">Something else? <a href="/components/kt-faq">Ask us</a>.</span>
+      <span slot="note">Something else? <a href="/components/kt-faq/">Ask us</a>.</span>
     </kt-faq>`;
   },
 
@@ -1353,7 +1353,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
     const posts = [
       {
         title: 'A dashboard in an afternoon',
-        href: '/components/kt-post-grid',
+        href: '/components/kt-post-grid/',
         excerpt: 'Charts, stats and a table, from an empty page to a screen the team uses.',
         date: '2026-09-28',
         image: '/dashboard.png',
@@ -1362,7 +1362,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       },
       {
         title: 'Anatomy of a component',
-        href: '/components/kt-post-grid',
+        href: '/components/kt-post-grid/',
         excerpt: 'What goes into a button that works with a mouse, a keyboard and a screen reader.',
         date: '2026-09-14',
         image: '/component.png',
@@ -1371,7 +1371,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       },
       {
         title: 'Your brand in one line',
-        href: '/components/kt-post-grid',
+        href: '/components/kt-post-grid/',
         excerpt: 'A colour, a font and a density: how the tokens carry them everywhere.',
         date: '2026-08-30',
         image: '/guide.png',
@@ -1384,7 +1384,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       lead="Notes on building interfaces with Kanto."
       .posts=${posts}
     >
-      <a slot="more" href="/components/kt-post-grid">Every post</a>
+      <a slot="more" href="/components/kt-post-grid/">Every post</a>
     </kt-post-grid>`;
   },
 
@@ -1395,7 +1395,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       author="Ada Park"
       author-role="Design engineer"
       date="2026-09-28"
-      back-href="/components/kt-post-grid"
+      back-href="/components/kt-post-grid/"
       heading-level="2"
       .tags=${['Guide']}
     >
@@ -1416,7 +1416,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
         <li>A table of what is late, sorted by how late.</li>
       </ul>
       <p>Everything else waited for someone to ask for it. Nobody did.</p>
-      <p slot="end">Next: <a href="/components/kt-blog-post">Anatomy of a component</a></p>
+      <p slot="end">Next: <a href="/components/kt-blog-post/">Anatomy of a component</a></p>
     </kt-blog-post>`,
 
   'kt-newsletter': () =>
@@ -1479,7 +1479,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
         title: 'Connect your bank',
         description: 'So payments match their invoices by themselves.',
         action: 'Connect',
-        href: '/components/kt-empty-page',
+        href: '/components/kt-empty-page/',
       },
     ];
     return html`<kt-empty-page
@@ -1488,7 +1488,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       heading-level="2"
       .steps=${steps}
     >
-      <a slot="actions" href="/components/kt-empty-page">Skip for now</a>
+      <a slot="actions" href="/components/kt-empty-page/">Skip for now</a>
     </kt-empty-page>`;
   },
 
@@ -1497,23 +1497,23 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
       {
         heading: 'Product',
         links: [
-          { label: 'Features', href: '/components/kt-footer' },
-          { label: 'Pricing', href: '/components/kt-footer' },
-          { label: 'Changelog', href: '/components/kt-footer' },
+          { label: 'Features', href: '/components/kt-footer/' },
+          { label: 'Pricing', href: '/components/kt-footer/' },
+          { label: 'Changelog', href: '/components/kt-footer/' },
         ],
       },
       {
         heading: 'Company',
         links: [
-          { label: 'About', href: '/components/kt-footer' },
+          { label: 'About', href: '/components/kt-footer/' },
           { label: 'GitHub', href: 'https://github.com', external: true },
         ],
       },
       {
         heading: 'Help',
         links: [
-          { label: 'Documentation', href: '/components/kt-footer' },
-          { label: 'Contact', href: '/components/kt-footer' },
+          { label: 'Documentation', href: '/components/kt-footer/' },
+          { label: 'Contact', href: '/components/kt-footer/' },
         ],
       },
     ];
@@ -1592,7 +1592,7 @@ const EXAMPLES: Record<string, () => TemplateResult> = {
         <kt-button slot="actions" icon="plus">New document</kt-button>
       </kt-page-header>
       <kt-page-header level="section" heading="Recently opened">
-        <a slot="actions" href="/components/kt-table">See all files</a>
+        <a slot="actions" href="/components/kt-table/">See all files</a>
       </kt-page-header>
     </div>`,
 

@@ -1,6 +1,6 @@
-// @vitest-environment-options {"url": "https://kanto.arnaudmichel.fr/components/kt-button", "settings": {"navigation": {"disableChildFrameNavigation": true}}}
+// @vitest-environment-options {"url": "https://kanto.arnaudmichel.fr/components/kt-button/", "settings": {"navigation": {"disableChildFrameNavigation": true}}}
 // A real address, so the site routes on its path; frames stay unloaded, as on about:blank.
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { go } from './lib/address.js';
 import { NPM_URL, REPO_URL, VERSION_TAG } from './lib/project.js';
 
@@ -90,7 +90,7 @@ describe('the documentation shell', () => {
   });
 
   it('lists every version in the sidebar on the release page, each pointing at its notes', async () => {
-    await visit('/release/releases');
+    await visit('/release/releases/');
 
     const group = [...app.querySelectorAll('.sidebar-group')].find(
       (candidate) => candidate.querySelector('.overline')!.textContent!.trim() === 'Versions',
@@ -121,14 +121,14 @@ describe('the documentation shell', () => {
     await visit('/');
     app.querySelector<HTMLElement>('.home-hero [data-accent-id="teal"]')!.click();
     await tick();
-    await visit('/guide/introduction');
+    await visit('/guide/introduction/');
     await visit('/');
     const checked = app.querySelector('.home-hero [data-accent-id][aria-checked="true"]');
     expect(checked!.getAttribute('data-accent-id')).toBe('violet');
   });
 
   it('has a page for AI agents, with the line each one needs', async () => {
-    await visit('/guide/ai-agents');
+    await visit('/guide/ai-agents/');
     const page = app.querySelector('main')!;
     expect(page.querySelector('h1')!.textContent).toContain('AI agents');
     const text = page.textContent!;
@@ -139,30 +139,30 @@ describe('the documentation shell', () => {
     expect(text).toContain('llms-full.txt');
     expect(text).toContain('claude mcp add kanto -- npx -y kanto-mcp');
     const nav = [...app.querySelectorAll('a')].map((link) => link.getAttribute('href'));
-    expect(nav).toContain('/guide/ai-agents');
+    expect(nav).toContain('/guide/ai-agents/');
   });
 
   it('names each page in the tab title, and the home page by what Kanto is', async () => {
-    await visit('/components/kt-date-picker');
+    await visit('/components/kt-date-picker/');
     expect(document.title).toMatch(/date-picker.* — Kanto$/);
-    await visit('/guide/installation');
+    await visit('/guide/installation/');
     expect(document.title).toBe('Installation — Kanto');
     await visit('/');
     expect(document.title).toBe('Kanto — web components in your colours, in any framework');
   });
 
   it('opens a guide page at a section linked with an anchor', async () => {
-    await visit('/guide/installation#no-build-step');
+    await visit('/guide/installation/#no-build-step');
     expect(document.title).toBe('Installation — Kanto');
     expect(app.querySelector('#no-build-step')).not.toBeNull();
   });
 
   it('sends the old blocks page to the first block, and keeps the blocks in Components', async () => {
-    for (const hash of ['/blocks', '/blocks#marketing']) {
+    for (const hash of ['/blocks/', '/blocks/#marketing']) {
       await followOld(hash);
       expect(document.title, hash).toBe('hero — Kanto');
     }
-    await visit('/components/kt-hero');
+    await visit('/components/kt-hero/');
     const groups = [...app.querySelectorAll('.sidebar-group .overline')].map((g) =>
       g.textContent!.trim(),
     );
@@ -170,17 +170,17 @@ describe('the documentation shell', () => {
   });
 
   it('shows the templates in a gallery, each with its live demo and its page', async () => {
-    await visit('/templates');
+    await visit('/templates/');
     expect(document.title).toBe('Templates — Kanto');
     const card = app.querySelector('.templates-gallery .template-card')!;
-    expect(card.querySelector('a[href="/templates/saas"]')).not.toBeNull();
+    expect(card.querySelector('a[href="/templates/saas/"]')).not.toBeNull();
     const demo = card.querySelector<HTMLAnchorElement>('a.template-demo')!;
     expect(new URL(demo.getAttribute('href')!, location.href).pathname).toBe('/live/saas/');
     expect(card.querySelector('img')!.getAttribute('src')).toBe('/templates/saas-overview.png');
   });
 
   it('gives each template a page: screens, the command for each stack, what is inside', async () => {
-    await visit('/templates/saas');
+    await visit('/templates/saas/');
     expect(document.title).toBe('SaaS — Kanto');
     expect(app.querySelector<HTMLIFrameElement>('.template-run iframe')!.getAttribute('src')).toBe(
       '/live/saas/#/sign-in',
@@ -195,15 +195,15 @@ describe('the documentation shell', () => {
     tabs.dispatchEvent(new CustomEvent('kt-change', { detail: { value: 'vue' } }));
     await tick();
     expect(app.querySelector('.template-start kt-code')!.textContent).toContain('--stack vue');
-    expect(app.querySelector('a[href="/components/kt-auth-form"]')).not.toBeNull();
+    expect(app.querySelector('a[href="/components/kt-auth-form/"]')).not.toBeNull();
   });
 
   it('sends an old template link to the gallery', async () => {
-    await visit('/templates/sign-in');
+    await visit('/templates/sign-in/');
     expect(document.title).toBe('Templates — Kanto');
   });
   it('shows products built with Kanto in Apps, and how to add one', async () => {
-    await visit('/apps');
+    await visit('/apps/');
     expect(document.title).toBe('Showcase — Kanto');
     const cards = [...app.querySelectorAll('.built-with .built-with-card')];
     expect(cards.length).toBeGreaterThanOrEqual(2);
@@ -221,7 +221,7 @@ describe('the documentation shell', () => {
   });
 
   it('names every link on the templates and apps pages, or hides it from assistive tech', async () => {
-    for (const hash of ['/templates', '/templates/saas', '/apps']) {
+    for (const hash of ['/templates/', '/templates/saas/', '/apps/']) {
       await visit(hash);
       const unnamed = [...app.querySelectorAll<HTMLAnchorElement>('main a')]
         .filter((link) => link.getAttribute('aria-hidden') !== 'true')
@@ -237,11 +237,11 @@ describe('the documentation shell', () => {
   });
 
   it('runs every demo in Templates, the dashboard from its own build', async () => {
-    await visit('/templates');
+    await visit('/templates/');
     expect(app.querySelectorAll('.templates-gallery .template-card').length).toBeGreaterThanOrEqual(
       5,
     );
-    await visit('/templates/dashboard');
+    await visit('/templates/dashboard/');
     expect(document.title).toBe('Dashboard — Kanto');
     expect(app.querySelector<HTMLIFrameElement>('.template-run iframe')!.getAttribute('src')).toBe(
       '/live/dashboard/#/',
@@ -252,15 +252,15 @@ describe('the documentation shell', () => {
 
   it('sends the old demo pages to their templates', async () => {
     for (const [old, title] of [
-      ['/apps/console-home', 'Dashboard'],
-      ['/app/console/home', 'Dashboard'],
-      ['/app/console/settings/security', 'Dashboard'],
-      ['/apps/landing', 'Landing'],
-      ['/apps/chat', 'Chat'],
-      ['/apps/portfolio', 'Portfolio'],
-      ['/app/landing', 'Landing'],
-      ['/app/portfolio', 'Portfolio'],
-      ['/app/chat', 'Chat'],
+      ['/apps/console-home/', 'Dashboard'],
+      ['/app/console/home/', 'Dashboard'],
+      ['/app/console/settings/security/', 'Dashboard'],
+      ['/apps/landing/', 'Landing'],
+      ['/apps/chat/', 'Chat'],
+      ['/apps/portfolio/', 'Portfolio'],
+      ['/app/landing/', 'Landing'],
+      ['/app/portfolio/', 'Portfolio'],
+      ['/app/chat/', 'Chat'],
     ]) {
       await visit(old!);
       expect(document.title, old).toBe(`${title} — Kanto`);
@@ -273,7 +273,7 @@ describe('the documentation shell', () => {
     // GitHub may or may not answer here. Either way the history comes from the
     // changelog this repository ships, so the version the manifest names is on
     // the page, with the way out to the repository and to npm.
-    await visit('/release/releases');
+    await visit('/release/releases/');
 
     const links = [...app.querySelectorAll<HTMLAnchorElement>('a')].map((a) => a.href);
     expect(links.some((h) => h.includes(REPO_URL))).toBe(true);
@@ -282,8 +282,8 @@ describe('the documentation shell', () => {
   });
 
   it("opens the buyer's thank-you page from Polar's return, its checkout id in the address", async () => {
-    await followOld('/pro/thanks?checkout_id=abc123');
-    expect(location.pathname + location.search).toBe('/pro/thanks?checkout_id=abc123');
+    await followOld('/pro/thanks/?checkout_id=abc123');
+    expect(location.pathname + location.search).toBe('/pro/thanks/?checkout_id=abc123');
     expect(app.querySelector('h1')?.textContent).toMatch(/Thank you/);
     expect(
       app.querySelector('a[href="https://github.com/kanto-ds/kanto-saas-pro/invitations"]'),
@@ -291,7 +291,7 @@ describe('the documentation shell', () => {
   });
 
   it('takes over the page the prerender wrote, instead of drawing beside it', async () => {
-    await visit('/components/kt-button');
+    await visit('/components/kt-button/');
     expect(app.querySelector('.prerendered')).toBeNull();
     expect(app.hasAttribute('data-prerendered')).toBe(false);
     expect(app.querySelectorAll('main h1')).toHaveLength(1);
@@ -302,28 +302,41 @@ describe('the documentation shell', () => {
       document.head.querySelector('link[rel="canonical"]')!.getAttribute('href');
     const description = () =>
       document.head.querySelector('meta[name="description"]')!.getAttribute('content');
-    await visit('/components/kt-button');
-    expect(canonical()).toBe('https://kanto.arnaudmichel.fr/components/kt-button');
+    await visit('/components/kt-button/');
+    expect(canonical()).toBe('https://kanto.arnaudmichel.fr/components/kt-button/');
     expect(description()).toBe(app.querySelector('.doc-summary')!.textContent!.trim());
     for (const [path, address] of [
-      ['/pro', '/pro'],
-      ['/templates', '/templates'],
-      ['/apps', '/apps'],
+      ['/pro/', '/pro/'],
+      ['/templates/', '/templates/'],
+      ['/apps/', '/apps/'],
       ['/', '/'],
     ]) {
       await visit(path!);
       expect(canonical(), path).toBe(`https://kanto.arnaudmichel.fr${address}`);
       expect(description(), path).toBeTruthy();
     }
-    expect(app.querySelector('.top-nav a[href="/templates"]')).not.toBeNull();
+    expect(app.querySelector('.top-nav a[href="/templates/"]')).not.toBeNull();
   });
 
   it("keeps the buyer's thank-you page out of search engines", async () => {
-    await visit('/pro/thanks');
+    await visit('/pro/thanks/');
     expect(document.head.querySelector('meta[name="robots"]')!.getAttribute('content')).toBe(
       'noindex',
     );
-    await visit('/pro');
+    await visit('/pro/');
     expect(document.head.querySelector('meta[name="robots"]')).toBeNull();
+  });
+
+  it('scrolls to a heading linked on the same page, without drawing the page again', async () => {
+    await visit('/guide/installation/');
+    const top = vi.spyOn(window, 'scrollTo');
+    // What the browser does for a plain `#id` link: the hash, then popstate.
+    history.pushState(null, '', '#no-build-step');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    await tick();
+    expect(top).not.toHaveBeenCalled();
+    top.mockRestore();
+    await visit('/guide/introduction/');
+    expect(document.title).toBe('Introduction — Kanto');
   });
 });

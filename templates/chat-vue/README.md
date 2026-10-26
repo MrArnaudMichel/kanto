@@ -29,4 +29,4 @@ Open the app with `#new` to start on a new conversation.
 
 `kt-app-shell`, `kt-button`, `kt-chat-message`, `kt-prompt-input`,
 `kt-empty-state`. Each is documented at
-https://kanto.arnaudmichel.fr/components.
+https://kanto.arnaudmichel.fr/components/.

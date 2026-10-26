@@ -87,7 +87,7 @@ accounts, teams and roles, plans and billing with Stripe or Lemon Squeezy, an
 admin panel and your database — SQLite, Postgres or MongoDB — in Nuxt, built
 with Kanto and set up in one command. You, or your AI agent, write only the
 product. A separate, paid product:
-**[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/pro)**.
+**[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/pro/)**.
 
 ## Why custom elements
 
@@ -228,7 +228,7 @@ editor data generated from it, so plain HTML gets completion and hover docs:
 `dist/AGENTS.md` — the rules that make code right the first time, the mistakes
 agents make and the fix, every component in a line. One line points Claude
 Code, Cursor, Copilot or Codex at it; the
-[AI agents guide](https://kanto.arnaudmichel.fr/guide/ai-agents) has each.
+[AI agents guide](https://kanto.arnaudmichel.fr/guide/ai-agents/) has each.
 An agent can also ask the docs as it codes: `claude mcp add kanto -- npx -y kanto-mcp`
 connects [kanto-mcp](packages/kanto-mcp), every component's page and API at your version.
 Each component's page ships at `node_modules/kanto-ds/dist/docs/<tag>.md`, and

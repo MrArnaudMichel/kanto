@@ -8,14 +8,14 @@ const at = (url: string) => {
 
 describe("the site's addresses", () => {
   it('reads a page from its path, and a heading from its hash', () => {
-    expect(addressOf(at('/components/kt-button'))).toEqual({
+    expect(addressOf(at('/components/kt-button/'))).toEqual({
       section: 'components',
       slug: 'kt-button',
       anchor: '',
       query: '',
       legacy: false,
     });
-    expect(addressOf(at('/guide/installation#no-build-step'))).toMatchObject({
+    expect(addressOf(at('/guide/installation/#no-build-step'))).toMatchObject({
       section: 'guide',
       slug: 'installation',
       anchor: 'no-build-step',
@@ -45,14 +45,14 @@ describe("the site's addresses", () => {
   });
 
   it('writes a page as a path', () => {
-    expect(hrefOf('components', 'kt-button')).toBe('/components/kt-button');
+    expect(hrefOf('components', 'kt-button')).toBe('/components/kt-button/');
     expect(hrefOf('home', '')).toBe('/');
-    expect(hrefOf('pro', '')).toBe('/pro');
+    expect(hrefOf('pro', '')).toBe('/pro/');
   });
 
   it('routes inside the site only what is a page of it', () => {
     const origin = 'https://kanto.example';
-    expect(isSiteLink(new URL('/components/kt-button', origin), origin)).toBe(true);
+    expect(isSiteLink(new URL('/components/kt-button/', origin), origin)).toBe(true);
     expect(isSiteLink(new URL('/live/saas/', origin), origin)).toBe(false);
     expect(isSiteLink(new URL('/llms.txt', origin), origin)).toBe(false);
     expect(isSiteLink(new URL('/pro/home-dark.webp', origin), origin)).toBe(false);
@@ -63,9 +63,9 @@ describe("the site's addresses", () => {
     const push = vi.spyOn(history, 'pushState').mockImplementation(() => {});
     const heard = vi.fn();
     window.addEventListener('popstate', heard);
-    go('/guide/installation');
+    go('/guide/installation/');
     window.removeEventListener('popstate', heard);
-    expect(push).toHaveBeenCalledWith(null, '', '/guide/installation');
+    expect(push).toHaveBeenCalledWith(null, '', '/guide/installation/');
     expect(heard).toHaveBeenCalledOnce();
     push.mockRestore();
   });

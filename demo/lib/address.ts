@@ -1,5 +1,5 @@
 /**
- * The site's addresses: a page is a path — `/components/kt-button` — and a
+ * The site's addresses: a page is a path — `/components/kt-button/` — and a
  * heading on it the hash, `#no-build-step`. The first site lived behind `#/`;
  * an old link still says where it goes, and the site moves it to its path.
  */
@@ -35,7 +35,8 @@ export function addressOf(location: { pathname: string; search: string; hash: st
 
 export function hrefOf(section: string, slug: string): string {
   if (!section || section === 'home') return '/';
-  return slug ? `/${section}/${slug}` : `/${section}`;
+  // With its slash: GitHub Pages answers `/pro` with a redirect to `/pro/`.
+  return slug ? `/${section}/${slug}/` : `/${section}/`;
 }
 
 /** A link the site routes itself: on this origin, a page, not a file or a template's live build. */

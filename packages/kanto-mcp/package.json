@@ -29,7 +29,7 @@
     "web-components",
     "design-system"
   ],
-  "homepage": "https://kanto.arnaudmichel.fr/guide/ai-agents",
+  "homepage": "https://kanto.arnaudmichel.fr/guide/ai-agents/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrArnaudMichel/kanto.git",

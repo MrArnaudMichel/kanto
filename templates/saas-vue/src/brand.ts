@@ -1,7 +1,7 @@
 /**
  * The brand, in one place. Change the accent, the font, the corners or the
  * density here and every screen follows. Every option:
- * https://kanto.arnaudmichel.fr/guide/appearance
+ * https://kanto.arnaudmichel.fr/guide/appearance/
  */
 import { setAppearance } from 'kanto-ds';
 

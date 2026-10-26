@@ -29,10 +29,13 @@ export function pageHtml(template, meta, body) {
   return html.replace('<div id="app"></div>', `<div id="app" data-prerendered>${body}</div>`);
 }
 
-/** Where a page is written: as `x.html` and `x/index.html`, so `/x` and `/x/` both find it. */
+/**
+ * Where a page is written: `x/index.html`, for the address `/x/`. GitHub
+ * Pages answers `/x` with a redirect to `/x/` wherever a folder `x/` exists.
+ */
 export function filesOf(path) {
   const name = path.replace(/^\/+|\/+$/g, '');
-  return name ? [`${name}.html`, `${name}/index.html`] : ['index.html'];
+  return [name ? `${name}/index.html` : 'index.html'];
 }
 
 export function sitemapOf(urls) {

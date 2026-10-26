@@ -211,7 +211,7 @@ function documentsOf(data) {
 }
 
 function searchDocs(data, { query } = {}) {
-  const asked = [...new Set(words(query))];
+  const asked = [...new Set(words(query ?? ''))];
   if (!asked.length) return refuse('Say what to look for: search_docs { "query": "date range" }.');
   const ranked = documentsOf(data)
     .map((document) => {

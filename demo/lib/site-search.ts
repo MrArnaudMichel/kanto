@@ -4,6 +4,7 @@
  * library's own <kt-command-palette>.
  */
 import { KT_ACCENTS, type KtCommand } from 'kanto-ds';
+import { hrefOf } from './address.js';
 import { COMPONENTS } from './registry.js';
 
 interface PageRoute {
@@ -11,6 +12,8 @@ interface PageRoute {
   readonly slug: string;
   readonly label: string;
   readonly group: string;
+  /** Its address, when not `/<section>/<slug>/`: the gallery is `/templates/`. */
+  readonly path?: string;
 }
 
 /** What running a command does. */
@@ -41,7 +44,7 @@ export function siteCommands(routes: readonly PageRoute[]): KtCommand[] {
     const section = SECTIONS[route.section] ?? { title: route.section, icon: 'file' };
     const component = route.section === 'components';
     return {
-      id: `page:/${route.section}/${route.slug}`,
+      id: `page:${route.path ?? hrefOf(route.section, route.slug)}`,
       label: component ? `<${route.slug}>` : route.label,
       group: section.title,
       icon: section.icon,

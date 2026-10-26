@@ -22,8 +22,8 @@ describe('llms.txt', () => {
   });
 
   it("points at each component's live page, at its real address", () => {
-    expect(llmsTxt()).toContain('https://kanto.arnaudmichel.fr/components/<tag>');
-    expect(agentsMd()).toContain('https://kanto.arnaudmichel.fr/components/<tag>');
+    expect(llmsTxt()).toContain('https://kanto.arnaudmichel.fr/components/<tag>/');
+    expect(agentsMd()).toContain('https://kanto.arnaudmichel.fr/components/<tag>/');
   });
 
   it('opens on what an assistant needs first: install, the two rules, theming', () => {

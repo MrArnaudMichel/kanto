@@ -103,6 +103,7 @@ describe("kanto-mcp's tools", () => {
 
   it('turns down a tool it does not have', () => {
     expect(callTool(data, 'delete_everything', {}).isError).toBe(true);
+    expect(text('search_docs')).toMatch(/^Say what to look for/);
   });
 });
 
@@ -143,6 +144,19 @@ describe('the MCP server', () => {
     ).toMatchObject({
       result: { content: [{ type: 'text', text: expect.stringContaining('## Svelte') }] },
     });
+  });
+
+  it('answers a malformed call with an error, and keeps serving', () => {
+    expect(
+      handle(data, { jsonrpc: '2.0', id: 3, method: 'tools/call', params: null }),
+    ).toMatchObject({
+      id: 3,
+      error: { code: -32602 },
+    });
+    expect(ask('tools/call', { name: 'delete_everything', arguments: {} })).toMatchObject({
+      error: { code: -32602 },
+    });
+    expect(ask('ping')).toEqual({ jsonrpc: '2.0', id: 1, result: {} });
   });
 
   it('answers a ping, stays silent on a notification, refuses what it does not know', () => {

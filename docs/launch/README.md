@@ -13,7 +13,7 @@ by a script; each file says where it goes and when.
 ## Before posting
 
 - The site is on real addresses and its pages are prerendered: check that
-  `https://kanto.arnaudmichel.fr/components/kt-table` opens directly, and
+  `https://kanto.arnaudmichel.fr/components/kt-table/` opens directly, and
   that `https://kanto.arnaudmichel.fr/sitemap.xml` lists the pages.
 - Submit the sitemap in Google Search Console and Bing Webmaster Tools
   (each asks to verify the domain once, by a DNS record).

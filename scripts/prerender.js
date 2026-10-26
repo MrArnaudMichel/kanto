@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
  * Writes each page of the built docs site as HTML a crawler reads, without
- * running a script: dist-demo/components/kt-button.html and
- * …/kt-button/index.html, each with its title, description and canonical
+ * running a script: dist-demo/components/kt-button/index.html, each with its title, description and canonical
  * address; then sitemap.xml, robots.txt and 404.html — the app, for an
  * address no file answers (GitHub Pages serves it there).
  *
@@ -54,7 +53,7 @@ async function visit(tab, path) {
       .map((link) => new URL(link.href, location.href))
       .filter((url) => url.origin === location.origin && !url.pathname.startsWith('/live/'))
       .filter((url) => !/\.[a-z0-9]+$/i.test(url.pathname))
-      .map((url) => url.pathname.replace(/(.)\/$/, '$1'));
+      .map((url) => url.pathname.replace(/\/?$/, '/'));
     return {
       title: document.title,
       description: content('meta[name="description"]'),

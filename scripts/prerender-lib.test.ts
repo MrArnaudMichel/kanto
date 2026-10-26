@@ -60,12 +60,10 @@ describe('the prerender', () => {
     ).toContain('<meta name="robots" content="noindex" />');
   });
 
-  it('writes a page where any server finds it, with or without a trailing slash', () => {
+  it("writes a page as its folder's index, the address GitHub Pages answers", () => {
+    // Pages redirects /x to /x/ wherever a folder x/ exists: /x/ is the address.
     expect(filesOf('/')).toEqual(['index.html']);
-    expect(filesOf('/components/kt-button')).toEqual([
-      'components/kt-button.html',
-      'components/kt-button/index.html',
-    ]);
+    expect(filesOf('/components/kt-button/')).toEqual(['components/kt-button/index.html']);
   });
 
   it('lists every page for search engines, and points them at the list', () => {

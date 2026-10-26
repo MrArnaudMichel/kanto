@@ -53,7 +53,7 @@ interface Route {
   readonly label: string;
   readonly group: string;
   readonly page: () => DocPage | TemplateResult;
-  /** Its address, when not `/<section>/<slug>`: the gallery is `/templates`. */
+  /** Its address, when not `/<section>/<slug>`: the gallery is `/templates/`. */
   readonly path?: string;
   /** What a search result says of it; a doc page says it with its summary. */
   readonly description?: string;
@@ -142,7 +142,7 @@ const SHOWCASE_ROUTE: Route = {
   label: 'Showcase',
   group: 'Apps',
   page: appsPage,
-  path: '/apps',
+  path: '/apps/',
 };
 
 /** The front door: rendered full width, without the sidebar or contents. */
@@ -163,7 +163,7 @@ const PRO_ROUTE: Route = {
   label: 'Kanto SaaS Pro',
   group: 'Pro',
   page: () => proPage(),
-  path: '/pro',
+  path: '/pro/',
   description:
     'A whole SaaS in Nuxt, on Kanto: accounts, teams, plans and billing, an admin panel, messages and an API, wired to the database and providers you choose. Paid once.',
 };
@@ -200,7 +200,7 @@ const TEMPLATE_ROUTES: Route[] = [
     label: 'Templates',
     group: 'Templates',
     page: templatesPage,
-    path: '/templates',
+    path: '/templates/',
   },
   ...TEMPLATE_CATALOG.map((entry) => ({
     section: 'templates' as const,
@@ -239,7 +239,7 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
 ];
 
 function currentRoute(): Route {
-  // `/guide/installation#no-build-step`: the page from the path, a heading from the hash.
+  // `/guide/installation/#no-build-step`: the page from the path, a heading from the hash.
   const { section, slug } = addressOf(location);
   if (!section || section === 'home') return HOME;
   // The blocks page gave way to the templates; its blocks are in Components.
@@ -502,7 +502,7 @@ function shell(route: Route, result: DocPage | TemplateResult): TemplateResult {
           (section) =>
             html`<a
               class=${classMap({ active: section.id === route.section })}
-              href=${`/${section.id}`}
+              href=${`/${section.id}/`}
               ><kt-icon name=${section.icon} size="16"></kt-icon> ${section.label}</a
             >`,
         )}
@@ -553,7 +553,7 @@ function shell(route: Route, result: DocPage | TemplateResult): TemplateResult {
       </div>
 
       <nav slot="menu" class="menu-nav">
-        ${SECTIONS.map((section) => html`<a href=${`/${section.id}`}>${section.label}</a>`)}
+        ${SECTIONS.map((section) => html`<a href=${`/${section.id}/`}>${section.label}</a>`)}
       </nav>
     </kt-header>
 
@@ -682,6 +682,7 @@ applyDocsAppearance(appearance);
 
 /** The page changed: drawn from the top, or at the heading the address names. */
 function onRouteChange(): void {
+  shownAt = `${location.pathname}${location.search}`;
   // Each visit to the home page starts its examples from the site as it is.
   if (currentRoute().section !== 'home') {
     resetStage();
@@ -735,7 +736,17 @@ document.addEventListener('click', (event) => {
   event.preventDefault();
   go(`${url.pathname}${url.search}${url.hash}`);
 });
-window.addEventListener('popstate', onRouteChange);
+/** The page on screen: a popstate that changes only the hash stays on it. */
+let shownAt = `${location.pathname}${location.search}`;
+window.addEventListener('popstate', () => {
+  const at = `${location.pathname}${location.search}`;
+  if (at === shownAt) {
+    const { anchor } = addressOf(location);
+    if (anchor) document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+  onRouteChange();
+});
 // An old link followed from inside the site: the browser changes only the hash.
 window.addEventListener('hashchange', () => {
   if (moveLegacy()) onRouteChange();
