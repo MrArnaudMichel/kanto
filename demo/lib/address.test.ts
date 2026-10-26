@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { addressOf, go, hrefOf, isSiteLink } from './address.js';
+import { addressOf, go, hrefOf, isSiteLink, liveDemoOf } from './address.js';
 
 const at = (url: string) => {
   const parsed = new URL(url, 'https://kanto.example');
@@ -68,5 +68,13 @@ describe("the site's addresses", () => {
     expect(push).toHaveBeenCalledWith(null, '', '/guide/installation/');
     expect(heard).toHaveBeenCalledOnce();
     push.mockRestore();
+  });
+
+  it("sends an old link to a template's running demo to the demo, now under /live/", () => {
+    expect(liveDemoOf(at('/templates/saas/#/sign-in'), ['saas'])).toBe('/live/saas/#/sign-in');
+    expect(liveDemoOf(at('/templates/saas/#/'), ['saas'])).toBe('/live/saas/#/');
+    expect(liveDemoOf(at('/templates/saas/'), ['saas'])).toBeUndefined();
+    expect(liveDemoOf(at('/templates/nope/#/x'), ['saas'])).toBeUndefined();
+    expect(liveDemoOf(at('/#/templates/saas'), ['saas'])).toBeUndefined();
   });
 });

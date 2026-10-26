@@ -28,6 +28,13 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, '');
 }
 
+/** `../kt-calendar/kt-calendar.md#range` → `/components/kt-calendar/#range`; any other link as it is. */
+function siteHref(href: string): string {
+  const page = /^(?:\.\.\/(kt-[a-z-]+)\/|\.\/)?(kt-[a-z-]+)\.md(#.*)?$/.exec(href);
+  if (!page || (page[1] && page[1] !== page[2])) return href;
+  return `/components/${page[2]}/${page[3] ?? ''}`;
+}
+
 /**
  * Renders one component's markdown.
  *
@@ -41,6 +48,13 @@ export function renderDoc(source: string): RenderedDoc {
   const marked = new Marked({
     gfm: true,
     breaks: false,
+    // A page links its neighbours as files beside it; on the site, they are pages.
+    walkTokens(token) {
+      if (token.type === 'link') {
+        const link = token as Tokens.Link;
+        link.href = siteHref(link.href);
+      }
+    },
     renderer: {
       heading({ depth, tokens }: Tokens.Heading) {
         const plain = plainTextOf(this.parser.parseInline(tokens));

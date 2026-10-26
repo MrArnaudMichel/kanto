@@ -12,7 +12,7 @@ import { INSTALL_COMMAND, REPO_URL, VERSION_TAG } from './lib/project.js';
 import { commandTarget, siteCommands } from './lib/site-search.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
 import { newComponents, parseChangelog } from './lib/releases.js';
-import { addressOf, go, hrefOf, isSiteLink } from './lib/address.js';
+import { addressOf, go, hrefOf, isSiteLink, liveDemoOf } from './lib/address.js';
 import { applyMeta, type PageMeta } from './lib/meta.js';
 import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
@@ -587,9 +587,9 @@ function shell(route: Route, result: DocPage | TemplateResult): TemplateResult {
 /** The tab title: the page, then the system; the home page says what Kanto is. */
 function pageTitle(): string {
   const route = currentRoute();
-  return route.section === 'home'
-    ? 'Kanto — web components in your colours, in any framework'
-    : `${route.label} — Kanto`;
+  if (route.section === 'home') return 'Kanto — web components in your colours, in any framework';
+  // A component by its tag: what people search for.
+  return `${route.section === 'components' ? route.slug : route.label} — Kanto`;
 }
 
 /** What the page tells a search engine: its title, its summary, its one address. */
@@ -711,6 +711,14 @@ function moveLegacy(): boolean {
       `${hrefOf(old.section, old.slug)}${old.query}${old.anchor ? `#${old.anchor}` : ''}`,
     );
   return old.legacy;
+}
+// An old link to a running demo goes on to the demo itself.
+{
+  const demo = liveDemoOf(
+    location,
+    TEMPLATE_CATALOG.map((entry) => entry.id),
+  );
+  if (demo) location.replace(demo);
 }
 moveLegacy();
 

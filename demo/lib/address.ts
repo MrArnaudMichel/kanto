@@ -52,3 +52,16 @@ export function go(path: string): void {
   history.pushState(null, '', path);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
+
+/**
+ * An old link to a template's running demo, `/templates/saas/#/sign-in`: the
+ * demo is under `/live/` now, and the page at `/templates/saas/` is its docs.
+ */
+export function liveDemoOf(
+  location: { pathname: string; hash: string },
+  templates: readonly string[],
+): string | undefined {
+  const id = /^\/templates\/([a-z-]+)\/?$/.exec(location.pathname)?.[1];
+  if (!id || !templates.includes(id) || !location.hash.startsWith('#/')) return undefined;
+  return `/live/${id}/${location.hash}`;
+}

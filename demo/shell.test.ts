@@ -1,6 +1,7 @@
 // @vitest-environment-options {"url": "https://kanto.arnaudmichel.fr/components/kt-button/", "settings": {"navigation": {"disableChildFrameNavigation": true}}}
 // A real address, so the site routes on its path; frames stay unloaded, as on about:blank.
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { go } from './lib/address.js';
 import { NPM_URL, REPO_URL, VERSION_TAG } from './lib/project.js';
 
@@ -144,7 +145,7 @@ describe('the documentation shell', () => {
 
   it('names each page in the tab title, and the home page by what Kanto is', async () => {
     await visit('/components/kt-date-picker/');
-    expect(document.title).toMatch(/date-picker.* — Kanto$/);
+    expect(document.title).toBe('kt-date-picker — Kanto');
     await visit('/guide/installation/');
     expect(document.title).toBe('Installation — Kanto');
     await visit('/');
@@ -160,7 +161,7 @@ describe('the documentation shell', () => {
   it('sends the old blocks page to the first block, and keeps the blocks in Components', async () => {
     for (const hash of ['/blocks/', '/blocks/#marketing']) {
       await followOld(hash);
-      expect(document.title, hash).toBe('hero — Kanto');
+      expect(document.title, hash).toBe('kt-hero — Kanto');
     }
     await visit('/components/kt-hero/');
     const groups = [...app.querySelectorAll('.sidebar-group .overline')].map((g) =>
@@ -338,5 +339,12 @@ describe('the documentation shell', () => {
     top.mockRestore();
     await visit('/guide/introduction/');
     expect(document.title).toBe('Introduction — Kanto');
+  });
+
+  it('shows a visitor whose script runs the app, not the prerendered page before it', () => {
+    const index = readFileSync('demo/index.html', 'utf8');
+    const head = index.slice(0, index.indexOf('</head>'));
+    expect(head).toContain("document.documentElement.classList.add('js')");
+    expect(head).toMatch(/\.js #app\[data-prerendered\]\s*\{\s*visibility: hidden;?\s*\}/);
   });
 });

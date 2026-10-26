@@ -36,6 +36,16 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
     />
+    <!-- The prerendered page is for readers without a script; with one, the
+         app draws in its place at once, and nothing half-styled shows first. -->
+    <script>
+      document.documentElement.classList.add('js');
+    </script>
+    <style>
+      .js #app[data-prerendered] {
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

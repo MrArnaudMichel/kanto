@@ -75,3 +75,24 @@ export function problemsOf(pages) {
   }
   return problems;
 }
+
+const prerendered = (html) => html.includes('<div id="app" data-prerendered>');
+
+/**
+ * The site's index.html as built, to write each page from: index.html, or
+ * after a first run — which writes the home page over it — 404.html.
+ */
+export function templateOf(index, notFound) {
+  if (!prerendered(index)) return index;
+  if (notFound !== undefined && !prerendered(notFound)) return notFound;
+  throw new Error(
+    'dist-demo is already prerendered and holds no page as built: run npm run build:demo.',
+  );
+}
+
+/** The app's HTML as a page holds it: frames left to the app to load, Lit's markers dropped. */
+export function bodyOf(html) {
+  return html
+    .replace(/<!--\?lit\$\d+\$-->|<!---->/g, '')
+    .replace(/(<iframe\b[^>]*?)\s+src="[^"]*"/g, '$1');
+}

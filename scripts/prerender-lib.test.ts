@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { filesOf, pageHtml, problemsOf, robotsOf, sitemapOf } from './prerender-lib.js';
+import {
+  bodyOf,
+  filesOf,
+  pageHtml,
+  problemsOf,
+  robotsOf,
+  sitemapOf,
+  templateOf,
+} from './prerender-lib.js';
 
 const SITE = 'https://kanto.example';
 const TEMPLATE = `<!doctype html>
@@ -97,5 +105,25 @@ describe('the prerender', () => {
       `${SITE}/e: its canonical address is ${SITE}/elsewhere`,
       `${SITE}/f: not written`,
     ]);
+  });
+
+  it('starts from the site as built, even run a second time', () => {
+    const written = pageHtml(
+      TEMPLATE,
+      { title: 't', description: 'd', canonical: `${SITE}/`, robots: '' },
+      '<h1>Home</h1>',
+    );
+    expect(templateOf(TEMPLATE, undefined)).toBe(TEMPLATE);
+    // The second run finds the home page written over index.html, and 404.html as built.
+    expect(templateOf(written, TEMPLATE)).toBe(TEMPLATE);
+    expect(() => templateOf(written, written)).toThrow(/npm run build:demo/);
+  });
+
+  it("keeps a page's frames from loading before the app draws them, and drops Lit's markers", () => {
+    expect(
+      bodyOf(
+        '<!--?lit$123$--><div><!----><iframe title="Demo" src="/live/saas/#/sign-in" loading="lazy"></iframe></div>',
+      ),
+    ).toBe('<div><iframe title="Demo" loading="lazy"></iframe></div>');
   });
 });

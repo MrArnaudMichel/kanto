@@ -95,3 +95,15 @@ describe('renderUntrustedMarkdown under a heading of the page', () => {
     expect(out).toContain('<h4');
   });
 });
+
+describe('links between component pages', () => {
+  it('lead to the page on the site, not to the markdown file', () => {
+    const { html } = renderDoc(
+      '# kt-a\n\nSee [the calendar](../kt-calendar/kt-calendar.md), [its range](../kt-calendar/kt-calendar.md#range) and [the field](./kt-date-input.md). [Elsewhere](https://example.com/x.md).\n',
+    );
+    expect(html).toContain('href="/components/kt-calendar/"');
+    expect(html).toContain('href="/components/kt-calendar/#range"');
+    expect(html).toContain('href="/components/kt-date-input/"');
+    expect(html).toContain('href="https://example.com/x.md"');
+  });
+});

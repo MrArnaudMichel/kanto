@@ -10,19 +10,21 @@
  * Runs after `npm run build:demo`'s builds, in Chromium.
  */
 /* global document, location -- the page's own, in what runs in the browser */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { preview } from 'vite';
-import { filesOf, pageHtml, robotsOf, sitemapOf } from './prerender-lib.js';
+import { bodyOf, filesOf, pageHtml, robotsOf, sitemapOf, templateOf } from './prerender-lib.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'dist-demo');
 const SITE = 'https://kanto.arnaudmichel.fr';
 const TABS = 6;
 
-const template = readFileSync(join(out, 'index.html'), 'utf8');
+const built = (file) =>
+  existsSync(join(out, file)) ? readFileSync(join(out, file), 'utf8') : undefined;
+const template = templateOf(built('index.html'), built('404.html'));
 writeFileSync(join(out, '404.html'), template);
 
 const server = await preview({
@@ -63,8 +65,7 @@ async function visit(tab, path) {
       links,
     };
   });
-  // Lit's markers mean nothing without Lit: the app redraws the page anyway.
-  page.body = page.body.replace(/<!--\?lit\$\d+\$-->|<!---->/g, '');
+  page.body = bodyOf(page.body);
   pages.set(path, page);
   for (const link of page.links) {
     if (seen.has(link)) continue;
