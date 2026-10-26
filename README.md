@@ -13,7 +13,7 @@ colour, a font and a density, watch a real screen change, and copy the one
 line that does it in your project — or open it on StackBlitz.
 
 Or build a page from whole sections: the site's
-**[blocks](https://kanto.arnaudmichel.fr/#/blocks)** — a hero, pricing, a blog
+**[blocks](https://kanto.arnaudmichel.fr/blocks)** — a hero, pricing, a blog
 post, a sign-in form, a settings section and more — are live, each with its
 own documentation.
 
@@ -87,7 +87,7 @@ accounts, teams and roles, plans and billing with Stripe or Lemon Squeezy, an
 admin panel and your database — SQLite, Postgres or MongoDB — in Nuxt, built
 with Kanto and set up in one command. You, or your AI agent, write only the
 product. A separate, paid product:
-**[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/#/pro)**.
+**[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/pro)**.
 
 ## Why custom elements
 
@@ -228,7 +228,7 @@ editor data generated from it, so plain HTML gets completion and hover docs:
 `dist/AGENTS.md` — the rules that make code right the first time, the mistakes
 agents make and the fix, every component in a line. One line points Claude
 Code, Cursor, Copilot or Codex at it; the
-[AI agents guide](https://kanto.arnaudmichel.fr/#/guide/ai-agents) has each.
+[AI agents guide](https://kanto.arnaudmichel.fr/guide/ai-agents) has each.
 Each component's page ships at `node_modules/kanto-ds/dist/docs/<tag>.md`, and
 a chat that cannot read your project takes
 [`llms.txt`](https://kanto.arnaudmichel.fr/llms.txt) or

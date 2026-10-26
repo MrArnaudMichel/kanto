@@ -156,13 +156,13 @@ describe('the way to it', () => {
       homePage({ appearance: KT_DEFAULT_APPEARANCE, onUse: () => {}, rerender: () => {} }),
       home,
     );
-    expect(home.querySelector('a[href="#/pro"]')).not.toBeNull();
+    expect(home.querySelector('a[href="/pro"]')).not.toBeNull();
     const gallery = document.body.appendChild(document.createElement('main'));
     render(templatesPage().body, gallery);
-    expect(gallery.querySelector('a[href="#/pro"]')).not.toBeNull();
-    expect(readFileSync('README.md', 'utf8')).toContain('#/pro');
+    expect(gallery.querySelector('a[href="/pro"]')).not.toBeNull();
+    expect(readFileSync('README.md', 'utf8')).toContain('/pro');
     expect(readFileSync('demo/pages/templates.ts', 'utf8')).toMatch(
-      /entry\.id === 'saas'[\s\S]*#\/pro/,
+      /entry\.id === 'saas'[\s\S]*href="\/pro"/,
     );
   });
 });

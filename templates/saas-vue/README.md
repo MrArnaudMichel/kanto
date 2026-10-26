@@ -33,4 +33,4 @@ Routes are hashes — `#/customers` — so the build runs on any static host.
 `kt-empty-page`, `kt-page-header`, `kt-stat`, `kt-chart`, `kt-table`,
 `kt-input`, `kt-side-panel`, `kt-description-list`, `kt-settings-section`,
 `kt-toggle`, `kt-button`, `kt-confirm-dialog`, `kt-error-page`. Each is
-documented at https://kanto.arnaudmichel.fr/#/components.
+documented at https://kanto.arnaudmichel.fr/components.

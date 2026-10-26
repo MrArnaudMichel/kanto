@@ -31,26 +31,22 @@ describe('the templates catalog', () => {
     expect(new Set(TEMPLATE_CATALOG.map((entry) => entry.id)).size).toBe(TEMPLATE_CATALOG.length);
     for (const entry of TEMPLATE_CATALOG) {
       // Every demo is a template's own build: the docs' demo apps are gone.
-      expect(entry.demo, entry.id).toMatch(/^\.\/templates\/[a-z-]+\/(#\/[a-z-]*)?$/);
+      expect(entry.demo, entry.id).toMatch(/^\/live\/[a-z-]+\/(#\/[a-z-]*)?$/);
     }
-    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'landing')!.demo).toBe(
-      './templates/landing/',
-    );
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'landing')!.demo).toBe('/live/landing/');
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'portfolio')!.demo).toBe(
-      './templates/portfolio/',
+      '/live/portfolio/',
     );
-    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'chat')!.demo).toBe('./templates/chat/');
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'chat')!.demo).toBe('/live/chat/');
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'dashboard')!.demo).toBe(
-      './templates/dashboard/#/',
+      '/live/dashboard/#/',
     );
-    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'editor')!.demo).toBe(
-      './templates/editor/',
-    );
+    expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'editor')!.demo).toBe('/live/editor/');
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'changelog')!.demo).toBe(
-      './templates/changelog/',
+      '/live/changelog/',
     );
     expect(TEMPLATE_CATALOG.find((entry) => entry.id === 'saas')!.demo).toBe(
-      './templates/saas/#/sign-in',
+      '/live/saas/#/sign-in',
     );
   });
 

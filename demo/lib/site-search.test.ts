@@ -22,13 +22,13 @@ describe('the docs search', () => {
   it('has every page once, each leading to it', () => {
     const pages = commands.filter((command) => commandTarget(command.id)?.kind === 'page');
     expect(pages).toHaveLength(ROUTES.length);
-    expect(commandTarget(pages[0]!.id)).toEqual({ kind: 'page', hash: '#/guide/installation' });
+    expect(commandTarget(pages[0]!.id)).toEqual({ kind: 'page', path: '/guide/installation' });
   });
 
   it('finds a component by its tag, its name, or what its page says it does', () => {
-    expect(find('kt-table')[0]).toBe('page:#/components/kt-table');
-    expect(find('date picker')[0]).toBe('page:#/components/kt-date-picker');
-    expect(find('sorting')).toContain('page:#/components/kt-table');
+    expect(find('kt-table')[0]).toBe('page:/components/kt-table');
+    expect(find('date picker')[0]).toBe('page:/components/kt-date-picker');
+    expect(find('sorting')).toContain('page:/components/kt-table');
   });
 
   it('runs the site actions: theme, accent, install command, GitHub', () => {

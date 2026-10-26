@@ -72,10 +72,10 @@ describe.each(['dark', 'light'])('the home page, %s theme', (theme) => {
 
     frames[0]!.scrollIntoView();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(frames[0]!.getAttribute('src')).toContain(TEMPLATE_CATALOG[0]!.demo.slice(1));
+    expect(frames[0]!.getAttribute('src')).toContain(TEMPLATE_CATALOG[0]!.demo);
     frames.at(-1)!.scrollIntoView();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(frames.at(-1)!.getAttribute('src')).toContain(TEMPLATE_CATALOG.at(-1)!.demo.slice(1));
+    expect(frames.at(-1)!.getAttribute('src')).toContain(TEMPLATE_CATALOG.at(-1)!.demo);
   });
 });
 

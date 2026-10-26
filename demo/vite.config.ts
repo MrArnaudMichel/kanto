@@ -13,7 +13,7 @@ const alias: Alias[] = [
 ];
 
 /**
- * The template pages frame `./templates/<id>/`, which the build fills from
+ * The template pages frame `/live/<id>/`, which the build fills from
  * each template's vanilla project (scripts/build-template-demos.js). In dev,
  * each project runs live under that path instead — without this the frame
  * fell back to the docs page and showed the site itself.
@@ -28,7 +28,7 @@ function templateDemos(): Plugin {
         .filter((name) => name.endsWith('-vanilla'))
         .map((name) => name.replace(/-vanilla$/, ''));
       for (const id of ids) {
-        const base = `/templates/${id}/`;
+        const base = `/live/${id}/`;
         const demo = await createServer({
           root: at(`../templates/${id}-vanilla`),
           base,
@@ -45,7 +45,7 @@ function templateDemos(): Plugin {
         servers.push(demo);
         docs.middlewares.use((request, response, next) => {
           const url = request.url ?? '';
-          // `/templates/saas` without its slash: send it to the page.
+          // `/live/saas` without its slash: send it to the build.
           if (url === base.slice(0, -1)) {
             response.writeHead(301, { Location: base }).end();
           } else if (url.startsWith(base)) demo.middlewares(request, response, next);
@@ -68,7 +68,8 @@ function templateDemos(): Plugin {
  */
 export default defineConfig({
   root: at('.'),
-  base: './',
+  // Absolute: a page is at /components/kt-button, its scripts at /assets/.
+  base: '/',
   // Exact matches, not prefixes: an object alias for "kanto-ds" would also
   // swallow "kanto-ds/styles.css" and rewrite it to src/index.ts/styles.css.
   resolve: { alias },

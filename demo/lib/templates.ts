@@ -15,7 +15,7 @@ export interface TemplateEntry {
   readonly tryIt: string;
   /**
    * The running demo, relative to the site: a template's live build
-   * (`./templates/saas/#/sign-in`).
+   * (`/live/saas/#/sign-in`).
    */
   readonly demo: string;
   /** Its projects exist: `create-kanto` makes it, `templates/<id>-<stack>/` hold it. */
@@ -58,20 +58,20 @@ visit to any page goes to sign in.`,
   table, and change your name in Settings.
 - Search the customers as fast as you type: the last search always wins.
 - Delete the workspace — it asks first.`,
-    demo: './templates/saas/#/sign-in',
+    demo: '/live/saas/#/sign-in',
     project: true,
     routes: [
       {
-        path: '#/sign-in, #/sign-up',
+        path: '/sign-in, #/sign-up',
         what: 'The way in: sign in, create an account, reset a password.',
       },
-      { path: '#/welcome', what: 'First steps for a new account.' },
-      { path: '#/', what: 'What is billed, paid and late: stats, a chart, the latest invoices.' },
+      { path: '/welcome', what: 'First steps for a new account.' },
+      { path: '/', what: 'What is billed, paid and late: stats, a chart, the latest invoices.' },
       {
-        path: '#/customers',
+        path: '/customers',
         what: 'Everyone you bill: search, pages, and a customer in a side panel.',
       },
-      { path: '#/settings', what: 'Profile, notifications, and a danger zone that asks first.' },
+      { path: '/settings', what: 'Profile, notifications, and a danger zone that asks first.' },
     ],
     files: [
       { path: 'src/brand.ts', what: 'The brand, in one call.' },
@@ -99,10 +99,10 @@ visit to any page goes to sign in.`,
       'kt-error-page',
     ],
     screens: [
-      { file: 'saas-overview.png', path: 'templates/saas/#/', caption: 'The overview' },
-      { file: 'saas-customers.png', path: 'templates/saas/#/customers', caption: 'Customers' },
-      { file: 'saas-settings.png', path: 'templates/saas/#/settings', caption: 'Settings' },
-      { file: 'saas-sign-in.png', path: 'templates/saas/#/sign-in', caption: 'Signing in' },
+      { file: 'saas-overview.png', path: 'live/saas/#/', caption: 'The overview' },
+      { file: 'saas-customers.png', path: 'live/saas/#/customers', caption: 'Customers' },
+      { file: 'saas-settings.png', path: 'live/saas/#/settings', caption: 'Settings' },
+      { file: 'saas-sign-in.png', path: 'live/saas/#/sign-in', caption: 'Signing in' },
     ],
     seed: {
       'kanto-saas-session': JSON.stringify({
@@ -131,19 +131,19 @@ list in \`src/nav.ts\`.`,
   tick some rows and delete: it asks first.
 - Read a message in the **Inbox**: the count on the bell and beside Inbox goes down.
 - Collapse the sidebar from the top bar; on a phone it is a drawer.`,
-    demo: './templates/dashboard/#/',
+    demo: '/live/dashboard/#/',
     project: true,
     routes: [
-      { path: '#/', what: 'The overview: figures, revenue, the latest orders, what happened.' },
-      { path: '#/inbox', what: 'A two-pane mailbox, with a message to compose.' },
+      { path: '/', what: 'The overview: figures, revenue, the latest orders, what happened.' },
+      { path: '/inbox', what: 'A two-pane mailbox, with a message to compose.' },
       {
-        path: '#/customers',
+        path: '/customers',
         what: 'Filters, sorting and pages, a bulk delete that asks, a customer in a side panel.',
       },
-      { path: '#/files, #/activity', what: 'Stored files; the audit log, day by day.' },
-      { path: '#/integrations', what: 'What the workspace is wired to, on or off.' },
+      { path: '/files, #/activity', what: 'Stored files; the audit log, day by day.' },
+      { path: '/integrations', what: 'What the workspace is wired to, on or off.' },
       {
-        path: '#/settings/…',
+        path: '/settings/…',
         what: 'General, Members › People and Roles, Notifications, Security.',
       },
     ],
@@ -175,15 +175,15 @@ list in \`src/nav.ts\`.`,
       'kt-meter',
     ],
     screens: [
-      { file: 'dashboard-home.png', path: 'templates/dashboard/#/', caption: 'The overview' },
+      { file: 'dashboard-home.png', path: 'live/dashboard/#/', caption: 'The overview' },
       {
         file: 'dashboard-customers.png',
-        path: 'templates/dashboard/#/customers',
+        path: 'live/dashboard/#/customers',
         caption: 'Customers',
       },
       {
         file: 'dashboard-roles.png',
-        path: 'templates/dashboard/#/settings/members/roles',
+        path: 'live/dashboard/#/settings/members/roles',
         caption: 'Settings, three levels down',
       },
     ],
@@ -208,11 +208,11 @@ in as text (\`src/markdown.ts\`), and the documents live in this browser until
 - Open **History** after a minute of writing, and restore the older text: it asks
   first, and keeps what you had as a version too.
 - Make a **New document**, then delete it — that asks first as well.`,
-    demo: './templates/editor/',
+    demo: '/live/editor/',
     project: true,
     routes: [
-      { path: '#/', what: 'The first document.' },
-      { path: '#/doc/<id>', what: 'A document: the page, the preview, its history.' },
+      { path: '/', what: 'The first document.' },
+      { path: '/doc/<id>', what: 'A document: the page, the preview, its history.' },
     ],
     files: [
       { path: 'src/store.ts', what: 'Where documents are kept. Call your backend here.' },
@@ -232,10 +232,10 @@ in as text (\`src/markdown.ts\`), and the documents live in this browser until
       'kt-error-page',
     ],
     screens: [
-      { file: 'editor-page.png', path: 'templates/editor/', caption: 'Writing, with the preview' },
+      { file: 'editor-page.png', path: 'live/editor/', caption: 'Writing, with the preview' },
       {
         file: 'editor-guide.png',
-        path: 'templates/editor/#/doc/writing-guide',
+        path: 'live/editor/#/doc/writing-guide',
         caption: 'The writing guide',
       },
     ],
@@ -255,7 +255,7 @@ the page is yours.`,
   on the list already.
 - Narrow the window: every block stacks, and the header's links move into its
   menu.`,
-    demo: './templates/landing/',
+    demo: '/live/landing/',
     project: true,
     routes: [
       {
@@ -284,8 +284,8 @@ the page is yours.`,
       'kt-footer',
     ],
     screens: [
-      { file: 'landing-top.png', path: 'templates/landing/', caption: 'The top of the page' },
-      { file: 'landing-pricing.png', path: 'templates/landing/#pricing', caption: 'Pricing' },
+      { file: 'landing-top.png', path: 'live/landing/', caption: 'The top of the page' },
+      { file: 'landing-pricing.png', path: 'live/landing/#pricing', caption: 'Pricing' },
     ],
   },
   {
@@ -303,7 +303,7 @@ changes.`,
 - Ask, then switch to another conversation before the answer ends: it lands in
   the conversation it belongs to.
 - Narrow the window: the conversations move into the shell's drawer.`,
-    demo: './templates/chat/',
+    demo: '/live/chat/',
     project: true,
     routes: [],
     files: [
@@ -320,8 +320,8 @@ changes.`,
       'kt-empty-state',
     ],
     screens: [
-      { file: 'chat-conversation.png', path: 'templates/chat/', caption: 'A conversation' },
-      { file: 'chat-new.png', path: 'templates/chat/#new', caption: 'A new chat' },
+      { file: 'chat-conversation.png', path: 'live/chat/', caption: 'A conversation' },
+      { file: 'chat-new.png', path: 'live/chat/#new', caption: 'A new chat' },
     ],
   },
   {
@@ -339,7 +339,7 @@ Everything it says is in \`src/content.ts\`; the filter and the checks are in
     tryIt: `- Filter the work by a tag, then back to everything.
 - Open a case study, close it, open another: the panel follows.
 - Send the contact form empty first: each field says what it needs.`,
-    demo: './templates/portfolio/',
+    demo: '/live/portfolio/',
     project: true,
     routes: [
       {
@@ -371,8 +371,8 @@ Everything it says is in \`src/content.ts\`; the filter and the checks are in
       'kt-footer',
     ],
     screens: [
-      { file: 'portfolio-top.png', path: 'templates/portfolio/', caption: 'The top of the site' },
-      { file: 'portfolio-work.png', path: 'templates/portfolio/#work', caption: 'Selected work' },
+      { file: 'portfolio-top.png', path: 'live/portfolio/', caption: 'The top of the site' },
+      { file: 'portfolio-work.png', path: 'live/portfolio/#work', caption: 'Selected work' },
     ],
   },
   {
@@ -391,11 +391,11 @@ two equal.`,
 - Subscribe with any address — one ending in \`@example.com\` is on the list
   already.
 - Open **RSS**: the feed the releases make.`,
-    demo: './templates/changelog/',
+    demo: '/live/changelog/',
     project: true,
     routes: [
-      { path: '#/', what: 'Every release, newest first, with the filter by kind.' },
-      { path: '#/releases/<version>', what: 'One release, and the ones either side.' },
+      { path: '/', what: 'Every release, newest first, with the filter by kind.' },
+      { path: '/releases/<version>', what: 'One release, and the ones either side.' },
       { path: 'rss.xml', what: 'The feed, beside the page.' },
     ],
     files: [
@@ -416,10 +416,10 @@ two equal.`,
       'kt-error-page',
     ],
     screens: [
-      { file: 'changelog-releases.png', path: 'templates/changelog/', caption: 'Every release' },
+      { file: 'changelog-releases.png', path: 'live/changelog/', caption: 'Every release' },
       {
         file: 'changelog-release.png',
-        path: 'templates/changelog/#/releases/2.4.0',
+        path: 'live/changelog/#/releases/2.4.0',
         caption: 'One release',
       },
     ],

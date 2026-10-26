@@ -16,7 +16,7 @@ const get = (url: string) =>
 
 /**
  * `npm run dev` runs the templates' demos too: the template pages frame
- * `./templates/<id>/`, which only the site's build used to hold — in dev the
+ * `/live/<id>/`, which only the site's build used to hold — in dev the
  * frame showed the docs site itself.
  */
 describe('the docs dev server', () => {
@@ -43,13 +43,13 @@ describe('the docs dev server', () => {
       ['saas', 'Northwind'],
       ['dashboard', 'Northwind — operations console'],
     ]) {
-      const page = (await get(`${base}/templates/${id}/`)).body;
+      const page = (await get(`${base}/live/${id}/`)).body;
       expect(page, id).toContain(`<title>${title}</title>`);
     }
   });
 
   it('serves a demo’s own modules, with Kanto from src/', async () => {
-    const main = await get(`${base}/templates/saas/src/main.ts`);
+    const main = await get(`${base}/live/saas/src/main.ts`);
     expect(main.status).toBe(200);
     expect(main.body).toContain('/src/index.ts');
   });

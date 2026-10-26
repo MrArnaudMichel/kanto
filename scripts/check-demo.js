@@ -21,7 +21,7 @@ const demos = readdirSync(join(root, 'templates'))
   .filter((name) => name.endsWith('-vanilla'))
   .map((name) => name.replace(/-vanilla$/, ''));
 const missingDemos = demos.filter((id) => {
-  const page = join(root, 'dist-demo/templates', id, 'index.html');
+  const page = join(root, 'dist-demo/live', id, 'index.html');
   return (
     !existsSync(page) ||
     !/<script type="module"[^>]+src="\.\/assets\//.test(readFileSync(page, 'utf8'))

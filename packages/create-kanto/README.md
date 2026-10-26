@@ -26,5 +26,5 @@ Each template is also in the repository, to fork as it is:
 
 The `saas` template is the front end, its sign-in and data faked. For the
 whole SaaS — real accounts, billing, an admin panel and your database — see
-[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/#/pro), a separate, paid
+[Kanto SaaS Pro](https://kanto.arnaudmichel.fr/pro), a separate, paid
 product.

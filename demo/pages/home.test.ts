@@ -181,11 +181,11 @@ describe('the gallery', () => {
   it('links every component it names to its page', () => {
     const slugs = new Set(COMPONENTS.map((entry) => entry.slug));
     const links = [
-      ...mount().querySelectorAll<HTMLAnchorElement>('.home-gallery a[href^="#/components/"]'),
+      ...mount().querySelectorAll<HTMLAnchorElement>('.home-gallery a[href^="/components/"]'),
     ];
     expect(links.length).toBeGreaterThanOrEqual(20);
     for (const link of links) {
-      expect(slugs.has(link.getAttribute('href')!.replace('#/components/', '')), link.href).toBe(
+      expect(slugs.has(link.getAttribute('href')!.replace('/components/', '')), link.href).toBe(
         true,
       );
     }
@@ -195,15 +195,15 @@ describe('the gallery', () => {
 describe('templates', () => {
   it('leads to the gallery, and to each template, a miniature of it running', () => {
     const section = mount().querySelector('.home-templates')!;
-    expect(section.querySelector('a[href="#/templates"]')).not.toBeNull();
+    expect(section.querySelector('a[href="/templates"]')).not.toBeNull();
     for (const entry of TEMPLATE_CATALOG) {
-      expect(section.querySelector(`a[href="#/templates/${entry.id}"]`), entry.id).not.toBeNull();
+      expect(section.querySelector(`a[href="/templates/${entry.id}"]`), entry.id).not.toBeNull();
     }
     expect(section.querySelectorAll('iframe')).toHaveLength(TEMPLATE_CATALOG.length);
   });
 
   it('no longer leads to the blocks page', () => {
-    expect(mount().querySelector('a[href^="#/blocks"]')).toBeNull();
+    expect(mount().querySelector('a[href^="/blocks"]')).toBeNull();
   });
 });
 
@@ -223,7 +223,7 @@ describe('for AI agents', () => {
     tabs.dispatchEvent(new CustomEvent('kt-change', { detail: { value: 'cursor' } }));
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(section.textContent).toContain('.cursor/rules/kanto.mdc');
-    expect(section.querySelector('a[href="#/guide/ai-agents"]')).not.toBeNull();
+    expect(section.querySelector('a[href="/guide/ai-agents"]')).not.toBeNull();
     expect(section.querySelector('a[href$="llms-full.txt"]')).not.toBeNull();
   });
 });
@@ -285,7 +285,7 @@ describe('the way in', () => {
   it('says it is built for AI agents before anything else, and leads to the guide', () => {
     const hero = mount().querySelector('.home-hero')!;
     const flag = hero.querySelector<HTMLAnchorElement>('a.home-flag')!;
-    expect(flag.getAttribute('href')).toBe('#/guide/ai-agents');
+    expect(flag.getAttribute('href')).toBe('/guide/ai-agents');
     expect(flag.textContent).toMatch(/AI agents/);
     // Above the headline.
     expect(
@@ -324,11 +324,11 @@ describe('the way in', () => {
     )!;
     const hrefs = footer.columns.flatMap((column) => column.links.map((link) => link.href));
     for (const href of [
-      '#/guide/installation',
-      '#/components/kt-button',
-      '#/guide/ai-agents',
+      '/guide/installation',
+      '/components/kt-button',
+      '/guide/ai-agents',
       'llms.txt',
-      '#/release/releases',
+      '/release/releases',
     ]) {
       expect(hrefs, href).toContain(href);
     }

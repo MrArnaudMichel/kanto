@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Builds each template's vanilla stack into dist-demo/templates/<id>/, beside
+ * Builds each template's vanilla stack into dist-demo/live/<id>/, beside
  * the docs site, as its live demo. Like the site, it takes Kanto from src/ —
  * no install, no network — so the demo is the library at this commit.
  * Runs after the site's own build, which empties dist-demo.
@@ -31,7 +31,7 @@ for (const id of ids) {
     configFile: false,
     logLevel: 'warn',
     resolve: { alias },
-    build: { outDir: join(root, 'dist-demo/templates', id), emptyOutDir: true },
+    build: { outDir: join(root, 'dist-demo/live', id), emptyOutDir: true },
   });
   console.log(`built the ${id} live demo`);
 }

@@ -12,6 +12,7 @@ import { INSTALL_COMMAND, REPO_URL, VERSION_TAG } from './lib/project.js';
 import { commandTarget, siteCommands } from './lib/site-search.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
 import { newComponents, parseChangelog } from './lib/releases.js';
+import { addressOf, go, hrefOf, isSiteLink } from './lib/address.js';
 import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appsPage } from './pages/apps.js';
@@ -165,7 +166,7 @@ const PRO_THANKS_ROUTE: Route = {
   page: () => proThanksPage(),
 };
 
-/** The demo applications' old pages, `#/apps/<slug>`, and the templates they became. */
+/** The demo applications' old pages, `/apps/<slug>`, and the templates they became. */
 const DEMO_PAGES: Record<string, string> = {
   'console-home': 'dashboard',
   landing: 'landing',
@@ -173,7 +174,7 @@ const DEMO_PAGES: Record<string, string> = {
   portfolio: 'portfolio',
 };
 
-/** Full-screen demos, `#/app/<path>`, that became templates' live builds. */
+/** Full-screen demos, `/app/<path>`, that became templates' live builds. */
 const RETIRED_DEMOS: Record<string, string> = {
   console: 'dashboard',
   landing: 'landing',
@@ -226,13 +227,8 @@ const SECTIONS: { id: Section; label: string; icon: string }[] = [
 ];
 
 function currentRoute(): Route {
-  // `#/guide/installation#no-build-step`: the route, then a heading on it.
-  // A query after the page (`#/pro/thanks?checkout_id=…`) is the page's, not part of its address.
-  const [section, slug] = location.hash
-    .replace(/^#\/?/, '')
-    .split('#')[0]!
-    .split('?')[0]!
-    .split('/');
+  // `/guide/installation#no-build-step`: the page from the path, a heading from the hash.
+  const { section, slug } = addressOf(location);
   if (!section || section === 'home') return HOME;
   // The blocks page gave way to the templates; its blocks are in Components.
   if (section === 'blocks') return COMPONENT_ROUTES.find((route) => route.slug === 'kt-hero')!;
@@ -248,7 +244,7 @@ function currentRoute(): Route {
   );
 }
 
-const href = (route: Route) => `#/${route.section}/${route.slug}`;
+const href = (route: Route) => hrefOf(route.section, route.slug);
 
 /* ------------------------------------------------------------------- state */
 
@@ -271,7 +267,7 @@ function runSearch(id: string): void {
   if (!target) return;
   switch (target.kind) {
     case 'page':
-      location.hash = target.hash;
+      go(target.path);
       break;
     case 'theme':
     case 'accent': {
@@ -316,18 +312,16 @@ let visibleHeadings: readonly string[] = [];
 
 /* ------------------------------------------------------------------ layout */
 
-/**
- * Scrolls to a heading of the current page. The site routes on the hash, so an
- * in-page link cannot simply be `#id` — that would navigate away.
- */
+/** Scrolls to a heading of the current page, and says so in the address. */
 function jumpToHeading(event: Event, id: string): void {
   event.preventDefault();
+  history.replaceState(history.state, '', `#${id}`);
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   activeHeading = id;
   update();
 }
 
-const headingHref = (id: string) => `${location.hash.split('#').slice(0, 2).join('#')}#${id}`;
+const headingHref = (id: string) => `#${id}`;
 
 function sidebar(route: Route, page?: DocPage): TemplateResult {
   const inSection = ROUTES.filter((candidate) => candidate.section === route.section);
@@ -487,7 +481,7 @@ function shell(): TemplateResult {
 
   return html`
     <kt-header sticky label="Kanto documentation">
-      <a slot="brand" class="wordmark" href="#/">KANTO <span>DS</span></a>
+      <a slot="brand" class="wordmark" href="/">KANTO <span>DS</span></a>
       <!-- In the brand slot, not the default one: the header centres the
            default slot as a group, and a version chip belongs beside the
            wordmark rather than beside the sections. -->
@@ -498,7 +492,7 @@ function shell(): TemplateResult {
           (section) =>
             html`<a
               class=${classMap({ active: section.id === route.section })}
-              href=${`#/${section.id}`}
+              href=${`/${section.id}`}
               ><kt-icon name=${section.icon} size="16"></kt-icon> ${section.label}</a
             >`,
         )}
@@ -549,7 +543,7 @@ function shell(): TemplateResult {
       </div>
 
       <nav slot="menu" class="menu-nav">
-        ${SECTIONS.map((section) => html`<a href=${`#/${section.id}`}>${section.label}</a>`)}
+        ${SECTIONS.map((section) => html`<a href=${`/${section.id}`}>${section.label}</a>`)}
       </nav>
     </kt-header>
 
@@ -656,7 +650,8 @@ function trackReading(): void {
 setRenderer(update);
 applyDocsAppearance(appearance);
 
-window.addEventListener('hashchange', () => {
+/** The page changed: drawn from the top, or at the heading the address names. */
+function onRouteChange(): void {
   // Each visit to the home page starts its examples from the site as it is.
   if (currentRoute().section !== 'home') {
     resetStage();
@@ -669,9 +664,51 @@ window.addEventListener('hashchange', () => {
   window.scrollTo({ top: 0 });
   update();
   // A link to a heading lands on it, once the page that holds it has drawn.
-  const anchor = location.hash.split('#')[2];
+  const { anchor } = addressOf(location);
   if (anchor) document.getElementById(anchor)?.scrollIntoView();
   document.querySelector('kt-header')?.closeMenu();
+}
+
+/** Goes to a page of the site without reloading it. */
+/** An old `#/…` link lands on its page's path: the address a search engine reads. */
+function moveLegacy(): boolean {
+  const old = addressOf(location);
+  if (old.legacy)
+    history.replaceState(
+      null,
+      '',
+      `${hrefOf(old.section, old.slug)}${old.query}${old.anchor ? `#${old.anchor}` : ''}`,
+    );
+  return old.legacy;
+}
+moveLegacy();
+
+// A link to another page of the site moves without a reload; a file, a live build or another site loads.
+document.addEventListener('click', (event) => {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  )
+    return;
+  const link = event
+    .composedPath()
+    .find((node): node is HTMLAnchorElement => node instanceof HTMLAnchorElement);
+  if (!link || (link.target && link.target !== '_self') || link.hasAttribute('download')) return;
+  const url = new URL(link.href, location.href);
+  if (!isSiteLink(url, location.origin)) return;
+  // A heading on this page: the browser scrolls, the page stays.
+  if (url.pathname === location.pathname && url.search === location.search && url.hash) return;
+  event.preventDefault();
+  go(`${url.pathname}${url.search}${url.hash}`);
+});
+window.addEventListener('popstate', onRouteChange);
+// An old link followed from inside the site: the browser changes only the hash.
+window.addEventListener('hashchange', () => {
+  if (moveLegacy()) onRouteChange();
 });
 
 // `/` jumps to the filter, the way every docs site people already use does.

@@ -34,4 +34,4 @@ Routes are hashes — `#/customers` — so the build runs on any static host.
 `kt-toggle`, `kt-alert`, `kt-card`, `kt-badge`, `kt-avatar`, `kt-icon`,
 `kt-empty-state`, `kt-skeleton`, `kt-meter`, `kt-progress-bar`, `kt-tooltip`,
 `kt-error-page`. Each is documented at
-https://kanto.arnaudmichel.fr/#/components.
+https://kanto.arnaudmichel.fr/components.

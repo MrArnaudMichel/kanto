@@ -89,13 +89,10 @@ function retry(): void {
 /** `v1.0.1` → `notes-v1-0-1`. Prefixed so a tag can never collide with a page section. */
 const anchorFor = (tag: string) => `notes-${tag.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
 
-/**
- * In-page links go through `scrollIntoView`: the site routes on the hash, so a
- * bare `#notes-v1-0-1` would navigate away from the page instead of down it.
- */
+/** In-page links go through `scrollIntoView`: a smooth scroll down the page. */
 function jumpTo(id: string, label: TemplateResult | string): TemplateResult {
   return html`<a
-    href=${`${location.hash.split('#').slice(0, 2).join('#')}#${id}`}
+    href=${`${location.pathname}#${id}`}
     @click=${(event: Event) => {
       event.preventDefault();
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });

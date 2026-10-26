@@ -1,5 +1,21 @@
+// @vitest-environment-options {"url": "https://kanto.arnaudmichel.fr/components/kt-button", "settings": {"navigation": {"disableChildFrameNavigation": true}}}
+// A real address, so the site routes on its path; frames stay unloaded, as on about:blank.
 import { beforeAll, describe, expect, it } from 'vitest';
+import { go } from './lib/address.js';
 import { NPM_URL, REPO_URL, VERSION_TAG } from './lib/project.js';
+
+const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+/** Goes to a page the way a link of the site does. */
+const visit = async (path: string) => {
+  go(path);
+  await tick();
+};
+/** Follows an old `#/…` link from inside the site: only the hash changes. */
+const followOld = async (hash: string) => {
+  location.hash = hash;
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
+  await tick();
+};
 
 /**
  * Mounts the whole documentation site once and inspects what came out.
@@ -14,7 +30,6 @@ describe('the documentation shell', () => {
   // It imports and draws the whole site, which a loaded machine takes a while over.
   beforeAll(async () => {
     document.body.innerHTML = '<div id="app"></div>';
-    location.hash = '#/components/kt-button';
     await import('./main.js');
     app = document.querySelector<HTMLElement>('#app')!;
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -73,8 +88,7 @@ describe('the documentation shell', () => {
   });
 
   it('lists every version in the sidebar on the release page, each pointing at its notes', async () => {
-    location.hash = '#/release/releases';
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await visit('/release/releases');
 
     const group = [...app.querySelectorAll('.sidebar-group')].find(
       (candidate) => candidate.querySelector('.overline')!.textContent!.trim() === 'Versions',
@@ -89,37 +103,30 @@ describe('the documentation shell', () => {
     }
   });
 
-  it('opens on the home page, full width, for an empty hash, #/ and #/home', async () => {
-    for (const hash of ['', '#/', '#/home']) {
-      location.hash = hash;
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      expect(app.querySelector('.home'), hash || 'empty').not.toBeNull();
-      expect(app.querySelector('.sidebar'), hash || 'empty').toBeNull();
+  it('opens on the home page, full width, at / and /home', async () => {
+    for (const hash of ['/', '/home']) {
+      await visit(hash);
+      expect(app.querySelector('.home'), hash).not.toBeNull();
+      expect(app.querySelector('.sidebar'), hash).toBeNull();
     }
   });
 
   it('takes the wordmark home', () => {
-    expect(app.querySelector('.wordmark')!.getAttribute('href')).toBe('#/');
+    expect(app.querySelector('.wordmark')!.getAttribute('href')).toBe('/');
   });
 
   it('starts the hero colour from the site on each visit to the home page', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/';
-    await tick();
+    await visit('/');
     app.querySelector<HTMLElement>('.home-hero [data-accent-id="teal"]')!.click();
     await tick();
-    location.hash = '#/guide/introduction';
-    await tick();
-    location.hash = '#/';
-    await tick();
+    await visit('/guide/introduction');
+    await visit('/');
     const checked = app.querySelector('.home-hero [data-accent-id][aria-checked="true"]');
     expect(checked!.getAttribute('data-accent-id')).toBe('violet');
   });
 
   it('has a page for AI agents, with the line each one needs', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/guide/ai-agents';
-    await tick();
+    await visit('/guide/ai-agents');
     const page = app.querySelector('main')!;
     expect(page.querySelector('h1')!.textContent).toContain('AI agents');
     const text = page.textContent!;
@@ -129,38 +136,30 @@ describe('the documentation shell', () => {
     }
     expect(text).toContain('llms-full.txt');
     const nav = [...app.querySelectorAll('a')].map((link) => link.getAttribute('href'));
-    expect(nav).toContain('#/guide/ai-agents');
+    expect(nav).toContain('/guide/ai-agents');
   });
 
   it('names each page in the tab title, and the home page by what Kanto is', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/components/kt-date-picker';
-    await tick();
+    await visit('/components/kt-date-picker');
     expect(document.title).toMatch(/date-picker.* — Kanto$/);
-    location.hash = '#/guide/installation';
-    await tick();
+    await visit('/guide/installation');
     expect(document.title).toBe('Installation — Kanto');
-    location.hash = '#/';
-    await tick();
+    await visit('/');
     expect(document.title).toBe('Kanto — web components in your colours, in any framework');
   });
 
   it('opens a guide page at a section linked with an anchor', async () => {
-    location.hash = '#/guide/installation#no-build-step';
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await visit('/guide/installation#no-build-step');
     expect(document.title).toBe('Installation — Kanto');
     expect(app.querySelector('#no-build-step')).not.toBeNull();
   });
 
   it('sends the old blocks page to the first block, and keeps the blocks in Components', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    for (const hash of ['#/blocks', '#/blocks#marketing']) {
-      location.hash = hash;
-      await tick();
+    for (const hash of ['/blocks', '/blocks#marketing']) {
+      await followOld(hash);
       expect(document.title, hash).toBe('hero — Kanto');
     }
-    location.hash = '#/components/kt-hero';
-    await tick();
+    await visit('/components/kt-hero');
     const groups = [...app.querySelectorAll('.sidebar-group .overline')].map((g) =>
       g.textContent!.trim(),
     );
@@ -168,38 +167,24 @@ describe('the documentation shell', () => {
   });
 
   it('shows the templates in a gallery, each with its live demo and its page', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/templates';
-    await tick();
+    await visit('/templates');
     expect(document.title).toBe('Templates — Kanto');
     const card = app.querySelector('.templates-gallery .template-card')!;
-    expect(card.querySelector('a[href="#/templates/saas"]')).not.toBeNull();
+    expect(card.querySelector('a[href="/templates/saas"]')).not.toBeNull();
     const demo = card.querySelector<HTMLAnchorElement>('a.template-demo')!;
-    expect(
-      new URL(
-        demo.getAttribute('href')!,
-        location.href.replace(/^about:blank/, 'https://kanto.arnaudmichel.fr/'),
-      ).pathname,
-    ).toBe('/templates/saas/');
-    expect(card.querySelector('img')!.getAttribute('src')).toBe('./templates/saas-overview.png');
+    expect(new URL(demo.getAttribute('href')!, location.href).pathname).toBe('/live/saas/');
+    expect(card.querySelector('img')!.getAttribute('src')).toBe('/templates/saas-overview.png');
   });
 
   it('gives each template a page: screens, the command for each stack, what is inside', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/templates/saas';
-    await tick();
+    await visit('/templates/saas');
     expect(document.title).toBe('SaaS — Kanto');
     expect(app.querySelector<HTMLIFrameElement>('.template-run iframe')!.getAttribute('src')).toBe(
-      './templates/saas/#/sign-in',
+      '/live/saas/#/sign-in',
     );
-    // From the template's page too, the demo resolves beside the site, not under the hash.
+    // From the template's page too, the demo is the live build, not the page.
     const demo = app.querySelector<HTMLAnchorElement>('a.template-demo')!;
-    expect(
-      new URL(
-        demo.getAttribute('href')!,
-        location.href.replace(/^about:blank/, 'https://kanto.arnaudmichel.fr/'),
-      ).pathname,
-    ).toBe('/templates/saas/');
+    expect(new URL(demo.getAttribute('href')!, location.href).pathname).toBe('/live/saas/');
     expect(app.querySelector('.template-start kt-code')!.textContent).toContain(
       'npm create kanto@latest my-app -- --template saas --stack react',
     );
@@ -207,18 +192,15 @@ describe('the documentation shell', () => {
     tabs.dispatchEvent(new CustomEvent('kt-change', { detail: { value: 'vue' } }));
     await tick();
     expect(app.querySelector('.template-start kt-code')!.textContent).toContain('--stack vue');
-    expect(app.querySelector('a[href="#/components/kt-auth-form"]')).not.toBeNull();
+    expect(app.querySelector('a[href="/components/kt-auth-form"]')).not.toBeNull();
   });
 
   it('sends an old template link to the gallery', async () => {
-    location.hash = '#/templates/sign-in';
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await visit('/templates/sign-in');
     expect(document.title).toBe('Templates — Kanto');
   });
   it('shows products built with Kanto in Apps, and how to add one', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/apps';
-    await tick();
+    await visit('/apps');
     expect(document.title).toBe('Showcase — Kanto');
     const cards = [...app.querySelectorAll('.built-with .built-with-card')];
     expect(cards.length).toBeGreaterThanOrEqual(2);
@@ -236,10 +218,8 @@ describe('the documentation shell', () => {
   });
 
   it('names every link on the templates and apps pages, or hides it from assistive tech', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    for (const hash of ['#/templates', '#/templates/saas', '#/apps']) {
-      location.hash = hash;
-      await tick();
+    for (const hash of ['/templates', '/templates/saas', '/apps']) {
+      await visit(hash);
       const unnamed = [...app.querySelectorAll<HTMLAnchorElement>('main a')]
         .filter((link) => link.getAttribute('aria-hidden') !== 'true')
         .filter(
@@ -254,37 +234,32 @@ describe('the documentation shell', () => {
   });
 
   it('runs every demo in Templates, the dashboard from its own build', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
-    location.hash = '#/templates';
-    await tick();
+    await visit('/templates');
     expect(app.querySelectorAll('.templates-gallery .template-card').length).toBeGreaterThanOrEqual(
       5,
     );
-    location.hash = '#/templates/dashboard';
-    await tick();
+    await visit('/templates/dashboard');
     expect(document.title).toBe('Dashboard — Kanto');
     expect(app.querySelector<HTMLIFrameElement>('.template-run iframe')!.getAttribute('src')).toBe(
-      './templates/dashboard/#/',
+      '/live/dashboard/#/',
     );
     expect(app.querySelector('.template-start kt-code')).not.toBeNull();
     expect(app.querySelector('#try')).not.toBeNull();
   });
 
   it('sends the old demo pages to their templates', async () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
     for (const [old, title] of [
-      ['#/apps/console-home', 'Dashboard'],
-      ['#/app/console/home', 'Dashboard'],
-      ['#/app/console/settings/security', 'Dashboard'],
-      ['#/apps/landing', 'Landing'],
-      ['#/apps/chat', 'Chat'],
-      ['#/apps/portfolio', 'Portfolio'],
-      ['#/app/landing', 'Landing'],
-      ['#/app/portfolio', 'Portfolio'],
-      ['#/app/chat', 'Chat'],
+      ['/apps/console-home', 'Dashboard'],
+      ['/app/console/home', 'Dashboard'],
+      ['/app/console/settings/security', 'Dashboard'],
+      ['/apps/landing', 'Landing'],
+      ['/apps/chat', 'Chat'],
+      ['/apps/portfolio', 'Portfolio'],
+      ['/app/landing', 'Landing'],
+      ['/app/portfolio', 'Portfolio'],
+      ['/app/chat', 'Chat'],
     ]) {
-      location.hash = old!;
-      await tick();
+      await visit(old!);
       expect(document.title, old).toBe(`${title} — Kanto`);
       // The template's page itself, in the docs — not a title left over from the last one.
       expect(app.querySelector('.template-run iframe'), old).not.toBeNull();
@@ -295,8 +270,7 @@ describe('the documentation shell', () => {
     // GitHub may or may not answer here. Either way the history comes from the
     // changelog this repository ships, so the version the manifest names is on
     // the page, with the way out to the repository and to npm.
-    location.hash = '#/release/releases';
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await visit('/release/releases');
 
     const links = [...app.querySelectorAll<HTMLAnchorElement>('a')].map((a) => a.href);
     expect(links.some((h) => h.includes(REPO_URL))).toBe(true);
@@ -305,9 +279,8 @@ describe('the documentation shell', () => {
   });
 
   it("opens the buyer's thank-you page from Polar's return, its checkout id in the address", async () => {
-    location.hash = '#/pro/thanks?checkout_id=abc123';
-    window.dispatchEvent(new HashChangeEvent('hashchange'));
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await followOld('/pro/thanks?checkout_id=abc123');
+    expect(location.pathname + location.search).toBe('/pro/thanks?checkout_id=abc123');
     expect(app.querySelector('h1')?.textContent).toMatch(/Thank you/);
     expect(
       app.querySelector('a[href="https://github.com/kanto-ds/kanto-saas-pro/invitations"]'),

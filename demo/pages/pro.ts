@@ -29,7 +29,7 @@ function screen(
   eager = false,
   size: { width: number; height: number } = { width: 1440, height: 900 },
 ): TemplateResult {
-  const src = (theme: string) => `./pro/${file}-${theme}.webp`;
+  const src = (theme: string) => `/pro/${file}-${theme}.webp`;
   // Only one is ever shown: each carries the name, and the hero loads both at once.
   const loading = eager ? 'eager' : 'lazy';
   return html`<span class="pro-shot">
@@ -237,8 +237,8 @@ export function proPage(pro: Pro = PRO): TemplateResult {
         </table>
       </div>
       <p class="pro-compare-note">
-        The free ones stay free: <a href="#/guide/introduction">Kanto</a> and
-        <a href="#/templates/saas">the SaaS template</a>, MIT.
+        The free ones stay free: <a href="/guide/introduction">Kanto</a> and
+        <a href="/templates/saas">the SaaS template</a>, MIT.
       </p>
     </section>
 
@@ -280,7 +280,7 @@ export function proPage(pro: Pro = PRO): TemplateResult {
   </div>`;
 }
 
-/** After the purchase: Polar sends the buyer here (`#/pro/thanks?checkout_id=…`), with what to do next. */
+/** After the purchase: Polar sends the buyer here (`/pro/thanks?checkout_id=…`), with what to do next. */
 export function proThanksPage(pro: Pro = PRO): TemplateResult {
   const repo = `https://github.com/${pro.repository}`;
   return html`<div class="home pro">

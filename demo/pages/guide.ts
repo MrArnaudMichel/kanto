@@ -255,7 +255,7 @@ The \`SKILL.md\` at the repository's root is a Claude Code skill: the design gui
 
 export const TOOLS = `# Editors
 
-Kanto describes itself to your editor, so plain HTML and templates get completion and hover docs for every \`kt-*\` tag, attribute and event. For AI assistants, see [AI agents](#/guide/ai-agents).
+Kanto describes itself to your editor, so plain HTML and templates get completion and hover docs for every \`kt-*\` tag, attribute and event. For AI assistants, see [AI agents](/guide/ai-agents).
 
 ## Completion and hover docs
 

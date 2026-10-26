@@ -14,9 +14,9 @@ describe('the site header, on a phone', () => {
   it('keeps the wordmark on one line and clear of the actions', async () => {
     await page.viewport(390, 800);
     document.body.innerHTML = `<kt-header label="Kanto documentation">
-      <a slot="brand" class="wordmark" href="#/">KANTO <span>DS</span></a>
+      <a slot="brand" class="wordmark" href="/">KANTO <span>DS</span></a>
       <kt-badge slot="brand" class="version-chip" variant="code">v1.8.0</kt-badge>
-      <nav class="top-nav"><a href="#/guide">Guide</a></nav>
+      <nav class="top-nav"><a href="/guide">Guide</a></nav>
       <div slot="actions" class="header-actions">
         <!-- As on a phone: three icon buttons, 32px each. -->
         ${'<button style="width: 32px; height: 32px"></button>'.repeat(3)}

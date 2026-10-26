@@ -15,7 +15,7 @@ interface PageRoute {
 
 /** What running a command does. */
 export type CommandTarget =
-  | { kind: 'page'; hash: string }
+  | { kind: 'page'; path: string }
   | { kind: 'theme'; theme: 'dark' | 'light' }
   | { kind: 'accent'; accent: string }
   | { kind: 'copy-install' }
@@ -41,7 +41,7 @@ export function siteCommands(routes: readonly PageRoute[]): KtCommand[] {
     const section = SECTIONS[route.section] ?? { title: route.section, icon: 'file' };
     const component = route.section === 'components';
     return {
-      id: `page:#/${route.section}/${route.slug}`,
+      id: `page:/${route.section}/${route.slug}`,
       label: component ? `<${route.slug}>` : route.label,
       group: section.title,
       icon: section.icon,
@@ -76,7 +76,7 @@ export function siteCommands(routes: readonly PageRoute[]): KtCommand[] {
 
 /** What a command id stands for; null for one this module did not make. */
 export function commandTarget(id: string): CommandTarget | null {
-  if (id.startsWith('page:')) return { kind: 'page', hash: id.slice('page:'.length) };
+  if (id.startsWith('page:')) return { kind: 'page', path: id.slice('page:'.length) };
   if (id === 'theme:dark' || id === 'theme:light') {
     return { kind: 'theme', theme: id === 'theme:dark' ? 'dark' : 'light' };
   }

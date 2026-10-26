@@ -74,7 +74,7 @@ try {
     viewport: { width: 1400, height: 860 },
     colorScheme: 'dark',
   });
-  await home.goto(`${base}/#/`);
+  await home.goto(`${base}/`);
   await home.waitForTimeout(2000);
   await home.screenshot({ path: join(root, 'demo/public/apps/kanto.png') });
   await home.close();

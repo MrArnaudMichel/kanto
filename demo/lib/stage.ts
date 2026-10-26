@@ -455,7 +455,7 @@ export function stage({
           ${NAV.map(
             (item) =>
               html`<a
-                href="#/"
+                href="/"
                 @click=${(event: Event) => {
                   event.preventDefault();
                   view = item.label;
