@@ -33,7 +33,7 @@ In a project, every page below is also at
 
 - [Frameworks](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/docs/frameworks.md): setup for React 18 and 19, Vue, Angular and Svelte.
 - [Tokens and appearance](https://raw.githubusercontent.com/MrArnaudMichel/kanto/main/src/tokens/README.md): colour, type and spacing tokens, themes, accent and appearance settings.
-- [Live docs and playground](https://kanto.arnaudmichel.fr): every component with examples.
+- [Live docs and playground](https://kanto.arnaudmichel.fr): every component with examples, each at https://kanto.arnaudmichel.fr/components/<tag>.
 
 ## Components
 

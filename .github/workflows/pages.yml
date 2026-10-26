@@ -65,6 +65,11 @@ jobs:
 
       - run: npm ci
 
+      # The build writes each page's HTML from a headless browser, for the
+      # search engines that do not run the site's script.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
       # The site imports the library from src/, so there is no dist/ to build
       # first: what deploys is the source at this ref, the same thing the dev
       # server shows.

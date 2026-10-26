@@ -29,7 +29,9 @@ describe('the documentation shell', () => {
 
   // It imports and draws the whole site, which a loaded machine takes a while over.
   beforeAll(async () => {
-    document.body.innerHTML = '<div id="app"></div>';
+    // As the prerender wrote it: the app takes the page over, not beside it.
+    document.body.innerHTML =
+      '<div id="app" data-prerendered><h1 class="prerendered">kt-button</h1></div>';
     await import('./main.js');
     app = document.querySelector<HTMLElement>('#app')!;
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -285,5 +287,42 @@ describe('the documentation shell', () => {
     expect(
       app.querySelector('a[href="https://github.com/kanto-ds/kanto-saas-pro/invitations"]'),
     ).not.toBeNull();
+  });
+
+  it('takes over the page the prerender wrote, instead of drawing beside it', async () => {
+    await visit('/components/kt-button');
+    expect(app.querySelector('.prerendered')).toBeNull();
+    expect(app.hasAttribute('data-prerendered')).toBe(false);
+    expect(app.querySelectorAll('main h1')).toHaveLength(1);
+  });
+
+  it('gives each page its description and its one address', async () => {
+    const canonical = () =>
+      document.head.querySelector('link[rel="canonical"]')!.getAttribute('href');
+    const description = () =>
+      document.head.querySelector('meta[name="description"]')!.getAttribute('content');
+    await visit('/components/kt-button');
+    expect(canonical()).toBe('https://kanto.arnaudmichel.fr/components/kt-button');
+    expect(description()).toBe(app.querySelector('.doc-summary')!.textContent!.trim());
+    for (const [path, address] of [
+      ['/pro', '/pro'],
+      ['/templates', '/templates'],
+      ['/apps', '/apps'],
+      ['/', '/'],
+    ]) {
+      await visit(path!);
+      expect(canonical(), path).toBe(`https://kanto.arnaudmichel.fr${address}`);
+      expect(description(), path).toBeTruthy();
+    }
+    expect(app.querySelector('.top-nav a[href="/templates"]')).not.toBeNull();
+  });
+
+  it("keeps the buyer's thank-you page out of search engines", async () => {
+    await visit('/pro/thanks');
+    expect(document.head.querySelector('meta[name="robots"]')!.getAttribute('content')).toBe(
+      'noindex',
+    );
+    await visit('/pro');
+    expect(document.head.querySelector('meta[name="robots"]')).toBeNull();
   });
 });

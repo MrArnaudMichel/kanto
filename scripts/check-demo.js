@@ -10,6 +10,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { filesOf, problemsOf } from './prerender-lib.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -64,3 +65,28 @@ if (absent.length) {
   process.exit(1);
 }
 console.log(`ok   the docs site serves ${forAgents.join(', ')}`);
+
+// What a search engine reads: every page in the sitemap written, each with its
+// heading, its own title and its own address; robots.txt and the 404 beside them.
+const site = (file) => join(root, 'dist-demo', file);
+const sitemap = existsSync(site('sitemap.xml')) ? readFileSync(site('sitemap.xml'), 'utf8') : '';
+const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+const problems = problemsOf(
+  urls.map((url) => {
+    const file = site(filesOf(new URL(url).pathname)[0]);
+    return { url, html: existsSync(file) ? readFileSync(file, 'utf8') : undefined };
+  }),
+);
+for (const file of ['robots.txt', '404.html'])
+  if (!existsSync(site(file))) problems.push(`${file}: not written`);
+if (urls.length < 90)
+  problems.push(`sitemap.xml lists ${urls.length} pages, not the site's every page`);
+if (problems.length) {
+  console.error(
+    `\n✗ The prerendered site is not what a search engine should read:\n  ${problems.slice(0, 12).join('\n  ')}\n`,
+  );
+  process.exit(1);
+}
+console.log(
+  `ok   the docs site serves ${urls.length} pages written for search engines, a sitemap and robots.txt`,
+);

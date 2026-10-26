@@ -110,7 +110,7 @@ In a project, every page below is also at
 
 - [Frameworks](${RAW}/docs/frameworks.md): setup for React 18 and 19, Vue, Angular and Svelte.
 - [Tokens and appearance](${RAW}/src/tokens/README.md): colour, type and spacing tokens, themes, accent and appearance settings.
-- [Live docs and playground](${SITE}): every component with examples.
+- [Live docs and playground](${SITE}): every component with examples, each at ${SITE}/components/<tag>.
 
 ## Components
 
@@ -174,7 +174,7 @@ ${componentIndex(componentDocs())}
 ## More
 
 - Every page in one file: ${SITE}/llms-full.txt
-- The documentation, live: ${SITE}
+- The documentation, live: ${SITE} — a component at ${SITE}/components/<tag>
 `;
 }
 

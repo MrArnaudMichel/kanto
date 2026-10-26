@@ -21,6 +21,11 @@ describe('llms.txt', () => {
     for (const tag of tags) expect(text, tag).toContain(`/${tag}.md)`);
   });
 
+  it("points at each component's live page, at its real address", () => {
+    expect(llmsTxt()).toContain('https://kanto.arnaudmichel.fr/components/<tag>');
+    expect(agentsMd()).toContain('https://kanto.arnaudmichel.fr/components/<tag>');
+  });
+
   it('opens on what an assistant needs first: install, the two rules, theming', () => {
     const text = llmsTxt();
     expect(text).toMatch(/^# Kanto\n\n> /);

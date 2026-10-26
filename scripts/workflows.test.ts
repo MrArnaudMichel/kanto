@@ -14,4 +14,10 @@ describe('the Pages deploy', () => {
     expect(check).toBeGreaterThan(build);
     expect(upload).toBeGreaterThan(check);
   });
+
+  it('installs Chromium before building: the build writes each page from a browser', () => {
+    const install = pages.indexOf('npx playwright install --with-deps chromium');
+    expect(install).toBeGreaterThan(-1);
+    expect(pages.indexOf('npm run build:demo')).toBeGreaterThan(install);
+  });
 });

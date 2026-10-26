@@ -13,6 +13,7 @@ import { commandTarget, siteCommands } from './lib/site-search.js';
 import { visibleSections, visibleSpan } from './lib/progress.js';
 import { newComponents, parseChangelog } from './lib/releases.js';
 import { addressOf, go, hrefOf, isSiteLink } from './lib/address.js';
+import { applyMeta, type PageMeta } from './lib/meta.js';
 import { setRenderer } from './lib/render.js';
 import { componentPage, markdownPage, type DocPage } from './pages/component.js';
 import { appsPage } from './pages/apps.js';
@@ -52,6 +53,10 @@ interface Route {
   readonly label: string;
   readonly group: string;
   readonly page: () => DocPage | TemplateResult;
+  /** Its address, when not `/<section>/<slug>`: the gallery is `/templates`. */
+  readonly path?: string;
+  /** What a search result says of it; a doc page says it with its summary. */
+  readonly description?: string;
 }
 
 const GUIDE: Route[] = [
@@ -137,6 +142,7 @@ const SHOWCASE_ROUTE: Route = {
   label: 'Showcase',
   group: 'Apps',
   page: appsPage,
+  path: '/apps',
 };
 
 /** The front door: rendered full width, without the sidebar or contents. */
@@ -146,6 +152,8 @@ const HOME: Route = {
   label: 'Home',
   group: '',
   page: () => html``,
+  description:
+    'Eighty accessible web components for dashboards, admin tools and forms. Themeable in one line, in React, Vue, Angular, Svelte or plain HTML. Free and open source.',
 };
 
 /** Kanto SaaS Pro: full width, like the home page. */
@@ -155,6 +163,9 @@ const PRO_ROUTE: Route = {
   label: 'Kanto SaaS Pro',
   group: 'Pro',
   page: () => proPage(),
+  path: '/pro',
+  description:
+    'A whole SaaS in Nuxt, on Kanto: accounts, teams, plans and billing, an admin panel, messages and an API, wired to the database and providers you choose. Paid once.',
 };
 
 /** Where Polar sends a buyer after paying: the next steps. */
@@ -189,6 +200,7 @@ const TEMPLATE_ROUTES: Route[] = [
     label: 'Templates',
     group: 'Templates',
     page: templatesPage,
+    path: '/templates',
   },
   ...TEMPLATE_CATALOG.map((entry) => ({
     section: 'templates' as const,
@@ -244,7 +256,7 @@ function currentRoute(): Route {
   );
 }
 
-const href = (route: Route) => hrefOf(route.section, route.slug);
+const href = (route: Route) => route.path ?? hrefOf(route.section, route.slug);
 
 /* ------------------------------------------------------------------- state */
 
@@ -474,9 +486,7 @@ function docLayout(route: Route, page: DocPage): TemplateResult {
     ${tableOfContents(page)}`;
 }
 
-function shell(): TemplateResult {
-  const route = currentRoute();
-  const result = route.page();
+function shell(route: Route, result: DocPage | TemplateResult): TemplateResult {
   const isDoc = typeof result === 'object' && 'headings' in result;
 
   return html`
@@ -582,9 +592,29 @@ function pageTitle(): string {
     : `${route.label} — Kanto`;
 }
 
+/** What the page tells a search engine: its title, its summary, its one address. */
+function metaOf(route: Route, result: DocPage | TemplateResult): PageMeta {
+  const summary = typeof result === 'object' && 'headings' in result ? result.summary : '';
+  return {
+    title: pageTitle(),
+    description: route.description ?? (summary || HOME.description!),
+    path: href(route),
+    indexed: route !== PRO_THANKS_ROUTE,
+  };
+}
+
 function update(): void {
-  document.title = pageTitle();
-  render(shell(), document.querySelector<HTMLElement>('#app')!);
+  const root = document.querySelector<HTMLElement>('#app')!;
+  // The prerender's HTML, for whoever reads the page before the script runs:
+  // the app draws its own in its place.
+  if (root.hasAttribute('data-prerendered')) {
+    root.replaceChildren();
+    root.removeAttribute('data-prerendered');
+  }
+  const route = currentRoute();
+  const result = route.page();
+  applyMeta(metaOf(route, result));
+  render(shell(route, result), root);
   // The rail's entries only exist once rendered, and a page that does not
   // scroll would otherwise never place its fill.
   trackReading();
