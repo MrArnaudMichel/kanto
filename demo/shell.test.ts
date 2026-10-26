@@ -137,6 +137,7 @@ describe('the documentation shell', () => {
       expect(text, agent).toContain(agent);
     }
     expect(text).toContain('llms-full.txt');
+    expect(text).toContain('claude mcp add kanto -- npx -y kanto-mcp');
     const nav = [...app.querySelectorAll('a')].map((link) => link.getAttribute('href'));
     expect(nav).toContain('/guide/ai-agents');
   });

@@ -84,6 +84,19 @@ jobs:
           fi
           if [ "$PRERELEASE" = "true" ]; then npm publish --tag next; else npm publish; fi
 
+      # kanto-mcp too: its data, packed from this commit, is the library at
+      # this version. The same first publish by hand.
+      - name: Publish kanto-mcp
+        working-directory: packages/kanto-mcp
+        env:
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          if ! npm view kanto-mcp version > /dev/null 2>&1; then
+            echo "::notice::kanto-mcp is not on npm yet: publish it once by hand, then link it to this workflow."
+            exit 0
+          fi
+          if [ "$PRERELEASE" = "true" ]; then npm publish --tag next; else npm publish; fi
+
       # `cdn.jsdelivr.net/npm/kanto-ds@1` is cached for hours at the edge. Once
       # npm serves the new version — which can take a quarter of an hour — ask
       # jsDelivr to forget the old one, so the documented script tag follows

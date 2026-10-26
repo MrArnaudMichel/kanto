@@ -14,6 +14,14 @@ const write = (path: string, value: unknown) => {
 const read = (path: string) => JSON.parse(readFileSync(join(root, path), 'utf8'));
 
 describe('bumpTemplates', () => {
+  it('gives kanto-mcp the version too: its data is the library at that release', () => {
+    root = mkdtempSync(join(tmpdir(), 'bump-'));
+    write('packages/create-kanto/package.json', { version: '1.9.0' });
+    write('packages/kanto-mcp/package.json', { name: 'kanto-mcp', version: '1.9.0' });
+    expect(bumpTemplates(root, '1.10.0')).toContain('packages/kanto-mcp/package.json');
+    expect(read('packages/kanto-mcp/package.json').version).toBe('1.10.0');
+  });
+
   it('gives create-kanto the version, and every template its minor', () => {
     root = mkdtempSync(join(tmpdir(), 'bump-'));
     write('packages/create-kanto/package.json', { name: 'create-kanto', version: '1.9.0' });

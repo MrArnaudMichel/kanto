@@ -1,0 +1,40 @@
+{
+  "name": "kanto-mcp",
+  "version": "1.11.0",
+  "description": "Kanto's documentation for AI assistants, as an MCP server: every kt-* component's page and API, a search across the docs, the guides and each framework's setup.",
+  "type": "module",
+  "bin": {
+    "kanto-mcp": "index.js"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "data.json"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepack": "node scripts/bundle.js",
+    "postpack": "node scripts/clean.js"
+  },
+  "keywords": [
+    "kanto",
+    "kanto-ds",
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "cursor",
+    "web-components",
+    "design-system"
+  ],
+  "homepage": "https://kanto.arnaudmichel.fr/guide/ai-agents",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrArnaudMichel/kanto.git",
+    "directory": "packages/kanto-mcp"
+  },
+  "bugs": "https://github.com/MrArnaudMichel/kanto/issues",
+  "license": "MIT"
+}

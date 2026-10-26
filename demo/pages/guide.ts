@@ -221,6 +221,16 @@ ${agentSetupsMarkdown()}
 
 Each component's documentation is in the package, at \`node_modules/kanto-ds/dist/docs/<tag>.md\` — the properties, the events, what a screen reader hears and when not to use it. \`AGENTS.md\` tells the agent to read a component's page before using it, as you would.
 
+## Or ask the docs as it codes
+
+\`kanto-mcp\` is Kanto's documentation as an MCP server: the agent lists the components, searches the docs, and reads a component's page and its whole API — attributes, properties, events, slots, CSS parts — at the version you install. In Claude Code:
+
+\`\`\`sh
+claude mcp add kanto -- npx -y kanto-mcp
+\`\`\`
+
+In Cursor, Windsurf or VS Code, the same command in the MCP configuration: \`{ "command": "npx", "args": ["-y", "kanto-mcp"] }\`.
+
 ## For a chat that cannot read your project
 
 Give it one of these, by link or pasted:

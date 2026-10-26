@@ -1,5 +1,5 @@
 /**
- * On a release, create-kanto takes the library's version, and every template
+ * On a release, create-kanto and kanto-mcp take the library's version, and every template
  * asks for that minor of kanto-ds — so a project made today installs the
  * release it was tested against, and the fixes after it.
  */
@@ -34,6 +34,11 @@ export function bumpTemplates(root, version) {
   update('packages/create-kanto/package.json', (pkg) => {
     pkg.version = version;
   });
+  if (existsSync(join(root, 'packages/kanto-mcp/package.json'))) {
+    update('packages/kanto-mcp/package.json', (pkg) => {
+      pkg.version = version;
+    });
+  }
   const templates = join(root, 'templates');
   for (const name of existsSync(templates) ? readdirSync(templates) : []) {
     const path = `templates/${name}/package.json`;
